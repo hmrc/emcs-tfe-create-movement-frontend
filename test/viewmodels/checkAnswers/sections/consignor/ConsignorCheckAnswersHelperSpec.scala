@@ -41,8 +41,8 @@ class ConsignorCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures 
 
     ".summaryList" - {
 
-      "should return the correct rows for an XIPC user" in new Setup(
-        baseUserAnswers.set(ConsignorPaidTemporaryAuthorisationCodePage, testNITemporaryCertifiedConsignorErn), ern = testNITemporaryCertifiedConsignorErn
+      "should return the correct rows for an XIPA user" in new Setup(
+        baseUserAnswers.set(ConsignorPaidTemporaryAuthorisationCodePage, testNICertifiedConsignorErn), ern = testNICertifiedConsignorErn
       ) {
 
         val expectedResult: SummaryList = SummaryList(Seq(
@@ -54,7 +54,7 @@ class ConsignorCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures 
         checkAnswersHelper.summaryList() mustBe expectedResult
       }
 
-      "should return the correct rows for a non-XIPC user" in new Setup(baseUserAnswers) {
+      "should return the correct rows for a non-XIPA user" in new Setup(baseUserAnswers) {
 
         val expectedResult: SummaryList = SummaryList(Seq(
           Some(ConsignorTraderNameSummary.row),

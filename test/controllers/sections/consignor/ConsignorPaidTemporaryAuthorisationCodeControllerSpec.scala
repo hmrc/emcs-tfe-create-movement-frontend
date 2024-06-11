@@ -60,12 +60,12 @@ class ConsignorPaidTemporaryAuthorisationCodeControllerSpec extends SpecBase wit
   }
 
   "ConsignorPaidTemporaryAuthorisationCode Controller" - {
-    "when logged in as a NorthernIrelandTemporaryCertifiedConsignor user" - {
-      val onSubmit = routes.ConsignorPaidTemporaryAuthorisationCodeController.onSubmit(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode)
-      val userAnswers = emptyUserAnswers.copy(ern = testNITemporaryCertifiedConsignorErn)
+    "when logged in as a NorthernIrelandCertifiedConsignor user" - {
+      val onSubmit = routes.ConsignorPaidTemporaryAuthorisationCodeController.onSubmit(testNICertifiedConsignorErn, testDraftId, NormalMode)
+      val userAnswers = emptyUserAnswers.copy(ern = testNICertifiedConsignorErn)
 
       "must return OK and the correct view for a GET" in new Test(Some(userAnswers)) {
-        val result = controller.onPageLoad(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode)(request)
+        val result = controller.onPageLoad(testNICertifiedConsignorErn, testDraftId, NormalMode)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, onSubmit)(dr, messages(request)).toString
@@ -73,7 +73,7 @@ class ConsignorPaidTemporaryAuthorisationCodeControllerSpec extends SpecBase wit
 
       "must populate the view correctly on a GET when the question has previously been answered" in
         new Test(Some(userAnswers.set(ConsignorPaidTemporaryAuthorisationCodePage, "answer"))) {
-          val result = controller.onPageLoad(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode)(request)
+          val result = controller.onPageLoad(testNICertifiedConsignorErn, testDraftId, NormalMode)(request)
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(form.fill("answer"), onSubmit)(dr, messages(request)).toString
@@ -82,7 +82,7 @@ class ConsignorPaidTemporaryAuthorisationCodeControllerSpec extends SpecBase wit
       "must redirect to the next page when valid data is submitted" in new Test(Some(userAnswers)) {
         MockUserAnswersService.set().returns(Future.successful(userAnswers))
 
-        val result = controller.onSubmit(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "XIPTA12345678")))
+        val result = controller.onSubmit(testNICertifiedConsignorErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "XIPTA12345678")))
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -91,7 +91,7 @@ class ConsignorPaidTemporaryAuthorisationCodeControllerSpec extends SpecBase wit
       "must return a Bad Request and errors when an incorrect formatted PTA code is submitted" in new Test(Some(userAnswers)) {
         val boundForm = form.bind(Map("value" -> testGreatBritainErn))
 
-        val result = controller.onSubmit(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", testGreatBritainErn)))
+        val result = controller.onSubmit(testNICertifiedConsignorErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", testGreatBritainErn)))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, onSubmit)(dr, messages(request)).toString
@@ -100,48 +100,47 @@ class ConsignorPaidTemporaryAuthorisationCodeControllerSpec extends SpecBase wit
       "must return a Bad Request and errors when a blank value is submitted" in new Test(Some(userAnswers)) {
         val boundForm = form.bind(Map("value" -> ""))
 
-        val result = controller.onSubmit(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
+        val result = controller.onSubmit(testNICertifiedConsignorErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, onSubmit)(dr, messages(request)).toString
       }
 
-
       "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
-        val result = controller.onPageLoad(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode)(request)
+        val result = controller.onPageLoad(testNICertifiedConsignorErn, testDraftId, NormalMode)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
 
       "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
-        val result = controller.onSubmit(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
+        val result = controller.onSubmit(testNICertifiedConsignorErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
-    "when NOT logged in as a NorthernIrelandTemporaryCertifiedConsignor user" - {
-      val userAnswers = emptyUserAnswers.copy(ern = testErn)
+    "when NOT logged in as a NorthernIrelandCertifiedConsignor user" - {
+      val userAnswers = emptyUserAnswers.copy(ern = testNITemporaryCertifiedConsignorErn)
 
       "for a GET request" - {
         "must direct to ConsignorAddressController" in new Test(Some(userAnswers)) {
-          val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+          val result = controller.onPageLoad(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode)(request)
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual
-            controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
+            controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode).url
         }
       }
 
       "for a POST request" - {
         "must direct to ConsignorAddressController" in new Test(Some(userAnswers)) {
-          val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
+          val result = controller.onSubmit(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual
-            controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
+            controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode).url
         }
       }
     }

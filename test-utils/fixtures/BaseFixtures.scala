@@ -38,7 +38,7 @@ trait BaseFixtures {
   val testInternalId: String = "internalId"
   val testErn: String = "XIRC123456789"
   val testNorthernIrelandErn = "XIWK123456789"
-  val testNIDutyPaidErn = "XIPA123456789"
+  val testNICertifiedConsignorErn = "XIPA123456789"
   val testNITemporaryCertifiedConsignorErn = "XIPC123456789"
   val testNIRegisteredConsignorErn = "XIRC123456789"
   val testPaidTemporaryAuthorisationCode = "XIPTA12345678"

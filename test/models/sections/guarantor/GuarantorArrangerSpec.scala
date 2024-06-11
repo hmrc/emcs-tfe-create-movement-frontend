@@ -17,8 +17,14 @@
 package models.sections.guarantor
 
 import models.sections.guarantor.GuarantorArranger._
+import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, TemporaryCertifiedConsignee, UkTaxWarehouse}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import play.api.i18n.Messages
+import play.api.test.Helpers.stubMessages
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 class GuarantorArrangerSpec extends AnyFreeSpec with Matchers {
 
@@ -44,4 +50,40 @@ class GuarantorArrangerSpec extends AnyFreeSpec with Matchers {
       NoGuarantorRequired.auditDescription mustBe "NoGuarantorRequired"
     }
   }
+
+  "options" - {
+    implicit val msgs: Messages = stubMessages()
+
+    val scenariosWithoutConsignee: Seq[MovementScenario] =
+      UkTaxWarehouse.toList ++ Seq(CertifiedConsignee, TemporaryCertifiedConsignee)
+
+    scenariosWithoutConsignee.foreach {
+      scenario =>
+        s"should return all options, excluding Consignee, when the movement scenario is $scenario" in {
+          GuarantorArranger.options(scenario) mustBe Seq(Consignor, GoodsOwner, Transporter).map {
+            value =>
+              RadioItem(
+                content = Text(msgs(s"guarantorArranger.${value.toString}")),
+                value = Some(value.toString),
+                id = Some(s"value_${value.toString}")
+              )
+          }
+        }
+    }
+
+    MovementScenario.values.filterNot(scenariosWithoutConsignee.contains).foreach {
+      scenario =>
+        s"should return all options when the movement scenario is $scenario" in {
+          GuarantorArranger.options(scenario) mustBe Seq(Consignor, Consignee, GoodsOwner, Transporter).map {
+            value =>
+              RadioItem(
+                content = Text(msgs(s"guarantorArranger.${value.toString}")),
+                value = Some(value.toString),
+                id = Some(s"value_${value.toString}")
+              )
+          }
+        }
+    }
+  }
+
 }

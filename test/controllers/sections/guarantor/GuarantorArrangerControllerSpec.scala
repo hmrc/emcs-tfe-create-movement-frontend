@@ -22,9 +22,11 @@ import forms.sections.guarantor.GuarantorArrangerFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import models.sections.info.movementScenario.MovementScenario
 import models.{CheckMode, NormalMode, UserAddress, UserAnswers, VatNumberModel}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import pages.sections.guarantor._
+import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -41,7 +43,9 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
   lazy val form: Form[GuarantorArranger] = formProvider()
   lazy val view: GuarantorArrangerView = app.injector.instanceOf[GuarantorArrangerView]
 
-  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  val baseUserAnswers = emptyUserAnswers.set(DestinationTypePage, MovementScenario.EuTaxWarehouse)
+
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(baseUserAnswers)) {
     val request = FakeRequest(GET, guarantorArrangerRoute)
 
     lazy val testController = new GuarantorArrangerController(
@@ -60,26 +64,26 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
   }
 
   "GuarantorArranger Controller" - {
-    "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers.set(GuarantorRequiredPage, true))) {
+    "must return OK and the correct view for a GET" in new Fixture(Some(baseUserAnswers.set(GuarantorRequiredPage, true))) {
       val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(MovementScenario.EuTaxWarehouse, form, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
-      Some(emptyUserAnswers
+      Some(baseUserAnswers
         .set(GuarantorRequiredPage, true)
         .set(GuarantorArrangerPage, GuarantorArranger.values.head))) {
 
       val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill(GuarantorArranger.values.head), NormalMode)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(MovementScenario.EuTaxWarehouse, form.fill(GuarantorArranger.values.head), NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers.set(GuarantorRequiredPage, true))) {
-      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers.set(GuarantorRequiredPage, true)))
+    "must redirect to the next page when valid data is submitted" in new Fixture(Some(baseUserAnswers.set(GuarantorRequiredPage, true))) {
+      MockUserAnswersService.set().returns(Future.successful(baseUserAnswers.set(GuarantorRequiredPage, true)))
 
       val req = FakeRequest(POST, guarantorArrangerRoute).withFormUrlEncodedBody(("value", GuarantorArranger.values.head.toString))
 
@@ -89,14 +93,14 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers.set(GuarantorRequiredPage, true))) {
+    "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(baseUserAnswers.set(GuarantorRequiredPage, true))) {
       val req = FakeRequest(POST, guarantorArrangerRoute).withFormUrlEncodedBody(("value", "invalid value"))
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(MovementScenario.EuTaxWarehouse, boundForm, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to guarantor index controller for a GET if no guarantor required is found" in new Fixture() {
@@ -126,14 +130,14 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
       guarantorArranger =>
 
         s"must cleanse further guarantor sections when choosing an arranger of ${guarantorArranger.getClass.getSimpleName.stripSuffix("$")}" in new Fixture(
-          Some(emptyUserAnswers
+          Some(baseUserAnswers
             .set(GuarantorRequiredPage, true)
             .set(GuarantorArrangerPage, Transporter)
             .set(GuarantorNamePage, "Some name")
             .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("GB12345678")))
             .set(GuarantorAddressPage, UserAddress(Some("1"), "Street", "town", "AA11AA")))) {
 
-          val expectedAnswers = emptyUserAnswers
+          val expectedAnswers = baseUserAnswers
             .set(GuarantorRequiredPage, true)
             .set(GuarantorArrangerPage, guarantorArranger)
 
@@ -154,11 +158,11 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
           consignorOrConsigneeOldAnswer =>
             s"must force NormalMode if new answer is ${guarantorArranger.getClass.getSimpleName.stripSuffix("$")}" +
               s" and old answer is ${consignorOrConsigneeOldAnswer.getClass.getSimpleName.stripSuffix("$")}" in new Fixture(
-              Some(emptyUserAnswers
+              Some(baseUserAnswers
                 .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, consignorOrConsigneeOldAnswer))) {
 
-              MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+              MockUserAnswersService.set().returns(Future.successful(baseUserAnswers))
 
               val req = FakeRequest(POST, guarantorArrangerRouteCheckMode).withFormUrlEncodedBody(("value", guarantorArranger.toString))
 
@@ -172,12 +176,12 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
           oldAnswer =>
             s"must keep old Mode if new answer is ${guarantorArranger.getClass.getSimpleName.stripSuffix("$")}" +
               s" and old answer is ${oldAnswer.getClass.getSimpleName.stripSuffix("$")}" in new Fixture(
-              Some(emptyUserAnswers
+              Some(baseUserAnswers
                 .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, oldAnswer))) {
 
               if (oldAnswer != guarantorArranger) {
-                MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+                MockUserAnswersService.set().returns(Future.successful(baseUserAnswers))
               }
 
               val req = FakeRequest(POST, guarantorArrangerRouteCheckMode).withFormUrlEncodedBody(("value", guarantorArranger.toString))

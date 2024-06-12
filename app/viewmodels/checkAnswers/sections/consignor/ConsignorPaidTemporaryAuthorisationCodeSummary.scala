@@ -16,8 +16,8 @@
 
 package viewmodels.checkAnswers.sections.consignor
 
-import models.{CheckMode, NorthernIrelandTemporaryCertifiedConsignor}
 import models.requests.DataRequest
+import models.{CheckMode, NorthernIrelandCertifiedConsignor}
 import pages.sections.consignor.ConsignorPaidTemporaryAuthorisationCodePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -29,7 +29,7 @@ object ConsignorPaidTemporaryAuthorisationCodeSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(ConsignorPaidTemporaryAuthorisationCodePage).flatMap { ptaCode =>
-      Option.when(request.userTypeFromErn == NorthernIrelandTemporaryCertifiedConsignor) {
+      Option.when(request.userTypeFromErn == NorthernIrelandCertifiedConsignor) {
         SummaryListRowViewModel(
           key = "checkYourAnswersConsignor.paidTemporaryAuthorisationCode",
           value = ValueViewModel(HtmlFormat.escape(ptaCode).toString),

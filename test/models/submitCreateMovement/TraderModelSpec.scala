@@ -183,20 +183,20 @@ class TraderModelSpec extends SpecBase {
 
   "applyConsignor" - {
 
-    "when logged in as a NorthernIrelandTemporaryCertifiedConsignor user" - {
+    "when logged in as a NorthernIrelandCertifiedConsignor user" - {
 
       "must return a TraderModel using the PTA code as the ERN" in {
-        val userAnswers = emptyUserAnswers.copy(ern = testNITemporaryCertifiedConsignorErn)
+        val userAnswers = emptyUserAnswers.copy(ern = testNICertifiedConsignorErn)
           .set(ConsignorPaidTemporaryAuthorisationCodePage, testPaidTemporaryAuthorisationCode)
           .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
 
-        implicit val dr: DataRequest[_] = dataRequest(fakeRequest, userAnswers, testNITemporaryCertifiedConsignorErn)
+        implicit val dr: DataRequest[_] = dataRequest(fakeRequest, userAnswers, testNICertifiedConsignorErn)
 
         TraderModel.applyConsignor mustBe consignorTraderWithPtaCode
       }
     }
 
-    "when NOT logged in as a NorthernIrelandTemporaryCertifiedConsignor user" - {
+    "when NOT logged in as a NorthernIrelandCertifiedConsignor user" - {
 
       "must return a TraderModel using the logged in user's ERN" in {
         val userAnswers = emptyUserAnswers.copy(ern = testErn)

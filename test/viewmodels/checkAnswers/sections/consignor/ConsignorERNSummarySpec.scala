@@ -16,8 +16,8 @@
 
 package viewmodels.checkAnswers.sections.consignor
 
-import fixtures.messages.sections.consignor.CheckYourAnswersConsignorMessages
 import base.SpecBase
+import fixtures.messages.sections.consignor.CheckYourAnswersConsignorMessages
 import org.scalatest.matchers.must.Matchers
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -36,21 +36,21 @@ class ConsignorERNSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when the user is an XIPC trader" - {
+        "when the user is an XIPA trader" - {
 
           "must output the expected data" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, ern = testNITemporaryCertifiedConsignorErn)
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, ern = testNICertifiedConsignorErn)
 
             ConsignorERNSummary.row() mustBe None
           }
         }
 
-        "when the user is a non-XIPC trader" - {
+        "when the user is a non-XIPA trader" - {
 
           "must output the expected row" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, ern = testNITemporaryCertifiedConsignorErn)
 
             ConsignorERNSummary.row() mustBe
               Some(

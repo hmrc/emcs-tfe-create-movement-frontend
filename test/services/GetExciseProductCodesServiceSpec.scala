@@ -140,7 +140,7 @@ class GetExciseProductCodesServiceSpec extends SpecBase with MockGetExciseProduc
       "when Connector returns success from downstream, trader is XIPA - include S600 in results" in {
         implicit val request: DataRequest[_] = dataRequest(
           FakeRequest(),
-          ern = testNIDutyPaidErn
+          ern = testNICertifiedConsignorErn
         )
 
         val expectedResult = Seq(beerExciseProductCode, wineExciseProductCode, wineExciseProductCode300, spiritExciseProductCode, s600ExciseProductCode, energyExciseProductCode)

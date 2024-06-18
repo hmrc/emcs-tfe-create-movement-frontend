@@ -16,6 +16,7 @@
 
 package models.sections.items
 
+import models.audit.Auditable
 import models.requests.DataRequest
 import models.{Enumerable, WithName}
 import play.api.i18n.Messages
@@ -26,15 +27,25 @@ sealed trait ItemWineProductCategory
 
 object ItemWineProductCategory extends Enumerable.Implicits {
 
-  case object EuWineWithoutPdoOrPgi extends WithName("1") with ItemWineProductCategory
+  case object EuWineWithoutPdoOrPgi extends WithName("1") with ItemWineProductCategory with Auditable {
+    override val auditDescription: String = "EuWineWithoutPdoOrPgi"
+  }
 
-  case object EuVarietalWineWithoutPdoOrPgi extends WithName("2") with ItemWineProductCategory
+  case object EuVarietalWineWithoutPdoOrPgi extends WithName("2") with ItemWineProductCategory with Auditable {
+    override val auditDescription: String = "EuVarietalWineWithoutPdoOrPgi"
+  }
 
-  case object EuWineWithPdoOrPgiOrGi extends WithName("3") with ItemWineProductCategory
+  case object EuWineWithPdoOrPgiOrGi extends WithName("3") with ItemWineProductCategory with Auditable {
+    override val auditDescription: String = "EuWineWithPdoOrPgiOrGi"
+  }
 
-  case object ImportedWine extends WithName("4") with ItemWineProductCategory
+  case object ImportedWine extends WithName("4") with ItemWineProductCategory with Auditable {
+    override val auditDescription: String = "ImportedWine"
+  }
 
-  case object Other extends WithName("5") with ItemWineProductCategory
+  case object Other extends WithName("5") with ItemWineProductCategory with Auditable {
+    override val auditDescription: String = "Other"
+  }
 
   private val northernIrelandDisplayValues: Seq[ItemWineProductCategory] = Seq(
     EuWineWithoutPdoOrPgi, EuVarietalWineWithoutPdoOrPgi, EuWineWithPdoOrPgiOrGi, ImportedWine, Other

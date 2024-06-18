@@ -114,7 +114,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
           ),
           wineProduct = Some(
             WineProductModel(
-              wineProductCategory = ItemWineCategory.ImportedWine,
+              wineProductCategory = ItemWineProductCategory.ImportedWine,
               wineGrowingZoneCode = Some(ItemWineGrowingZone.CII),
               thirdCountryOfOrigin = Some(countryModelGB.code),
               otherInformation = Some("more wine info"),
@@ -195,7 +195,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
           ),
           wineProduct = Some(
             WineProductModel(
-              wineProductCategory = ItemWineCategory.ImportedWine,
+              wineProductCategory = ItemWineProductCategory.ImportedWine,
               wineGrowingZoneCode = Some(ItemWineGrowingZone.CII),
               thirdCountryOfOrigin = Some(countryModelGB.code),
               otherInformation = Some("more wine info"),
@@ -289,7 +289,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             ),
             wineProduct = Some(
               WineProductModel(
-                wineProductCategory = ItemWineCategory.ImportedWine,
+                wineProductCategory = ItemWineProductCategory.ImportedWine,
                 wineGrowingZoneCode = Some(ItemWineGrowingZone.CII),
                 thirdCountryOfOrigin = Some(countryModelGB.code),
                 otherInformation = Some("more wine info"),

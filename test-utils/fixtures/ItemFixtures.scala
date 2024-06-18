@@ -751,7 +751,7 @@ trait ItemFixtures {
       ),
       wineProduct = Some(
         WineProductModel(
-          wineProductCategory = ItemWineCategory.ImportedWine,
+          wineProductCategory = ItemWineProductCategory.ImportedWine,
           wineGrowingZoneCode = Some(ItemWineGrowingZone.CII),
           thirdCountryOfOrigin = Some(countryModelGB.code),
           otherInformation = Some("more wine info"),
@@ -1050,7 +1050,7 @@ trait ItemFixtures {
       ),
       wineProduct = Some(
         WineProductModel(
-          wineProductCategory = ItemWineCategory.ImportedWine,
+          wineProductCategory = ItemWineProductCategory.ImportedWine,
           wineGrowingZoneCode = Some(ItemWineGrowingZone.CII),
           thirdCountryOfOrigin = Some(countryModelGB.code),
           otherInformation = Some("more wine info"),
@@ -1346,7 +1346,7 @@ trait ItemFixtures {
       ),
       wineProduct = Some(
         WineProductModel(
-          wineProductCategory = ItemWineCategory.ImportedWine,
+          wineProductCategory = ItemWineProductCategory.ImportedWine,
           wineGrowingZoneCode = Some(ItemWineGrowingZone.CII),
           thirdCountryOfOrigin = Some(countryModelGB.code),
           otherInformation = Some("more wine info"),
@@ -1645,7 +1645,7 @@ trait ItemFixtures {
       ),
       wineProduct = Some(
         WineProductModel(
-          wineProductCategory = ItemWineCategory.ImportedWine,
+          wineProductCategory = ItemWineProductCategory.ImportedWine,
           wineGrowingZoneCode = Some(ItemWineGrowingZone.CII),
           thirdCountryOfOrigin = Some(countryModelGB.code),
           otherInformation = Some("more wine info"),

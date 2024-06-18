@@ -19,7 +19,6 @@ package models.submitCreateMovement
 import base.SpecBase
 import fixtures.ItemFixtures
 import models.requests.DataRequest
-import models.sections.items.ItemWineProductCategory.{ImportedWine, Other}
 import models.sections.items.{ItemDesignationOfOriginModel, ItemGeographicalIndicationType, ItemWineGrowingZone, ItemWineProductCategory}
 import models.{GoodsType, UserAnswers}
 import pages.sections.items._
@@ -31,7 +30,7 @@ class WineProductModelSpec extends SpecBase with ItemFixtures {
                    epc: String = testEpcWine,
                    cnCode: String = testCnCodeWine,
                    geographicalIndicationChoice: ItemGeographicalIndicationType = ItemGeographicalIndicationType.ProtectedDesignationOfOrigin,
-                   importedChoice: ItemWineProductCategory = Other
+                   importedChoice: ItemWineProductCategory = ItemWineProductCategory.Other
                  ): UserAnswers =
     emptyUserAnswers
       .set(ItemExciseProductCodePage(testIndex1), epc)
@@ -62,62 +61,13 @@ class WineProductModelSpec extends SpecBase with ItemFixtures {
         val result = WineProductModel.applyAtIdx(testIndex1)
 
         // bodge the wine operations to be sorted so the comparison works
-        WineProductModel.applyAtIdx(testIndex1).map(_.copy(wineOperations = result.flatMap(_.wineOperations.map(_.sortBy(_.code))))) mustBe Some(WineProductModel(
-          wineProductCategory = ItemWineCategory.EuWineWithPdoOrPgiOrGi,
+        result.map(_.copy(wineOperations = result.flatMap(_.wineOperations.map(_.sortBy(_.code))))) mustBe Some(WineProductModel(
+          wineProductCategory = ItemWineProductCategory.Other,
           wineGrowingZoneCode = Some(ItemWineGrowingZone.CI),
           thirdCountryOfOrigin = Some(countryModelGB.code),
           otherInformation = Some("more info"),
           wineOperations = Some(testWineOperations.sortBy(_.code))
         ))
-      }
-    }
-  }
-
-  "wineProductCategory" - {
-    "must return EuWineWithoutPdoOrPgi" - {
-      "when from the EU, with GI" in {
-        ItemGeographicalIndicationType.values.filterNot(_ == ItemGeographicalIndicationType.NoGeographicalIndication).foreach {
-          geographicalIndicationChoice =>
-            implicit val dr: DataRequest[_] = dataRequest(
-              FakeRequest(),
-              userAnswers(geographicalIndicationChoice = geographicalIndicationChoice)
-            )
-
-            WineProductModel.wineProductCategory(testIndex1) mustBe ItemWineCategory.EuWineWithPdoOrPgiOrGi
-        }
-      }
-    }
-    "must return EuWineWithoutPdoOrPgi" - {
-      "when from the EU, no GI, and not varietal" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          FakeRequest(),
-          userAnswers(geographicalIndicationChoice = ItemGeographicalIndicationType.NoGeographicalIndication)
-        )
-
-        WineProductModel.wineProductCategory(testIndex1) mustBe ItemWineCategory.EuWineWithoutPdoOrPgi
-      }
-    }
-    "must return EuVarietalWineWithoutPdoOrPgi" - {
-      "when from the EU, no GI, and varietal" in {
-        ItemWineCategory.varietalWines.foreach {
-          commodityCode =>
-            implicit val dr: DataRequest[_] = dataRequest(
-              FakeRequest(),
-              userAnswers(cnCode = commodityCode, geographicalIndicationChoice = ItemGeographicalIndicationType.NoGeographicalIndication)
-            )
-
-            WineProductModel.wineProductCategory(testIndex1) mustBe ItemWineCategory.EuVarietalWineWithoutPdoOrPgi
-        }
-      }
-    }
-    "must return ImportedWine" - {
-      "when not from the EU" - {
-        implicit val dr: DataRequest[_] = dataRequest(
-          FakeRequest(),
-          userAnswers(importedChoice = ImportedWine)
-        )
-
-        WineProductModel.wineProductCategory(testIndex1) mustBe ItemWineCategory.ImportedWine
       }
     }
   }

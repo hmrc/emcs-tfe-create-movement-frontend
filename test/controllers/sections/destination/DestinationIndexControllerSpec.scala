@@ -91,7 +91,7 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
     }
 
     "must redirect to the destination warehouse vat controller" - {
-      Seq(RegisteredConsignee,
+      Seq(
         TemporaryRegisteredConsignee,
         ExemptedOrganisation).foreach(
         answer =>

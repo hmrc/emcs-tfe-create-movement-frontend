@@ -284,7 +284,7 @@ class TraderModelSpec extends SpecBase {
         }
       "when DestinationTypePage means shouldStartFlowAtDestinationWarehouseVat" - {
         "when giveAddressAndBusinessName = true" in {
-          Seq(RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation).foreach {
+          Seq(TemporaryRegisteredConsignee, ExemptedOrganisation).foreach {
             movementScenario =>
               implicit val dr: DataRequest[_] = dataRequest(
                 fakeRequest,
@@ -301,7 +301,7 @@ class TraderModelSpec extends SpecBase {
           }
         }
         "when giveAddressAndBusinessName = false" in {
-          Seq(RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation).foreach {
+          Seq(TemporaryRegisteredConsignee, ExemptedOrganisation).foreach {
             movementScenario =>
               implicit val dr: DataRequest[_] = dataRequest(
                 fakeRequest,

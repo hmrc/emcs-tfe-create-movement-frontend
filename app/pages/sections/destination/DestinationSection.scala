@@ -36,7 +36,6 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
 
   def shouldStartFlowAtDestinationWarehouseVat(implicit destinationTypePageAnswer: MovementScenario): Boolean =
     Seq(
-      RegisteredConsignee,
       TemporaryRegisteredConsignee,
       CertifiedConsignee,
       TemporaryCertifiedConsignee,
@@ -120,7 +119,6 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
       movementScenario =>
         (UkTaxWarehouse.values ++ Seq(
           EuTaxWarehouse,
-          RegisteredConsignee,
           TemporaryRegisteredConsignee,
           CertifiedConsignee,
           TemporaryCertifiedConsignee,

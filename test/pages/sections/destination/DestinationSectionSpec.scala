@@ -139,7 +139,6 @@ class DestinationSectionSpec extends SpecBase
 
           "when mandatory pages have an answer and DestinationDetailsChoicePage = true" in {
             Seq(
-              RegisteredConsignee,
               TemporaryRegisteredConsignee,
               ExemptedOrganisation
             ).foreach {
@@ -162,7 +161,6 @@ class DestinationSectionSpec extends SpecBase
 
           "when mandatory pages have an answer and DestinationDetailsChoicePage = false" in {
             Seq(
-              RegisteredConsignee,
               TemporaryRegisteredConsignee,
               ExemptedOrganisation
             ).foreach {
@@ -185,7 +183,6 @@ class DestinationSectionSpec extends SpecBase
         "must return InProgress" - {
           "when some, but not all, mandatory pages have an answer and DestinationDetailsChoicePage = true" in {
             Seq(
-              RegisteredConsignee,
               TemporaryRegisteredConsignee,
               ExemptedOrganisation
             ).foreach {
@@ -217,7 +214,6 @@ class DestinationSectionSpec extends SpecBase
         "must return NotStarted" - {
           "when no mandatory pages have an answer" in {
             Seq(
-              RegisteredConsignee,
               TemporaryRegisteredConsignee,
               ExemptedOrganisation
             ).foreach {

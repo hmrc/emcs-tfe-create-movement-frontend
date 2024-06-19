@@ -324,6 +324,10 @@ class DraftMovementHelper @Inject()(list: list, p: p) extends Logging {
 
   private[draftMovement] def removeAmendEntryMessageFromErrorReason(errorReason: String): String =
     errorReason
+      .replaceAll(
+        "You must provide a valid Trader ID if the destination is .Tax Warehouse.\\. Please amend your entry and resubmit\\.",
+        "You must provide a valid excise ID for the place of destination tax warehouse."
+      )
       .replaceAll("\\s*Please amend your entry and resubmit\\.*", "")
       .replaceAll("origin type code is .Tax Warehouse.\\.", "origin type code is 'Tax Warehouse' or 'Duty Paid'.")
       .replaceAll("'(Import|Tax Warehouse|Duty Paid|Export)'", "‘$1’")

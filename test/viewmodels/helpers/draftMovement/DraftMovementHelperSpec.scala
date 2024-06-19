@@ -1056,7 +1056,7 @@ class DraftMovementHelperSpec extends SpecBase {
                 p()(Html("The place of delivery information must not be present where the destination is for Export.")),
                 p()(Html("The place of delivery information must not be present where the destination is to Registered Consignee.")),
                 p()(Html("The Trader ID is not required for Direct Deliveries.")),
-                p()(Html("You must provide a valid Trader ID if the destination is ‘Tax Warehouse’.")),
+                p()(Html("You must provide a valid excise ID for the place of destination tax warehouse.")),
                 p()(Html("The UK place of delivery excise warehouse ID must start with GB00 where the place of destination is a UK excise warehouse.")),
                 p()(Html("The consignee delivery place trader ID must not start with GB or XI where the place of destination is either a non-UK excise warehouse or Temporary Registered Consignee.")),
                 p()(Html("The consignee delivery place Trader ID must start with XI00 where the place of destination is to an excise warehouse in Northern Ireland.")),
@@ -1134,6 +1134,12 @@ class DraftMovementHelperSpec extends SpecBase {
       }
 
       "removeAmendEntryMessageFromErrorReason" - {
+
+        "must change the ChRIS response for error message 12.e" in {
+          val result = helper.removeAmendEntryMessageFromErrorReason("You must provide a valid Trader ID if the destination is 'Tax Warehouse'. Please amend your entry and resubmit.")
+          result mustBe "You must provide a valid excise ID for the place of destination tax warehouse."
+        }
+
         "must remove 'Please amend your entry and resubmit.' from the error reason" in {
           Seq(
             "This is an error. Please amend your entry and resubmit.",

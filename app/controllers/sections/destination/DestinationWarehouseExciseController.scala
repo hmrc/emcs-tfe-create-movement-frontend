@@ -48,15 +48,19 @@ class DestinationWarehouseExciseController @Inject()(
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      renderView(Ok, fillForm(DestinationWarehouseExcisePage, formProvider()), mode)
+      withAnswer(DestinationTypePage) { movementScenario =>
+        renderView(Ok, fillForm(DestinationWarehouseExcisePage, formProvider(movementScenario)), mode)
+      }
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithError => Future.successful(renderView(BadRequest, formWithError, mode)),
-        cleanseSaveAndRedirect(_, mode)
-      )
+      withAnswerAsync(DestinationTypePage) { movementScenario =>
+        formProvider(movementScenario).bindFromRequest().fold(
+          formWithError => Future.successful(renderView(BadRequest, formWithError, mode)),
+          cleanseSaveAndRedirect(_, mode)
+        )
+      }
     }
 
   private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {

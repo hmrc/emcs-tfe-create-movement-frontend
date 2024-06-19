@@ -21,7 +21,9 @@ import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.destination.DestinationWarehouseExciseMessages.English
 import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
+import models.sections.info.movementScenario.MovementScenario
 import play.api.data.FormError
+import play.api.data.validation.{Invalid, Valid, ValidationResult}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 
@@ -34,7 +36,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase
   val maxLength = 16
   val invalidCharactersKey = "destinationWarehouseExcise.error.invalidCharacter"
 
-  val form = new DestinationWarehouseExciseFormProvider().apply()(dataRequest(FakeRequest()))
+  val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.CertifiedConsignee)(dataRequest(FakeRequest()))
 
   ".value" - {
 
@@ -91,7 +93,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase
       }
 
       "when a submission failure exists and the input is the same as the previous one" - {
-        val form = new DestinationWarehouseExciseFormProvider().apply()(
+        val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.UkTaxWarehouse.NI)(
           dataRequest(
             FakeRequest(),
             emptyUserAnswers.copy(
@@ -104,6 +106,112 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase
           val boundForm = form.bind(Map("value" -> testErn))
 
           boundForm.errors.headOption mustBe Some(FormError("value", "destinationWarehouseExcise.error.submissionError", Seq()))
+        }
+      }
+
+      "inputIsValidForDestinationType" - {
+        "for destination tax warehouse in GB" - {
+          "must return Valid when the input starts with GB00" in {
+            val result =
+              new DestinationWarehouseExciseFormProvider()
+                .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.GB)
+                .apply("GB00123456789")
+
+            result mustBe Valid
+          }
+          "must return Invalid when the input starts with XI00" in {
+            val result: ValidationResult =
+              new DestinationWarehouseExciseFormProvider()
+                .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.GB)
+                .apply("XI00123456789")
+
+            result mustBe a[Invalid]
+            result.asInstanceOf[Invalid].errors.flatMap(_.messages.map(msgs(_))) mustBe Seq(English.errorInvalidGB00)
+          }
+          "must return Invalid when the input doesn't start with GB00" in {
+            val result: ValidationResult =
+              new DestinationWarehouseExciseFormProvider()
+                .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.GB)
+                .apply("FR00123456789")
+
+            result mustBe a[Invalid]
+            result.asInstanceOf[Invalid].errors.flatMap(_.messages.map(msgs(_))) mustBe Seq(English.errorInvalidGB00)
+          }
+          "must return Invalid when the input is empty" in {
+            val result: ValidationResult =
+              new DestinationWarehouseExciseFormProvider()
+                .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.GB)
+                .apply("")
+
+            result.asInstanceOf[Invalid].errors.flatMap(_.messages.map(msgs(_))) mustBe Seq(English.errorInvalidGB00)
+          }
+        }
+        "for destination tax warehouse in XI" - {
+          "must return Valid when the input starts with XI00" in {
+            val result =
+              new DestinationWarehouseExciseFormProvider()
+                .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.NI)
+                .apply("XI00123456789")
+
+            result mustBe Valid
+          }
+          "must return Invalid when the input starts with GB00" in {
+            val result: ValidationResult =
+              new DestinationWarehouseExciseFormProvider()
+                .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.NI)
+                .apply("GB00123456789")
+
+            result mustBe a[Invalid]
+            result.asInstanceOf[Invalid].errors.flatMap(_.messages.map(msgs(_))) mustBe Seq(English.errorInvalidXI00)
+          }
+          "must return Invalid when the input doesn't start with XI00" in {
+            val result: ValidationResult =
+              new DestinationWarehouseExciseFormProvider()
+                .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.NI)
+                .apply("FR00123456789")
+
+            result mustBe a[Invalid]
+            result.asInstanceOf[Invalid].errors.flatMap(_.messages.map(msgs(_))) mustBe Seq(English.errorInvalidXI00)
+          }
+          "must return Invalid when the input is empty" in {
+            val result: ValidationResult =
+              new DestinationWarehouseExciseFormProvider()
+                .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.NI)
+                .apply("")
+
+            result.asInstanceOf[Invalid].errors.flatMap(_.messages.map(msgs(_))) mustBe Seq(English.errorInvalidXI00)
+          }
+        }
+        "for other destination types" - {
+          MovementScenario.values.filterNot(MovementScenario.UkTaxWarehouse.values.contains).foreach {
+            movementScenario =>
+              s"when destination type is $movementScenario" - {
+                "must return Valid when the input doesn't start with XI or GB" in {
+                  val result =
+                    new DestinationWarehouseExciseFormProvider()
+                      .inputIsValidForDestinationType(movementScenario)
+                      .apply("FR00123456789")
+
+                  result mustBe Valid
+                }
+                "must return Invalid when the input starts with GB" in {
+                  val result: ValidationResult =
+                    new DestinationWarehouseExciseFormProvider()
+                      .inputIsValidForDestinationType(movementScenario)
+                      .apply("GB00123456789")
+
+                  result.asInstanceOf[Invalid].errors.flatMap(_.messages.map(msgs(_))) mustBe Seq(English.errorInvalidXIOrGB)
+                }
+                "must return Invalid when the input starts with XI" in {
+                  val result: ValidationResult =
+                    new DestinationWarehouseExciseFormProvider()
+                      .inputIsValidForDestinationType(movementScenario)
+                      .apply("XI00123456789")
+
+                  result.asInstanceOf[Invalid].errors.flatMap(_.messages.map(msgs(_))) mustBe Seq(English.errorInvalidXIOrGB)
+                }
+              }
+          }
         }
       }
     }

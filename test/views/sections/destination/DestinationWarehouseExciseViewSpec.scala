@@ -31,6 +31,7 @@ import play.api.test.FakeRequest
 import views.html.sections.destination.DestinationWarehouseExciseView
 import views.{BaseSelectors, ViewBehaviours}
 import controllers.sections.destination.routes
+import models.sections.info.movementScenario.MovementScenario
 import play.api.data.FormError
 
 class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures {
@@ -46,7 +47,7 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours wi
       implicit val msgs: Messages = messages(Seq(English.lang))
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-      val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply()
+      val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply(MovementScenario.UkTaxWarehouse.NI)
 
       implicit val doc: Document =
         Jsoup.parse(view(
@@ -78,7 +79,7 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours wi
         )
       )
 
-      val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply()
+      val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply(MovementScenario.UkTaxWarehouse.NI)
 
 
       implicit val doc: Document =
@@ -108,7 +109,7 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours wi
         )
       )
 
-      val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply()
+      val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply(MovementScenario.UkTaxWarehouse.NI)
 
       implicit val doc: Document =
         Jsoup.parse(view(

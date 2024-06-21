@@ -21,9 +21,11 @@ import controllers.actions.FakeDataRetrievalAction
 import forms.sections.dispatch.DispatchWarehouseExciseFormProvider
 import mocks.services.MockUserAnswersService
 import models.requests.DataRequest
+import models.sections.info.DispatchPlace
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
 import pages.sections.dispatch.{DispatchAddressPage, DispatchWarehouseExcisePage}
+import pages.sections.info.DispatchPlacePage
 import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -89,6 +91,7 @@ class DispatchWarehouseExciseControllerSpec extends SpecBase with MockUserAnswer
 
     "must redirect to the next page when valid data is submitted (page already answered, and should remove Dispatch Address as GB -> XI" in new Fixture(
       Some(emptyUserAnswers
+        .set(DispatchPlacePage, DispatchPlace.NorthernIreland)
         .set(DispatchWarehouseExcisePage, testGreatBritainErn)
         .set(DispatchAddressPage, testUserAddress)
       )

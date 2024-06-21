@@ -24,6 +24,7 @@ import models.requests.DataRequest
 import models.sections.info._
 import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import pages.sections.destination.{DestinationConsigneeDetailsPage, DestinationWarehouseExcisePage}
+import pages.sections.dispatch.DispatchWarehouseExcisePage
 import pages.sections.info._
 import play.api.i18n.Messages
 import play.api.libs.json.Json
@@ -75,23 +76,43 @@ class SubmitCreateMovementModelSpec extends SpecBase with ItemFixtures {
       }
     }
     "when XIWK" - {
-      s"must return OfficeModel(GB$dispatchOfficeSuffix) when DispatchPlacePage is GreatBritain" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          request = fakeRequest,
-          answers = emptyUserAnswers.set(DispatchPlacePage, DispatchPlace.GreatBritain),
-          ern = "XIWK123"
-        )
-
-        SubmitCreateMovementModel.dispatchOffice mustBe OfficeModel(s"GB$dispatchOfficeSuffix")
+      "when DispatchWarehouseExcisePage is present" - {
+        s"must return OfficeModel(XI$dispatchOfficeSuffix) when DispatchWarehouseExcisePage starts with XI" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            request = fakeRequest,
+            answers = emptyUserAnswers.set(DispatchWarehouseExcisePage, "XI00123456789"),
+            ern = "XIWK123"
+          )
+          SubmitCreateMovementModel.dispatchOffice mustBe OfficeModel(s"XI$dispatchOfficeSuffix")
+        }
+        s"must return OfficeModel(GB$dispatchOfficeSuffix) when DispatchWarehouseExcisePage starts with GB" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            request = fakeRequest,
+            answers = emptyUserAnswers.set(DispatchWarehouseExcisePage, "GB00123456789"),
+            ern = "XIWK123"
+          )
+          SubmitCreateMovementModel.dispatchOffice mustBe OfficeModel(s"GB$dispatchOfficeSuffix")
+        }
       }
-      s"must return OfficeModel(XI$dispatchOfficeSuffix) when DispatchPlacePage is NorthernIreland" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          request = fakeRequest,
-          answers = emptyUserAnswers.set(DispatchPlacePage, DispatchPlace.NorthernIreland),
-          ern = "XIWK123"
-        )
+      "when DispatchWarehouseExcisePage is missing" - {
+        s"must return OfficeModel(GB$dispatchOfficeSuffix) when DispatchPlacePage is GreatBritain" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            request = fakeRequest,
+            answers = emptyUserAnswers.set(DispatchPlacePage, DispatchPlace.GreatBritain),
+            ern = "XIWK123"
+          )
 
-        SubmitCreateMovementModel.dispatchOffice mustBe OfficeModel(s"XI$dispatchOfficeSuffix")
+          SubmitCreateMovementModel.dispatchOffice mustBe OfficeModel(s"GB$dispatchOfficeSuffix")
+        }
+        s"must return OfficeModel(XI$dispatchOfficeSuffix) when DispatchPlacePage is NorthernIreland" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            request = fakeRequest,
+            answers = emptyUserAnswers.set(DispatchPlacePage, DispatchPlace.NorthernIreland),
+            ern = "XIWK123"
+          )
+
+          SubmitCreateMovementModel.dispatchOffice mustBe OfficeModel(s"XI$dispatchOfficeSuffix")
+        }
       }
     }
     Seq("GBRC123", "GBWK123").foreach(

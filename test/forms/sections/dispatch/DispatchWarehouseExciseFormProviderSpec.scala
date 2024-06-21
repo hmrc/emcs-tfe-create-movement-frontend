@@ -20,7 +20,13 @@ import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
+import models.requests.DataRequest
+import models.response.MissingMandatoryPage
+import models.sections.info.DispatchPlace
+import pages.sections.info.DispatchPlacePage
 import play.api.data.FormError
+import play.api.data.validation.{Invalid, Valid}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
 class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours with SpecBase with MovementSubmissionFailureFixtures {
@@ -144,6 +150,67 @@ class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours with
 
       val boundForm = form.bind(Map(fieldName -> testErn))
       boundForm.errors.headOption mustBe Some(FormError(fieldName, "dispatchWarehouseExcise.error.submissionError", Seq()))
+    }
+  }
+
+  "validationForERNBasedOnConsignor" - {
+    val form = new DispatchWarehouseExciseFormProvider()
+
+    "when request ERN is XIWK" - {
+      "when dispatch place is Great Britain" - {
+        "must allow only GB00 ERNs" in {
+          val userAnswers = emptyUserAnswers.set(DispatchPlacePage, DispatchPlace.GreatBritain)
+          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), ern = "XIWK123456789", answers = userAnswers)
+          form.validationForERNBasedOnConsignor.apply("GB00123456789") mustBe Valid
+          form.validationForERNBasedOnConsignor.apply("XI00123456789") mustBe Invalid("dispatchWarehouseExcise.error.mustStartWithGB00", "(GB00)[a-zA-Z0-9]{9}")
+          form.validationForERNBasedOnConsignor.apply("FR00123456789") mustBe Invalid("dispatchWarehouseExcise.error.mustStartWithGB00", "(GB00)[a-zA-Z0-9]{9}")
+        }
+      }
+      "when dispatch place is Northern Ireland" - {
+        "must allow only XI00 ERNs" in {
+          val userAnswers = emptyUserAnswers.set(DispatchPlacePage, DispatchPlace.NorthernIreland)
+          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), ern = "XIWK123456789", answers = userAnswers)
+          form.validationForERNBasedOnConsignor.apply("XI00123456789") mustBe Valid
+          form.validationForERNBasedOnConsignor.apply("GB00123456789") mustBe Invalid("dispatchWarehouseExcise.error.mustStartWithXI00", "(XI00)[a-zA-Z0-9]{9}")
+          form.validationForERNBasedOnConsignor.apply("FR00123456789") mustBe Invalid("dispatchWarehouseExcise.error.mustStartWithXI00", "(XI00)[a-zA-Z0-9]{9}")
+        }
+      }
+      "when dispatch place is missing" - {
+        "must error" in {
+          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), ern = "XIWK123456789")
+          val result = intercept[MissingMandatoryPage] {
+            form.validationForERNBasedOnConsignor
+          }
+          result.message mustBe "Missing mandatory page dispatchPlace for Northern Ireland Warehouse Keeper XIWK123456789"
+        }
+      }
+    }
+    "when request ERN is XIRC" - {
+      implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), ern = "XIRC123456789")
+      "must allow both XI00 and GB00 ERNs" in {
+        form.validationForERNBasedOnConsignor.apply("XI00123456789") mustBe Valid
+        form.validationForERNBasedOnConsignor.apply("GB00123456789") mustBe Valid
+      }
+      "must error for ERNs that do not start with XI00 or GB00" in {
+        form.validationForERNBasedOnConsignor.apply("FR00123456789") mustBe
+          Invalid("dispatchWarehouseExcise.error.mustStartWithGBOrXI00", "(GB00|XI00)[a-zA-Z0-9]{9}")
+      }
+    }
+    "when request ERN is GBWK" - {
+      implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), ern = "GBWK123456789")
+      "must allow only GB00 ERNs" in {
+        form.validationForERNBasedOnConsignor.apply("GB00123456789") mustBe Valid
+        form.validationForERNBasedOnConsignor.apply("XI00123456789") mustBe Invalid("dispatchWarehouseExcise.error.mustStartWithGB00", "(GB00)[a-zA-Z0-9]{9}")
+        form.validationForERNBasedOnConsignor.apply("FR00123456789") mustBe Invalid("dispatchWarehouseExcise.error.mustStartWithGB00", "(GB00)[a-zA-Z0-9]{9}")
+      }
+    }
+    "when request ERN is GBRC" - {
+      implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), ern = "GBRC123456789")
+      "must allow only GB00 ERNs" in {
+        form.validationForERNBasedOnConsignor.apply("GB00123456789") mustBe Valid
+        form.validationForERNBasedOnConsignor.apply("XI00123456789") mustBe Invalid("dispatchWarehouseExcise.error.mustStartWithGB00", "(GB00)[a-zA-Z0-9]{9}")
+        form.validationForERNBasedOnConsignor.apply("FR00123456789") mustBe Invalid("dispatchWarehouseExcise.error.mustStartWithGB00", "(GB00)[a-zA-Z0-9]{9}")
+      }
     }
   }
 }

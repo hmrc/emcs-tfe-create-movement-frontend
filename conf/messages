@@ -643,6 +643,7 @@ dispatchWarehouseExcise.error.length = Excise ID must be 13 characters
 dispatchWarehouseExcise.error.xss = Excise ID must not contain < and > and : and ;
 dispatchWarehouseExcise.error.format = Excise ID must start with 2 capital letters followed by 11 numbers or mixed letters and numbers
 dispatchWarehouseExcise.error.mustStartWithGB00 = Excise ID must start with GB00, usually followed by 9 numbers or mixed letters and numbers
+dispatchWarehouseExcise.error.mustStartWithXI00 = Excise ID must start with XI00, usually followed by 9 numbers or mixed letters and numbers
 dispatchWarehouseExcise.error.mustStartWithGBOrXI00 = Excise ID must start with GB00 or XI00, usually followed by 9 numbers or mixed letters and numbers
 dispatchWarehouseExcise.error.submissionError = You must update the excise ID for the dispatching tax warehouse so that it is different to the original submission
 dispatchWarehouseExcise.change.hidden = Excise ID (ERN) of the tax warehouse of dispatch

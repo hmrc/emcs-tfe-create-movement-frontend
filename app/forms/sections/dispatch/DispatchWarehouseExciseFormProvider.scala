@@ -17,9 +17,12 @@
 package forms.sections.dispatch
 
 import forms.mappings.Mappings
-import forms.{GB_00_EXCISE_NUMBER_REGEX, XI_OR_GB_00_EXCISE_NUMBER_REGEX, XSS_REGEX}
+import forms.{GB_00_EXCISE_NUMBER_REGEX, XI_00_EXCISE_NUMBER_REGEX, XI_OR_GB_00_EXCISE_NUMBER_REGEX, XSS_REGEX}
 import models.requests.DataRequest
+import models.response.MissingMandatoryPage
+import models.sections.info.DispatchPlace
 import pages.sections.dispatch.DispatchWarehouseExcisePage
+import pages.sections.info.DispatchPlacePage
 import play.api.data.Form
 import play.api.data.validation.Constraint
 
@@ -42,9 +45,16 @@ class DispatchWarehouseExciseFormProvider @Inject() extends Mappings {
     )
   }
 
-  private def validationForERNBasedOnConsignor()(implicit request: DataRequest[_]): Constraint[String] = {
+  private[dispatch] def validationForERNBasedOnConsignor(implicit request: DataRequest[_]): Constraint[String] = {
     if(request.isNorthernIrelandErn) {
-      regexpUnlessEmpty(XI_OR_GB_00_EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.mustStartWithGBOrXI00")
+      if(request.isWarehouseKeeper) {
+        request.userAnswers.get(DispatchPlacePage).map {
+          case DispatchPlace.GreatBritain => regexpUnlessEmpty(GB_00_EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.mustStartWithGB00")
+          case DispatchPlace.NorthernIreland => regexpUnlessEmpty(XI_00_EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.mustStartWithXI00")
+        }.getOrElse(throw MissingMandatoryPage(s"Missing mandatory page ${DispatchPlacePage.toString} for Northern Ireland Warehouse Keeper ${request.ern}"))
+      } else {
+        regexpUnlessEmpty(XI_OR_GB_00_EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.mustStartWithGBOrXI00")
+      }
     } else {
       regexpUnlessEmpty(GB_00_EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.mustStartWithGB00")
     }

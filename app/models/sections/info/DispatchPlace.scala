@@ -32,8 +32,8 @@ object DispatchPlace extends Enumerable.Implicits {
     GreatBritain, NorthernIreland
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, index) =>
+  def options(implicit messages: Messages): Seq[RadioItem] = values.map {
+    value =>
       RadioItem(
         content = Text(messages(s"dispatchPlace.${value.toString}")),
         value = Some(value.toString),

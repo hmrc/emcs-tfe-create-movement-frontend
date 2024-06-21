@@ -26,7 +26,6 @@ import models.sections.info.DispatchPlace
 import pages.sections.info.DispatchPlacePage
 import play.api.data.FormError
 import play.api.data.validation.{Invalid, Valid}
-import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
 class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours with SpecBase with MovementSubmissionFailureFixtures {

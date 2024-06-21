@@ -626,8 +626,9 @@ transportUnitIdentity.error.invalidCharacters.5 = Unique identifier must only co
 
 transportUnitIdentity.change.hidden = transport identifier
 
-dispatchPlace.title = Where is the place of dispatch for this movement?
-dispatchPlace.heading = Where is the place of dispatch for this movement?
+dispatchPlace.title = Where are the goods being dispatched from?
+dispatchPlace.heading = Where are the goods being dispatched from?
+dispatchPlace.hint = This is the place where the movement starts.
 dispatchPlace.GB = Great Britain
 dispatchPlace.XI = Northern Ireland
 dispatchPlace.error.required = Select the place of dispatch for this movement
@@ -643,6 +644,7 @@ dispatchWarehouseExcise.error.length = Excise ID must be 13 characters
 dispatchWarehouseExcise.error.xss = Excise ID must not contain < and > and : and ;
 dispatchWarehouseExcise.error.format = Excise ID must start with 2 capital letters followed by 11 numbers or mixed letters and numbers
 dispatchWarehouseExcise.error.mustStartWithGB00 = Excise ID must start with GB00, usually followed by 9 numbers or mixed letters and numbers
+dispatchWarehouseExcise.error.mustStartWithXI00 = Excise ID must start with XI00, usually followed by 9 numbers or mixed letters and numbers
 dispatchWarehouseExcise.error.mustStartWithGBOrXI00 = Excise ID must start with GB00 or XI00, usually followed by 9 numbers or mixed letters and numbers
 dispatchWarehouseExcise.error.submissionError = You must update the excise ID for the dispatching tax warehouse so that it is different to the original submission
 dispatchWarehouseExcise.change.hidden = Excise ID (ERN) of the tax warehouse of dispatch

@@ -21,8 +21,9 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 object DispatchPlaceMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val title = titleHelper("Where is the place of dispatch for this movement?")
-    val heading = "Where is the place of dispatch for this movement?"
+    val heading = "Where are the goods being dispatched from?"
+    val title = titleHelper(heading)
+    val hint = "This is the place where the movement starts."
     val greatBritainRadioOption = "Great Britain"
     val northernIrelandRadioOption = "Northern Ireland"
 

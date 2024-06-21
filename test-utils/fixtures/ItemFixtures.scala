@@ -411,7 +411,7 @@ trait ItemFixtures {
     .set(DispatchUseConsignorDetailsPage, false)
     .set(DispatchBusinessNamePage, "dispatch name")
     .set(DispatchAddressPage, testUserAddress.copy(street = "dispatch street"))
-    .set(DispatchWarehouseExcisePage, "dispatch ern")
+    .set(DispatchWarehouseExcisePage, "XI00123456789")
     // dispatchImportOffice
     .set(ImportCustomsOfficeCodePage, "dispatch import office")
     // complementConsigneeTrader
@@ -808,7 +808,7 @@ trait ItemFixtures {
       |    }
       |  },
       |  "placeOfDispatchTrader": {
-      |    "traderExciseNumber": "dispatch ern",
+      |    "traderExciseNumber": "XI00123456789",
       |    "traderName": "dispatch name",
       |    "address": {
       |      "streetNumber": "10",
@@ -963,7 +963,7 @@ trait ItemFixtures {
       eoriNumber = None
     ),
     placeOfDispatchTrader = Some(TraderModel(
-      traderExciseNumber = Some("dispatch ern"),
+      traderExciseNumber = Some("XI00123456789"),
       traderName = Some("dispatch name"),
       address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "dispatch street"))),
       vatNumber = None,
@@ -1402,7 +1402,7 @@ trait ItemFixtures {
       |    }
       |  },
       |  "placeOfDispatchTrader": {
-      |    "traderExciseNumber": "dispatch ern",
+      |    "traderExciseNumber": "XI00123456789",
       |    "traderName": "dispatch name",
       |    "address": {
       |      "streetNumber": "10",
@@ -1558,7 +1558,7 @@ trait ItemFixtures {
       eoriNumber = None
     ),
     placeOfDispatchTrader = Some(TraderModel(
-      traderExciseNumber = Some("dispatch ern"),
+      traderExciseNumber = Some("XI00123456789"),
       traderName = Some("dispatch name"),
       address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "dispatch street"))),
       vatNumber = None,

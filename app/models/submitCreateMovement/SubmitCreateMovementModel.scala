@@ -22,6 +22,7 @@ import models.requests.DataRequest
 import models.sections.info.DispatchPlace
 import models.sections.info.movementScenario.{MovementScenario, MovementType}
 import models.{NorthernIrelandCertifiedConsignor, NorthernIrelandRegisteredConsignor, NorthernIrelandTemporaryCertifiedConsignor, NorthernIrelandWarehouseKeeper, UserType}
+import pages.sections.dispatch.DispatchWarehouseExcisePage
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import pages.sections.importInformation.ImportCustomsOfficeCodePage
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
@@ -83,7 +84,8 @@ object SubmitCreateMovementModel extends ModelConstructorHelpers {
       case NorthernIrelandRegisteredConsignor | NorthernIrelandTemporaryCertifiedConsignor | NorthernIrelandCertifiedConsignor =>
         DispatchPlace.NorthernIreland + appConfig.destinationOfficeSuffix
       case NorthernIrelandWarehouseKeeper =>
-        mandatoryPage(DispatchPlacePage) + appConfig.destinationOfficeSuffix
+        val prefix: String = request.userAnswers.get(DispatchWarehouseExcisePage).getOrElse(mandatoryPage(DispatchPlacePage).toString).take(2)
+        prefix + appConfig.destinationOfficeSuffix
       case _ =>
         DispatchPlace.GreatBritain + appConfig.destinationOfficeSuffix
     }

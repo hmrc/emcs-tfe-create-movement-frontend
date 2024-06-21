@@ -44,7 +44,7 @@
                 field  = form("value"),
                 legend = LegendViewModel(Text(messages("dispatchPlace.heading"))).asPageHeading(LegendSize.Large),
                 items  = DispatchPlace.options
-            )
+            ).withHint(HintViewModel(Text(messages("dispatchPlace.hint"))))
         )
 
         @govukButton(

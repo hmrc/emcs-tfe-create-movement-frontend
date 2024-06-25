@@ -24,7 +24,7 @@ import models.sections.items.{ItemWineGrowingZone, ItemWineProductCategory}
 import pages.sections.items._
 import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
 import play.api.libs.json.{Json, Reads, Writes, __}
-import utils.{CommodityCodeHelper, JsonOptionFormatter, ModelConstructorHelpers}
+import utils.{ItemHelper, JsonOptionFormatter, ModelConstructorHelpers}
 
 case class WineProductModel(
                              wineProductCategory: ItemWineProductCategory,
@@ -38,7 +38,7 @@ object WineProductModel extends ModelConstructorHelpers with JsonOptionFormatter
 
   def applyAtIdx(idx: Index)(implicit request: DataRequest[_]): Option[WineProductModel] = {
 
-    if (request.userAnswers.get(ItemCommodityCodePage(idx)).exists(CommodityCodeHelper.isWineCommodityCode)) {
+    if (ItemHelper.isWine(idx)(request.userAnswers)) {
       Some(
         WineProductModel(
           wineProductCategory = mandatoryPage(ItemWineProductCategoryPage(idx)),

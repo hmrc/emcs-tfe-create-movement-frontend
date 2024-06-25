@@ -886,9 +886,10 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
 
   "wineMoreInformationAnswers" - {
     "must return two items" - {
-      "when commodity code is wine and more info = true" in {
+      "when EPC code and CN code is wine and more info = true" in {
         val userAnswers: UserAnswers = emptyUserAnswers
           .set(ItemWineMoreInformationChoicePage(testIndex1), true)
+          .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
           .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
 
         val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
@@ -898,9 +899,10 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
     }
 
     "must return one item" - {
-      "when commodity code is wine and more info = false" in {
+      "when EPC code and CN code is wine and more info = false" in {
         val userAnswers: UserAnswers = emptyUserAnswers
           .set(ItemWineMoreInformationChoicePage(testIndex1), false)
+          .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
           .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
 
         val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
@@ -910,10 +912,22 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
     }
 
     "must return an empty Seq" - {
-      "when not wine" in {
+      "when CN code is wine but EPC is not" in {
         val userAnswers: UserAnswers = emptyUserAnswers
           .set(ItemWineMoreInformationChoicePage(testIndex1), true)
-          .set(ItemCommodityCodePage(testIndex1), testCnCodeBeer)
+          .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
+          .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
+
+        val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineMoreInformationAnswers(dr) mustBe Nil
+      }
+
+      "when CN code and EPC are not wine" in {
+        val userAnswers: UserAnswers = emptyUserAnswers
+          .set(ItemWineMoreInformationChoicePage(testIndex1), true)
+          .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
+          .set(ItemCommodityCodePage(testIndex1), testCnCodeSpirit)
 
         val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
@@ -924,9 +938,10 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
 
   "wineCountryOfOriginAnswers" - {
     "must return two items" - {
-      "when commodity code is wine and imported = false" in {
+      "when EPC code and CN code are wine and imported = false" in {
         val userAnswers: UserAnswers = emptyUserAnswers
           .set(ItemWineProductCategoryPage(testIndex1), ImportedWine)
+          .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
           .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
 
         val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
@@ -936,9 +951,10 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
     }
 
     "must return one item" - {
-      "when commodity code is wine and imported = true" in {
+      "when EPC code and CN code are wine and imported = true" in {
         val userAnswers: UserAnswers = emptyUserAnswers
           .set(ItemWineProductCategoryPage(testIndex1), Other)
+          .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
           .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
 
         val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
@@ -948,12 +964,27 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
     }
 
     "must return an empty Seq" - {
-      "when not wine" in {
-        val userAnswers: UserAnswers = emptyUserAnswers
-          .set(ItemWineProductCategoryPage(testIndex1), Other)
-          .set(ItemCommodityCodePage(testIndex1), testCnCodeBeer)
+      "when CN code is wine but EPC is not" in {
+        val userAnswers: UserAnswers =
+          emptyUserAnswers
+            .set(ItemQuantityPage(testIndex1), BigDecimal(61))
+            .set(ItemWineProductCategoryPage(testIndex1), Other)
+            .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
+            .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
 
-        val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineCountryOfOriginAnswers(dr) mustBe Nil
+      }
+      "when CN code and EPC are not wine" in {
+        val userAnswers: UserAnswers =
+          emptyUserAnswers
+            .set(ItemQuantityPage(testIndex1), BigDecimal(61))
+            .set(ItemWineProductCategoryPage(testIndex1), Other)
+            .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
+            .set(ItemCommodityCodePage(testIndex1), testCnCodeSpirit)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
         section.wineCountryOfOriginAnswers(dr) mustBe Nil
       }
@@ -1196,11 +1227,12 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
 
   "wineBulkGrowingZoneAnswer" - {
     "must return a non-empty Seq" - {
-      "when commodity code is wine, quantity > 60 and not imported from the EU" in {
+      "when EPC and CN are wine, quantity > 60 and not imported from the EU" in {
         val userAnswers: UserAnswers =
           emptyUserAnswers
             .set(ItemQuantityPage(testIndex1), BigDecimal(61))
             .set(ItemWineProductCategoryPage(testIndex1), Other)
+            .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
             .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
@@ -1210,12 +1242,25 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
     }
 
     "must return an empty Seq" - {
-      "when not wine" in {
+      "when CN code is wine but EPC is not" in {
         val userAnswers: UserAnswers =
           emptyUserAnswers
             .set(ItemQuantityPage(testIndex1), BigDecimal(61))
             .set(ItemWineProductCategoryPage(testIndex1), Other)
-            .set(ItemCommodityCodePage(testIndex1), testCnCodeBeer)
+            .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
+            .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineBulkGrowingZoneAnswer mustBe Nil
+      }
+      "when CN code and EPC are not wine" in {
+        val userAnswers: UserAnswers =
+          emptyUserAnswers
+            .set(ItemQuantityPage(testIndex1), BigDecimal(61))
+            .set(ItemWineProductCategoryPage(testIndex1), Other)
+            .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
+            .set(ItemCommodityCodePage(testIndex1), testCnCodeSpirit)
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 
@@ -1268,9 +1313,10 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
 
   "wineBulkOperationAnswer" - {
     "must return a non-empty Seq" - {
-      "when commodity code is wine with quantity > 60" in {
+      "when commodity code and EPC is wine with quantity > 60" in {
         val userAnswers: UserAnswers =
           emptyUserAnswers.set(ItemQuantityPage(testIndex1), BigDecimal(61))
+            .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
             .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
@@ -1289,10 +1335,21 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
 
         section.wineBulkOperationAnswer mustBe Nil
       }
-      "when not wine" in {
+      "when CN code is wine but EPC is not" in {
         val userAnswers: UserAnswers =
           emptyUserAnswers.set(ItemQuantityPage(testIndex1), BigDecimal(61))
-            .set(ItemCommodityCodePage(testIndex1), testCnCodeBeer)
+            .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
+            .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
+
+        section.wineBulkOperationAnswer mustBe Nil
+      }
+      "when CN code and EPC are not wine" in {
+        val userAnswers: UserAnswers =
+          emptyUserAnswers.set(ItemQuantityPage(testIndex1), BigDecimal(61))
+            .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
+            .set(ItemCommodityCodePage(testIndex1), testCnCodeSpirit)
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 

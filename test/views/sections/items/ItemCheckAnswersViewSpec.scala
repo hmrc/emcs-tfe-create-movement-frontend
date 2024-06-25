@@ -24,7 +24,7 @@ import models.{CheckMode, NormalMode}
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.sections.items.{ItemBulkPackagingChoicePage, ItemExciseProductCodePage, ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemPackagingShippingMarksChoicePage, ItemSelectPackagingPage, ItemsPackagingSection}
+import pages.sections.items.{ItemBulkPackagingChoicePage, ItemCommodityCodePage, ItemExciseProductCodePage, ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemPackagingShippingMarksChoicePage, ItemSelectPackagingPage, ItemsPackagingSection}
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.FakeRequest
@@ -65,6 +65,7 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
             emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+              .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
               .set(ItemBulkPackagingChoicePage(testIndex1), false)
               .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageAerosol)
               .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "2")
@@ -92,6 +93,7 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
               emptyUserAnswers
                 .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+                .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
                 .set(ItemBulkPackagingChoicePage(testIndex1), false)
                 .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageAerosol)
                 .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "2")
@@ -108,6 +110,12 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
         }
 
         "for the bulk view" - {
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+              .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
+          )
+
           implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute, addMorePackagingCall, isBulk = true, packagingCount = None).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(

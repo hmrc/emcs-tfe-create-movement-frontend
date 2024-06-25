@@ -16,7 +16,17 @@
 
 package utils
 
-object CommodityCodeHelper {
+import models.GoodsType.Wine
+import models.{GoodsType, Index, UserAnswers}
+import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 
-  def isWineCommodityCode(cnCode: String): Boolean = cnCode == "22060010" || (cnCode.startsWith("2204") && cnCode != "22043096" && cnCode != "22043098")
+object ItemHelper {
+
+  def isWine(idx: Index)(implicit userAnswers: UserAnswers): Boolean = {
+    (userAnswers.get(ItemExciseProductCodePage(idx)), userAnswers.get(ItemCommodityCodePage(idx))) match {
+      case (Some(epc), Some(cnCode))
+        if (cnCode == "22060010" || (cnCode.startsWith("2204") && cnCode != "22043096" && cnCode != "22043098")) && GoodsType(epc) == Wine => true
+      case _ => false
+    }
+  }
 }

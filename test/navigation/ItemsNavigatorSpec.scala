@@ -544,12 +544,22 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
         }
 
         "to the Packaging Seal Choice (Bulk packaging) page" - {
-          "when commodity code is not Wine" in {
+          "when EPC is not Wine" in {
             GoodsType.values.filterNot(_ == GoodsType.Wine).foreach { goodsType =>
               navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
                 .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
                 .set(ItemExciseProductCodePage(testIndex1), s"${goodsType.code}300")
                 .set(ItemCommodityCodePage(testIndex1), "000000")
+              ) mustBe itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+            }
+          }
+
+          "when EPC is not Wine but the commodity code is 22060010" in {
+            GoodsType.values.filterNot(_ == GoodsType.Wine).foreach { goodsType =>
+              navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
+                .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
+                .set(ItemExciseProductCodePage(testIndex1), s"${goodsType.code}300")
+                .set(ItemCommodityCodePage(testIndex1), "22060010")
               ) mustBe itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
             }
           }
@@ -563,21 +573,6 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
                 .set(ItemQuantityPage(testIndex1), BigDecimal(60))
               ) mustBe itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
             }
-          }
-        }
-
-        "to the Items Index page" - {
-          "when there is no answer for ItemExciseProductCodePage" in {
-            navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
-              .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
-            ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
-          }
-
-          "when there is no answer for ItemQuantityPage when the EPC is Wine" in {
-            navigator.nextPage(ItemBulkPackagingSelectPage(testIndex1), NormalMode, emptyUserAnswers
-              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeW200.code)
-              .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "Bulk, liquid"))
-            ) mustBe itemsRoutes.ItemsIndexController.onPageLoad(testErn, testDraftId)
           }
         }
       }

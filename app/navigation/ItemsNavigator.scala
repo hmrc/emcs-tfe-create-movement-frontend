@@ -26,8 +26,8 @@ import pages.Page
 import pages.sections.items._
 import play.api.mvc.Call
 import queries.ItemsCount
-import utils.CommodityCodeHelper
 import utils.ExciseProductCodeHelper.{isSpiritAndNotSpirituousBeverages, isSpirituousBeverages}
+import utils.ItemHelper
 
 import javax.inject.Inject
 
@@ -112,11 +112,10 @@ class ItemsNavigator @Inject() extends BaseNavigator {
         case Some(true) =>
           itemsRoutes.ItemBulkPackagingSelectController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         case _ =>
-          userAnswers.get(ItemCommodityCodePage(idx)) match {
-            case Some(cnCode) if CommodityCodeHelper.isWineCommodityCode(cnCode) =>
-              itemsRoutes.ItemWineProductCategoryController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-            case _ =>
-              itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
+          if (ItemHelper.isWine(idx)(userAnswers)) {
+            itemsRoutes.ItemWineProductCategoryController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          } else {
+            itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
           }
       }
 
@@ -294,7 +293,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
             case _ =>
               // answer has changed
               userAnswers.get(ItemCommodityCodePage(idx)) match {
-                case Some(cnCode) if CommodityCodeHelper.isWineCommodityCode(cnCode) =>
+                case Some(cnCode) if ItemHelper.isWine(idx)(userAnswers) =>
                   itemsRoutes.ItemWineProductCategoryController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
                 case _ =>
                   itemsRoutes.ItemsPackagingIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx)
@@ -393,6 +392,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
       case _ =>
         itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     }
+
   private def epcRouting(idx: Index, userAnswers: UserAnswers, mode: Mode): Call =
     userAnswers.get(ItemExciseProductCodePage(idx)) match {
       case Some(_) =>
@@ -421,21 +421,18 @@ class ItemsNavigator @Inject() extends BaseNavigator {
     }
 
   private def bulkPackagingSelectRouting(idx: Index, userAnswers: UserAnswers): Call =
-    userAnswers.get(ItemCommodityCodePage(idx)) match {
-      case Some(cnCode) if CommodityCodeHelper.isWineCommodityCode(cnCode) =>
-        userAnswers.get(ItemQuantityPage(idx)) match {
-          case Some(quantity) =>
-            if (quantity <= 60) {
-              itemsRoutes.ItemWineProductCategoryController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-            } else {
-              itemsRoutes.ItemWineOperationsChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-            }
-          case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
-        }
-      case Some(_) =>
-        itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
-      case _ =>
-        itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+    if (ItemHelper.isWine(idx)(userAnswers)) {
+      userAnswers.get(ItemQuantityPage(idx)) match {
+        case Some(quantity) =>
+          if (quantity <= 60) {
+            itemsRoutes.ItemWineProductCategoryController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          } else {
+            itemsRoutes.ItemWineOperationsChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          }
+        case _ => itemsRoutes.ItemsIndexController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      }
+    } else {
+      itemsRoutes.ItemBulkPackagingSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
     }
 
   private def itemWineProductCategoryRouting(idx: Index, mode: Mode): UserAnswers => Call = (userAnswers: UserAnswers) => {

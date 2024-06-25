@@ -23,7 +23,7 @@ import models.{GoodsType, Index}
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import queries.ItemsPackagingCount
-import utils.{CommodityCodeHelper, ExciseProductCodeHelper, JsonOptionFormatter, SubmissionError}
+import utils.{ItemHelper, ExciseProductCodeHelper, JsonOptionFormatter, SubmissionError}
 import viewmodels.taskList._
 
 case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptionFormatter {
@@ -101,7 +101,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
 
   private[items] def wineMoreInformationAnswers(implicit request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(
-      request.userAnswers.get(ItemCommodityCodePage(idx)).exists(CommodityCodeHelper.isWineCommodityCode)
+      ItemHelper.isWine(idx)(request.userAnswers)
     ) {
       request.userAnswers.get(ItemWineMoreInformationChoicePage(idx)) match {
         case wineInfoChoice@Some(true) => Seq(wineInfoChoice, request.userAnswers.get(ItemWineMoreInformationPage(idx)))
@@ -111,7 +111,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
 
   private[items] def wineCountryOfOriginAnswers(implicit request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(
-      request.userAnswers.get(ItemCommodityCodePage(idx)).exists(CommodityCodeHelper.isWineCommodityCode)
+      ItemHelper.isWine(idx)(request.userAnswers)
     ) {
       request.userAnswers.get(ItemWineProductCategoryPage(idx)) match {
         case wineImportedChoice@Some(ImportedWine) => Seq(wineImportedChoice, request.userAnswers.get(ItemWineOriginPage(idx)))
@@ -148,7 +148,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
 
   private[items] def wineBulkGrowingZoneAnswer(implicit request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(
-      request.userAnswers.get(ItemCommodityCodePage(idx)).exists(CommodityCodeHelper.isWineCommodityCode)
+      ItemHelper.isWine(idx)(request.userAnswers)
     )((request.userAnswers.get(ItemQuantityPage(idx)), request.userAnswers.get(ItemWineProductCategoryPage(idx))) match {
       case (Some(quantity), Some(productCategory)) if productCategory != ImportedWine && quantity > 60 => Seq(request.userAnswers.get(ItemWineGrowingZonePage(idx)))
       case _ => Seq()
@@ -156,7 +156,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
 
   private[items] def wineBulkOperationAnswer(implicit request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(
-      request.userAnswers.get(ItemCommodityCodePage(idx)).exists(CommodityCodeHelper.isWineCommodityCode)
+      ItemHelper.isWine(idx)(request.userAnswers)
     )(request.userAnswers.get(ItemQuantityPage(idx)) match {
       case Some(quantity) if quantity > 60 =>
         Seq(request.userAnswers.get(ItemWineOperationsChoicePage(idx)))

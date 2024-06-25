@@ -16,11 +16,9 @@
 
 @import models.requests.DataRequest
 @import models.response.referenceData.CnCodeInformation
-@import viewmodels.helpers.ItemCheckAnswersHelper
-@import utils.CommodityCodeHelper
-@import pages.sections.items.ItemsSectionItem
-@import viewmodels.helpers.ErrorNotificationBannerHelper
-@import pages.sections.items.ItemsPackagingSection
+@import pages.sections.items.{ItemsPackagingSection, ItemsSectionItem}
+@import viewmodels.helpers.{ErrorNotificationBannerHelper, ItemCheckAnswersHelper}
+@import utils.ItemHelper
 
 @this(
         layout: templates.Layout,
@@ -50,7 +48,7 @@
 
       @govukSummaryList(helper.constructQuantityCard(idx, cnCodeInformation))
 
-      @if(CommodityCodeHelper.isWineCommodityCode(cnCodeInformation.cnCode)) {
+      @if(ItemHelper.isWine(idx)(request.userAnswers)) {
           @govukSummaryList(helper.constructWineDetailsCard(idx))
       }
 

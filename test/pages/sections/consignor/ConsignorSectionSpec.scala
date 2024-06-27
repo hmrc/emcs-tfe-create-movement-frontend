@@ -24,7 +24,7 @@ class ConsignorSectionSpec extends SpecBase {
 
   "isCompleted" - {
 
-    "for a NorthernIrelandCertifiedConsignor logged in trader" - {
+    "for a NorthernIrelandTemporaryCertifiedConsignor logged in trader" - {
 
       "must return true" - {
         "when both the PTA code and address have been provided" in {
@@ -33,7 +33,7 @@ class ConsignorSectionSpec extends SpecBase {
             answers = emptyUserAnswers
               .set(ConsignorPaidTemporaryAuthorisationCodePage, testPaidTemporaryAuthorisationCode)
               .set(ConsignorAddressPage, testUserAddress),
-            ern = testNICertifiedConsignorErn
+            ern = testNITemporaryCertifiedConsignorErn
           )
 
           ConsignorSection.isCompleted mustBe true
@@ -46,7 +46,7 @@ class ConsignorSectionSpec extends SpecBase {
             request = FakeRequest(),
             answers = emptyUserAnswers
               .set(ConsignorPaidTemporaryAuthorisationCodePage, testPaidTemporaryAuthorisationCode),
-            ern = testNICertifiedConsignorErn
+            ern = testNITemporaryCertifiedConsignorErn
           )
 
           ConsignorSection.isCompleted mustBe false
@@ -56,7 +56,7 @@ class ConsignorSectionSpec extends SpecBase {
             request = FakeRequest(),
             answers = emptyUserAnswers
               .set(ConsignorAddressPage, testUserAddress),
-            ern = testNICertifiedConsignorErn
+            ern = testNITemporaryCertifiedConsignorErn
           )
 
           ConsignorSection.isCompleted mustBe false
@@ -65,7 +65,7 @@ class ConsignorSectionSpec extends SpecBase {
           implicit val dr: DataRequest[_] = dataRequest(
             request = FakeRequest(),
             answers = emptyUserAnswers,
-            ern = testNICertifiedConsignorErn)
+            ern = testNITemporaryCertifiedConsignorErn)
 
           ConsignorSection.isCompleted mustBe false
         }
@@ -75,14 +75,14 @@ class ConsignorSectionSpec extends SpecBase {
 
     }
 
-    "NOT for a NorthernIrelandCertifiedConsignor logged in trader" - {
+    "NOT for a NorthernIrelandTemporaryCertifiedConsignor logged in trader" - {
 
       "must return true" - {
         "when the address has been provided" in {
           implicit val dr: DataRequest[_] = dataRequest(
             request = FakeRequest(),
             answers = emptyUserAnswers.set(ConsignorAddressPage, testUserAddress),
-            ern = testNITemporaryCertifiedConsignorErn
+            ern = testNICertifiedConsignorErn
           )
 
           ConsignorSection.isCompleted mustBe true
@@ -93,7 +93,7 @@ class ConsignorSectionSpec extends SpecBase {
           implicit val dr: DataRequest[_] = dataRequest(
             request = FakeRequest(),
             answers = emptyUserAnswers,
-            ern = testNITemporaryCertifiedConsignorErn
+            ern = testNICertifiedConsignorErn
           )
 
           ConsignorSection.isCompleted mustBe false

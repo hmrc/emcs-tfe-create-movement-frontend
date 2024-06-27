@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.sections.consignor
 
-import models.NorthernIrelandCertifiedConsignor
+import models.NorthernIrelandTemporaryCertifiedConsignor
 import models.requests.DataRequest
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,7 +26,7 @@ import viewmodels.implicits._
 object ConsignorERNSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    Option.when(request.userTypeFromErn != NorthernIrelandCertifiedConsignor) {
+    Option.when(request.userTypeFromErn != NorthernIrelandTemporaryCertifiedConsignor) {
       SummaryListRowViewModel(
         key = "checkYourAnswersConsignor.ern",
         value = ValueViewModel(request.ern),

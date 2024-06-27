@@ -38,17 +38,7 @@ class ConsignorPaidTemporaryAuthorisationCodeSummarySpec extends SpecBase with M
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when the user is a non-XIPA trader" - {
-
-          "must output the expected data" in {
-
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, ern = testNITemporaryCertifiedConsignorErn)
-
-            ConsignorPaidTemporaryAuthorisationCodeSummary.row() mustBe None
-          }
-        }
-
-        "when the user is an XIPA trader but there is no answer for the page" - {
+        "when the user is a non-XIPC trader" - {
 
           "must output the expected data" in {
 
@@ -58,23 +48,33 @@ class ConsignorPaidTemporaryAuthorisationCodeSummarySpec extends SpecBase with M
           }
         }
 
-        "when the user is an XIPA trader" - {
+        "when the user is an XIPC trader but there is no answer for the page" - {
+
+          "must output the expected data" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, ern = testNITemporaryCertifiedConsignorErn)
+
+            ConsignorPaidTemporaryAuthorisationCodeSummary.row() mustBe None
+          }
+        }
+
+        "when the user is an XIPC trader" - {
 
           "must output the expected row" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(ConsignorPaidTemporaryAuthorisationCodePage, testNICertifiedConsignorErn),
-              ern = testNICertifiedConsignorErn
+              .set(ConsignorPaidTemporaryAuthorisationCodePage, testNITemporaryCertifiedConsignorErn),
+              ern = testNITemporaryCertifiedConsignorErn
             )
 
             ConsignorPaidTemporaryAuthorisationCodeSummary.row() mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.paidTemporaryAuthorisationCode,
-                  value = Value(Text(testNICertifiedConsignorErn)),
+                  value = Value(Text(testNITemporaryCertifiedConsignorErn)),
                   actions = Seq(ActionItemViewModel(
                     content = Text(messagesForLanguage.change),
-                    href = controllers.sections.consignor.routes.ConsignorPaidTemporaryAuthorisationCodeController.onPageLoad(testNICertifiedConsignorErn, testDraftId, CheckMode).url,
+                    href = controllers.sections.consignor.routes.ConsignorPaidTemporaryAuthorisationCodeController.onPageLoad(testNITemporaryCertifiedConsignorErn, testDraftId, CheckMode).url,
                     id = "changeConsignorPaidTemporaryAuthorisationCode"
                   ).withVisuallyHiddenText(messagesForLanguage.paidTemporaryAuthorisationCodeChangeHidden))
                 )

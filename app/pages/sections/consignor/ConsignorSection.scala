@@ -16,7 +16,7 @@
 
 package pages.sections.consignor
 
-import models.NorthernIrelandCertifiedConsignor
+import models.NorthernIrelandTemporaryCertifiedConsignor
 import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
@@ -31,11 +31,11 @@ case object ConsignorSection extends Section[JsObject] {
       request.userAnswers.get(ConsignorPaidTemporaryAuthorisationCodePage),
       request.userAnswers.get(ConsignorAddressPage)
     ) match {
-      case (NorthernIrelandCertifiedConsignor, Some(_), Some(_)) =>
+      case (NorthernIrelandTemporaryCertifiedConsignor, Some(_), Some(_)) =>
         Completed
-      case (NorthernIrelandCertifiedConsignor, ptaCodePage, addressPage) if ptaCodePage.nonEmpty || addressPage.nonEmpty =>
+      case (NorthernIrelandTemporaryCertifiedConsignor, ptaCodePage, addressPage) if ptaCodePage.nonEmpty || addressPage.nonEmpty =>
         InProgress
-      case (NorthernIrelandCertifiedConsignor, None, None) =>
+      case (NorthernIrelandTemporaryCertifiedConsignor, None, None) =>
         NotStarted
       case (_, _, None) =>
         NotStarted

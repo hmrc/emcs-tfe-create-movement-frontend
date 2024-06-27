@@ -21,7 +21,7 @@ import models.requests.DataRequest
 import models.response.ExciseProductCodesException
 import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import models.sections.info.movementScenario.MovementType
-import models.{ExciseProductCode, NorthernIrelandCertifiedConsignor}
+import models.{ExciseProductCode, NorthernIrelandTemporaryCertifiedConsignor}
 import pages.sections.guarantor.GuarantorRequiredPage
 import pages.sections.info.DestinationTypePage
 import uk.gov.hmrc.http.HeaderCarrier
@@ -45,9 +45,9 @@ class GetExciseProductCodesService @Inject()(connector: GetExciseProductCodesCon
 
   private[services] def removeS600IfDutySuspendedMovement()(implicit request: DataRequest[_]): PartialFunction[Seq[ExciseProductCode], Seq[ExciseProductCode]] =
     epcs =>
-      //Only include S600 in list if consignor ERN = XIPA/ XIPTA (user is/should be asked for an XIPTA as part of a XIPA flow)
+      //Only include S600 in list if consignor ERN = XIPC/ XIPTA (user is/should be asked for an XIPTA as part of a XIPC flow)
       request.userTypeFromErn match {
-        case NorthernIrelandCertifiedConsignor => epcs
+        case NorthernIrelandTemporaryCertifiedConsignor => epcs
         case _ => epcs.filterNot(_.code == "S600")
       }
 

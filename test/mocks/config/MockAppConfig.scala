@@ -17,7 +17,7 @@
 package mocks.config
 
 import config.AppConfig
-import org.scalamock.handlers.CallHandler0
+import org.scalamock.handlers.{CallHandler0, CallHandler1}
 import org.scalamock.scalatest.MockFactory
 
 import java.time.LocalDate
@@ -26,6 +26,9 @@ trait MockAppConfig extends MockFactory {
   lazy val mockAppConfig: AppConfig = mock[AppConfig]
 
   object MockAppConfig {
+    def loginUrl: CallHandler0[String] = (mockAppConfig.loginUrl _).expects()
+    def loginContinueUrl: CallHandler1[String, String] = (mockAppConfig.loginContinueUrl(_: String)).expects(*)
+    def enableXIPCInCaM: CallHandler0[Boolean] = (mockAppConfig.enableXIPCInCaM _).expects()
     def destinationOfficeSuffix: CallHandler0[String] = (mockAppConfig.destinationOfficeSuffix _).expects()
     def betaAllowListCheckingEnabled: CallHandler0[Boolean] = (mockAppConfig.betaAllowListCheckingEnabled _).expects()
     def maxDispatchDateFutureDays: CallHandler0[Int] = (mockAppConfig.maxDispatchDateFutureDays _).expects()

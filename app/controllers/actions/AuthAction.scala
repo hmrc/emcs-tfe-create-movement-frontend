@@ -17,6 +17,7 @@
 package controllers.actions
 
 import config.{AppConfig, EnrolmentKeys}
+import models.{NorthernIrelandTemporaryCertifiedConsignor, UserType}
 import models.requests.UserRequest
 import play.api.mvc.Results._
 import play.api.mvc._
@@ -97,7 +98,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
       case emcsEnrolments =>
         emcsEnrolments.find(_.identifiers.exists(ident => ident.key == EnrolmentKeys.ERN && ident.value == ernFromUrl)) match {
           case Some(enrolment) if enrolment.isActivated =>
-            block(UserRequest(request, ernFromUrl, internalId, credId, sessionId.get.value, emcsEnrolments.size > 1))
+            checkIfUserErnCanAccessCaM(ernFromUrl, internalId, credId, sessionId, emcsEnrolments.size > 1)(block)
           case Some(_) =>
             logger.debug(s"[checkOrganisationEMCSEnrolment] ${EnrolmentKeys.EMCS_ENROLMENT} enrolment found but not activated")
             Future.successful(Redirect(controllers.error.routes.ErrorController.inactiveEnrolment()))
@@ -106,4 +107,28 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
             Future.successful(Redirect(controllers.error.routes.ErrorController.unauthorised()))
         }
     }
+
+  private def checkIfUserErnCanAccessCaM[A](ernFromUrl: String,
+                                            internalId: String,
+                                            credId: String,
+                                            sessionId: Option[SessionId],
+                                            hasMultipleEnrolments: Boolean
+                                           )(block: UserRequest[A] => Future[Result])
+                                           (implicit request: Request[A]): Future[Result] = {
+    lazy val success = block(UserRequest(request, ernFromUrl, internalId, credId, sessionId.get.value, hasMultipleEnrolments))
+
+    if(UserType(ernFromUrl) != NorthernIrelandTemporaryCertifiedConsignor) {
+      // all ERNs except XIPC are allowed through
+      success
+    } else {
+      if(config.enableXIPCInCaM) {
+        // if XIPC is allowed through
+        success
+      } else {
+        // if XIPC is not allowed through
+        logger.warn(s"[checkIfUserErnCanAccessCaM] User attempted to access CaM with Northern Ireland Temporary Certified Consignor ern: '$ernFromUrl' when enableXIPCInCaM is set to false")
+        Future.successful(Redirect(controllers.error.routes.ErrorController.unauthorised()))
+      }
+    }
+  }
 }

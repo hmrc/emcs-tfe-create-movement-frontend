@@ -45,7 +45,7 @@ case class DataRequest[A](request: UserRequest[A],
     case Some(dp) if dp == NorthernIreland => Some(NorthernIreland)
     case None if !isNorthernIrelandErn => Some(GreatBritain)
     case value =>
-      logger.warn(s"[dispatchPlace] Invalid value for DISPATCH_PLACE: $value")
+      logger.debug(s"[dispatchPlace] Invalid value for DISPATCH_PLACE: $value")
       None
   }
 }

@@ -21,7 +21,7 @@ import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.transportArranger.TransportArranger
-import models.{NorthernIrelandCertifiedConsignor, UserAddress}
+import models.{NorthernIrelandTemporaryCertifiedConsignor, UserAddress}
 import pages.sections.consignee._
 import pages.sections.consignor._
 import pages.sections.destination._
@@ -65,7 +65,7 @@ object TraderModel extends ModelConstructorHelpers {
   def applyConsignor(implicit request: DataRequest[_]): TraderModel = {
     val consignorAddress: UserAddress = mandatoryPage(ConsignorAddressPage)
 
-    val ern = if (request.userTypeFromErn == NorthernIrelandCertifiedConsignor) {
+    val ern = if (request.userTypeFromErn == NorthernIrelandTemporaryCertifiedConsignor) {
       mandatoryPage(ConsignorPaidTemporaryAuthorisationCodePage)
     } else {
       request.ern

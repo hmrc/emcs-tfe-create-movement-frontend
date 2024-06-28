@@ -20,7 +20,7 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.consignor.ConsignorPaidTemporaryAuthorisationCodeFormProvider
 import models.requests.DataRequest
-import models.{Mode, NormalMode, NorthernIrelandCertifiedConsignor}
+import models.{Mode, NormalMode, NorthernIrelandTemporaryCertifiedConsignor}
 import navigation.ConsignorNavigator
 import pages.sections.consignor.ConsignorPaidTemporaryAuthorisationCodePage
 import play.api.data.Form
@@ -64,7 +64,7 @@ class ConsignorPaidTemporaryAuthorisationCodeController @Inject()(
 
   private[consignor] def authorisedForController(f: Future[Result])(implicit request: DataRequest[_]): Future[Result] =
     request.userTypeFromErn match {
-      case NorthernIrelandCertifiedConsignor => f
+      case NorthernIrelandTemporaryCertifiedConsignor => f
       case _ => Future.successful(
         Redirect(routes.ConsignorAddressController.onPageLoad(request.ern, request.draftId, NormalMode))
       )

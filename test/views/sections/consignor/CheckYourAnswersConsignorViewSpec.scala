@@ -55,7 +55,7 @@ class CheckYourAnswersConsignorViewSpec extends SpecBase with ViewBehaviours {
 
         val summaryListHelper = app.injector.instanceOf[ConsignorCheckAnswersHelper]
 
-        "for a non-XIPA trader" - {
+        "for a non-XIPC trader" - {
           implicit val doc: Document = Jsoup.parse(view(
             summaryListHelper.summaryList(),
             controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testErn, testDraftId)
@@ -78,16 +78,16 @@ class CheckYourAnswersConsignorViewSpec extends SpecBase with ViewBehaviours {
           }
         }
 
-        "for an XIPA trader" - {
+        "for an XIPC trader" - {
 
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
             .set(ConsignorPaidTemporaryAuthorisationCodePage, testPaidTemporaryAuthorisationCode)
             .set(ConsignorAddressPage, testUserAddress),
-            ern = testNICertifiedConsignorErn)
+            ern = testNITemporaryCertifiedConsignorErn)
 
           implicit val doc: Document = Jsoup.parse(view(
             summaryListHelper.summaryList(),
-            controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testNICertifiedConsignorErn, testDraftId)
+            controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onSubmit(testNITemporaryCertifiedConsignorErn, testDraftId)
           ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
@@ -103,13 +103,13 @@ class CheckYourAnswersConsignorViewSpec extends SpecBase with ViewBehaviours {
           "have a link to change Paid Temporary Authorisation Code" in {
 
             doc.select(Selectors.changeConsignorPaidTemporaryAuthorisationCodeLink).attr("href") mustBe
-              controllers.sections.consignor.routes.ConsignorPaidTemporaryAuthorisationCodeController.onPageLoad(testNICertifiedConsignorErn, testDraftId, CheckMode).url
+              controllers.sections.consignor.routes.ConsignorPaidTemporaryAuthorisationCodeController.onPageLoad(testNITemporaryCertifiedConsignorErn, testDraftId, CheckMode).url
           }
 
           "have a link to change Address details" in {
 
             doc.select(Selectors.changeConsignorAddressLink).attr("href") mustBe
-              controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testNICertifiedConsignorErn, testDraftId, CheckMode).url
+              controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testNITemporaryCertifiedConsignorErn, testDraftId, CheckMode).url
           }
         }
       }

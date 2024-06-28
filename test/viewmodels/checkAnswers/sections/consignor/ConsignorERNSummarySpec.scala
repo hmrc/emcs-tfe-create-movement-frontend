@@ -36,21 +36,21 @@ class ConsignorERNSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when the user is an XIPA trader" - {
+        "when the user is an XIPC trader" - {
 
           "must output the expected data" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, ern = testNICertifiedConsignorErn)
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, ern = testNITemporaryCertifiedConsignorErn)
 
             ConsignorERNSummary.row() mustBe None
           }
         }
 
-        "when the user is a non-XIPA trader" - {
+        "when the user is a non-XIPC trader" - {
 
           "must output the expected row" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, ern = testNITemporaryCertifiedConsignorErn)
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, ern = testNICertifiedConsignorErn)
 
             ConsignorERNSummary.row() mustBe
               Some(

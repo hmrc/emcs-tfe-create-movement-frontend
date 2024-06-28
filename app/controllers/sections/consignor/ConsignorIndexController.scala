@@ -18,7 +18,7 @@ package controllers.sections.consignor
 
 import controllers.BaseNavigationController
 import controllers.actions._
-import models.{NormalMode, NorthernIrelandCertifiedConsignor}
+import models.{NormalMode, NorthernIrelandTemporaryCertifiedConsignor}
 import navigation.ConsignorNavigator
 import pages.sections.consignor.ConsignorSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -39,7 +39,7 @@ class ConsignorIndexController @Inject()(override val userAnswersService: UserAn
     authorisedDataRequest(ern, draftId) { implicit request =>
       if (ConsignorSection.isCompleted) {
         Redirect(controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(ern, draftId))
-      } else if (request.userTypeFromErn == NorthernIrelandCertifiedConsignor) {
+      } else if (request.userTypeFromErn == NorthernIrelandTemporaryCertifiedConsignor) {
         Redirect(controllers.sections.consignor.routes.ConsignorPaidTemporaryAuthorisationCodeController.onPageLoad(ern, draftId, NormalMode))
       } else {
         Redirect(controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(ern, draftId, NormalMode))

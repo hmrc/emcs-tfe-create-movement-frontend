@@ -40,7 +40,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   def betaBannerFeedbackUrl(implicit request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$deskproName&backUrl=${SafeRedirectUrl(host + request.uri).encodedUrl}"
 
-  lazy val loginUrl: String = configuration.get[String]("urls.login")
+  def loginUrl: String = configuration.get[String]("urls.login")
 
   def loginContinueUrl(ern: String): String = configuration.get[String]("urls.loginContinue") + s"/trader/$ern"
 
@@ -128,6 +128,8 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   def maxDispatchDateFutureDays: Int = configuration.get[Int]("constants.maxDispatchDateFutureDays")
 
   def betaAllowListCheckingEnabled: Boolean = isEnabled(CheckBetaAllowList)
+
+  def enableXIPCInCaM: Boolean = isEnabled(EnableXIPCInCaM)
 
   def betaCheckServiceName: String = configuration.get[String]("beta.serviceName")
 }

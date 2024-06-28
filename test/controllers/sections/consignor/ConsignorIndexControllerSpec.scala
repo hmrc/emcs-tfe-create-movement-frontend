@@ -54,25 +54,25 @@ class ConsignorIndexControllerSpec extends SpecBase with MockUserAnswersService 
     }
 
     "when ConsignorSection.isCompleted is false" - {
-      "and logged in as a NorthernIrelandCertifiedConsignor" - {
+      "and logged in as a NorthernIrelandTemporaryCertifiedConsignor" - {
         "must redirect to ConsignorPaidTemporaryAuthorisationCodeController" in
-          new Fixture(Some(emptyUserAnswers.copy(ern = testNICertifiedConsignorErn))) {
-            val result = testController.onPageLoad(testNICertifiedConsignorErn, testDraftId)(request)
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe
-              Some(controllers.sections.consignor.routes.ConsignorPaidTemporaryAuthorisationCodeController.onPageLoad(testNICertifiedConsignorErn, testDraftId, NormalMode).url)
-          }
-
-      }
-      "and NOT logged in as a NorthernIrelandCertifiedConsignor" - {
-        "must redirect to ConsignorAddressController" in
           new Fixture(Some(emptyUserAnswers.copy(ern = testNITemporaryCertifiedConsignorErn))) {
             val result = testController.onPageLoad(testNITemporaryCertifiedConsignorErn, testDraftId)(request)
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result) mustBe
-              Some(controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode).url)
+              Some(controllers.sections.consignor.routes.ConsignorPaidTemporaryAuthorisationCodeController.onPageLoad(testNITemporaryCertifiedConsignorErn, testDraftId, NormalMode).url)
+          }
+
+      }
+      "and NOT logged in as a NorthernIrelandTemporaryCertifiedConsignor" - {
+        "must redirect to ConsignorAddressController" in
+          new Fixture(Some(emptyUserAnswers.copy(ern = testNICertifiedConsignorErn))) {
+            val result = testController.onPageLoad(testNICertifiedConsignorErn, testDraftId)(request)
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustBe
+              Some(controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(testNICertifiedConsignorErn, testDraftId, NormalMode).url)
           }
       }
     }

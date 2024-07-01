@@ -69,7 +69,7 @@ class InformationDispatchTimeSummarySpec extends SpecBase {
 
           implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DispatchDetailsPage(), model))
 
-          InformationTimeOfDispatchSummary.row mustBe expectedRow(value = "7:25")
+          InformationTimeOfDispatchSummary.row mustBe expectedRow(value = "07:25")
         }
       }
 

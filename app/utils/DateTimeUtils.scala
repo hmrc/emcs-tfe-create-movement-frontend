@@ -34,7 +34,7 @@ trait DateTimeUtils {
 
   implicit class LocalTimeExtensions(time: LocalTime) {
     def formatTimeForUIOutput(): String =
-      s"${time.getHour}:${"%02d".format(time.getMinute)}"
+      s"${"%02d".format(time.getHour)}:${"%02d".format(time.getMinute)}"
 
     def twentyFourHourClock(): Boolean =
       13 to 23 contains time.getHour

@@ -212,6 +212,27 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll w
 
                 s"the ${EnrolmentKeys.ERN} identifier is present" - {
 
+                  "the user is invalid" - {
+                    Seq("GB00", "XI00", "ABCD").foreach {
+                      ernPrefix =>
+                        val badErn = s"${ernPrefix}1234"
+                        s"redirect to unauthorised for ern $badErn" in new Harness {
+                          override val ern: String = badErn
+                          private val singleEnrolment = Enrolments(Set(
+                            Enrolment(
+                              key = EnrolmentKeys.EMCS_ENROLMENT,
+                              identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, ern)),
+                              state = EnrolmentKeys.ACTIVATED
+                            )
+                          ))
+                          override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = singleEnrolment))
+
+                          status(result) mustBe SEE_OTHER
+                          redirectLocation(result) mustBe Some(controllers.error.routes.ErrorController.unauthorised().url)
+                        }
+                    }
+                  }
+
                   "the user is XIPC" - {
                     "enableXIPCInCaM is true" - {
                       "allow the User through, returning a 200 (OK)" in new Harness {
@@ -250,7 +271,7 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll w
                     }
                   }
 
-                  "the user is not XIPC" - {
+                  "the user is not XIPC or invalid" - {
                     val singleEnrolment = Enrolments(Set(
                       Enrolment(
                         key = EnrolmentKeys.EMCS_ENROLMENT,

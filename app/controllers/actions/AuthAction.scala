@@ -17,8 +17,8 @@
 package controllers.actions
 
 import config.{AppConfig, EnrolmentKeys}
-import models.{NorthernIrelandTemporaryCertifiedConsignor, UserType}
 import models.requests.UserRequest
+import models.{GreatBritainWarehouse, NorthernIrelandTemporaryCertifiedConsignor, NorthernIrelandWarehouse, Unknown, UserType}
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
@@ -116,18 +116,24 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
                                            )(block: UserRequest[A] => Future[Result])
                                            (implicit request: Request[A]): Future[Result] = {
     lazy val success = block(UserRequest(request, ernFromUrl, internalId, credId, sessionId.get.value, hasMultipleEnrolments))
+    val userType = UserType(ernFromUrl)
 
-    if(UserType(ernFromUrl) != NorthernIrelandTemporaryCertifiedConsignor) {
-      // all ERNs except XIPC are allowed through
-      success
+    if (Seq(Unknown, GreatBritainWarehouse, NorthernIrelandWarehouse).contains(userType)) {
+      logger.warn(s"[checkIfUserErnCanAccessCaM] User attempted to access CaM with invalid ern: '$ernFromUrl'")
+      Future.successful(Redirect(controllers.error.routes.ErrorController.unauthorised()))
     } else {
-      if(config.enableXIPCInCaM) {
-        // if XIPC is allowed through
+      if (userType != NorthernIrelandTemporaryCertifiedConsignor) {
+        // all ERNs except XIPC are allowed through
         success
       } else {
-        // if XIPC is not allowed through
-        logger.warn(s"[checkIfUserErnCanAccessCaM] User attempted to access CaM with Northern Ireland Temporary Certified Consignor ern: '$ernFromUrl' when enableXIPCInCaM is set to false")
-        Future.successful(Redirect(controllers.error.routes.ErrorController.unauthorised()))
+        if (config.enableXIPCInCaM) {
+          // if XIPC is allowed through
+          success
+        } else {
+          // if XIPC is not allowed through
+          logger.warn(s"[checkIfUserErnCanAccessCaM] User attempted to access CaM with Northern Ireland Temporary Certified Consignor ern: '$ernFromUrl' when enableXIPCInCaM is set to false")
+          Future.successful(Redirect(controllers.error.routes.ErrorController.unauthorised()))
+        }
       }
     }
   }

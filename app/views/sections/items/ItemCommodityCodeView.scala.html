@@ -34,6 +34,7 @@
         link: components.link,
         appConfig: AppConfig,
         continueOrExit: components.continueOrExit,
+        clearAccessibleAutocompleteButton: components.clearAccessibleAutocompleteButton,
         autocompleteCss: HmrcAccessibleAutocompleteCss,
         autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
@@ -91,6 +92,8 @@
                 )
             )
         )
+
+        @clearAccessibleAutocompleteButton(idToClear = "item-commodity-code")
 
         @continueOrExit()
     }

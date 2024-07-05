@@ -80,9 +80,11 @@ class ItemExciseProductCodeViewSpec extends SpecBase
           Selectors.h1 -> messagesForLanguage.heading(testIndex1),
           Selectors.p(1) -> messagesForLanguage.paragraph,
           Selectors.label("excise-product-code") -> messagesForLanguage.label,
+          Selectors.hint -> messagesForLanguage.hint,
           Selectors.selectOption(1) -> messagesForLanguage.defaultSelectOption,
           Selectors.selectOption(2) -> messagesForLanguage.beerSelectOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.secondaryButton -> messagesForLanguage.clearSelectedCode,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))(doc())
 
@@ -101,6 +103,7 @@ class ItemExciseProductCodeViewSpec extends SpecBase
             Selectors.h1 -> messagesForLanguage.heading(testIndex1),
             Selectors.p(1) -> messagesForLanguage.paragraph,
             Selectors.label("excise-product-code") -> messagesForLanguage.label,
+            Selectors.hint -> messagesForLanguage.hint,
             Selectors.selectOption(1) -> messagesForLanguage.defaultSelectOption,
             Selectors.selectOption(2) -> messagesForLanguage.beerSelectOption,
             Selectors.warningText -> messagesForLanguage.warningText,
@@ -131,6 +134,7 @@ class ItemExciseProductCodeViewSpec extends SpecBase
                 Selectors.h1 -> messagesForLanguage.heading(testIndex1),
                 Selectors.p(1) -> messagesForLanguage.paragraph,
                 Selectors.label("excise-product-code") -> messagesForLanguage.label,
+                Selectors.hint -> messagesForLanguage.hint,
                 Selectors.selectOption(1) -> messagesForLanguage.defaultSelectOption,
                 Selectors.selectOption(2) -> messagesForLanguage.beerSelectOption,
                 Selectors.button -> messagesForLanguage.saveAndContinue,
@@ -163,6 +167,7 @@ class ItemExciseProductCodeViewSpec extends SpecBase
             Selectors.h1 -> messagesForLanguage.heading(testIndex1),
             Selectors.p(1) -> messagesForLanguage.paragraph,
             Selectors.label("excise-product-code") -> messagesForLanguage.label,
+            Selectors.hint -> messagesForLanguage.hint,
             Selectors.selectOption(1) -> messagesForLanguage.defaultSelectOption,
             Selectors.selectOption(2) -> messagesForLanguage.beerSelectOption,
             Selectors.button -> messagesForLanguage.saveAndContinue,

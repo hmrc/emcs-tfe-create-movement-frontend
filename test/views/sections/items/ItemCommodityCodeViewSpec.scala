@@ -63,6 +63,7 @@ class ItemCommodityCodeViewSpec extends SpecBase with ViewBehaviours with ItemFi
         Selectors.selectOption(2) -> s"${testCommodityCode1.cnCode}: ${testCommodityCode1.cnCodeDescription}",
         Selectors.selectOption(3) -> s"${testCommodityCode2.cnCode}: ${testCommodityCode2.cnCodeDescription}",
         Selectors.button -> English.saveAndContinue,
+        Selectors.secondaryButton -> English.clearSelectedCode,
         Selectors.saveAndExitLink -> English.returnToDraft
       ))
 

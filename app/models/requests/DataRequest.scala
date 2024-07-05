@@ -20,7 +20,9 @@ import models._
 import models.response.emcsTfe.GetMessageStatisticsResponse
 import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
-import pages.sections.info.DispatchPlacePage
+import models.sections.info.movementScenario.{MovementScenario, MovementType}
+import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.mvc.WrappedRequest
 import utils.Logging
 
@@ -50,4 +52,19 @@ case class DataRequest[A](request: UserRequest[A],
       logger.debug(s"[dispatchPlace] Invalid value for DISPATCH_PLACE: $value")
       None
   }
+
+  def isUkToUkAndNoGuarantor: Boolean =
+    (userAnswers.get(DestinationTypePage), userAnswers.get(GuarantorRequiredPage)) match {
+      case (Some(scenario), Some(false)) if scenario.movementType(this) == MovementType.UkToUk => true
+      case _ => false
+    }
+
+  def isUkToEuAndNoGuarantor: Boolean =
+    (userAnswers.get(DestinationTypePage), userAnswers.get(GuarantorRequiredPage)) match {
+      case (Some(scenario), Some(false)) if scenario.movementType(this) == MovementType.UkToEu => true
+      case _ => false
+    }
+
+  def isUnknownDestination: Boolean =
+    userAnswers.get(DestinationTypePage).contains(MovementScenario.UnknownDestination)
 }

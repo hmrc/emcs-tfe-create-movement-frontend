@@ -29,6 +29,7 @@ site.item = item
 site.noResultsFound = No results found
 site.divider = or
 site.warning = Warning:
+site.clearSelectedCode = Clear selected code
 
 country.austria = Austria
 country.belgium = Belgium
@@ -1044,14 +1045,18 @@ goodsType.E.plural = energies
 
 itemExciseProductCode.title = Choose the Excise Product Code (EPC) for item {0}
 itemExciseProductCode.heading = Choose the Excise Product Code (EPC) for item {0}
-itemExciseProductCode.checkYourAnswersLabel = Excise product code
+itemExciseProductCode.checkYourAnswersLabel = Excise Product Code
 itemExciseProductCode.paragraph = You will be asked to give information and packaging details about this item. You can return to this screen to add more items later.
 itemExciseProductCode.warningText = Changing the EPC code removes any information completed for this item and you will be asked to enter new item information
-itemExciseProductCode.label = Excise Product Code
-itemExciseProductCode.error.required = Choose the Excise product code
+itemExciseProductCode.label = Select the Excise Product Code (EPC)
+itemExciseProductCode.hint = Start typing the EPC code to see suggestions
+itemExciseProductCode.error.required = Choose the Excise Product Code
 itemExciseProductCode.error.submissionFailure = You must update the Excise Product Code so that it is different to the original submission
-itemExciseProductCode.change.hidden = Excise product code
+itemExciseProductCode.change.hidden = Excise Product Code
 itemExciseProductCode.select.defaultValue = Choose Excise Product Code
+itemExciseProductCode.inset.GBNoGuarantor = Only items with EPC codes B000, W200 and W300 can be selected for this type of movement if there is no guarantor.
+itemExciseProductCode.inset.EuNoGuarantor = Only energy EPC codes can be selected for this type of movement if there is no guarantor.
+itemExciseProductCode.inset.unknownDestination = Only energy EPC codes can be selected for a movement with an unknown destination.
 
 itemBrandName.title = Do you know the brand name of the {0}?
 itemBrandName.heading = Do you know the brand name of the {0}?

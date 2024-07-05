@@ -19,11 +19,7 @@ package services
 import connectors.referenceData.GetExciseProductCodesConnector
 import models.requests.DataRequest
 import models.response.ExciseProductCodesException
-import models.sections.info.movementScenario.MovementScenario.UnknownDestination
-import models.sections.info.movementScenario.MovementType
 import models.{ExciseProductCode, NorthernIrelandTemporaryCertifiedConsignor}
-import pages.sections.guarantor.GuarantorRequiredPage
-import pages.sections.info.DestinationTypePage
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
@@ -34,14 +30,16 @@ class GetExciseProductCodesService @Inject()(connector: GetExciseProductCodesCon
                                             (implicit ec: ExecutionContext) {
 
 
-  private[services] def filterEPCCodes()(implicit request: DataRequest[_]): PartialFunction[Seq[ExciseProductCode], Seq[ExciseProductCode]] =
-    epcs =>
-      (request.userAnswers.get(DestinationTypePage), request.userAnswers.get(GuarantorRequiredPage)) match {
-        case (Some(scenario), Some(false)) if scenario.movementType == MovementType.UkToUk => epcs.filter(epc => Set("B000", "W200", "W300")(epc.code))
-        case (Some(UnknownDestination), _) => epcs.filter(_.category.toUpperCase == "E")
-        case (Some(scenario), Some(false)) if scenario.movementType == MovementType.UkToEu => epcs.filter(_.category.toUpperCase == "E")
-        case _ => epcs
-      }
+  private[services] def filterEPCCodes()(implicit request: DataRequest[_]): PartialFunction[Seq[ExciseProductCode], Seq[ExciseProductCode]] = epcs =>
+    if (request.isUkToUkAndNoGuarantor) {
+      epcs.filter(epc => Set("B000", "W200", "W300")(epc.code))
+    } else if (request.isUnknownDestination) {
+      epcs.filter(_.category.toUpperCase == "E")
+    } else if (request.isUkToEuAndNoGuarantor) {
+      epcs.filter(_.category.toUpperCase == "E")
+    } else {
+      epcs
+    }
 
   private[services] def removeS600IfDutySuspendedMovement()(implicit request: DataRequest[_]): PartialFunction[Seq[ExciseProductCode], Seq[ExciseProductCode]] =
     epcs =>

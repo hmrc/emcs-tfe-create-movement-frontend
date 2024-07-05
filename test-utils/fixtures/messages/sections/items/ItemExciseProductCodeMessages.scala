@@ -26,16 +26,21 @@ object ItemExciseProductCodeMessages {
 
     def title(idx: Index): String = titleHelper(heading(idx))
 
-    val cyaLabel = "Excise product code"
-    val cyaChangeHidden = "Excise product code"
+    val cyaLabel = "Excise Product Code"
+    val cyaChangeHidden = "Excise Product Code"
 
     val defaultSelectOption = "Choose Excise Product Code"
     val beerSelectOption = "B000: Beer"
 
-    val label = "Excise Product Code"
+    val label = "Select the Excise Product Code (EPC)"
+    val hint = "Start typing the EPC code to see suggestions"
     val paragraph = "You will be asked to give information and packaging details about this item. You can return to this screen to add more items later."
 
     val warningText = s"$warning Changing the EPC code removes any information completed for this item and you will be asked to enter new item information"
+
+    val insetTextGBNoGuarantor = "Only items with EPC codes B000, W200 and W300 can be selected for this type of movement if there is no guarantor."
+    val insetTextEuNoGuarantor = "Only energy EPC codes can be selected for this type of movement if there is no guarantor."
+    val insetTextUnknownDestination = "Only energy EPC codes can be selected for a movement with an unknown destination."
 
     val itemExciseProductCodeConsignorNotApprovedToSendError = "The excise product code for this item must be one that the consignor is approved to send"
     val itemExciseProductCodeConsigneeNotApprovedToReceiveError = "The excise product code for this item must be one that the consignee is approved to receive"

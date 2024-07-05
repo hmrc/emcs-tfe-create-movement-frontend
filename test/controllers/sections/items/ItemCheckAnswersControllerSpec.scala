@@ -57,7 +57,7 @@ class ItemCheckAnswersControllerSpec extends SpecBase
       fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       app.injector.instanceOf[DataRequiredAction],
       mockGetCnCodeInformationService,
       Helpers.stubMessagesControllerComponents(),

@@ -50,7 +50,7 @@ class DocumentReferenceControllerSpec extends SpecBase with MockUserAnswersServi
       mockUserAnswersService,
       new FakeDocumentsNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       formProvider,

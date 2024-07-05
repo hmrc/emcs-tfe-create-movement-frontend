@@ -52,7 +52,7 @@ class ItemBulkPackagingSealTypeControllerSpec extends SpecBase with MockUserAnsw
       fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),

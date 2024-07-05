@@ -47,7 +47,7 @@ class InfoIndexControllerSpec extends SpecBase {
 
     lazy val controller = new InfoIndexController(
       fakeBetaAllowListAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       fakeAuthAction,
       Helpers.stubMessagesControllerComponents()

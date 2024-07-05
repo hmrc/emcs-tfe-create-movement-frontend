@@ -15,7 +15,6 @@
  *@
 
 @import forms.sections.items.ItemSmallIndependentProducerFormProvider.producerField
-@import models.GoodsType
 @import models.requests.DataRequest
 @import models.sections.items.ItemSmallIndependentProducerType.CertifiedIndependentSmallProducer
 @import viewmodels.helpers.ItemSmallIndependentProducerHelper
@@ -34,7 +33,7 @@
 
 @(form: Form[_], action: Call, index: Index)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemSmallIndependentProducer.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemSmallIndependentProducer.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action, 'autoComplete -> "off") {
 

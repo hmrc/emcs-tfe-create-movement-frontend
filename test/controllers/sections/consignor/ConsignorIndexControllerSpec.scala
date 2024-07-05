@@ -35,7 +35,7 @@ class ConsignorIndexControllerSpec extends SpecBase with MockUserAnswersService 
       mockUserAnswersService,
       new FakeConsignorNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       messagesControllerComponents

@@ -17,8 +17,7 @@
 @import forms.sections.transportArranger.TransportArrangerVatFormProvider
 @import models.requests.DataRequest
 @import models.sections.transportArranger.TransportArranger
-@import viewmodels.LegendSize
-@import viewmodels.InputWidth
+@import viewmodels.{InputWidth, LegendSize}
 
 @this(
         layout: templates.Layout,
@@ -32,7 +31,7 @@
 
 @(form: Form[_], action: Call, arranger: TransportArranger)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages(s"transportArrangerVat.$arranger.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages(s"transportArrangerVat.$arranger.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action) {
 

@@ -40,7 +40,7 @@ class DraftMovementControllerSpec extends SpecBase with MockValidationService wi
       messagesApi,
       fakeAuthAction,
       fakeBetaAllowListAction,
-      new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       messagesControllerComponents,
       mockValidationService,

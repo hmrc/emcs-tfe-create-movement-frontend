@@ -17,19 +17,20 @@
 package controllers.actions
 
 import models.requests.{OptionalDataRequest, UserRequest}
+import models.response.emcsTfe.GetMessageStatisticsResponse
 import models.{TraderKnownFacts, UserAnswers}
 import play.api.mvc.ActionTransformer
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers], optTraderKnownFacts: Option[TraderKnownFacts]) extends DataRetrievalAction {
+class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers], optTraderKnownFacts: Option[TraderKnownFacts], messageStatisticsResponse: Option[GetMessageStatisticsResponse]) extends DataRetrievalAction {
 
   def apply(lrn: String): ActionTransformer[UserRequest, OptionalDataRequest] =
 
     new ActionTransformer[UserRequest, OptionalDataRequest] {
 
       override def transform[A](request: UserRequest[A]): Future[OptionalDataRequest[A]] =
-        Future(OptionalDataRequest(request, lrn, dataToReturn, optTraderKnownFacts))
+        Future(OptionalDataRequest(request, lrn, dataToReturn, optTraderKnownFacts, messageStatisticsResponse))
 
       override protected implicit val executionContext: ExecutionContext =
         scala.concurrent.ExecutionContext.Implicits.global

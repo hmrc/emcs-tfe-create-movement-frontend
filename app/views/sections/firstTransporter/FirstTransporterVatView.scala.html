@@ -14,11 +14,10 @@
  * limitations under the License.
  *@
 
+@import forms.sections.firstTransporter.FirstTransporterVatFormProvider
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
-@import viewmodels.LabelSize
 @import viewmodels.LegendSize
-@import forms.sections.firstTransporter.FirstTransporterVatFormProvider
 
 @this(
     layout: templates.Layout,
@@ -32,7 +31,7 @@
 
 @(form: Form[_], action: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("firstTransporterVat.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("firstTransporterVat.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action) {
 

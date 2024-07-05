@@ -53,7 +53,7 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
       fakeBetaAllowListAction,
       new FakeDocumentsNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(startingUserAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(startingUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       formProvider,
       messagesControllerComponents,

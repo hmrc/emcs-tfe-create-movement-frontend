@@ -42,7 +42,7 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService w
       userAnswersService = mockUserAnswersService,
       navigator = new FakeDispatchNavigator(testOnwardRoute),
       auth = fakeAuthAction,
-      getData = new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      getData = new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       requireData = dataRequiredAction,
       betaAllowList = fakeBetaAllowListAction,
       controllerComponents = messagesControllerComponents

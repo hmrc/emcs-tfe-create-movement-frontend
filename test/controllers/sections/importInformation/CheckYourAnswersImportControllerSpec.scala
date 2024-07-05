@@ -53,7 +53,7 @@ class CheckYourAnswersImportControllerSpec extends SpecBase with SummaryListFlue
       messagesApi,
       fakeAuthAction,
       fakeBetaAllowListAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       Helpers.stubMessagesControllerComponents(),
       new FakeImportInformationNavigator(testOnwardRoute),

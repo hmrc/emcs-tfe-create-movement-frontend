@@ -14,8 +14,8 @@
  * limitations under the License.
  *@
 
-@import models.requests.DataRequest
 @import models.GoodsType
+@import models.requests.DataRequest
 @import viewmodels.InputWidth._
 
 @this(
@@ -31,7 +31,7 @@
 
 @(form: Form[_], idx: Index, goodsType: GoodsType, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemNetGrossMass.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemNetGrossMass.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action = controllers.sections.items.routes.ItemNetGrossMassController.onSubmit(request.ern, request.draftId, idx, mode)) {
 

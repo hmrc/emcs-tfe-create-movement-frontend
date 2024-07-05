@@ -54,7 +54,7 @@ class SadAddToListControllerSpec extends SpecBase with MockUserAnswersService {
       mockUserAnswersService,
       app.injector.instanceOf[SadNavigator],
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       formProvider,

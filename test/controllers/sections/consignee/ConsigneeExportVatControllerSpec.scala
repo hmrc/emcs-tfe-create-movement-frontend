@@ -45,7 +45,7 @@ class ConsigneeExportVatControllerSpec extends SpecBase with MockUserAnswersServ
       mockUserAnswersService,
       new FakeConsigneeNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       formProvider,

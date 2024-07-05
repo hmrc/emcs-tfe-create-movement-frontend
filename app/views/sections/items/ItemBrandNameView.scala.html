@@ -14,10 +14,10 @@
  * limitations under the License.
  *@
 
+@import forms.sections.items.ItemBrandNameFormProvider
+@import models.GoodsType
 @import models.requests.DataRequest
 @import viewmodels.LegendSize
-@import models.GoodsType
-@import forms.sections.items.ItemBrandNameFormProvider
 
 @this(
         layout: templates.Layout,
@@ -33,7 +33,7 @@
 
 @(form: Form[_], action: Call, goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemBrandName.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemBrandName.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action, 'autoComplete -> "off") {
 

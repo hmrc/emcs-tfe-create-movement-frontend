@@ -76,7 +76,7 @@ class ItemsAddToListControllerSpec extends SpecBase with MockUserAnswersService 
       fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(startingUserAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(startingUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       formProvider,
       messagesControllerComponents,

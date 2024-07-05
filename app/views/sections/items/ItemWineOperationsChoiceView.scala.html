@@ -33,7 +33,7 @@
 
 @(form: Form[_], action: Call, values: Seq[WineOperations])(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemWineOperationsChoice.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemWineOperationsChoice.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action = action, 'autoComplete -> "off") {
 

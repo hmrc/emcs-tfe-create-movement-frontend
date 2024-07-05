@@ -16,7 +16,7 @@
 
 @import models.requests.DataRequest
 @import models.sections.items.ItemsAddToList
-@import pages.sections.items.{ItemDegreesPlatoPage, ItemQuantityPage, ItemsSectionItems}
+@import pages.sections.items.ItemsSectionItems
 @import viewmodels.LegendSize
 @import viewmodels.helpers.ItemsAddToListHelper
 
@@ -43,7 +43,7 @@
     pageTitle = formOpt.fold(titleNoForm(pluralSingular("itemsAddToList.title", items.length))) {
         form => title(form, pluralSingular("itemsAddToList.title", items.length))
     },
-    maybeShowActiveTrader = maybeShowActiveTrader(request)
+    maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))
 ) {
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {

@@ -14,13 +14,9 @@
  * limitations under the License.
  *@
 
+@import forms.sections.items.ItemDesignationOfOriginFormProvider._
 @import models.requests.DataRequest
 @import viewmodels.LegendSize
-@import forms.sections.items.ItemDesignationOfOriginFormProvider
-@import models.sections.items.ItemGeographicalIndicationType._
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
-@import models.sections.items.ItemGeographicalIndicationType
-@import forms.sections.items.ItemDesignationOfOriginFormProvider._
 @import viewmodels.helpers.ItemDesignationOfOriginHelper
 
 @this(
@@ -53,7 +49,7 @@
   }
 }
 
-@layout(pageTitle = title(form, titleOrHeading("title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, titleOrHeading("title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action, 'autoComplete -> "off") {
 

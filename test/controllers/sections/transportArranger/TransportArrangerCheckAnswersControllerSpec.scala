@@ -45,7 +45,7 @@ class TransportArrangerCheckAnswersControllerSpec extends SpecBase with SummaryL
       mockUserAnswersService,
       new FakeTransportArrangerNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       MockTransportArrangerCheckAnswersHelper,

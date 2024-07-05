@@ -53,7 +53,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
       mockUserAnswersService,
       new FakeDestinationNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       formProvider,

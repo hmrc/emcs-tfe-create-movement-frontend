@@ -14,9 +14,9 @@
  * limitations under the License.
  *@
 
+@import forms.sections.items.ItemPackagingEnterShippingMarksFormProvider
 @import models.requests.DataRequest
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
-@import forms.sections.items.ItemPackagingEnterShippingMarksFormProvider
 @import viewmodels.LabelSize
 
 @this(
@@ -33,7 +33,7 @@
 
 @(form: Form[_], action: Call, packagingIndex: Index, itemIndex: Index, packagingDescription: String, packagingQuantity: String)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemPackagingEnterShippingMarks.title", packagingIndex.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemPackagingEnterShippingMarks.title", packagingIndex.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action = action) {
 

@@ -100,7 +100,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
       messagesApi,
       fakeAuthAction,
       fakeBetaAllowListAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       messagesControllerComponents,
       new FakeConsigneeNavigator(testOnwardRoute),

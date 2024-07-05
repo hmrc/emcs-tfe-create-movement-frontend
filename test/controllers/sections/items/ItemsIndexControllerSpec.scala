@@ -41,7 +41,7 @@ class ItemsIndexControllerSpec extends SpecBase
       mockUserAnswersService,
       app.injector.instanceOf[ItemsNavigator],
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       Helpers.stubMessagesControllerComponents()

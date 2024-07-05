@@ -14,10 +14,9 @@
  * limitations under the License.
  *@
 
-@import models.requests.DataRequest
-@import viewmodels.InputWidth._
-@import models.GoodsType
 @import forms.sections.items.ItemDensityFormProvider.itemDensityFormField
+@import models.GoodsType
+@import models.requests.DataRequest
 
 @this(
         layout: templates.Layout,
@@ -31,7 +30,7 @@
 
 @(form: Form[_], action: Call, goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemDensity.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemDensity.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action) {
 

@@ -41,7 +41,7 @@
     } else {
         messages("consigneeExcise.title")
     }
-), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action, Symbol("autoComplete") -> "off") {
 

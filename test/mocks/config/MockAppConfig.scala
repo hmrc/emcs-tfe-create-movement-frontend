@@ -33,5 +33,8 @@ trait MockAppConfig extends MockFactory {
     def betaAllowListCheckingEnabled: CallHandler0[Boolean] = (mockAppConfig.betaAllowListCheckingEnabled _).expects()
     def maxDispatchDateFutureDays: CallHandler0[Int] = (mockAppConfig.maxDispatchDateFutureDays _).expects()
     def earliestDispatchDate: CallHandler0[LocalDate] = (mockAppConfig.earliestDispatchDate _).expects()
+
+    def messageStatisticsNotificationEnabled: CallHandler0[Boolean] = (() => mockAppConfig.messageStatisticsNotificationEnabled).expects()
+
   }
 }

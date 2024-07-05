@@ -14,10 +14,9 @@
  * limitations under the License.
  *@
 
+@import config.AppConfig
 @import models.requests.DataRequest
 @import uk.gov.hmrc.govukfrontend.views.html.components._
-@import viewmodels.LegendSize
-@import config.AppConfig
 
 
 @this(
@@ -39,7 +38,7 @@
 
 @(form: Form[_], onwardRoute: Call, requiredGuarantee: Boolean = false, requiredGuaranteeNIToEU: Boolean = false)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, if(requiredGuarantee || requiredGuaranteeNIToEU) messages("guarantorRequired.isRequired.title") else messages("guarantorRequired.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, if(requiredGuarantee || requiredGuaranteeNIToEU) messages("guarantorRequired.isRequired.title") else messages("guarantorRequired.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @if(requiredGuarantee || requiredGuaranteeNIToEU) {
 

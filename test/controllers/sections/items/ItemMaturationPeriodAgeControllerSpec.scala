@@ -58,7 +58,7 @@ class ItemMaturationPeriodAgeControllerSpec extends SpecBase with MockUserAnswer
       betaAllowList = app.injector.instanceOf[FakeBetaAllowListAction],
       navigator = new FakeItemsNavigator(testOnwardRoute),
       auth = app.injector.instanceOf[FakeAuthAction],
-      getData = new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      getData = new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       requireData = app.injector.instanceOf[DataRequiredAction],
       formProvider = formProvider,
       controllerComponents = app.injector.instanceOf[MessagesControllerComponents],

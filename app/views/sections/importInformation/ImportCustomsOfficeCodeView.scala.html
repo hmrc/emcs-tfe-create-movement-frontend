@@ -16,8 +16,8 @@
 
 @import config.AppConfig
 @import models.requests.DataRequest
-@import viewmodels.LabelSize
 @import pages.sections.importInformation.ImportCustomsOfficeCodePage
+@import viewmodels.LabelSize
 @import viewmodels.helpers.ErrorNotificationBannerHelper
 
 @this(layout: templates.Layout,
@@ -43,7 +43,7 @@
     } else {
         messages("importCustomsOfficeCode.northernIrishRegisteredConsignor.title")
     }
-), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action, Symbol("autoComplete") -> "off") {
 

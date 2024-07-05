@@ -15,8 +15,7 @@
  *@
 
 @import models.requests.DataRequest
-@import pages.sections.info.LocalReferenceNumberPage
-@import pages.sections.info.DispatchDetailsPage
+@import pages.sections.info.{DispatchDetailsPage, LocalReferenceNumberPage}
 @import viewmodels.helpers.ErrorNotificationBannerHelper
 
 @this(
@@ -33,7 +32,7 @@
 
 @(list: SummaryList, submitAction: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("informationCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = titleNoForm(messages("informationCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action = submitAction) {
 

@@ -41,7 +41,7 @@ class DataRetrievalActionImpl @Inject()(val userAnswersService: UserAnswersServi
       for {
         userAnswers <- userAnswersService.get(request.ern, draftId)
         traderKnownFacts <- getTraderKnownFactsService.getTraderKnownFacts(request.ern)
-        messageStatistics <- getMessageStatisticsService.getMessageStatistics(request.ern)(hc, request)
+        messageStatistics <- getMessageStatisticsService.getMessageStatistics(request.ern)(hc)
       } yield {
         OptionalDataRequest(request, draftId, userAnswers, traderKnownFacts, messageStatistics)
       }

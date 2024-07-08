@@ -19,7 +19,6 @@ package services
 import config.AppConfig
 import connectors.emcsTfe.GetMessageStatisticsConnector
 import featureswitch.core.config.FeatureSwitching
-import models.requests.UserRequest
 import models.response.MessageStatisticsException
 import models.response.emcsTfe.GetMessageStatisticsResponse
 import uk.gov.hmrc.http.HeaderCarrier
@@ -32,9 +31,9 @@ class GetMessageStatisticsService @Inject()(connector: GetMessageStatisticsConne
                                             override val config: AppConfig
                                            )(implicit ec: ExecutionContext) extends FeatureSwitching {
 
-  def getMessageStatistics(ern: String)(implicit hc: HeaderCarrier, request: UserRequest[_]): Future[Option[GetMessageStatisticsResponse]] = {
+  def getMessageStatistics(ern: String)(implicit hc: HeaderCarrier): Future[Option[GetMessageStatisticsResponse]] = {
 
-    if(config.messageStatisticsNotificationEnabled) {
+    if (config.messageStatisticsNotificationEnabled) {
       connector.getMessageStatistics(ern).map {
         case Right(messageStatistics) => Some(messageStatistics)
         case _ => throw MessageStatisticsException(s"No message statistics found for trader $ern")

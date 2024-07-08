@@ -41,7 +41,7 @@ class PreDraftDataRetrievalActionImpl @Inject()(val preDraftService: PreDraftSer
       for {
         userAnswers <- preDraftService.get(request.ern, request.sessionId)
         traderKnownFacts <- getTraderKnownFactsService.getTraderKnownFacts(request.ern)
-        messageStatistics <- getMessageStatisticsService.getMessageStatistics(request.ern)(hc, request)
+        messageStatistics <- getMessageStatisticsService.getMessageStatistics(request.ern)(hc)
       } yield {
         OptionalDataRequest(request, request.sessionId, userAnswers, traderKnownFacts, messageStatistics)
       }

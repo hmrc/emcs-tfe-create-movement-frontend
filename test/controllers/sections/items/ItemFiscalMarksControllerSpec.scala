@@ -49,7 +49,7 @@ class ItemFiscalMarksControllerSpec extends SpecBase with MockUserAnswersService
       fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),

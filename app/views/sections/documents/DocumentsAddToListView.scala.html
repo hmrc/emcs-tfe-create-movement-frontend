@@ -36,7 +36,7 @@
     pageTitle = formOpt.fold(titleNoForm(pluralSingular("documentsAddToList.title", documents.length))){
         form => title(form, pluralSingular("documentsAddToList.title", documents.length))
     },
-    maybeShowActiveTrader = maybeShowActiveTrader(request)
+    maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))
 ) {
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {

@@ -16,13 +16,15 @@
 
 package models.requests
 
+import models.response.emcsTfe.GetMessageStatisticsResponse
 import models.{TraderKnownFacts, UserAnswers}
 import play.api.mvc.WrappedRequest
 
 case class OptionalDataRequest[A](request: UserRequest[A],
                                   draftId: String,
                                   userAnswers: Option[UserAnswers],
-                                  traderKnownFacts: Option[TraderKnownFacts]) extends WrappedRequest[A](request) {
+                                  traderKnownFacts: Option[TraderKnownFacts],
+                                  messageStatistics: Option[GetMessageStatisticsResponse]) extends WrappedRequest[A](request) {
   val internalId = request.internalId
   val ern = request.ern
 }

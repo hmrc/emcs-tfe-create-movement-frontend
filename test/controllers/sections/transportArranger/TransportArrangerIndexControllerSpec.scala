@@ -39,7 +39,7 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
       mockUserAnswersService,
       new FakeTransportArrangerNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       Helpers.stubMessagesControllerComponents()

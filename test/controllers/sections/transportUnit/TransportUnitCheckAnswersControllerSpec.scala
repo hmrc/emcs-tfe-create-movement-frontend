@@ -44,7 +44,7 @@ class TransportUnitCheckAnswersControllerSpec extends SpecBase with MockUserAnsw
       fakeBetaAllowListAction,
       new FakeTransportUnitNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       Helpers.stubMessagesControllerComponents(),
       view,

@@ -55,7 +55,7 @@ class ItemBrandNameControllerSpec extends SpecBase with MockUserAnswersService w
       fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),

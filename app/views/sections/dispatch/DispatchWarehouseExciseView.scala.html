@@ -15,10 +15,10 @@
  *@
 
 @import models.requests.DataRequest
+@import pages.sections.dispatch.DispatchWarehouseExcisePage
 @import viewmodels.InputWidth._
 @import viewmodels.LabelSize
 @import viewmodels.helpers.ErrorNotificationBannerHelper
-@import pages.sections.dispatch.DispatchWarehouseExcisePage
 
 @this(
     layout: templates.Layout,
@@ -35,7 +35,7 @@
 
 @(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("dispatchWarehouseExcise.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("dispatchWarehouseExcise.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action = controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onSubmit(request.ern, request.draftId, mode)) {
 

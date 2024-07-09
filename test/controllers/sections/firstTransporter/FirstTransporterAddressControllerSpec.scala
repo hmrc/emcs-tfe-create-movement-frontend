@@ -52,7 +52,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
       mockUserAnswersService,
       new FakeFirstTransporterNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       new AddressFormProvider(),

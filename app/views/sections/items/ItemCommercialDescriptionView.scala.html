@@ -14,10 +14,10 @@
  * limitations under the License.
  *@
 
+@import models.GoodsType
 @import models.requests.DataRequest
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
 @import viewmodels.LabelSize
-@import models.GoodsType
 @import viewmodels.helpers.ItemCommercialDescriptionHelper
 
 @this(
@@ -36,7 +36,7 @@
 
 @(form: Form[_], action: Call, goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemCommercialDescription.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemCommercialDescription.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action, 'autoComplete -> "off"){
 

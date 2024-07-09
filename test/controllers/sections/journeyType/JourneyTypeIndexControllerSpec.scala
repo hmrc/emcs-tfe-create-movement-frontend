@@ -38,7 +38,7 @@ class JourneyTypeIndexControllerSpec extends SpecBase with MockUserAnswersServic
       mockUserAnswersService,
       app.injector.instanceOf[JourneyTypeNavigator],
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       Helpers.stubMessagesControllerComponents()

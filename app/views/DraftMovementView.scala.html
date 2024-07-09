@@ -45,7 +45,7 @@
 
 @layout(
     pageTitle = titleNoForm(headerAndTitle),
-    maybeShowActiveTrader = maybeShowActiveTrader(request),
+    maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages))),
     showBackLink = false
 ) {
 

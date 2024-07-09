@@ -1,5 +1,10 @@
 service.name = Excise Movement and Control System
 
+navigation.home = Home
+navigation.messages = Messages
+navigation.drafts = Drafts
+navigation.movements = Movements
+
 site.back = Back
 site.remove = Remove
 site.continueEditing = Continue editing

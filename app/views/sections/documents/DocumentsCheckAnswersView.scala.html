@@ -27,7 +27,7 @@
 
 @(summaryList: SummaryList)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("documentsCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = titleNoForm(messages("documentsCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action = controllers.sections.documents.routes.DocumentsCheckAnswersController.onSubmit(request.ern, request.draftId), 'autoComplete -> "off") {
 

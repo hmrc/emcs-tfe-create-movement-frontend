@@ -49,7 +49,7 @@ class ItemWineGrowingZoneControllerSpec extends SpecBase with MockUserAnswersSer
       userAnswersService = mockUserAnswersService,
       navigator = new FakeItemsNavigator(testOnwardRoute),
       auth = fakeAuthAction,
-      getData = new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      getData = new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       requireData = dataRequiredAction,
       betaAllowList = fakeBetaAllowListAction,
       formProvider = formProvider,

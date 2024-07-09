@@ -53,7 +53,7 @@ class ItemPackagingShippingMarksChoiceControllerSpec extends SpecBase with MockU
       fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),

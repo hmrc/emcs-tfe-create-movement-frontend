@@ -34,7 +34,7 @@
 
 @(form: Form[_], itemIndex: Index, packagingIndex: Index, packagingDescription: String, packagingQuantity: String, action: Call, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemPackagingShippingMarksChoice.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemPackagingShippingMarksChoice.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action, 'autoComplete -> "off") {
 

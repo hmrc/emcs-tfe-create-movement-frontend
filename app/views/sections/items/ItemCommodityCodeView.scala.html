@@ -14,16 +14,13 @@
  * limitations under the License.
  *@
 
-@import models.requests.DataRequest
-@import viewmodels.InputWidth._
-@import controllers.sections.items.routes
+@import config.AppConfig
 @import models.GoodsType
+@import models.requests.DataRequest
+@import models.response.referenceData.CnCodeInformation
 @import uk.gov.hmrc.govukfrontend.views.Implicits.RichSelect
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
-@import models.response.referenceData.CnCodeInformation
-@import pages.sections.items.ItemCommodityCodePage
 @import views.html.helper.CSPNonce
-@import config.AppConfig
 
 @this(
         layout: templates.Layout,
@@ -48,7 +45,7 @@
   <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
 }
 
-@layout(pageTitle = title(form = form, title = messages("itemCommodityCode.title", goodsType.toSingularOutput())), additionalCss = autocompleteCss(), additionalScripts = scripts, maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form = form, title = messages("itemCommodityCode.title", goodsType.toSingularOutput())), additionalCss = autocompleteCss(), additionalScripts = scripts, maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action) {
         @if(form.errors.nonEmpty) {

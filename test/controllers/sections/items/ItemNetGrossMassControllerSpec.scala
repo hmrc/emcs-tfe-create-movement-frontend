@@ -52,7 +52,7 @@ class ItemNetGrossMassControllerSpec extends SpecBase with MockUserAnswersServic
       mockUserAnswersService,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       app.injector.instanceOf[DataRequiredAction],
       fakeBetaAllowListAction,
       formProvider,

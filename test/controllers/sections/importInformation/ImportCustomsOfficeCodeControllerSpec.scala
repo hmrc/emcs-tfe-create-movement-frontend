@@ -47,7 +47,7 @@ class ImportCustomsOfficeCodeControllerSpec extends SpecBase with MockUserAnswer
       messagesApi,
       fakeAuthAction,
       fakeBetaAllowListAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       new FakeImportInformationNavigator(testOnwardRoute),
       mockUserAnswersService,

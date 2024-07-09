@@ -14,11 +14,11 @@
  * limitations under the License.
  *@
 
-@import models.requests.DataRequest
-@import viewmodels.InputWidth._
 @import config.AppConfig
-@import viewmodels.LabelSize
+@import models.requests.DataRequest
 @import pages.sections.exportInformation.ExportCustomsOfficePage
+@import viewmodels.InputWidth._
+@import viewmodels.LabelSize
 @import viewmodels.helpers.ErrorNotificationBannerHelper
 
 @this(
@@ -39,7 +39,7 @@
 
 @(form: Form[_], action: Call, euExport: Boolean)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("exportCustomsOffice.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("exportCustomsOffice.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action) {
 

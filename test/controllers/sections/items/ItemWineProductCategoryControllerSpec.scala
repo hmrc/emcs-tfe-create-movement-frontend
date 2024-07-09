@@ -50,7 +50,7 @@ class ItemWineProductCategoryControllerSpec extends SpecBase with MockUserAnswer
       navigator = new FakeItemsNavigator(testOnwardRoute),
       auth = fakeAuthAction,
       betaAllowList = fakeBetaAllowListAction,
-      getData = new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      getData = new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       requireData = dataRequiredAction,
       formProvider = formProvider,
       controllerComponents = Helpers.stubMessagesControllerComponents(),

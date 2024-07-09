@@ -50,7 +50,7 @@ class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswer
       fakeBetaAllowListAction,
       app.injector.instanceOf[TransportUnitNavigator],
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),

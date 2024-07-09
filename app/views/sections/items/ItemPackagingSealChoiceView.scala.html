@@ -15,7 +15,6 @@
  *@
 
 @import models.requests.DataRequest
-@import viewmodels.LegendSize
 
 @this(
     layout: templates.Layout,
@@ -32,7 +31,7 @@
 
 @(form: Form[_], action: Call, packagingDescription: String,  packagingIndex: Index, itemIndex: Index, packagingQuantity: Option[String], isBulk: Boolean)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemPackagingSealChoice.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemPackagingSealChoice.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action = action, 'autoComplete -> "off") {
 

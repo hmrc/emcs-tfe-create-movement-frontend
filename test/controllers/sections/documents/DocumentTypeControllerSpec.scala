@@ -67,7 +67,7 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
       fakeBetaAllowListAction,
       new FakeDocumentsNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       mockGetDocumentTypesService,
       formProvider,

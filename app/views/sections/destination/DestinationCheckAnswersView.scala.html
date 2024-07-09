@@ -15,8 +15,8 @@
  *@
 
 @import models.requests.DataRequest
-@import viewmodels.helpers.ErrorNotificationBannerHelper
 @import pages.sections.destination.DestinationWarehouseExcisePage
+@import viewmodels.helpers.ErrorNotificationBannerHelper
 
 @this(
     layout: templates.Layout,
@@ -31,7 +31,7 @@
 
 @(list: SummaryList, onSubmitCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("destinationCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = titleNoForm(messages("destinationCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
 

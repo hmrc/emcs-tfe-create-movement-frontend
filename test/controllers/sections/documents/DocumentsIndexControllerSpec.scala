@@ -35,7 +35,7 @@ class DocumentsIndexControllerSpec extends SpecBase with MockUserAnswersService 
       mockUserAnswersService,
       new FakeDocumentsNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       messagesControllerComponents

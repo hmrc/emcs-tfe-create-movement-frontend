@@ -16,9 +16,9 @@
 
 @import models.requests.DataRequest
 @import models.sections.info.movementScenario.MovementScenario
+@import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 @import models.sections.journeyType.HowMovementTransported
 @import viewmodels.LegendSize
-@import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 
 @this(
     layout: templates.Layout,
@@ -41,7 +41,7 @@
   )
 }
 
-@layout(pageTitle = title(form, messages("howMovementTransported.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("howMovementTransported.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action = controllers.sections.journeyType.routes.HowMovementTransportedController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
 

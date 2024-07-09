@@ -60,20 +60,29 @@ class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitchi
     }
 
     ".emcsTfeHomeUrl" - {
-      "should generate the correct url" - {
-        s"when the $ReturnToLegacy feature switch is enabled" in {
-          enable(ReturnToLegacy)
-
-          appConfig.emcsTfeHomeUrl mustBe "http://localhost:8080/emcs/trader"
-        }
-
-        s"when the $ReturnToLegacy feature switch is disabled" in {
-          disable(ReturnToLegacy)
-
-          appConfig.emcsTfeHomeUrl mustBe "http://localhost:8310/emcs/account"
-        }
+      "should generate the correct url" in {
+        appConfig.emcsTfeHomeUrl mustBe "http://localhost:8310/emcs/account"
       }
     }
+
+    ".emcsTfeMessagesUrl" - {
+      "should generate the correct url" in {
+        appConfig.emcsTfeMessagesUrl(testErn) mustBe s"http://localhost:8310/emcs/account/trader/$testErn/messages"
+      }
+    }
+
+    ".emcsTfeDraftsUrl" - {
+      "should generate the correct url" in {
+        appConfig.emcsTfeDraftsUrl(testErn) mustBe s"http://localhost:8310/emcs/account/trader/$testErn/draft-movements"
+      }
+    }
+
+    ".emcsTfeMovementsUrl" - {
+      "should generate the correct url" in {
+        appConfig.emcsTfeMovementsUrl(testErn) mustBe s"http://localhost:8310/emcs/account/trader/$testErn/movements"
+      }
+    }
+
   }
 
 }

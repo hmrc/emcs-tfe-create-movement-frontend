@@ -47,4 +47,7 @@ trait EmcsTfeHttpParser[A] extends BaseConnectorUtils[A] {
     withExceptionRecovery("post") {
       http.POST[I, Either[ErrorResponse, A]](url, body)(writes, EmcsTfeReads, hc, ec)
     }(implicitly, logger)
+
+  def get(url: String, queryParams: Seq[(String, String)] = Seq.empty)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, A]] =
+    http.GET[Either[ErrorResponse, A]](url, queryParams)
 }

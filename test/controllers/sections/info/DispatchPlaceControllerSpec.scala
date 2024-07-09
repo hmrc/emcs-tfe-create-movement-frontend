@@ -48,9 +48,9 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService w
       mockUserAnswersService,
       new FakeInfoNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakePreDraftRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakePreDraftRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       preDraftDataRequiredAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
@@ -70,10 +70,12 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService w
         lazy val dispatchPlaceSubmitAction = controllers.sections.info.routes.DispatchPlaceController.onPreDraftSubmit(testNorthernIrelandErn, NormalMode)
 
         "must return OK and the correct view for a GET" in new Fixture(userAnswers = Some(northernIrelandUserAnswers)) {
-          val result = controller.onPreDraftPageLoad(testNorthernIrelandErn, NormalMode)(request)
+          val dr = dataRequest(request, ern = testNorthernIrelandErn)
+
+          val result = controller.onPreDraftPageLoad(testNorthernIrelandErn, NormalMode)(dr)
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form, dispatchPlaceSubmitAction)(dataRequest(request), messages(request)).toString
+          contentAsString(result) mustEqual view(form, dispatchPlaceSubmitAction)(dr, messages(request)).toString
         }
       }
 
@@ -95,11 +97,13 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService w
         lazy val dispatchPlaceSubmitAction = controllers.sections.info.routes.DispatchPlaceController.onPreDraftSubmit(testNorthernIrelandErn, NormalMode)
 
         "must return a Bad Request and errors when invalid data is submitted" in new Fixture(userAnswers = Some(northernIrelandUserAnswers)) {
+          val dr = dataRequest(request, ern = testNorthernIrelandErn)
+
           val boundForm = form.bind(Map("value" -> ""))
           val result = controller.onPreDraftSubmit(testNorthernIrelandErn, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
           status(result) mustEqual BAD_REQUEST
-          contentAsString(result) mustEqual view(boundForm, dispatchPlaceSubmitAction)(dataRequest(request), messages(request)).toString
+          contentAsString(result) mustEqual view(boundForm, dispatchPlaceSubmitAction)(dr, messages(request)).toString
         }
 
         "must redirect to the next page when valid data is submitted" in new Fixture(userAnswers = Some(northernIrelandUserAnswers)) {

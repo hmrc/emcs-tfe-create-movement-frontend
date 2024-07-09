@@ -67,18 +67,16 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   lazy val feedbackFrontendSurveyUrl: String = s"$feedbackFrontendHost/feedback/$deskproName/beta"
 
   def emcsTfeHomeUrl: String =
-    if (isEnabled(ReturnToLegacy)) {
-      configuration.get[String]("urls.legacy.atAGlance")
-    } else {
-      configuration.get[String]("urls.emcsTfeHome")
-    }
+    configuration.get[String]("urls.emcsTfeHome")
+
+  def emcsTfeMessagesUrl(ern: String): String =
+    configuration.get[String]("urls.emcsTfeMessages").replace("{ern}", ern)
 
   def emcsTfeDraftsUrl(ern: String): String =
-    if (isEnabled(ReturnToLegacy)) {
-      configuration.get[String]("urls.legacy.atAGlance")
-    } else {
-      configuration.get[String]("urls.emcsTfeDrafts").replace("{ern}", ern)
-    }
+    configuration.get[String]("urls.emcsTfeDrafts").replace("{ern}", ern)
+
+  def emcsTfeMovementsUrl(ern: String): String =
+    configuration.get[String]("urls.emcsTfeMovements").replace("{ern}", ern)
 
   def returnToDraft(implicit request: DataRequest[_]): String = controllers.routes.DraftMovementController.onPageLoad(request.ern, request.draftId).url
 
@@ -132,4 +130,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   def enableXIPCInCaM: Boolean = isEnabled(EnableXIPCInCaM)
 
   def betaCheckServiceName: String = configuration.get[String]("beta.serviceName")
+
+  def messageStatisticsNotificationEnabled: Boolean = isEnabled(MessageStatisticsNotification)
 }

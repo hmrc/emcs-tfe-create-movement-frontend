@@ -49,7 +49,7 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
       fakeBetaAllowListAction,
       new FakeDestinationNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       formProvider,
       messagesControllerComponents,

@@ -46,7 +46,7 @@ class DocumentsCheckAnswersControllerSpec extends SpecBase with MockUserAnswersS
       fakeBetaAllowListAction,
       new FakeDocumentsNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       messagesControllerComponents,
       view,

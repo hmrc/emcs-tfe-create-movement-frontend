@@ -48,7 +48,7 @@ class GuarantorCheckAnswersControllerSpec extends SpecBase with SummaryListFluen
       mockUserAnswersService,
       new FakeGuarantorNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       mockGuarantorCheckAnswersHelper,

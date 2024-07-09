@@ -28,7 +28,7 @@
 @(submitAction: Call)(implicit request: DataRequest[_], messages: Messages)
 
 
-@layout(pageTitle = titleNoForm(messages("declaration.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = titleNoForm(messages("declaration.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(submitAction) {
 

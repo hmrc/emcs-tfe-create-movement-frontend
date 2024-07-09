@@ -17,7 +17,7 @@
 package config
 
 import base.SpecBase
-import featureswitch.core.config.{FeatureSwitching, RedirectToFeedbackSurvey, ReturnToLegacy}
+import featureswitch.core.config.{FeatureSwitching, RedirectToFeedbackSurvey}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.BeforeAndAfterEach
 import play.api.test.FakeRequest

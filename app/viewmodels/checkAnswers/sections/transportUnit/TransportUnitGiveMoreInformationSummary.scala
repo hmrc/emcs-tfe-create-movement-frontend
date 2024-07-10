@@ -46,7 +46,7 @@ object TransportUnitGiveMoreInformationSummary {
               content = "site.change",
               href = routes.TransportUnitGiveMoreInformationController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
               id = s"changeTransportUnitMoreInformation${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("transportUnitGiveMoreInformation.change.hidden"))
+            ).withVisuallyHiddenText(messages("transportUnitGiveMoreInformation.change.hidden", idx.displayIndex))
           )
         ).flatten
       } else {

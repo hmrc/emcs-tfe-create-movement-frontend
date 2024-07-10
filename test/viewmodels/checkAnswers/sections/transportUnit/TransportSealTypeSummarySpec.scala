@@ -73,7 +73,7 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
                       content = messagesForLanguage.change,
                       href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                       id = "changeTransportSealType1"
-                    ).withVisuallyHiddenText(messagesForLanguage.sealTypeCyaChangeHidden)
+                    ).withVisuallyHiddenText(messagesForLanguage.sealTypeCyaChangeHidden(testIndex1))
                   )
                 )
               )
@@ -134,7 +134,7 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
                       content = messagesForLanguage.change,
                       href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                       id = "changeTransportSealType1"
-                    ).withVisuallyHiddenText(messagesForLanguage.sealTypeCyaChangeHidden)
+                    ).withVisuallyHiddenText(messagesForLanguage.sealTypeCyaChangeHidden(testIndex1))
                   )
                 )
               )

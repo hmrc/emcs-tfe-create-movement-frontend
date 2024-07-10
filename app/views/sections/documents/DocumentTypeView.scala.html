@@ -27,6 +27,7 @@
         govukButton: GovukButton,
         h2: components.h2,
         continueOrExit: components.continueOrExit,
+        clearAccessibleAutocompleteButton: components.clearAccessibleAutocompleteButton,
         autocompleteCss: HmrcAccessibleAutocompleteCss,
         autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
@@ -36,6 +37,13 @@
 @scripts = {
   @autocompleteJavascript()
   <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
+}
+
+@errorMessage = @{
+    form.errors("document-type") match {
+        case Nil => None
+        case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
+    }
 }
 
 @layout(pageTitle = title(form, messages("documentType.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages))), additionalCss = autocompleteCss(), additionalScripts = scripts) {
@@ -57,10 +65,7 @@
                     content = Text(messages("documentType.heading"))
                 ),
                 items = selectOptions,
-                errorMessage = form.errors("document-type") match {
-                    case Nil => None
-                    case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
-                }
+                errorMessage = errorMessage
             ).asAccessibleAutocomplete(
                 Some(
                     AccessibleAutocomplete(
@@ -70,6 +75,8 @@
                 )
             )
         )
+
+        @clearAccessibleAutocompleteButton(idToClear = "document-type")
 
         @continueOrExit()
     }

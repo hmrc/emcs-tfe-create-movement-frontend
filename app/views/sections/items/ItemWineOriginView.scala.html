@@ -20,24 +20,32 @@
 @import views.html.helper.CSPNonce
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton,
-    govukSelect: GovukSelect,
-    h1: components.h1,
-    h2: components.h2,
-    continueOrExit: components.continueOrExit,
-    autocompleteCss: HmrcAccessibleAutocompleteCss,
-    autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukInput: GovukInput,
+        govukButton: GovukButton,
+        govukSelect: GovukSelect,
+        h1: components.h1,
+        h2: components.h2,
+        continueOrExit: components.continueOrExit,
+        clearAccessibleAutocompleteButton: components.clearAccessibleAutocompleteButton,
+        autocompleteCss: HmrcAccessibleAutocompleteCss,
+        autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
 
 @(form: Form[_], action: Call, selectOptions: Seq[SelectItem])(implicit request: DataRequest[_], messages: Messages)
 
 @scripts = {
-    @autocompleteJavascript()
+@autocompleteJavascript()
     <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
+}
+
+@errorMessage = @{
+    form.errors("country") match {
+        case Nil => None
+        case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
+    }
 }
 
 @layout(pageTitle = title(form, messages("itemWineOrigin.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages))), additionalCss = autocompleteCss(), additionalScripts = scripts) {
@@ -52,19 +60,16 @@
 
         @govukSelect(
             Select(
-              id = "country",
-              name = "country",
-              label = Label(
-                  classes = "govuk-label--l",
-                  isPageHeading = true,
-                  content = Text(messages("itemWineOrigin.heading"))
-              ),
-              items = selectOptions,
-              hint = Some(HintViewModel(content = Text(messages("itemWineOrigin.hint")))),
-              errorMessage = form.errors("country") match {
-              case Nil => None
-              case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
-              }
+                id = "country",
+                name = "country",
+                label = Label(
+                    classes = "govuk-label--l",
+                    isPageHeading = true,
+                    content = Text(messages("itemWineOrigin.heading"))
+                ),
+                items = selectOptions,
+                hint = Some(HintViewModel(content = Text(messages("itemWineOrigin.hint")))),
+                errorMessage = errorMessage
             ).asAccessibleAutocomplete(
                 Some(
                     AccessibleAutocomplete(
@@ -75,6 +80,8 @@
                 )
             )
         )
+
+        @clearAccessibleAutocompleteButton(idToClear = "country")
 
         @continueOrExit()
 

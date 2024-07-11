@@ -17,16 +17,17 @@
 package viewmodels.helpers
 
 import models.requests.DataRequest
+import models.sections.items.ExciseProductCodeRules
 import play.api.i18n.Messages
 
 class ItemExciseProductCodeHelper {
   def insetText()(implicit request: DataRequest[_], messages: Messages): Option[String] = {
-    if (request.isUkToUkAndNoGuarantor) {
+    if (ExciseProductCodeRules.GBNoGuarantorRules.shouldDisplayInset()) {
       Some(messages("itemExciseProductCode.inset.GBNoGuarantor"))
-    } else if (request.isUnknownDestination) {
+    } else if (ExciseProductCodeRules.NINoGuarantorRules.shouldDisplayInset()) {
+      Some(messages("itemExciseProductCode.inset.XINoGuarantor"))
+    } else if (ExciseProductCodeRules.UnknownDestinationRules.shouldDisplayInset()) {
       Some(messages("itemExciseProductCode.inset.unknownDestination"))
-    } else if (request.isUkToEuAndNoGuarantor) {
-      Some(messages("itemExciseProductCode.inset.EuNoGuarantor"))
     } else {
       None
     }

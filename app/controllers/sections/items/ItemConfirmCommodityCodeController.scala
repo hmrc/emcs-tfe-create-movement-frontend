@@ -19,8 +19,10 @@ package controllers.sections.items
 import controllers.actions._
 import models.requests.{CnCodeInformationItem, DataRequest}
 import models.response.referenceData.CnCodeInformation
-import models.{Index, NormalMode, ReviewMode}
+import models.sections.items.ExciseProductCodeRules
+import models.{Index, NormalMode, ReviewMode, UserAnswers}
 import navigation.ItemsNavigator
+import pages.sections.guarantor.GuarantorSection
 import pages.sections.items.{ItemCommodityCodePage, ItemConfirmCommodityCodePage, ItemExciseProductCodePage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -42,7 +44,7 @@ class ItemConfirmCommodityCodeController @Inject()(override val messagesApi: Mes
                                                    val navigator: ItemsNavigator,
                                                    val itemConfirmCommodityCodeHelper: ItemConfirmCommodityCodeHelper,
                                                    view: ItemConfirmCommodityCodeView
-                                              ) extends BaseItemsNavigationController with AuthActionHelper {
+                                                  ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) {
@@ -50,10 +52,10 @@ class ItemConfirmCommodityCodeController @Inject()(override val messagesApi: Mes
         validateIndexAsync(idx) {
           withCnCodeInformation(idx) {
             cnCodeInformation =>
-              Ok(view(
+              Future.successful(Ok(view(
                 routes.ItemConfirmCommodityCodeController.onSubmit(request.ern, request.draftId, idx),
                 itemConfirmCommodityCodeHelper.summaryList(idx, cnCodeInformation, ReviewMode)
-              ))
+              )))
           }
         }
     }
@@ -63,20 +65,38 @@ class ItemConfirmCommodityCodeController @Inject()(override val messagesApi: Mes
     authorisedDataRequestAsync(ern, draftId) {
       implicit request =>
         validateIndexAsync(idx) {
-          Future.successful(Redirect(navigator.nextPage(ItemConfirmCommodityCodePage(idx), NormalMode, request.userAnswers)))
+          withCnCodeInformation(idx) {
+            case CnCodeInformation(_, _, exciseProductCode, _, _) =>
+              userAnswersService.set(userAnswersWithGuarantorSectionMaybeRemoved(request.userAnswers, exciseProductCode)).map {
+                userAnswers =>
+                  Redirect(navigator.nextPage(ItemConfirmCommodityCodePage(idx), NormalMode, userAnswers))
+              }
+          }
         }
     }
 
-  private[controllers] def withCnCodeInformation(idx: Index)(f: CnCodeInformation => Result)(implicit request: DataRequest[_]): Future[Result] = {
+  private[controllers] def userAnswersWithGuarantorSectionMaybeRemoved(userAnswers: UserAnswers, exciseProductCode: String)
+                                                                      (implicit request: DataRequest[_]): UserAnswers = {
+    if (
+      ExciseProductCodeRules.GBNoGuarantorRules.shouldResetGuarantorSectionOnSubmission(exciseProductCode) ||
+        ExciseProductCodeRules.NINoGuarantorRules.shouldResetGuarantorSectionOnSubmission(exciseProductCode)
+    ) {
+      userAnswers.resetSection(GuarantorSection)
+    } else {
+      userAnswers
+    }
+  }
+
+  private[controllers] def withCnCodeInformation(idx: Index)(f: CnCodeInformation => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
     (request.userAnswers.get(ItemExciseProductCodePage(idx)), request.userAnswers.get(ItemCommodityCodePage(idx))) match {
       case (Some(epc), Some(commodityCode)) =>
-        cnCodeInformationService.getCnCodeInformation(Seq(CnCodeInformationItem(epc, commodityCode))).map { response =>
+        cnCodeInformationService.getCnCodeInformation(Seq(CnCodeInformationItem(epc, commodityCode))).flatMap { response =>
           response.headOption match {
             case Some((_, cnCodeInfo)) =>
               f(cnCodeInfo)
             case _ =>
               logger.warn(s"[withCnCodeInformation] Could not retrieve CnCodeInformation for item productCode: '$epc' and commodityCode: '$commodityCode'")
-              Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+              Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
           }
         }
       case _ =>

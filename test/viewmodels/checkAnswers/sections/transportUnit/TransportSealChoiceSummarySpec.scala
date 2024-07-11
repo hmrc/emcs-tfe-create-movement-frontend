@@ -73,7 +73,7 @@ class TransportSealChoiceSummarySpec extends SpecBase with Matchers with Transpo
                       content = messagesForLanguage.change,
                       href = transportUnitRoutes.TransportSealChoiceController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                       id = "changeTransportSealChoice1"
-                    ).withVisuallyHiddenText(messagesForLanguage.moreInfoCyaChangeHidden)
+                    ).withVisuallyHiddenText(messagesForLanguage.moreInfoCyaChangeHidden(testIndex1))
                   )
                 )
               )

@@ -43,7 +43,7 @@ object TransportSealInformationSummary {
                 "site.change",
                 routes.TransportSealTypeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
                 s"changeTransportSealInformation${idx.displayIndex}"
-              ).withVisuallyHiddenText(messages("transportSealType.moreInfo.change.hidden"))
+              ).withVisuallyHiddenText(messages("transportSealType.moreInfo.change.hidden", idx.displayIndex))
             )
           } else {
             Seq()
@@ -53,7 +53,7 @@ object TransportSealInformationSummary {
           key = "transportSealType.moreInfo.checkYourAnswersLabel",
           value = ValueViewModel(HtmlContent(link(
             link = routes.TransportSealTypeController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
-            messageKey = s"transportSealType.moreInfo.checkYourAnswersAddInfo")))
+            messageKey = "transportSealType.moreInfo.checkYourAnswersAddInfo")))
         )
       }
     }

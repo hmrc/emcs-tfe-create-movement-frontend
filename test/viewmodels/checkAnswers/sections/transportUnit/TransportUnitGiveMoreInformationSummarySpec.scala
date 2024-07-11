@@ -72,7 +72,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
                     content = messagesForLanguage.change,
                     href = routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
                     id = "changeTransportUnitMoreInformation1"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden(testIndex1))
                 )
               )
             )

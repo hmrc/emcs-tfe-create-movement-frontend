@@ -39,7 +39,7 @@ object TransportUnitIdentitySummary {
             "site.change",
             routes.TransportUnitIdentityController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx, CheckMode).url,
             s"changeTransportUnitIdentity${idx.displayIndex}"
-          ).withVisuallyHiddenText(messages("transportUnitIdentity.change.hidden"))
+          ).withVisuallyHiddenText(messages("transportUnitIdentity.change.hidden", idx.displayIndex))
         )
       } else {
         Seq()

@@ -92,7 +92,6 @@ class ItemExciseProductCodeController @Inject()(
       }
     }
 
-  // TODO: test this method
   private[controllers] def userAnswersWithGuarantorSectionMaybeRemoved(userAnswers: UserAnswers, exciseProductCode: String)
                                                                       (implicit request: DataRequest[_]): UserAnswers = {
     if (

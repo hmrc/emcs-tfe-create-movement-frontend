@@ -74,6 +74,7 @@ class ItemPackagingSelectShippingMarkViewSpec extends SpecBase
           Selectors.selectOption(2) -> "beans",
           Selectors.selectOption(3) -> "eggs",
           Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.secondaryButton -> messagesForLanguage.clearSelectedCode,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))(doc())
       }

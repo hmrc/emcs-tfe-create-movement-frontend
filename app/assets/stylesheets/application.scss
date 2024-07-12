@@ -7,10 +7,11 @@ $hmrc-assets-path: "/emcs/create-movement/assets/lib/hmrc-frontend/hmrc/assets/"
 @import "primary-navigation";
 
 .js-visible {
-  display: none !important;
+  display: none;
 }
+
 .js-enabled .js-visible {
-  display: inline-block !important;
+  display: inline-block;
 }
 
 .float-none {
@@ -21,6 +22,7 @@ $hmrc-assets-path: "/emcs/create-movement/assets/lib/hmrc-frontend/hmrc/assets/"
   header, nav, footer {
     display: none;
   }
+
   .no-print, .no-print * {
     display: none !important;
   }

@@ -43,6 +43,7 @@ trait BaseMessages { _: i18n =>
   val continue = "Continue"
   val confirmAnswers = "Confirm answers"
   val notProvided = "Not provided"
+  val clearSelectedCode = "Clear selected code"
   val saveAndContinue = "Save and continue"
   val confirmAndContinue = "Confirm and continue"
   val returnToDraft = "Return to draft"

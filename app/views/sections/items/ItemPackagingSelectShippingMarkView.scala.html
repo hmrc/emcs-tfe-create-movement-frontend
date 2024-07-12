@@ -23,7 +23,7 @@
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
-        govukCharacterCount : GovukCharacterCount,
+        govukCharacterCount: GovukCharacterCount,
         govukButton: GovukButton,
         h1: components.h1,
         h2: components.h2,
@@ -32,6 +32,7 @@
         govukSelect: GovukSelect,
         strong: components.strong,
         continueOrExit: components.continueOrExit,
+        clearAccessibleAutocompleteButton: components.clearAccessibleAutocompleteButton,
         autocompleteCss: HmrcAccessibleAutocompleteCss,
         autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
@@ -39,8 +40,15 @@
 @(form: Form[_], action: Call, itemIdx: Index, packagingIdx: Index, selectOptions: Seq[SelectItem])(implicit request: DataRequest[_], messages: Messages)
 
 @scripts = {
-    @autocompleteJavascript()
+@autocompleteJavascript()
     <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
+}
+
+@errorMessage = @{
+    form.errors("value") match {
+        case Nil => None
+        case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
+    }
 }
 
 @layout(pageTitle = title(form, messages("itemPackagingSelectShippingMark.title", packagingIdx.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages))), additionalCss = autocompleteCss(), additionalScripts = scripts) {
@@ -64,10 +72,7 @@
                 ),
                 hint = Some(HintViewModel(Text(messages("itemPackagingSelectShippingMark.hint", itemIdx.displayIndex)))),
                 items = selectOptions,
-                errorMessage = form.errors("value") match {
-                case Nil => None
-                case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
-                }
+                errorMessage = errorMessage
             ).asAccessibleAutocomplete(
                 Some(
                     AccessibleAutocomplete(
@@ -77,6 +82,8 @@
                 )
             )
         )
+
+        @clearAccessibleAutocompleteButton(idToClear = "value")
 
         @continueOrExit()
 

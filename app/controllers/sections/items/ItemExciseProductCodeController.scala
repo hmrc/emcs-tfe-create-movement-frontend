@@ -19,8 +19,10 @@ package controllers.sections.items
 import controllers.actions._
 import forms.sections.items.ItemExciseProductCodeFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode}
+import models.sections.items.ExciseProductCodeRules
+import models.{Index, Mode, UserAnswers}
 import navigation.ItemsNavigator
+import pages.sections.guarantor.GuarantorSection
 import pages.sections.items.{ItemExciseProductCodePage, ItemsSectionItem, ItemsSectionItems}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -82,13 +84,25 @@ class ItemExciseProductCodeController @Inject()(
                   newAnswer = value,
                   cleansingFunction = removeItemSubmissionFailure(idx, request.userAnswers.resetIndexedSection(ItemsSectionItem(idx), idx))
                 )
-                saveAndRedirect(ItemExciseProductCodePage(idx), value, updatedUserAnswers, mode)
+                saveAndRedirect(ItemExciseProductCodePage(idx), value, userAnswersWithGuarantorSectionMaybeRemoved(updatedUserAnswers, value), mode)
               }
             )
           }
         }
       }
     }
+
+  private[controllers] def userAnswersWithGuarantorSectionMaybeRemoved(userAnswers: UserAnswers, exciseProductCode: String)
+                                                                      (implicit request: DataRequest[_]): UserAnswers = {
+    if (
+      ExciseProductCodeRules.GBNoGuarantorRules.shouldResetGuarantorSectionOnSubmission(exciseProductCode) ||
+        ExciseProductCodeRules.NINoGuarantorRules.shouldResetGuarantorSectionOnSubmission(exciseProductCode)
+    ) {
+      userAnswers.remove(GuarantorSection)
+    } else {
+      userAnswers
+    }
+  }
 
   override def validateIndexAsync(idx: Index)(f: => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
     validateIndexForJourneyEntry(ItemsCount, idx, ItemsSectionItems.MAX)(

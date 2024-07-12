@@ -24,7 +24,7 @@ object ItemConfirmCommodityCodeMessages {
     def heading() = "Review and confirm Excise Product Code and commodity code"
     def title(): String = titleHelper(heading())
 
-    val exciseProductCode: String = "Excise product code"
+    val exciseProductCode: String = "Excise Product Code"
     val commodityCode: String = "Commodity code"
     val confirmCodes = "Confirm codes"
   }

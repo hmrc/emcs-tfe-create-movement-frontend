@@ -21,9 +21,13 @@ import controllers.actions.FakeDataRetrievalAction
 import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import forms.sections.items.ItemExciseProductCodeFormProvider
 import mocks.services.{MockGetExciseProductCodesService, MockUserAnswersService}
+import models.requests.DataRequest
+import models.sections.info.DispatchPlace
 import models.{ExciseProductCode, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.ItemExciseProductCodePage
+import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.info.DispatchPlacePage
+import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call, Result}
 import play.api.test.Helpers._
@@ -40,7 +44,6 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
   with ItemFixtures
   with MovementSubmissionFailureFixtures {
 
-  val action: Call = controllers.sections.items.routes.ItemExciseProductCodeController.onSubmit(testErn, testDraftId, testIndex1, NormalMode)
 
   val sampleEPCs: Seq[ExciseProductCode] = Seq(beerExciseProductCode, wineExciseProductCode)
 
@@ -50,6 +53,12 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
 
   class Fixture(val userAnswers: Option[UserAnswers]) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    val ern: String = testErn
+
+    implicit lazy val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers.get, ern)
+
+    lazy val action: Call = controllers.sections.items.routes.ItemExciseProductCodeController.onSubmit(ern, testDraftId, testIndex1, NormalMode)
 
     lazy val controller = new ItemExciseProductCodeController(
       messagesApi,
@@ -73,24 +82,24 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
   "ItemExciseProductCode Controller" - {
 
     "must redirect to Index of section when the idx is outside of bounds for a GET" in new Fixture(Some(emptyUserAnswers)) {
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex2, NormalMode)(request)
+      val result: Future[Result] = controller.onPageLoad(ern, testDraftId, testIndex2, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
+      redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(ern, testDraftId).url)
     }
 
     "must redirect to Index of section when the idx is outside of bounds for a POST" in new Fixture(Some(emptyUserAnswers)) {
-      val result = controller.onSubmit(testErn, testDraftId, testIndex2, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", "W200")))
+      val result: Future[Result] = controller.onSubmit(ern, testDraftId, testIndex2, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", "W200")))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url)
+      redirectLocation(result) mustBe Some(routes.ItemsIndexController.onPageLoad(ern, testDraftId).url)
     }
 
     "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
 
       MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
 
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
+      val result: Future[Result] = controller.onPageLoad(ern, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -103,12 +112,12 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
 
       MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
 
-      val sampleEPCsSelectOptionsWithBeerSelected = SelectItemHelper.constructSelectItems(
+      val sampleEPCsSelectOptionsWithBeerSelected: Seq[SelectItem] = SelectItemHelper.constructSelectItems(
         selectOptions = sampleEPCs,
         defaultTextMessageKey = "itemExciseProductCode.select.defaultValue",
         existingAnswer = Some("B000"))(messages(request))
 
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
+      val result: Future[Result] = controller.onPageLoad(ern, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -125,7 +134,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
           ).returns(Future.successful(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)))
 
           val result: Future[Result] =
-            controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
+            controller.onSubmit(ern, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -136,7 +145,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
           MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
 
           val result: Future[Result] =
-            controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
+            controller.onSubmit(ern, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -151,7 +160,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
           ).returns(Future.successful(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)))
 
           val result: Future[Result] =
-            controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
+            controller.onSubmit(ern, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -183,7 +192,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
           ))
 
           val result: Future[Result] =
-            controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
+            controller.onSubmit(ern, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -195,9 +204,9 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
 
       MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
 
-      val boundForm = form.bind(Map("excise-product-code" -> ""))
+      val boundForm: Form[String] = form.bind(Map("excise-product-code" -> ""))
 
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", "")))
+      val result: Future[Result] = controller.onSubmit(ern, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", "")))
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
@@ -206,17 +215,71 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
 
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
+      val result: Future[Result] = controller.onPageLoad(ern, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
+      val result: Future[Result] = controller.onSubmit(ern, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+    }
+
+    "userAnswersWithGuarantorSectionMaybeRemoved" - {
+      "must return the user answers with the guarantor section removed" - {
+        "when ExciseProductCodeRules.GBNoGuarantorRules.shouldResetGuarantorSectionOnSubmission returns true" in new Fixture(Some(
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+            .set(GuarantorRequiredPage, false)
+        )) {
+          override val ern: String = testGreatBritainWarehouseKeeperErn
+
+          val result: UserAnswers = controller.userAnswersWithGuarantorSectionMaybeRemoved(userAnswers.get, testEpcTobacco)
+
+          result mustBe emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+        }
+        "when ExciseProductCodeRules.NINoGuarantorRules.shouldResetGuarantorSectionOnSubmission returns true" in new Fixture(Some(
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+            .set(DispatchPlacePage, DispatchPlace.NorthernIreland)
+            .set(GuarantorRequiredPage, false)
+        )) {
+          override val ern: String = testNorthernIrelandErn
+
+          val result: UserAnswers = controller.userAnswersWithGuarantorSectionMaybeRemoved(userAnswers.get, testEpcTobacco)
+
+          result mustBe emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco).set(DispatchPlacePage, DispatchPlace.NorthernIreland)
+        }
+      }
+
+      "must return the user answers unchanged" - {
+        "when ExciseProductCodeRules.GBNoGuarantorRules.shouldResetGuarantorSectionOnSubmission returns false" in new Fixture(Some(
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+            .set(GuarantorRequiredPage, true)
+        )) {
+          override val ern: String = testGreatBritainWarehouseKeeperErn
+
+          val result: UserAnswers = controller.userAnswersWithGuarantorSectionMaybeRemoved(userAnswers.get, testEpcWine)
+
+          result mustBe userAnswers.get
+        }
+        "when ExciseProductCodeRules.NINoGuarantorRules.shouldResetGuarantorSectionOnSubmission returns false" in new Fixture(Some(
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+            .set(DispatchPlacePage, DispatchPlace.NorthernIreland)
+            .set(GuarantorRequiredPage, true)
+        )) {
+          override val ern: String = testNorthernIrelandErn
+
+          val result: UserAnswers = controller.userAnswersWithGuarantorSectionMaybeRemoved(userAnswers.get, testEpcWine)
+
+          result mustBe userAnswers.get
+        }
+      }
     }
   }
 }

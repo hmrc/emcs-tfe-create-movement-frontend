@@ -42,7 +42,7 @@ class ItemConfirmCommodityCodeController @Inject()(override val messagesApi: Mes
                                                    val navigator: ItemsNavigator,
                                                    val itemConfirmCommodityCodeHelper: ItemConfirmCommodityCodeHelper,
                                                    view: ItemConfirmCommodityCodeView
-                                              ) extends BaseItemsNavigationController with AuthActionHelper {
+                                                  ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) {

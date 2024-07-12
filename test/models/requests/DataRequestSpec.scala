@@ -61,7 +61,7 @@ class DataRequestSpec extends SpecBase {
               answers = res match {
                 case Some(dp) => emptyUserAnswers.set(DispatchPlacePage, dp)
                 case None => emptyUserAnswers
-               }
+              }
             )
 
             request.dispatchPlace mustBe res

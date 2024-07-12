@@ -19,78 +19,95 @@
 @import uk.gov.hmrc.govukfrontend.views.Implicits.RichSelect
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
 @import viewmodels.helpers.ErrorNotificationBannerHelper
+@import viewmodels.helpers.ItemExciseProductCodeHelper
 @import views.html.helper.CSPNonce
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton,
-    govukSelect: GovukSelect,
-    h1: components.h1,
-    h2: components.h2,
-    p: components.p,
-    notificationBannerHelper: ErrorNotificationBannerHelper,
-    notificationBanner: GovukNotificationBanner,
-    warningText: components.warningText,
-    continueOrExit: components.continueOrExit,
-    autocompleteCss: HmrcAccessibleAutocompleteCss,
-    autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukInput: GovukInput,
+        govukButton: GovukButton,
+        govukSelect: GovukSelect,
+        h1: components.h1,
+        h2: components.h2,
+        p: components.p,
+        inset: components.inset,
+        notificationBannerHelper: ErrorNotificationBannerHelper,
+        notificationBanner: GovukNotificationBanner,
+        warningText: components.warningText,
+        continueOrExit: components.continueOrExit,
+        clearAccessibleAutocompleteButton: components.clearAccessibleAutocompleteButton,
+        autocompleteCss: HmrcAccessibleAutocompleteCss,
+        autocompleteJavascript: HmrcAccessibleAutocompleteJavascript,
+        helper: ItemExciseProductCodeHelper
 )
 
 @(form: Form[_], action: Call, selectOptions: Seq[SelectItem], idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
 @scripts = {
-  @autocompleteJavascript()
-  <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
+@autocompleteJavascript()
+    <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
+}
+
+@errorMessage = @{
+    form.errors("excise-product-code") match {
+        case Nil => None
+        case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
+    }
 }
 
 @layout(pageTitle = title(form, messages("itemExciseProductCode.title", idx.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages))), additionalCss = autocompleteCss(), additionalScripts = scripts) {
 
     @formHelper(action = action) {
 
-      @if(ItemExciseProductCodePage(idx).isMovementSubmissionError && form.errors.isEmpty) {
-        @notificationBannerHelper.content(ItemExciseProductCodePage(idx).getSubmissionErrorCodes(isOnAddToList = false), hasContentHeading = false).map(notificationBanner(_))
-      }
+        @if(ItemExciseProductCodePage(idx).isMovementSubmissionError && form.errors.isEmpty) {
+            @notificationBannerHelper.content(ItemExciseProductCodePage(idx).getSubmissionErrorCodes(isOnAddToList = false), hasContentHeading = false).map(notificationBanner(_))
+        }
 
-      @if(form.errors.nonEmpty) {
-          @govukErrorSummary(ErrorSummaryViewModel(form))
-      }
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
 
-      @h1("itemExciseProductCode.heading", Some(messages("items.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")), args = idx.displayIndex)
+        @h1("itemExciseProductCode.heading", Some(messages("items.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")), args = idx.displayIndex)
 
-      @p(){@messages("itemExciseProductCode.paragraph")}
+        @p() {
+            @messages("itemExciseProductCode.paragraph")
+        }
 
-      @govukSelect(
-        Select(
-          id = "excise-product-code",
-          name = "excise-product-code",
-          label = Label(
-            classes = "govuk-label--m",
-            isPageHeading = false,
-            content = Text(messages("itemExciseProductCode.label"))
-          ),
-          items = selectOptions,
-          errorMessage = form.errors("excise-product-code") match {
-          case Nil => None
-          case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
-          }
-        ).asAccessibleAutocomplete(
-          Some(
-            AccessibleAutocomplete(
-              defaultValue = Some(""),
-              showAllValues = true
+        @helper.insetText().map(insetText => inset(Html(insetText)))
+
+        @govukSelect(
+            Select(
+                id = "excise-product-code",
+                name = "excise-product-code",
+                label = Label(
+                    classes = "govuk-label--m",
+                    isPageHeading = false,
+                    content = Text(messages("itemExciseProductCode.label"))
+                ),
+                hint = Some(Hint(content = Text(messages("itemExciseProductCode.hint")))),
+                items = selectOptions,
+                errorMessage = errorMessage
+            ).asAccessibleAutocomplete(
+                Some(
+                    AccessibleAutocomplete(
+                        defaultValue = Some(""),
+                        showAllValues = true
+                    )
+                )
             )
-          )
         )
-      )
 
-      @if(mode == CheckMode) {
-        @warningText{@messages("itemExciseProductCode.warningText")}
-      }
+        @if((mode == CheckMode) || (mode == ReviewMode)) {
+            @warningText {
+                @messages("itemExciseProductCode.warningText")
+            }
+        }
 
-      @continueOrExit()
+        @clearAccessibleAutocompleteButton(idToClear = "excise-product-code")
+
+        @continueOrExit()
     }
 }
 

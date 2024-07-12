@@ -19,11 +19,7 @@ package services
 import connectors.referenceData.GetExciseProductCodesConnector
 import models.requests.DataRequest
 import models.response.ExciseProductCodesException
-import models.sections.info.movementScenario.MovementScenario.UnknownDestination
-import models.sections.info.movementScenario.MovementType
 import models.{ExciseProductCode, NorthernIrelandTemporaryCertifiedConsignor}
-import pages.sections.guarantor.GuarantorRequiredPage
-import pages.sections.info.DestinationTypePage
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
@@ -34,27 +30,19 @@ class GetExciseProductCodesService @Inject()(connector: GetExciseProductCodesCon
                                             (implicit ec: ExecutionContext) {
 
 
-  private[services] def filterEPCCodes()(implicit request: DataRequest[_]): PartialFunction[Seq[ExciseProductCode], Seq[ExciseProductCode]] =
-    epcs =>
-      (request.userAnswers.get(DestinationTypePage), request.userAnswers.get(GuarantorRequiredPage)) match {
-        case (Some(scenario), Some(false)) if scenario.movementType == MovementType.UkToUk => epcs.filter(epc => Set("B000", "W200", "W300")(epc.code))
-        case (Some(UnknownDestination), _) => epcs.filter(_.category.toUpperCase == "E")
-        case (Some(scenario), Some(false)) if scenario.movementType == MovementType.UkToEu => epcs.filter(_.category.toUpperCase == "E")
-        case _ => epcs
-      }
-
-  private[services] def removeS600IfDutySuspendedMovement()(implicit request: DataRequest[_]): PartialFunction[Seq[ExciseProductCode], Seq[ExciseProductCode]] =
-    epcs =>
-      //Only include S600 in list if consignor ERN = XIPC/ XIPTA (user is/should be asked for an XIPTA as part of a XIPC flow)
-      request.userTypeFromErn match {
-        case NorthernIrelandTemporaryCertifiedConsignor => epcs
-        case _ => epcs.filterNot(_.code == "S600")
-      }
+  private[services] def removeS600IfDutySuspendedMovement(exciseProductCodes: Seq[ExciseProductCode])
+                                                         (implicit request: DataRequest[_]): Seq[ExciseProductCode] = {
+    //Only include S600 in list if consignor ERN = XIPC/ XIPTA (user is/should be asked for an XIPTA as part of a XIPC flow)
+    request.userTypeFromErn match {
+      case NorthernIrelandTemporaryCertifiedConsignor => exciseProductCodes
+      case _ => exciseProductCodes.filterNot(_.code == "S600")
+    }
+  }
 
   def getExciseProductCodes()(implicit hc: HeaderCarrier, dataRequest: DataRequest[_]): Future[Seq[ExciseProductCode]] = {
     connector.getExciseProductCodes().map {
       case Left(_) => throw ExciseProductCodesException("No excise product codes retrieved")
-      case Right(exciseProductCodes) => (filterEPCCodes andThen removeS600IfDutySuspendedMovement)(exciseProductCodes)
+      case Right(exciseProductCodes) => removeS600IfDutySuspendedMovement(exciseProductCodes)
     }
   }
 }

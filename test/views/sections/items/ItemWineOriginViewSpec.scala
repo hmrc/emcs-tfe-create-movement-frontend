@@ -60,6 +60,7 @@ class ItemWineOriginViewSpec extends SpecBase with ViewBehaviours {
           Selectors.selectOption(1) -> messagesForLanguage.defaultSelectOption,
           Selectors.selectOption(2) -> messagesForLanguage.auSelectOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,
+          Selectors.secondaryButton -> messagesForLanguage.clearSelectedCode,
           Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }

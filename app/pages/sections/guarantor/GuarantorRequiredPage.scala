@@ -59,14 +59,14 @@ case object GuarantorRequiredPage extends QuestionPage[Boolean] {
     val isUkTaxWarehouse = request.userAnswers.get(DestinationTypePage)
       .exists(UkTaxWarehouse.toList.contains(_))
 
-    val hasReleventGoodsTypes = ItemsSectionItems.checkGoodsType(Seq(
+    val hasRelevantGoodsTypes = ItemsSectionItems.checkGoodsType(Seq(
       GoodsType.Spirits,
       GoodsType.Intermediate,
       GoodsType.Energy,
       GoodsType.Tobacco
     ))
 
-    isUkTaxWarehouse && hasReleventGoodsTypes
+    isUkTaxWarehouse && hasRelevantGoodsTypes
   }
 
   private def destinationTypeToEUCondition(implicit request: DataRequest[_]): Boolean = {

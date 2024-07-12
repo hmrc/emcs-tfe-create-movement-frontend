@@ -21,6 +21,7 @@ import models.sections.items.ExciseProductCodeRules
 import play.api.i18n.Messages
 
 class ItemExciseProductCodeHelper {
+  // TODO: test this method
   def insetText()(implicit request: DataRequest[_], messages: Messages): Option[String] = {
     if (ExciseProductCodeRules.GBNoGuarantorRules.shouldDisplayInset()) {
       Some(messages("itemExciseProductCode.inset.GBNoGuarantor"))

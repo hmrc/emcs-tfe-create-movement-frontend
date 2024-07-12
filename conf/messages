@@ -1054,9 +1054,9 @@ itemExciseProductCode.error.required = Choose the Excise Product Code
 itemExciseProductCode.error.submissionFailure = You must update the Excise Product Code so that it is different to the original submission
 itemExciseProductCode.change.hidden = Excise Product Code
 itemExciseProductCode.select.defaultValue = Choose Excise Product Code
-itemExciseProductCode.inset.GBNoGuarantor = A UK to UK movement with no guarantor must select EPC codes B000, W200 or W300. If you choose to select a different EPC code you are required to add a guarantor.
-itemExciseProductCode.inset.XINoGuarantor = NI to EU movements with no guarantor must select energy products. If you choose to select a different EPC code you are required to add a guarantor.
-itemExciseProductCode.inset.unknownDestination = Movements to an unknown destination must select energy products. If you choose to select a different EPC code this movement will fail submission.
+itemExciseProductCode.inset.GBNoGuarantor = <strong>A UK to UK movement with no guarantor must select EPC codes B000, W200 or W300.</strong> If you choose to select a different EPC code you are required to add a guarantor.
+itemExciseProductCode.inset.XINoGuarantor = <strong>NI to EU movements with no guarantor must select energy products.</strong> If you choose to select a different EPC code you are required to add a guarantor.
+itemExciseProductCode.inset.unknownDestination = <strong>Movements to an unknown destination must select energy products.</strong> If you choose to select a different EPC code this movement will fail submission.
 
 itemBrandName.title = Do you know the brand name of the {0}?
 itemBrandName.heading = Do you know the brand name of the {0}?

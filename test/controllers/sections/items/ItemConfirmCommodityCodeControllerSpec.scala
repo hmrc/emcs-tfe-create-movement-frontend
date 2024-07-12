@@ -162,7 +162,7 @@ class ItemConfirmCommodityCodeControllerSpec extends SpecBase
 
 
     "withCnCodeInformation" - {
-      val cnCodeSuccessFunction: CnCodeInformation => Future[Result] = _ => Future.successful(Results.Ok)
+      val cnCodeSuccessFunction: CnCodeInformation => Result = _ => Results.Ok
 
       "must redirect to the index controller" - {
         "when EPC is missing" in new Fixture(Some(emptyUserAnswers.set(ItemCommodityCodePage(testIndex1), testCnCodeTobacco))) {

@@ -99,7 +99,7 @@ class ItemExciseProductCodeController @Inject()(
       ExciseProductCodeRules.GBNoGuarantorRules.shouldResetGuarantorSectionOnSubmission(exciseProductCode) ||
         ExciseProductCodeRules.NINoGuarantorRules.shouldResetGuarantorSectionOnSubmission(exciseProductCode)
     ) {
-      userAnswers.resetSection(GuarantorSection)
+      userAnswers.remove(GuarantorSection)
     } else {
       userAnswers
     }

@@ -39,7 +39,7 @@ object ItemExciseProductCodeMessages {
     val warningText = s"$warning Changing the EPC code removes any information completed for this item and you will be asked to enter new item information"
 
     val insetTextGBNoGuarantor = "<strong>A UK to UK movement with no guarantor must select EPC codes B000, W200 or W300.</strong> If you choose to select a different EPC code you are required to add a guarantor."
-    val insetTextEuNoGuarantor = "<strong>A UK to UK movement with no guarantor must select EPC codes B000, W200 or W300.</strong> If you choose to select a different EPC code you are required to add a guarantor."
+    val insetTextEuNoGuarantor = "<strong>NI to EU movements with no guarantor must select energy products.</strong> If you choose to select a different EPC code you are required to add a guarantor."
     val insetTextUnknownDestination = "<strong>Movements to an unknown destination must select energy products.</strong> If you choose to select a different EPC code this movement will fail submission."
 
     val itemExciseProductCodeConsignorNotApprovedToSendError = "The excise product code for this item must be one that the consignor is approved to send"

@@ -19,9 +19,7 @@ package models.requests
 import base.SpecBase
 import models._
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
-import models.sections.info.movementScenario.MovementScenario
-import pages.sections.guarantor.GuarantorRequiredPage
-import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
+import pages.sections.info.DispatchPlacePage
 import play.api.test.FakeRequest
 
 class DataRequestSpec extends SpecBase {

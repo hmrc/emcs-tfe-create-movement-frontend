@@ -79,16 +79,6 @@ final case class UserAnswers(ern: String,
       data.setObject(section.path, Json.obj())
     }
 
-  /**
-   * @param section section to reset to an empty object
-   * @return UserAnswers with the supplied section reset to an empty JSON object
-   *         Note, if used on an indexed section, the index will be lost - use resetIndexedSection for indexed sections
-   */
-  def resetSection(section: Section[JsObject]): UserAnswers =
-    handleResult {
-      data.setObject(section.path, Json.obj())
-    }
-
   private[models] def handleResult: JsResult[JsObject] => UserAnswers = {
     case JsSuccess(updatedAnswers, _) =>
       copy(data = updatedAnswers)

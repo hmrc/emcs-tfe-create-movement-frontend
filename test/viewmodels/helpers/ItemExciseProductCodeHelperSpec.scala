@@ -19,9 +19,10 @@ package viewmodels.helpers
 import base.SpecBase
 import fixtures.messages.sections.items.ItemExciseProductCodeMessages
 import models.requests.DataRequest
+import models.sections.info.DispatchPlace
 import models.sections.info.movementScenario.MovementScenario
 import pages.sections.guarantor.GuarantorRequiredPage
-import pages.sections.info.DestinationTypePage
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import viewmodels.govuk.LabelFluency
@@ -37,7 +38,7 @@ class ItemExciseProductCodeHelperSpec extends SpecBase with LabelFluency {
 
         "insetText" - {
           "must render" - {
-            "when request is UK to UK and no guarantor" in {
+            "when ExciseProductCodeRules.GBNoGuarantorRules.shouldDisplayInset is true" in {
               implicit val request: DataRequest[_] = dataRequest(
                 request = FakeRequest(),
                 ern = "GBWK123456789",
@@ -48,18 +49,19 @@ class ItemExciseProductCodeHelperSpec extends SpecBase with LabelFluency {
               implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
               helper.insetText().value mustBe messagesForLanguage.insetTextGBNoGuarantor
             }
-            "when request is UK to EU and no guarantor" in {
+            "when ExciseProductCodeRules.NINoGuarantorRules.shouldDisplayInset is true" in {
               implicit val request: DataRequest[_] = dataRequest(
                 request = FakeRequest(),
-                ern = "GBWK123456789",
+                ern = "XIWK123456789",
                 answers = emptyUserAnswers
                   .set(DestinationTypePage, MovementScenario.DirectDelivery)
+                  .set(DispatchPlacePage, DispatchPlace.NorthernIreland)
                   .set(GuarantorRequiredPage, false)
               )
               implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
               helper.insetText().value mustBe messagesForLanguage.insetTextEuNoGuarantor
             }
-            "when request is unknown destination" in {
+            "when ExciseProductCodeRules.UnknownDestinationRules.shouldDisplayInset is true" in {
               implicit val request: DataRequest[_] = dataRequest(
                 request = FakeRequest(),
                 ern = "GBWK123456789",

@@ -49,12 +49,21 @@
 
         @helper.content(isDeferred)
 
-        @govukInput(
-            InputViewModel(
-                field = form("value"),
-                label = LabelViewModel(Text(helper.heading(isDeferred))).hidden
-            ).withWidth(Full)
-        )
+        @if(isDeferred) {
+            @govukInput(
+                InputViewModel(
+                    field = form("value"),
+                    label = LabelViewModel(Text(messages("localReferenceNumber.deferred.label"))).hidden,
+                ).withWidth(Full)
+            )
+        } else {
+            @govukInput(
+                InputViewModel(
+                    field = form("value"),
+                    label = LabelViewModel(Text(messages("localReferenceNumber.new.label"))),
+                ).withWidth(Full).withHint(HintViewModel(Text(messages("localReferenceNumber.new.hint"))))
+            )
+        }
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))

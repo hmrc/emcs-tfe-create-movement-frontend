@@ -57,7 +57,7 @@ case object GuarantorRequiredPage extends QuestionPage[Boolean] {
   private def destinationTypeUkTaxWarehouseCondition(implicit request: DataRequest[_]): Boolean = {
 
     val isUkTaxWarehouse = request.userAnswers.get(DestinationTypePage)
-      .exists(UkTaxWarehouse.toList.contains(_))
+      .exists(UkTaxWarehouse.values.contains(_))
 
     val hasRelevantGoodsTypes = ItemsSectionItems.checkGoodsType(Seq(
       GoodsType.Spirits,
@@ -71,7 +71,7 @@ case object GuarantorRequiredPage extends QuestionPage[Boolean] {
 
   private def destinationTypeToEUCondition(implicit request: DataRequest[_]): Boolean = {
 
-    val releventDestinationTypes = Seq(
+    val relevantDestinationTypes = Seq(
       EuTaxWarehouse,
       ExemptedOrganisation,
       UnknownDestination,
@@ -82,7 +82,7 @@ case object GuarantorRequiredPage extends QuestionPage[Boolean] {
       DirectDelivery
     )
 
-    request.userAnswers.get(DestinationTypePage).exists(releventDestinationTypes.contains(_))
+    request.userAnswers.get(DestinationTypePage).exists(relevantDestinationTypes.contains(_))
   }
 
   private def isAlcoholOrTobaccoCondition(implicit request: DataRequest[_]): Boolean =

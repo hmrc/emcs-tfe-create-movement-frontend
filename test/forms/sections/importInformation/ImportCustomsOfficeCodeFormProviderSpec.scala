@@ -66,10 +66,20 @@ class ImportCustomsOfficeCodeFormProviderSpec extends SpecBase with StringFieldB
       boundForm.errors mustBe Seq(FormError(fieldName, regexKey, Seq(CUSTOMS_OFFICE_CODE_REGEX)))
     }
 
-    "not bind a value that doesn't start with two capital letters" in {
+    "not bind a value that doesn't start with two letters" in {
 
-      val boundForm = form.bind(Map(fieldName -> "gb345678"))
+      val boundForm = form.bind(Map(fieldName -> "12345678"))
       boundForm.errors mustBe Seq(FormError(fieldName, regexKey, Seq(CUSTOMS_OFFICE_CODE_REGEX)))
+    }
+
+    "must transform the inputted ERN to uppercase" in {
+      val result = form.bind(Map(fieldName -> "gb123456")).get
+      result mustBe "GB123456"
+    }
+
+    "must transform the inputted ERN removing any spaces" in {
+      val result = form.bind(Map(fieldName -> "GB 123 456")).get
+      result mustBe "GB123456"
     }
 
     "bind a value that meets the expected regex" in {

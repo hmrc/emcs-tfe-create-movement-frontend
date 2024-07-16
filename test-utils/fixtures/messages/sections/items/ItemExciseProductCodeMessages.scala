@@ -22,7 +22,7 @@ import models.Index
 object ItemExciseProductCodeMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    def heading(idx: Index): String = s"Choose the Excise Product Code (EPC) for item ${idx.displayIndex}"
+    def heading(idx: Index): String = s"Excise Product Code (EPC) for item ${idx.displayIndex}"
 
     def title(idx: Index): String = titleHelper(heading(idx))
 

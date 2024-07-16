@@ -1043,8 +1043,8 @@ goodsType.S.plural = spirits
 goodsType.E.singular = energy
 goodsType.E.plural = energies
 
-itemExciseProductCode.title = Choose the Excise Product Code (EPC) for item {0}
-itemExciseProductCode.heading = Choose the Excise Product Code (EPC) for item {0}
+itemExciseProductCode.title = Excise Product Code (EPC) for item {0}
+itemExciseProductCode.heading = Excise Product Code (EPC) for item {0}
 itemExciseProductCode.checkYourAnswersLabel = Excise Product Code
 itemExciseProductCode.paragraph = You will be asked to give information and packaging details about this item. You can return to this screen to add more items later.
 itemExciseProductCode.warningText = Changing the EPC code removes any information completed for this item and you will be asked to enter new item information

@@ -36,7 +36,7 @@ import viewmodels.govuk.summarylist._
 
 class GuarantorRequiredSummarySpec extends SpecBase {
 
-  private def expectedRow(value: String, ern: String = testErn)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
+  private def expectedRow(value: String, ern: String = testGreatBritainWarehouseKeeperErn)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
     Some(
       SummaryListRowViewModel(
         key = Key(Text(messagesForLanguage.cyaLabel)),
@@ -60,7 +60,7 @@ class GuarantorRequiredSummarySpec extends SpecBase {
 
         "then must return a not provided row" in {
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, testGreatBritainWarehouseKeeperErn)
 
           GuarantorRequiredSummary.row mustBe expectedRow(value = messagesForLanguage.notProvided)
         }
@@ -70,9 +70,7 @@ class GuarantorRequiredSummarySpec extends SpecBase {
 
         "then must return a row with the answer of yes " in {
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(GuarantorRequiredPage, true)
-          )
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, true), testGreatBritainWarehouseKeeperErn)
 
           GuarantorRequiredSummary.row mustBe expectedRow(value = messagesForLanguage.yes)
         }
@@ -82,7 +80,7 @@ class GuarantorRequiredSummarySpec extends SpecBase {
 
         "then must return a row with the answer " in {
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false), testGreatBritainWarehouseKeeperErn)
 
           GuarantorRequiredSummary.row mustBe expectedRow(value = messagesForLanguage.no)
         }

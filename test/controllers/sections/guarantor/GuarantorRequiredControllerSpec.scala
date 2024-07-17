@@ -43,8 +43,8 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
   lazy val form: Form[Boolean] = formProvider()
   lazy val view: GuarantorRequiredView = app.injector.instanceOf[GuarantorRequiredView]
 
-  lazy val guarantorRequiredRoute: Call = routes.GuarantorRequiredController.onPageLoad(testErn, testDraftId, NormalMode)
-  lazy val onSubmitRoute: Call = routes.GuarantorRequiredController.onSubmit(testErn, testDraftId, NormalMode)
+  lazy val guarantorRequiredRoute: Call = routes.GuarantorRequiredController.onPageLoad(testGreatBritainWarehouseKeeperErn, testDraftId, NormalMode)
+  lazy val onSubmitRoute: Call = routes.GuarantorRequiredController.onSubmit(testGreatBritainWarehouseKeeperErn, testDraftId, NormalMode)
   lazy val enterGuarantorDetailsRoute = (ern: String) => routes.GuarantorRequiredController.enterGuarantorDetails(ern, testDraftId)
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
@@ -69,20 +69,20 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
 
     "must return OK and the correct view for a GET" in new Fixture() {
 
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testGreatBritainWarehouseKeeperErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, onSubmitRoute)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(form, onSubmitRoute)(dataRequest(request, ern = testGreatBritainWarehouseKeeperErn), messages(request)).toString
     }
 
     "must return OK and the correct view when the guarantor will always be required" in new Fixture(Some(emptyUserAnswers
       .set(ConsigneeExcisePage, "AARC123456789")
     )) {
 
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testGreatBritainWarehouseKeeperErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, enterGuarantorDetailsRoute(testErn), requiredGuarantee = true)(dataRequest(request, ern = testErn), messages(request)).toString
+      contentAsString(result) mustEqual view(form, enterGuarantorDetailsRoute(testGreatBritainWarehouseKeeperErn), requiredGuarantee = true)(dataRequest(request, ern = testGreatBritainWarehouseKeeperErn), messages(request)).toString
     }
 
     "must return OK and the correct view when the guarantor will always be required for NI to EU" in new Fixture(Some(emptyUserAnswers
@@ -90,20 +90,20 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
       .set(HowMovementTransportedPage, AirTransport)
     )) {
 
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testGreatBritainWarehouseKeeperErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, enterGuarantorDetailsRoute(testErn), requiredGuaranteeNIToEU = true)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(form, enterGuarantorDetailsRoute(testGreatBritainWarehouseKeeperErn), requiredGuaranteeNIToEU = true)(dataRequest(request, ern = testGreatBritainWarehouseKeeperErn), messages(request)).toString
 
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(emptyUserAnswers.set(GuarantorRequiredPage, true))) {
 
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testGreatBritainWarehouseKeeperErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill(true), onSubmitRoute)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(form.fill(true), onSubmitRoute)(dataRequest(request, ern = testGreatBritainWarehouseKeeperErn), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture() {
@@ -111,7 +111,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
 
       val req = FakeRequest(POST, guarantorRequiredRoute.url).withFormUrlEncodedBody(("value", "true"))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testGreatBritainWarehouseKeeperErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -121,17 +121,17 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
       val req = FakeRequest(POST, guarantorRequiredRoute.url).withFormUrlEncodedBody(("value", ""))
       val boundForm = form.bind(Map("value" -> ""))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testGreatBritainWarehouseKeeperErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, onSubmitRoute)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(boundForm, onSubmitRoute)(dataRequest(request, ern = testGreatBritainWarehouseKeeperErn), messages(request)).toString
     }
 
     "must redirect to the next page for enterGuarantorDetails route" in new Fixture() {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val result = testController.enterGuarantorDetails(testErn, testDraftId, NormalMode)(request)
+      val result = testController.enterGuarantorDetails(testGreatBritainWarehouseKeeperErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -149,7 +149,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
 
       MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
 
-      val result = testController.enterGuarantorDetails(testErn, testDraftId, NormalMode)(request)
+      val result = testController.enterGuarantorDetails(testGreatBritainWarehouseKeeperErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -157,7 +157,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
 
     "must redirect to Journey Recovery for a GET onPageLoad if no existing data is found" in new Fixture(None) {
 
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testGreatBritainWarehouseKeeperErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -167,7 +167,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
 
       val req = FakeRequest(POST, guarantorRequiredRoute.url).withFormUrlEncodedBody(("value", "true"))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testGreatBritainWarehouseKeeperErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -175,7 +175,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
 
     "must redirect to Journey Recovery for a GET enterGuarantorDetails if no existing data is found" in new Fixture(None) {
 
-      val result = testController.enterGuarantorDetails(testErn, testDraftId, NormalMode)(request)
+      val result = testController.enterGuarantorDetails(testGreatBritainWarehouseKeeperErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -192,7 +192,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
 
       val req = FakeRequest(POST, guarantorRequiredRoute.url).withFormUrlEncodedBody(("value", "false"))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testGreatBritainWarehouseKeeperErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
     }
@@ -208,7 +208,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
 
       val req = FakeRequest(POST, guarantorRequiredRoute.url).withFormUrlEncodedBody(("value", "true"))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testGreatBritainWarehouseKeeperErn, testDraftId, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
     }

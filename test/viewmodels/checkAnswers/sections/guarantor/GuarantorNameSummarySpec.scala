@@ -47,7 +47,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
           value = Value(Text(value)),
           actions = if (!showChangeLink) Seq() else Seq(ActionItemViewModel(
             content = Text(messagesForLanguage.change),
-            href = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testDraftId, mode).url,
+            href = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testGreatBritainWarehouseKeeperErn, testDraftId, mode).url,
             id = "changeGuarantorName"
           ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
         )
@@ -69,10 +69,13 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
 
                 "then must return expected row" in {
 
-                  implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                    .set(GuarantorArrangerPage, Consignee)
-                    .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                    .set(HowMovementTransportedPage, FixedTransportInstallations)
+                  implicit lazy val request = dataRequest(
+                    FakeRequest(),
+                    emptyUserAnswers
+                      .set(GuarantorArrangerPage, Consignee)
+                      .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                      .set(HowMovementTransportedPage, FixedTransportInstallations),
+                    testGreatBritainWarehouseKeeperErn
                   )
 
                   GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.consigneeNameNotProvided, false)
@@ -83,10 +86,13 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
 
                 "then must return expected row" in {
 
-                  implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                    .set(GuarantorArrangerPage, Consignee)
-                    .set(DestinationTypePage, EuTaxWarehouse)
-                    .set(HowMovementTransportedPage, AirTransport)
+                  implicit lazy val request = dataRequest(
+                    FakeRequest(),
+                    emptyUserAnswers
+                      .set(GuarantorArrangerPage, Consignee)
+                      .set(DestinationTypePage, EuTaxWarehouse)
+                      .set(HowMovementTransportedPage, AirTransport),
+                    testGreatBritainWarehouseKeeperErn
                   )
 
                   GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.consigneeNameNotProvided, false)
@@ -97,8 +103,11 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
 
                 "then must return expected row" in {
 
-                  implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                    .set(GuarantorArrangerPage, Consignee)
+                  implicit lazy val request = dataRequest(
+                    FakeRequest(),
+                    emptyUserAnswers
+                      .set(GuarantorArrangerPage, Consignee),
+                    testGreatBritainWarehouseKeeperErn
                   )
 
                   GuarantorNameSummary.row mustBe None
@@ -137,7 +146,8 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Consignee)
+                  .set(GuarantorArrangerPage, Consignee),
+                testGreatBritainWarehouseKeeperErn
               )
 
               GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.consigneeNameNotProvided, false)
@@ -149,7 +159,8 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, Consignee)
-                  .set(ConsigneeBusinessNamePage, "consignee name here")
+                  .set(ConsigneeBusinessNamePage, "consignee name here"),
+                testGreatBritainWarehouseKeeperErn
               )
 
               GuarantorNameSummary.row mustBe expectedRow("consignee name here", false)
@@ -162,7 +173,8 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Consignor)
+                  .set(GuarantorArrangerPage, Consignor),
+                testGreatBritainWarehouseKeeperErn
               )
 
               GuarantorNameSummary.row mustBe expectedRow(testMinTraderKnownFacts.traderName, false)
@@ -176,7 +188,8 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, GoodsOwner)
+                  .set(GuarantorArrangerPage, GoodsOwner),
+                testGreatBritainWarehouseKeeperErn
               )
 
               GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
@@ -188,7 +201,8 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, GoodsOwner)
-                  .set(GuarantorNamePage, "guarantor name here")
+                  .set(GuarantorNamePage, "guarantor name here"),
+                testGreatBritainWarehouseKeeperErn
               )
 
               GuarantorNameSummary.row mustBe expectedRow("guarantor name here", true)
@@ -202,7 +216,8 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Transporter)
+                  .set(GuarantorArrangerPage, Transporter),
+                testGreatBritainWarehouseKeeperErn
               )
 
               GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
@@ -214,7 +229,8 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, Transporter)
-                  .set(GuarantorNamePage, "transporter name here")
+                  .set(GuarantorNamePage, "transporter name here"),
+                testGreatBritainWarehouseKeeperErn
               )
 
               GuarantorNameSummary.row mustBe expectedRow("transporter name here", true)

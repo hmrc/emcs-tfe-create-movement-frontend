@@ -41,7 +41,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
         value = Value(Text(value)),
         actions = Seq(ActionItemViewModel(
           content = Text(messagesForLanguage.change),
-          href = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testDraftId, CheckMode).url,
+          href = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testGreatBritainWarehouseKeeperErn, testDraftId, CheckMode).url,
           id = "changeGuarantorArranger"
         ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
       )
@@ -60,9 +60,12 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
           "then must return expected row" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(GuarantorArrangerPage, Consignee)
-              .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+            implicit lazy val request = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(GuarantorArrangerPage, Consignee)
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
+              testGreatBritainWarehouseKeeperErn
             )
 
             GuarantorArrangerSummary.row mustBe expectedRow(messagesForLanguage.consigneeRadioOption)
@@ -73,10 +76,13 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
           "then must return expected row" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(GuarantorArrangerPage, Consignee)
-              .set(DestinationTypePage, EuTaxWarehouse)
-              .set(HowMovementTransportedPage, AirTransport)
+            implicit lazy val request = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(GuarantorArrangerPage, Consignee)
+                .set(DestinationTypePage, EuTaxWarehouse)
+                .set(HowMovementTransportedPage, AirTransport),
+              testGreatBritainWarehouseKeeperErn
             )
 
             GuarantorArrangerSummary.row mustBe expectedRow(messagesForLanguage.consigneeRadioOption)
@@ -87,8 +93,11 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
           "then must return expected row" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(GuarantorArrangerPage, Consignee)
+            implicit lazy val request = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(GuarantorArrangerPage, Consignee),
+              testGreatBritainWarehouseKeeperErn
             )
 
             GuarantorArrangerSummary.row mustBe None
@@ -100,7 +109,11 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
         "then must not return a row" in {
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
+          implicit lazy val request = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers.set(GuarantorRequiredPage, false),
+            testGreatBritainWarehouseKeeperErn
+          )
 
           GuarantorArrangerSummary.row mustBe None
         }
@@ -110,7 +123,11 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
         "and there is no answer for the GuarantorArrangerPage" in {
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, true))
+          implicit lazy val request = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers.set(GuarantorRequiredPage, true),
+            testGreatBritainWarehouseKeeperErn
+          )
 
           GuarantorArrangerSummary.row mustBe expectedRow(messagesForLanguage.notProvided)
         }
@@ -128,7 +145,8 @@ class GuarantorArrangerSummarySpec extends SpecBase {
               FakeRequest(),
               emptyUserAnswers
                 .set(GuarantorRequiredPage, true)
-                .set(GuarantorArrangerPage, arranger)
+                .set(GuarantorArrangerPage, arranger),
+              testGreatBritainWarehouseKeeperErn
             )
 
             GuarantorArrangerSummary.row mustBe expectedRow(expectedMessage)

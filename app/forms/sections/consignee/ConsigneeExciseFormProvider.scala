@@ -16,13 +16,15 @@
 
 package forms.sections.consignee
 
+import config.Constants
 import forms.mappings.Mappings
 import forms.{ALPHANUMERIC_REGEX, EXCISE_NUMBER_REGEX}
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.{TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, UkTaxWarehouse}
 import pages.sections.consignee.ConsigneeExcisePage
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
+import play.api.data.validation.{Constraint, Invalid, Valid}
 
 import javax.inject.Inject
 
@@ -43,10 +45,27 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
           regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"$keyPrefix.error.invalidCharacters"),
           regexpUnlessEmpty(EXCISE_NUMBER_REGEX, s"$keyPrefix.error.format")
         ))
+        .transform[String](_.toUpperCase, identity)
+        .verifying(validateErn)
         .verifying(isNotEqualToOptExistingAnswer(
           existingAnswer = ConsigneeExcisePage.getOriginalAttributeValue,
           errorKey = "consigneeExcise.error.submissionError"
         ))
     )
   }
+
+  def validateErn(implicit request: DataRequest[_]): Constraint[String] =
+    Constraint {
+      case ern if DestinationTypePage.value.contains(UkTaxWarehouse.GB) =>
+        if (ern.startsWith(Constants.GBWK_PREFIX)) Valid else Invalid("consigneeExcise.error.mustStartWithGBWK")
+
+      case ern if DestinationTypePage.value.contains(UkTaxWarehouse.NI) =>
+        if (ern.startsWith(Constants.XIWK_PREFIX)) Valid else Invalid("consigneeExcise.error.mustStartWithXIWK")
+
+      case ern if DestinationTypePage.isNItoEuMovement =>
+        if (ern.startsWith(Constants.NI_PREFIX) || ern.startsWith(Constants.GB_PREFIX)) Invalid("consigneeExcise.error.mustNotStartWithGBOrXI") else Valid
+
+      case _ =>
+        Valid
+    }
 }

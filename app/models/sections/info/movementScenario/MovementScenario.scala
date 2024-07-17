@@ -69,8 +69,6 @@ object MovementScenario extends Enumerable.Implicits with Logging {
    */
   object UkTaxWarehouse {
 
-    val toList = Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI)
-
     private def _originType(implicit request: DataRequest[_]): OriginType = getOriginType()
     private def _destinationType: DestinationType = DestinationType.TaxWarehouse
     private def _movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
@@ -309,7 +307,12 @@ object MovementScenario extends Enumerable.Implicits with Logging {
     TemporaryCertifiedConsignee
   )
 
+
   val values: Seq[MovementScenario] = (valuesExportUkAndUkTaxWarehouse ++ valuesEu ++ valuesForDutyPaidTraders).distinct
+
+  def valuesUkTaxWarehouse: Seq[MovementScenario] = UkTaxWarehouse.values
+  def valuesExport: Seq[MovementScenario] = values.filter(_.destinationType == DestinationType.Export)
+
 
   implicit val enumerable: Enumerable[MovementScenario] = Enumerable(values.map(v => v.toString -> v): _*)
 }

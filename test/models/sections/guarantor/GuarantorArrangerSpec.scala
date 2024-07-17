@@ -55,7 +55,7 @@ class GuarantorArrangerSpec extends AnyFreeSpec with Matchers {
     implicit val msgs: Messages = stubMessages()
 
     val scenariosWithConsignee: Seq[MovementScenario] =
-      UkTaxWarehouse.toList ++ Seq(CertifiedConsignee, TemporaryCertifiedConsignee)
+      UkTaxWarehouse.values ++ Seq(CertifiedConsignee, TemporaryCertifiedConsignee)
 
     scenariosWithConsignee.foreach {
       scenario =>

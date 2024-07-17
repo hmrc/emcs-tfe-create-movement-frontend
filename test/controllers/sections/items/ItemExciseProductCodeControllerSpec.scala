@@ -23,11 +23,12 @@ import forms.sections.items.ItemExciseProductCodeFormProvider
 import mocks.services.{MockGetExciseProductCodesService, MockUserAnswersService}
 import models.requests.DataRequest
 import models.sections.info.DispatchPlace
+import models.sections.info.movementScenario.MovementScenario
 import models.{ExciseProductCode, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.guarantor.GuarantorRequiredPage
-import pages.sections.info.DispatchPlacePage
-import pages.sections.items.{ItemCommodityCodePage, ItemExciseProductCodePage}
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
+import pages.sections.items.ItemExciseProductCodePage
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call, Result}
 import play.api.test.Helpers._
@@ -233,25 +234,26 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
         "when ExciseProductCodeRules.GBNoGuarantorRules.shouldResetGuarantorSectionOnSubmission returns true" in new Fixture(Some(
           emptyUserAnswers
             .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+            .set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB)
             .set(GuarantorRequiredPage, false)
         )) {
           override val ern: String = testGreatBritainWarehouseKeeperErn
 
           val result: UserAnswers = controller.userAnswersWithGuarantorSectionMaybeRemoved(userAnswers.get, testEpcTobacco)
 
-          result mustBe emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+          result mustBe emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco).set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB)
         }
         "when ExciseProductCodeRules.NINoGuarantorRules.shouldResetGuarantorSectionOnSubmission returns true" in new Fixture(Some(
           emptyUserAnswers
             .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
-            .set(DispatchPlacePage, DispatchPlace.NorthernIreland)
+            .set(DestinationTypePage, MovementScenario.DirectDelivery)
             .set(GuarantorRequiredPage, false)
         )) {
           override val ern: String = testNorthernIrelandErn
 
           val result: UserAnswers = controller.userAnswersWithGuarantorSectionMaybeRemoved(userAnswers.get, testEpcTobacco)
 
-          result mustBe emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco).set(DispatchPlacePage, DispatchPlace.NorthernIreland)
+          result mustBe emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco).set(DestinationTypePage, MovementScenario.DirectDelivery)
         }
       }
 

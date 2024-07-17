@@ -17,10 +17,10 @@
 package models.sections.items
 
 import models.requests.DataRequest
-import models.sections.info.DispatchPlace
 import models.sections.info.movementScenario.MovementScenario
+import models.{NorthernIrelandCertifiedConsignor, NorthernIrelandWarehouseKeeper, UserType}
 import pages.sections.guarantor.GuarantorRequiredPage
-import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
+import pages.sections.info.DestinationTypePage
 
 sealed trait ExciseProductCodeRules {
   def shouldDisplayInset()(implicit request: DataRequest[_]): Boolean
@@ -30,8 +30,9 @@ sealed trait ExciseProductCodeRules {
 object ExciseProductCodeRules {
   object GBNoGuarantorRules extends ExciseProductCodeRules {
     def shouldDisplayInset()(implicit request: DataRequest[_]): Boolean = {
-      request.userAnswers.get(GuarantorRequiredPage) match {
-        case Some(false) if request.isGreatBritainErn => true
+      // return true if GuarantorRequired=no, the user is GBWK/XIWK, and the destination is a UK Tax Warehouse
+      (request.userAnswers.get(GuarantorRequiredPage), request.userAnswers.get(DestinationTypePage)) match {
+        case (Some(false), Some(movementScenario)) if request.isWarehouseKeeper && MovementScenario.UkTaxWarehouse.values.contains(movementScenario) => true
         case _ => false
       }
     }
@@ -43,8 +44,15 @@ object ExciseProductCodeRules {
 
   object NINoGuarantorRules extends ExciseProductCodeRules {
     def shouldDisplayInset()(implicit request: DataRequest[_]): Boolean = {
-      (request.userAnswers.get(GuarantorRequiredPage), request.userAnswers.get(DispatchPlacePage)) match {
-        case (Some(false), Some(DispatchPlace.NorthernIreland)) if request.isNorthernIrelandErn => true
+      // return true if GuarantorRequired=no, and EITHER the user is XIPA, OR the user is XIWK and the destination not Export, UK Tax Warehouse, or Unknown
+      (request.userAnswers.get(GuarantorRequiredPage), request.userAnswers.get(DestinationTypePage)) match {
+        case (Some(false), _) if UserType(request.ern) == NorthernIrelandCertifiedConsignor => true
+        case (Some(false), Some(movementScenario)) if UserType(request.ern) == NorthernIrelandWarehouseKeeper &&
+          !Seq(
+            MovementScenario.valuesExport,
+            MovementScenario.valuesUkTaxWarehouse,
+            Seq(MovementScenario.UnknownDestination)
+          ).flatten.contains(movementScenario) => true
         case _ => false
       }
     }

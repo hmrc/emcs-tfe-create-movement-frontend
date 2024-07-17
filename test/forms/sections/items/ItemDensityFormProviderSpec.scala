@@ -52,6 +52,14 @@ class ItemDensityFormProviderSpec extends StringFieldBehaviours with GuiceOneApp
         FormError(itemDensityFormField, List(errorLengthKey))
       )
     }
+    "must reject a value which is 0 when converted to BigDecimal" in {
+      form.bind(Map(itemDensityFormField -> "0")).error(itemDensityFormField) must contain(
+        FormError(itemDensityFormField, List(errorGreaterThanZeroKey))
+      )
+      form.bind(Map(itemDensityFormField -> "000.00")).error(itemDensityFormField) must contain(
+        FormError(itemDensityFormField, List(errorGreaterThanZeroKey))
+      )
+    }
     "must reject a value with more than 5 total digits" in {
       form.bind(Map(itemDensityFormField -> "123456")).error(itemDensityFormField) must contain(
         FormError(itemDensityFormField, List(errorLengthKey))

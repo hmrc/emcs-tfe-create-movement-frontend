@@ -1514,6 +1514,7 @@ itemDensity.checkYourAnswersLabel = Density at 15&deg;C
 itemDensity.checkYourAnswersValue = {0}kg/m<sup>3</sup>
 itemDensity.error.required = Enter the density of the {0}
 itemDensity.error.length = Enter a density amount up to 5 digits long, which can include up to 2 decimal places
+itemDensity.error.greaterThanZero = Density amount must be greater than 0
 itemDensity.change.hidden = density
 itemDensity.suffix = kg/m<sup>3</sup>
 itemDensity.hint = Enter the density, at 15 degrees Celsius per kilogram per cubic metre.

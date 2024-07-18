@@ -98,10 +98,13 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
 
               "then must not return a row" in {
 
-                implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-                  .set(ConsigneeExportInformationPage, Set(VatNumber))
-                  .set(ConsigneeExportVatPage, "VAT123")
-                  .set(GuarantorArrangerPage, Consignee)
+                implicit lazy val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(ConsigneeExportInformationPage, Set(VatNumber))
+                    .set(ConsigneeExportVatPage, "VAT123")
+                    .set(GuarantorArrangerPage, Consignee),
+                  testGreatBritainWarehouseKeeperErn
                 )
 
                 GuarantorErnVatSummary.rows mustBe Seq.empty
@@ -254,7 +257,7 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
 
             }
 
-            Seq(ExportWithCustomsDeclarationLodgedInTheUk, ExportWithCustomsDeclarationLodgedInTheEu).foreach{ destinationType =>
+            Seq(ExportWithCustomsDeclarationLodgedInTheUk, ExportWithCustomsDeclarationLodgedInTheEu).foreach { destinationType =>
 
               s"and the destination type is an ${destinationType.stringValue}" - {
 
@@ -316,7 +319,7 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                     .set(GuarantorArrangerPage, GoodsOwner)
                 )
 
-                GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaVatInputLabel , messagesForLanguage.notProvided, true))
+                GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaVatInputLabel, messagesForLanguage.notProvided, true))
               }
             }
 

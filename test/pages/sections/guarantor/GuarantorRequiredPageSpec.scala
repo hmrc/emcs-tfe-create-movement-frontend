@@ -40,6 +40,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
 
         implicit val dr: DataRequest[_] = dataRequest(
           request = FakeRequest(),
+          ern = testGreatBritainWarehouseKeeperErn,
           answers = emptyUserAnswers
             .set(DestinationTypePage, UkTaxWarehouse.GB)
             .set(ItemExciseProductCodePage(0), Tobacco.code)
@@ -69,7 +70,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
 
       "must return false" in {
 
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), ern = testGreatBritainWarehouseKeeperErn, answers = emptyUserAnswers)
 
         GuarantorRequiredPage.isRequired() mustBe false
       }
@@ -90,6 +91,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
 
               implicit val dr: DataRequest[_] = dataRequest(
                 request = FakeRequest(),
+                ern = testGreatBritainWarehouseKeeperErn,
                 answers = emptyUserAnswers
                   .set(DestinationTypePage, destinationType)
                   .set(ItemExciseProductCodePage(0), goodsType.code)
@@ -108,6 +110,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
 
               implicit val dr: DataRequest[_] = dataRequest(
                 request = FakeRequest(),
+                ern = testGreatBritainWarehouseKeeperErn,
                 answers = emptyUserAnswers
                   .set(DestinationTypePage, destinationType)
                   .set(ItemExciseProductCodePage(0), goodsType.code)
@@ -125,6 +128,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
 
             implicit val dr: DataRequest[_] = dataRequest(
               request = FakeRequest(),
+              ern = testGreatBritainWarehouseKeeperErn,
               answers = emptyUserAnswers
                 .set(DestinationTypePage, destinationType)
                 .set(ItemExciseProductCodePage(0), GoodsType.Spirits.code)
@@ -143,6 +147,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
 
             implicit val dr: DataRequest[_] = dataRequest(
               request = FakeRequest(),
+              ern = testGreatBritainWarehouseKeeperErn,
               answers = emptyUserAnswers
                 .set(DestinationTypePage, destinationType)
                 .set(ItemExciseProductCodePage(0), GoodsType.Beer.code)
@@ -161,6 +166,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
 
             implicit val dr: DataRequest[_] = dataRequest(
               request = FakeRequest(),
+              ern = testGreatBritainWarehouseKeeperErn,
               answers = emptyUserAnswers
                 .set(DestinationTypePage, destinationType)
                 .set(ItemExciseProductCodePage(0), GoodsType.Beer.code)
@@ -173,6 +179,24 @@ class GuarantorRequiredPageSpec extends SpecBase {
       }
     }
 
+    Seq("GBRC", "XIRC").foreach {
+      ernPrefix =>
+        s"when the consignor ERN is $ernPrefix" - {
+
+          "return true" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(
+              request = FakeRequest(),
+              ern = ernPrefix + "123",
+              answers = emptyUserAnswers
+                .set(DestinationTypePage, DirectDelivery)
+            )
+
+            GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe true
+          }
+        }
+    }
+
     Seq(ExportWithCustomsDeclarationLodgedInTheUk, ExportWithCustomsDeclarationLodgedInTheEu).foreach { destinationType =>
 
       s"when the Destination Type is Export: ${destinationType.toString}" - {
@@ -181,6 +205,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
 
           implicit val dr: DataRequest[_] = dataRequest(
             request = FakeRequest(),
+            ern = testGreatBritainWarehouseKeeperErn,
             answers = emptyUserAnswers.set(DestinationTypePage, destinationType)
           )
 
@@ -201,10 +226,10 @@ class GuarantorRequiredPageSpec extends SpecBase {
 
             implicit val dr: DataRequest[_] = dataRequest(
               request = FakeRequest(),
+              ern = testGreatBritainWarehouseKeeperErn,
               answers = emptyUserAnswers
                 .set(DestinationTypePage, DirectDelivery)
-                .set(ConsigneeExcisePage, nonGBorXIErn),
-              ern = testErn
+                .set(ConsigneeExcisePage, nonGBorXIErn)
             )
 
             GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe true
@@ -219,10 +244,10 @@ class GuarantorRequiredPageSpec extends SpecBase {
 
               implicit val dr: DataRequest[_] = dataRequest(
                 request = FakeRequest(),
+                ern = testGreatBritainWarehouseKeeperErn,
                 answers = emptyUserAnswers
                   .set(DestinationTypePage, DirectDelivery)
-                  .set(ConsigneeExcisePage, ern),
-                ern = testErn
+                  .set(ConsigneeExcisePage, ern)
               )
 
               GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe false
@@ -238,6 +263,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
 
               implicit val dr: DataRequest[_] = dataRequest(
                 request = FakeRequest(),
+                ern = testGreatBritainWarehouseKeeperErn,
                 answers = emptyUserAnswers
                   .set(DestinationTypePage, destinationType)
                   .set(ItemExciseProductCodePage(0), goodsType.code)

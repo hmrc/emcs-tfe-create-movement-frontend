@@ -104,10 +104,10 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
     }
 
     "must redirect to guarantor index controller for a GET if no guarantor required is found" in new Fixture() {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testGreatBritainWarehouseKeeperErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url
+      redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testGreatBritainWarehouseKeeperErn, testDraftId).url
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {

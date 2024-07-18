@@ -17,9 +17,9 @@
 package pages.sections.items
 
 import config.Constants.BODYEADESAD
-import models.{GoodsType, UserAnswers}
 import models.requests.DataRequest
 import models.response.InvalidRegexException
+import models.{GoodsType, UserAnswers}
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import queries.ItemsCount
@@ -82,8 +82,7 @@ case object ItemsSectionItems extends Section[JsObject] {
     (0 until request.userAnswers.get(ItemsCount).getOrElse(0)).exists { idx =>
       request.userAnswers
         .get(ItemExciseProductCodePage(idx))
-        .exists(code => goodsTypes.contains(GoodsType.apply(code))
-      )
+        .exists(code => goodsTypes.contains(GoodsType.apply(code)))
     }
 
   override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = getSubmissionFailuresForItems().nonEmpty

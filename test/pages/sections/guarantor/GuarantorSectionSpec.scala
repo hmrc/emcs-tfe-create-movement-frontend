@@ -55,8 +55,7 @@ class GuarantorSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
-            .set(GuarantorRequiredPage, false),
-          testGreatBritainWarehouseKeeperErn
+            .set(GuarantorRequiredPage, false)
         )
         GuarantorSection.isCompleted mustBe true
       }

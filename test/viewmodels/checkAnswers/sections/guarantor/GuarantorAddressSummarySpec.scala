@@ -198,8 +198,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
               FakeRequest(),
               emptyUserAnswers
                 .set(GuarantorRequiredPage, false)
-                .set(GuarantorArrangerPage, Consignor),
-              testGreatBritainWarehouseKeeperErn
+                .set(GuarantorArrangerPage, Consignor)
             )
 
             GuarantorAddressSummary.row() mustBe None
@@ -246,8 +245,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
-                  .set(GuarantorArrangerPage, Consignor),
-                testGreatBritainWarehouseKeeperErn
+                  .set(GuarantorArrangerPage, Consignor)
               )
 
               GuarantorAddressSummary.row() mustBe None

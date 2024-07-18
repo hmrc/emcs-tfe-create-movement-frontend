@@ -46,8 +46,8 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
     override protected def controllerComponents: MessagesControllerComponents = messagesControllerComponents
   }
 
-  class Test(ua: UserAnswers, ern: String = testErn) {
-    implicit val dr: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ua, ern)
+  class Test(ua: UserAnswers) {
+    implicit val dr: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ua)
   }
 
   "withGuarantorRequiredAnswer" - {
@@ -85,22 +85,22 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
 
     "must redirect to GuarantorIndexController" - {
 
-      "when GuarantorRequiredPage is not present in UserAnswers" in new Test(emptyUserAnswers, testGreatBritainWarehouseKeeperErn) {
+      "when GuarantorRequiredPage is not present in UserAnswers" in new Test(emptyUserAnswers) {
 
         val result: Future[Result] = TestController.withGuarantorRequiredAnswer(Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testGreatBritainWarehouseKeeperErn, testDraftId).url)
+        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url)
       }
     }
     "must redirect to guarantor CYA" - {
 
-      "when guarantor is not required" in new Test(emptyUserAnswers.set(GuarantorRequiredPage, false), testGreatBritainWarehouseKeeperErn) {
+      "when guarantor is not required" in new Test(emptyUserAnswers.set(GuarantorRequiredPage, false)) {
 
         val result: Future[Result] = TestController.withGuarantorRequiredAnswer(Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testGreatBritainWarehouseKeeperErn, testDraftId).url)
+        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId).url)
       }
     }
   }

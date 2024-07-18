@@ -40,7 +40,7 @@ case object GuarantorRequiredPage extends QuestionPage[Boolean] {
     guarantorAlwaysRequiredUk() || guarantorAlwaysRequiredNIToEU()
 
   def guarantorAlwaysRequiredUk()(implicit request: DataRequest[_]): Boolean =
-    destinationTypeUkTaxWarehouseCondition || registeredConsignorCondition || destinationTypeExportCondition || notGBOrXIConsigneeCondition
+    destinationTypeUkTaxWarehouseCondition || destinationTypeExportCondition || notGBOrXIConsigneeCondition
 
   def guarantorAlwaysRequiredNIToEU()(implicit request: DataRequest[_]): Boolean =
     destinationTypeToEUCondition && (isAlcoholOrTobaccoCondition || nonFixedMovementTransportTypeCondition || nonFixedTransportUnitTypeCondition)
@@ -68,8 +68,6 @@ case object GuarantorRequiredPage extends QuestionPage[Boolean] {
 
     isUkTaxWarehouse && hasRelevantGoodsTypes
   }
-
-  private def registeredConsignorCondition(implicit request: DataRequest[_]): Boolean = request.isRegisteredConsignor
 
   private def destinationTypeToEUCondition(implicit request: DataRequest[_]): Boolean = {
 

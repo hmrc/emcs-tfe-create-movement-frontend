@@ -103,8 +103,7 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                   emptyUserAnswers
                     .set(ConsigneeExportInformationPage, Set(VatNumber))
                     .set(ConsigneeExportVatPage, "VAT123")
-                    .set(GuarantorArrangerPage, Consignee),
-                  testGreatBritainWarehouseKeeperErn
+                    .set(GuarantorArrangerPage, Consignee)
                 )
 
                 GuarantorErnVatSummary.rows mustBe Seq.empty

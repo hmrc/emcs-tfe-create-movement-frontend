@@ -138,8 +138,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                   .set(GuarantorArrangerPage, value)
                   .set(GuarantorNamePage, "guarantor name")
                   .set(GuarantorVatPage, VatNumberModel(true, Some("gurantor123")))
-                  .set(GuarantorAddressPage, testUserAddress),
-                testGreatBritainWarehouseKeeperErn
+                  .set(GuarantorAddressPage, testUserAddress)
               )
               helper.summaryList()(request, msgs).rows.length mustBe 6
             }
@@ -154,8 +153,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, value)
                   .set(ConsigneeBusinessNamePage, s"$value name")
-                  .set(ConsigneeAddressPage, testUserAddress),
-                testGreatBritainWarehouseKeeperErn
+                  .set(ConsigneeAddressPage, testUserAddress)
               )
               helper.summaryList()(request, msgs).rows.length mustBe 5
             }

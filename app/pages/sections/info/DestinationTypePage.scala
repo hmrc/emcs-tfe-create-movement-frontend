@@ -25,6 +25,5 @@ case object DestinationTypePage extends QuestionPage[MovementScenario] {
   override val toString: String = "destinationType"
   override val path: JsPath = InfoSection.path \ toString
 
-  def isNItoEuMovement(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.get(this).exists(_.isNItoEU)
+  def isNItoEuMovement(implicit request: DataRequest[_]): Boolean = value.exists(_.isNItoEU)
 }

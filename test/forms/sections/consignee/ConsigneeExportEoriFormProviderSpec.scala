@@ -46,12 +46,13 @@ class ConsigneeExportEoriFormProviderSpec extends SpecBase with StringFieldBehav
       fieldName,
       maxLength,
       FormError(fieldName, lengthKey, Seq(maxLength))
+
     )
 
     behave like fieldWithEori(
       form = form,
       fieldName = fieldName,
-      formatError = FormError(fieldName, "consigneeExportEori.error.invalidFormat", Seq("[A-Z]{2}[A-Za-z0-9]{0,15}"))
+      formatError = FormError(fieldName, "consigneeExportEori.error.invalidFormat", Seq("[A-Za-z]{2}[A-Za-z0-9]{0,15}"))
     )
 
   }
@@ -82,8 +83,19 @@ class ConsigneeExportEoriFormProviderSpec extends SpecBase with StringFieldBehav
             messagesForLanguage.errorInvalid
         }
 
+        "must transform the inputted EORI removing any spaces" in {
+          val result = form.bind(Map("value" -> "GB 123 456")).get
+          result mustBe "GB123456"
+        }
+
+        "must transform the inputted EORI into uppercase" in {
+          val result = form.bind(Map("value" -> "gb123456")).get
+          result mustBe "GB123456"
+        }
+
       }
     }
+
   }
 
 }

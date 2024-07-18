@@ -41,7 +41,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
         value = Value(Text(value)),
         actions = Seq(ActionItemViewModel(
           content = Text(messagesForLanguage.change),
-          href = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testGreatBritainWarehouseKeeperErn, testDraftId, CheckMode).url,
+          href = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testDraftId, CheckMode).url,
           id = "changeGuarantorArranger"
         ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
       )
@@ -64,8 +64,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
               FakeRequest(),
               emptyUserAnswers
                 .set(GuarantorArrangerPage, Consignee)
-                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
-              testGreatBritainWarehouseKeeperErn
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
             )
 
             GuarantorArrangerSummary.row mustBe expectedRow(messagesForLanguage.consigneeRadioOption)
@@ -81,8 +80,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
               emptyUserAnswers
                 .set(GuarantorArrangerPage, Consignee)
                 .set(DestinationTypePage, EuTaxWarehouse)
-                .set(HowMovementTransportedPage, AirTransport),
-              testGreatBritainWarehouseKeeperErn
+                .set(HowMovementTransportedPage, AirTransport)
             )
 
             GuarantorArrangerSummary.row mustBe expectedRow(messagesForLanguage.consigneeRadioOption)
@@ -96,8 +94,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
             implicit lazy val request = dataRequest(
               FakeRequest(),
               emptyUserAnswers
-                .set(GuarantorArrangerPage, Consignee),
-              testGreatBritainWarehouseKeeperErn
+                .set(GuarantorArrangerPage, Consignee)
             )
 
             GuarantorArrangerSummary.row mustBe None
@@ -111,8 +108,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
           implicit lazy val request = dataRequest(
             FakeRequest(),
-            emptyUserAnswers.set(GuarantorRequiredPage, false),
-            testGreatBritainWarehouseKeeperErn
+            emptyUserAnswers.set(GuarantorRequiredPage, false)
           )
 
           GuarantorArrangerSummary.row mustBe None
@@ -125,8 +121,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
           implicit lazy val request = dataRequest(
             FakeRequest(),
-            emptyUserAnswers.set(GuarantorRequiredPage, true),
-            testGreatBritainWarehouseKeeperErn
+            emptyUserAnswers.set(GuarantorRequiredPage, true)
           )
 
           GuarantorArrangerSummary.row mustBe expectedRow(messagesForLanguage.notProvided)
@@ -145,8 +140,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
               FakeRequest(),
               emptyUserAnswers
                 .set(GuarantorRequiredPage, true)
-                .set(GuarantorArrangerPage, arranger),
-              testGreatBritainWarehouseKeeperErn
+                .set(GuarantorArrangerPage, arranger)
             )
 
             GuarantorArrangerSummary.row mustBe expectedRow(expectedMessage)

@@ -39,7 +39,9 @@ object ItemDensityFormProvider {
   val itemDensityFormField = "itemDensity"
   val errorRequiredKey = "itemDensity.error.required"
   val errorLengthKey = "itemDensity.error.length"
+  val errorGreaterThanZeroKey = "itemDensity.error.greaterThanZero"
 
+  // scalastyle:off cyclomatic.complexity
   def itemDensityFormatter(goodsType: GoodsType)(implicit messages: Messages): Formatter[BigDecimal] = new Formatter[BigDecimal] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BigDecimal] = {
       val goodsTypeName: String = goodsType.toSingularOutput()
@@ -52,13 +54,17 @@ object ItemDensityFormProvider {
         case Some(itemDensity) =>
           Try(BigDecimal(itemDensity).underlying().stripTrailingZeros()) match {
             case Success(itemDensityNumeric) =>
-              val numberOfDecimalPlaces = Math.max(0, itemDensityNumeric.scale)
-              val totalDigits = itemDensityNumeric.precision
-
-              if (numberOfDecimalPlaces <= 2 && totalDigits <= 5 && itemDensityNumeric >= 0) {
-                Right(itemDensityNumeric)
+              if(itemDensityNumeric.compareTo(BigDecimal(0)) == 0) {
+                Left(Seq(FormError(key, errorGreaterThanZeroKey)))
               } else {
-                Left(Seq(FormError(key, errorLengthKey)))
+                val numberOfDecimalPlaces = Math.max(0, itemDensityNumeric.scale)
+                val totalDigits = itemDensityNumeric.precision
+
+                if (numberOfDecimalPlaces <= 2 && totalDigits <= 5 && itemDensityNumeric >= 0) {
+                  Right(itemDensityNumeric)
+                } else {
+                  Left(Seq(FormError(key, errorLengthKey)))
+                }
               }
             case Failure(_) =>
               Left(Seq(FormError(key, errorLengthKey)))
@@ -69,4 +75,5 @@ object ItemDensityFormProvider {
     override def unbind(key: String, value: BigDecimal): Map[String, String] =
       Map(key -> value.toString)
   }
+  // scalastyle:on
 }

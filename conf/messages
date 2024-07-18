@@ -586,6 +586,10 @@ consigneeExcise.change.hidden.ernForTemporaryRegisteredConsignee = consignee ide
 consigneeExcise.checkYourAnswersLabel.ernForTemporaryCertifiedConsignee = Identification number for Temporary Certified Consignee
 consigneeExcise.change.hidden.ernForTemporaryCertifiedConsignee = consignee identification number for Temporary Certified Consignee
 
+consigneeExcise.error.mustStartWithGBWK = ERN must start with GBWK because the destination is a tax warehouse in Great Britain
+consigneeExcise.error.mustStartWithXIWK = ERN must start with XIWK because the destination is a tax warehouse in Northern Ireland
+consigneeExcise.error.mustNotStartWithGBOrXI = ERN must not start with GBWK or XIWK because the destination is not a tax warehouse in the United Kingdom
+
 transportUnitType.title = What will the goods be transported in?
 transportUnitType.heading = What will the goods be transported in?
 transportUnitType.hint = You can return to this page to select another option.

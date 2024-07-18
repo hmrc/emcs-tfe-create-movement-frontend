@@ -17,6 +17,7 @@
 package pages
 
 import models.requests.DataRequest
+import play.api.libs.json.Reads
 import queries.{Gettable, Settable}
 import utils.SubmissionError
 
@@ -43,4 +44,6 @@ trait QuestionPage[+A] extends Page with Gettable[A] with Settable[A] {
     request.userAnswers.submissionFailures.collect {
       case error if possibleErrors.map(_.code).contains(error.errorType) && !error.hasBeenFixed => SubmissionError(error.errorType)
     }
+
+  def value[T >: A](implicit request: DataRequest[_], reads: Reads[T]): Option[T] = request.userAnswers.get[T](this)
 }

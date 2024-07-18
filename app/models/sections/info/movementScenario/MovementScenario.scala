@@ -18,6 +18,7 @@ package models.sections.info.movementScenario
 
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, RegisteredConsignee, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
 import models.{Enumerable, WithName}
 import utils.Logging
 
@@ -30,6 +31,18 @@ sealed trait MovementScenario {
 
   //TODO we should probably change this to use the messages file instead of having the message here directly
   val stringValue: String
+
+  def isNItoEU(implicit request: DataRequest[_]): Boolean =
+    request.isNorthernIrelandErn &&
+      Seq(
+        DirectDelivery,
+        ExemptedOrganisation,
+        RegisteredConsignee,
+        EuTaxWarehouse,
+        TemporaryRegisteredConsignee,
+        CertifiedConsignee,
+        TemporaryCertifiedConsignee
+      ).contains(this)
 }
 
 object MovementScenario extends Enumerable.Implicits with Logging {

@@ -17,6 +17,7 @@
 package pages.sections.guarantor
 
 import models.GoodsType._
+import models.{NorthernIrelandCertifiedConsignor, NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper}
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario._
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
@@ -41,6 +42,7 @@ case object GuarantorRequiredPage extends QuestionPage[Boolean] {
 
   def guarantorIsOptionalNIToEU(implicit request: DataRequest[_]): Boolean = {
     DestinationTypePage.isNItoEuMovement && destinationTypeIsNotUnknownOrExempted && onlyFixedTransport &&
+      Seq(NorthernIrelandRegisteredConsignor, NorthernIrelandCertifiedConsignor, NorthernIrelandWarehouseKeeper).contains(request.userTypeFromErn) &&
       ItemsSectionItems.onlyContainsOrIsEmpty(Energy)
   }
 

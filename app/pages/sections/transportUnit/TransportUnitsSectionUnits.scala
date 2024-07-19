@@ -16,13 +16,12 @@
 
 package pages.sections.transportUnit
 
-import models.{GoodsType, Index}
+import models.Index
 import models.requests.DataRequest
 import models.sections.transportUnit.TransportUnitType
 import pages.sections.Section
-import pages.sections.items.ItemExciseProductCodePage
 import play.api.libs.json.{JsArray, JsPath}
-import queries.{ItemsCount, TransportUnitsCount}
+import queries.TransportUnitsCount
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case object TransportUnitsSectionUnits extends Section[JsArray] {

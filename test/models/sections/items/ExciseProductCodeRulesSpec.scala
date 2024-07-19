@@ -19,114 +19,123 @@ package models.sections.items
 import base.SpecBase
 import models.sections.info.DispatchPlace
 import models.sections.info.movementScenario.MovementScenario
-import models.sections.items.ExciseProductCodeRules.{GBNoGuarantorRules, NINoGuarantorRules, UnknownDestinationRules}
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, TemporaryCertifiedConsignee, UkTaxWarehouse}
+import models.sections.items.ExciseProductCodeRules.{NINoGuarantorRules, UKNoGuarantorRules, UnknownDestinationRules}
+import models.sections.journeyType.HowMovementTransported.AirTransport
 import pages.sections.guarantor.GuarantorRequiredPage
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
+import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.test.FakeRequest
 
 class ExciseProductCodeRulesSpec extends SpecBase {
 
-  "GBNoGuarantorRules" - {
+  "UKNoGuarantorRules" - {
     ".shouldDisplayInset" - {
       "must return true" - {
-        "when GuarantorRequiredPage is false and isWarehouseKeeper is true and destination is UK Tax Warehouse" in {
-          Seq("GBWK123", "XIWK123").foreach { ern =>
-            MovementScenario.UkTaxWarehouse.values.foreach {
-              movementScenario =>
-                val request = dataRequest(
-                  FakeRequest(),
-                  ern = ern,
-                  answers = emptyUserAnswers.set(GuarantorRequiredPage, false).set(DestinationTypePage, movementScenario)
-                )
-                GBNoGuarantorRules.shouldDisplayInset()(request) mustBe true
-            }
-          }
+        "when GuarantorRequiredPage is false and Guarantor is Optional (UK to UK)" in {
+          val request = dataRequest(
+            FakeRequest(),
+            ern = testGreatBritainWarehouseKeeperErn,
+            answers = emptyUserAnswers
+              .set(GuarantorRequiredPage, false)
+              .set(DestinationTypePage, UkTaxWarehouse.GB)
+          )
+          UKNoGuarantorRules.shouldDisplayInset()(request) mustBe true
         }
       }
-
       "must return false" - {
+
+        "when GuarantorRequiredPage is not answered yet" in {
+          val request = dataRequest(
+            FakeRequest(),
+            ern = testGreatBritainWarehouseKeeperErn,
+            answers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB)
+          )
+          UKNoGuarantorRules.shouldDisplayInset()(request) mustBe false
+        }
+
         "when GuarantorRequiredPage is true" in {
-          Seq("GBWK123", "GBRC123").foreach { ern =>
-            MovementScenario.UkTaxWarehouse.values.foreach {
-              movementScenario =>
-                val request = dataRequest(
-                  FakeRequest(),
-                  ern = ern,
-                  answers = emptyUserAnswers.set(GuarantorRequiredPage, true).set(DestinationTypePage, movementScenario)
-                )
-                GBNoGuarantorRules.shouldDisplayInset()(request) mustBe false
-            }
-          }
+          val request = dataRequest(
+            FakeRequest(),
+            ern = testGreatBritainWarehouseKeeperErn,
+            answers = emptyUserAnswers
+              .set(GuarantorRequiredPage, true)
+              .set(DestinationTypePage, UkTaxWarehouse.GB)
+          )
+          UKNoGuarantorRules.shouldDisplayInset()(request) mustBe false
         }
-        "when isWarehouseKeeper is false" in {
-          Seq("GBRC123", "XIRC123", "XIPA123", "XIPC123").foreach { ern =>
-            MovementScenario.UkTaxWarehouse.values.foreach {
-              movementScenario =>
-                val request = dataRequest(
-                  FakeRequest(),
-                  ern = ern,
-                  answers = emptyUserAnswers.set(GuarantorRequiredPage, false).set(DestinationTypePage, movementScenario)
-                )
-                GBNoGuarantorRules.shouldDisplayInset()(request) mustBe false
-            }
-          }
+
+        "when Guarantor is always required (UK to UK)" in {
+          val request = dataRequest(
+            FakeRequest(),
+            ern = testGreatBritainWarehouseKeeperErn,
+            answers = emptyUserAnswers.set(DestinationTypePage, EuTaxWarehouse)
+          )
+          UKNoGuarantorRules.shouldDisplayInset()(request) mustBe false
         }
-        "when not a UK Tax Warehouse" in {
-          Seq("GBWK123", "XIWK123").foreach { ern =>
-            MovementScenario.values.filterNot(MovementScenario.UkTaxWarehouse.values.contains).foreach {
-              movementScenario =>
-                val request = dataRequest(
-                  FakeRequest(),
-                  ern = ern,
-                  answers = emptyUserAnswers.set(GuarantorRequiredPage, false).set(DestinationTypePage, movementScenario)
-                )
-                GBNoGuarantorRules.shouldDisplayInset()(request) mustBe false
-            }
-          }
+
+        "when Guarantor is always required (NI to EU)" in {
+          val request = dataRequest(
+            FakeRequest(),
+            ern = testNorthernIrelandErn,
+            answers = emptyUserAnswers
+              .set(DestinationTypePage, EuTaxWarehouse)
+              .set(HowMovementTransportedPage, AirTransport)
+          )
+          UKNoGuarantorRules.shouldDisplayInset()(request) mustBe false
         }
-        "when GuarantorRequiredPage is missing" in {
-          Seq("GBWK123", "GBRC123").foreach { ern =>
-            val request = dataRequest(FakeRequest(), ern = ern)
-            GBNoGuarantorRules.shouldDisplayInset()(request) mustBe false
-          }
+
+        "when Guarantor is NOT required (NI to EU)" in {
+          val request = dataRequest(
+            FakeRequest(),
+            ern = testNorthernIrelandErn,
+            answers = emptyUserAnswers.set(DestinationTypePage, EuTaxWarehouse)
+          )
+          UKNoGuarantorRules.shouldDisplayInset()(request) mustBe false
         }
       }
     }
 
     ".shouldResetGuarantorSectionOnSubmission" - {
       "must return true" - {
-        "when shouldDisplayInset is true and exciseProductCode is not B000, W200 or W300" in {
-          Seq("B001", "W201", "W301").foreach { exciseProductCode =>
-            val request = dataRequest(
-              FakeRequest(),
-              ern = "GBWK123",
-              answers = emptyUserAnswers.set(GuarantorRequiredPage, false).set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB)
-            )
-            GBNoGuarantorRules.shouldResetGuarantorSectionOnSubmission(exciseProductCode)(request) mustBe true
+        "when shouldDisplayInset is true and exciseProductCode is not Beer or Wine" - {
+          Seq("T400", "E500", "S200").foreach { exciseProductCode =>
+
+            s"when excise product code is $exciseProductCode" in {
+
+              val request = dataRequest(
+                FakeRequest(),
+                ern = testGreatBritainWarehouseKeeperErn,
+                answers = emptyUserAnswers
+                  .set(GuarantorRequiredPage, false)
+                  .set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB)
+              )
+              UKNoGuarantorRules.shouldResetGuarantorSectionOnSubmission(exciseProductCode)(request) mustBe true
+            }
           }
         }
       }
 
       "must return false" - {
         "when shouldDisplayInset is false" in {
-          val request = dataRequest(FakeRequest(), ern = "GBWK123", answers = emptyUserAnswers.set(GuarantorRequiredPage, false))
-          GBNoGuarantorRules.shouldResetGuarantorSectionOnSubmission("B000")(request) mustBe false
+          val request = dataRequest(FakeRequest(), ern = testGreatBritainWarehouseKeeperErn, answers = emptyUserAnswers.set(GuarantorRequiredPage, false))
+          UKNoGuarantorRules.shouldResetGuarantorSectionOnSubmission("B000")(request) mustBe false
         }
         "when exciseProductCode is B000" in {
-          val request = dataRequest(FakeRequest(), ern = "GBWK123", answers = emptyUserAnswers.set(GuarantorRequiredPage, false))
-          GBNoGuarantorRules.shouldResetGuarantorSectionOnSubmission("B000")(request) mustBe false
+          val request = dataRequest(FakeRequest(), ern = testGreatBritainWarehouseKeeperErn, answers = emptyUserAnswers.set(GuarantorRequiredPage, false))
+          UKNoGuarantorRules.shouldResetGuarantorSectionOnSubmission("B000")(request) mustBe false
         }
         "when exciseProductCode is W200" in {
-          val request = dataRequest(FakeRequest(), ern = "GBWK123", answers = emptyUserAnswers.set(GuarantorRequiredPage, false))
-          GBNoGuarantorRules.shouldResetGuarantorSectionOnSubmission("W200")(request) mustBe false
+          val request = dataRequest(FakeRequest(), ern = testGreatBritainWarehouseKeeperErn, answers = emptyUserAnswers.set(GuarantorRequiredPage, false))
+          UKNoGuarantorRules.shouldResetGuarantorSectionOnSubmission("W200")(request) mustBe false
         }
         "when exciseProductCode is W300" in {
-          val request = dataRequest(FakeRequest(), ern = "GBWK123", answers = emptyUserAnswers.set(GuarantorRequiredPage, false))
-          GBNoGuarantorRules.shouldResetGuarantorSectionOnSubmission("W300")(request) mustBe false
+          val request = dataRequest(FakeRequest(), ern = testGreatBritainWarehouseKeeperErn, answers = emptyUserAnswers.set(GuarantorRequiredPage, false))
+          UKNoGuarantorRules.shouldResetGuarantorSectionOnSubmission("W300")(request) mustBe false
         }
         "when shouldDisplayInset is true" in {
-          val request = dataRequest(FakeRequest(), ern = "GBWK123", answers = emptyUserAnswers.set(GuarantorRequiredPage, true))
-          GBNoGuarantorRules.shouldResetGuarantorSectionOnSubmission("B000")(request) mustBe false
+          val request = dataRequest(FakeRequest(), ern = testGreatBritainWarehouseKeeperErn, answers = emptyUserAnswers.set(GuarantorRequiredPage, true))
+          UKNoGuarantorRules.shouldResetGuarantorSectionOnSubmission("B000")(request) mustBe false
         }
       }
     }
@@ -136,88 +145,123 @@ class ExciseProductCodeRulesSpec extends SpecBase {
     ".shouldDisplayInset" - {
       "must return true" - {
         "when GuarantorRequiredPage is false and XIPA" in {
-            val request = dataRequest(FakeRequest(), ern = "XIPA123", answers = emptyUserAnswers.set(GuarantorRequiredPage, false))
-            NINoGuarantorRules.shouldDisplayInset()(request) mustBe true
+          val request = dataRequest(FakeRequest(), ern = "XIPA123", answers = emptyUserAnswers
+            .set(DestinationTypePage, TemporaryCertifiedConsignee)
+            .set(GuarantorRequiredPage, false)
+          )
+          NINoGuarantorRules.shouldDisplayInset()(request) mustBe true
         }
-        "when GuarantorRequiredPage is false and XIWK and destination is not Export, UK Tax Warehouse or Unknown" in {
+        "when GuarantorRequiredPage is false and XIWK and destination is not Export, UK Tax Warehouse, Unknown or Exempted" - {
           val movementScenarios = MovementScenario.values.filterNot(
             Seq(
               MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk,
               MovementScenario.ExportWithCustomsDeclarationLodgedInTheEu,
               MovementScenario.UkTaxWarehouse.GB,
               MovementScenario.UkTaxWarehouse.NI,
-              MovementScenario.UnknownDestination
+              MovementScenario.UnknownDestination,
+              MovementScenario.ExemptedOrganisation
             ).contains
           )
           movementScenarios.foreach { movementScenario =>
-            val request = dataRequest(
-              FakeRequest(),
-              ern = "XIWK123",
-              answers = emptyUserAnswers.set(GuarantorRequiredPage, false).set(DestinationTypePage, movementScenario)
-            )
-            NINoGuarantorRules.shouldDisplayInset()(request) mustBe true
+
+            s"when movement scenario is $movementScenario" in {
+
+              val request = dataRequest(
+                FakeRequest(),
+                ern = testNorthernIrelandErn,
+                answers = emptyUserAnswers
+                  .set(DestinationTypePage, movementScenario)
+                  .set(GuarantorRequiredPage, false)
+              )
+              NINoGuarantorRules.shouldDisplayInset()(request) mustBe true
+            }
           }
         }
       }
 
       "must return false" - {
-        "when GuarantorRequiredPage is true" in {
-          Seq("XIPA123", "XIWK123").foreach { ern =>
-            val movementScenarios = MovementScenario.values.filterNot(
-              Seq(
-                MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk,
-                MovementScenario.ExportWithCustomsDeclarationLodgedInTheEu,
-                MovementScenario.UkTaxWarehouse.GB,
-                MovementScenario.UkTaxWarehouse.NI,
-                MovementScenario.UnknownDestination
-              ).contains
-            )
-            movementScenarios.foreach { movementScenario =>
-              val request = dataRequest(
-                FakeRequest(),
-                ern = ern,
-                answers = emptyUserAnswers.set(GuarantorRequiredPage, true).set(DestinationTypePage, movementScenario)
+        "when GuarantorRequiredPage is true" - {
+          Seq("XIPA123", "XIWK123", "XIRC123").foreach { ern =>
+
+            s"when ERN is $ern" - {
+
+              val movementScenarios = MovementScenario.values.filterNot(
+                Seq(
+                  MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk,
+                  MovementScenario.ExportWithCustomsDeclarationLodgedInTheEu,
+                  MovementScenario.UkTaxWarehouse.GB,
+                  MovementScenario.UkTaxWarehouse.NI,
+                  MovementScenario.UnknownDestination,
+                  MovementScenario.ExemptedOrganisation
+                ).contains
               )
-              NINoGuarantorRules.shouldDisplayInset()(request) mustBe false
+
+              movementScenarios.foreach { movementScenario =>
+
+                s"when movement scenario is $movementScenario" in {
+
+                  val request = dataRequest(
+                    FakeRequest(),
+                    ern = ern,
+                    answers = emptyUserAnswers.set(GuarantorRequiredPage, true).set(DestinationTypePage, movementScenario)
+                  )
+                  NINoGuarantorRules.shouldDisplayInset()(request) mustBe false
+                }
+              }
             }
           }
         }
-        "when not XIPA or XIWK" in {
-          Seq("XIPC123", "XIRC123", "GBWK123", "GBRC123").foreach { ern =>
-            val movementScenarios = MovementScenario.values.filterNot(
-              Seq(
-                MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk,
-                MovementScenario.ExportWithCustomsDeclarationLodgedInTheEu,
-                MovementScenario.UkTaxWarehouse.GB,
-                MovementScenario.UkTaxWarehouse.NI,
-                MovementScenario.UnknownDestination
-              ).contains
-            )
-            movementScenarios.foreach { movementScenario =>
+        "when not XIPA or XIWK or XIRC" - {
+          Seq("XIPC123", testGreatBritainWarehouseKeeperErn, "GBRC123").foreach { ern =>
+
+            s"when ERN is $ern" - {
+
+              val movementScenarios = MovementScenario.values.filterNot(
+                Seq(
+                  MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk,
+                  MovementScenario.ExportWithCustomsDeclarationLodgedInTheEu,
+                  MovementScenario.UkTaxWarehouse.GB,
+                  MovementScenario.UkTaxWarehouse.NI,
+                  MovementScenario.UnknownDestination,
+                  MovementScenario.ExemptedOrganisation
+                ).contains
+              )
+
+              movementScenarios.foreach { movementScenario =>
+
+                s"when movement scenario is $movementScenario" in {
+
+                  val request = dataRequest(
+                    FakeRequest(),
+                    ern = ern,
+                    answers = emptyUserAnswers.set(GuarantorRequiredPage, false).set(DestinationTypePage, movementScenario)
+                  )
+                  NINoGuarantorRules.shouldDisplayInset()(request) mustBe false
+                }
+              }
+            }
+          }
+        }
+        "when XIWK and destination is Export, UK Tax Warehouse or Unknown" - {
+          val movementScenarios = Seq(
+            MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk,
+            MovementScenario.ExportWithCustomsDeclarationLodgedInTheEu,
+            MovementScenario.UkTaxWarehouse.GB,
+            MovementScenario.UkTaxWarehouse.NI,
+            MovementScenario.UnknownDestination,
+            MovementScenario.ExemptedOrganisation
+          )
+          movementScenarios.foreach { movementScenario =>
+
+            s"when movement scenario is $movementScenario" in {
+
               val request = dataRequest(
                 FakeRequest(),
-                ern = ern,
+                ern = "XIWK123",
                 answers = emptyUserAnswers.set(GuarantorRequiredPage, false).set(DestinationTypePage, movementScenario)
               )
               NINoGuarantorRules.shouldDisplayInset()(request) mustBe false
             }
-          }
-        }
-        "when XIWK and destination is Export, UK Tax Warehouse or Unknown" in {
-          val movementScenarios = Seq(
-              MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk,
-              MovementScenario.ExportWithCustomsDeclarationLodgedInTheEu,
-              MovementScenario.UkTaxWarehouse.GB,
-              MovementScenario.UkTaxWarehouse.NI,
-              MovementScenario.UnknownDestination
-            )
-          movementScenarios.foreach { movementScenario =>
-            val request = dataRequest(
-              FakeRequest(),
-              ern = "XIWK123",
-              answers = emptyUserAnswers.set(GuarantorRequiredPage, false).set(DestinationTypePage, movementScenario)
-            )
-            NINoGuarantorRules.shouldDisplayInset()(request) mustBe false
           }
         }
         "when GuarantorRequiredPage is missing" in {
@@ -231,7 +275,7 @@ class ExciseProductCodeRulesSpec extends SpecBase {
 
     ".shouldResetGuarantorSectionOnSubmission" - {
       "must return true" - {
-        "when shouldDisplayInset is true and exciseProductCode doesn't start with E" in {
+        "when shouldDisplayInset is true and exciseProductCode is not Energy" in {
           val request = dataRequest(
             FakeRequest(),
             ern = "XIWK123",

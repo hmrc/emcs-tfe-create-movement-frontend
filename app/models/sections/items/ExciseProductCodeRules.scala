@@ -16,9 +16,10 @@
 
 package models.sections.items
 
+import models.GoodsType
+import models.GoodsType.{Beer, Energy, Wine}
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
-import models.{NorthernIrelandCertifiedConsignor, NorthernIrelandWarehouseKeeper, UserType}
 import pages.sections.guarantor.GuarantorRequiredPage
 import pages.sections.info.DestinationTypePage
 
@@ -28,47 +29,25 @@ sealed trait ExciseProductCodeRules {
 }
 
 object ExciseProductCodeRules {
-  object GBNoGuarantorRules extends ExciseProductCodeRules {
-    def shouldDisplayInset()(implicit request: DataRequest[_]): Boolean = {
-      // return true if GuarantorRequired=no, the user is GBWK/XIWK, and the destination is a UK Tax Warehouse
-      (request.userAnswers.get(GuarantorRequiredPage), request.userAnswers.get(DestinationTypePage)) match {
-        case (Some(false), Some(movementScenario)) if request.isWarehouseKeeper && MovementScenario.UkTaxWarehouse.values.contains(movementScenario) => true
-        case _ => false
-      }
-    }
+  object UKNoGuarantorRules extends ExciseProductCodeRules {
+    def shouldDisplayInset()(implicit request: DataRequest[_]): Boolean =
+      GuarantorRequiredPage.guarantorIsOptionalUKtoUK && GuarantorRequiredPage.is(false)
 
-    def shouldResetGuarantorSectionOnSubmission(exciseProductCode: String)(implicit request: DataRequest[_]): Boolean = {
-      shouldDisplayInset() && (!Set("B000", "W200", "W300").contains(exciseProductCode))
-    }
+    def shouldResetGuarantorSectionOnSubmission(exciseProductCode: String)(implicit request: DataRequest[_]): Boolean =
+      shouldDisplayInset() && !Seq(Beer, Wine).contains(GoodsType(exciseProductCode))
   }
 
   object NINoGuarantorRules extends ExciseProductCodeRules {
-    def shouldDisplayInset()(implicit request: DataRequest[_]): Boolean = {
-      // return true if GuarantorRequired=no, and EITHER the user is XIPA, OR the user is XIWK and the destination not Export, UK Tax Warehouse, or Unknown
-      (request.userAnswers.get(GuarantorRequiredPage), request.userAnswers.get(DestinationTypePage)) match {
-        case (Some(false), _) if UserType(request.ern) == NorthernIrelandCertifiedConsignor => true
-        case (Some(false), Some(movementScenario)) if UserType(request.ern) == NorthernIrelandWarehouseKeeper &&
-          !Seq(
-            MovementScenario.valuesExport,
-            MovementScenario.valuesUkTaxWarehouse,
-            Seq(MovementScenario.UnknownDestination)
-          ).flatten.contains(movementScenario) => true
-        case _ => false
-      }
-    }
+    def shouldDisplayInset()(implicit request: DataRequest[_]): Boolean =
+      GuarantorRequiredPage.guarantorIsOptionalNIToEU && GuarantorRequiredPage.is(false)
 
-    def shouldResetGuarantorSectionOnSubmission(exciseProductCode: String)(implicit request: DataRequest[_]): Boolean = {
-      shouldDisplayInset() && (exciseProductCode.toUpperCase.head != 'E')
-    }
+    def shouldResetGuarantorSectionOnSubmission(exciseProductCode: String)(implicit request: DataRequest[_]): Boolean =
+      shouldDisplayInset() && GoodsType(exciseProductCode) != Energy
   }
 
   object UnknownDestinationRules extends ExciseProductCodeRules {
-    def shouldDisplayInset()(implicit request: DataRequest[_]): Boolean = {
-      request.userAnswers.get(DestinationTypePage) match {
-        case Some(MovementScenario.UnknownDestination) => true
-        case _ => false
-      }
-    }
+    def shouldDisplayInset()(implicit request: DataRequest[_]): Boolean =
+      DestinationTypePage.is(MovementScenario.UnknownDestination)
 
     def shouldResetGuarantorSectionOnSubmission(exciseProductCode: String)(implicit request: DataRequest[_]): Boolean = false
   }

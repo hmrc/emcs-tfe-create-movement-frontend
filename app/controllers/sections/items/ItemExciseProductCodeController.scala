@@ -95,7 +95,7 @@ class ItemExciseProductCodeController @Inject()(
   private[controllers] def userAnswersWithGuarantorSectionMaybeRemoved(userAnswers: UserAnswers, exciseProductCode: String)
                                                                       (implicit request: DataRequest[_]): UserAnswers = {
     if (
-      ExciseProductCodeRules.GBNoGuarantorRules.shouldResetGuarantorSectionOnSubmission(exciseProductCode) ||
+      ExciseProductCodeRules.UKNoGuarantorRules.shouldResetGuarantorSectionOnSubmission(exciseProductCode) ||
         ExciseProductCodeRules.NINoGuarantorRules.shouldResetGuarantorSectionOnSubmission(exciseProductCode)
     ) {
       userAnswers.remove(GuarantorSection)

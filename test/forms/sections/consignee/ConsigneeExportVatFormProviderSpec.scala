@@ -94,6 +94,21 @@ class ConsigneeExportVatFormProviderSpec extends SpecBase with StringFieldBehavi
             messagesForLanguage.errorInvalid
         }
 
+        "must transform the inputted VAT removing any spaces" in {
+          val result = form.bind(Map("value" -> "GB 123 456")).get
+          result mustBe "GB123456"
+        }
+
+        "must transform the inputted VAT into uppercase" in {
+          val result = form.bind(Map("value" -> "gb123456")).get
+          result mustBe "GB123456"
+        }
+
+        "must transform the inputted VAT removing any dashes" in {
+          val result = form.bind(Map("value" -> "gb1-234-56")).get
+          result mustBe "GB123456"
+        }
+
       }
     }
   }

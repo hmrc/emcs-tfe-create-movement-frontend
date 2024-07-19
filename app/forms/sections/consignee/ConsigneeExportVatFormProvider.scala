@@ -27,8 +27,8 @@ class ConsigneeExportVatFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "value" -> text("consigneeExportVat.error.required")
+        .transform[String](_.toUpperCase.replace(" ", "").replace("-", ""), identity)
         .verifying(maxLength(16, "consigneeExportVat.error.length"))
-        .transform[String](_.replace("-", "").replace(" ", ""), identity)
         .verifying(regexpUnlessEmpty(ONLY_ALPHANUMERIC_REGEX, "consigneeExportVat.error.invalid"))
     )
 }

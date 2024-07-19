@@ -40,7 +40,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
 
   "summaryList" - {
 
-    "when movement is UKtoEU and JourneyType is FixedTransportInstallations (or JourneyType has not been answered yet)" - {
+    "when movement is NItoEU and JourneyType is FixedTransportInstallations (or JourneyType has not been answered yet)" - {
 
       GuarantorArranger.displayValues.foreach {
         case value@(GoodsOwner | Transporter) =>
@@ -81,7 +81,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
       }
     }
 
-    "when movement is UKtoEU and JourneyType is anything other than FixedTransportInstallations" - {
+    "when movement is NItoEU and JourneyType is anything other than FixedTransportInstallations" - {
 
       GuarantorArranger.displayValues.foreach {
         case value@(GoodsOwner | Transporter) =>
@@ -138,7 +138,8 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                   .set(GuarantorArrangerPage, value)
                   .set(GuarantorNamePage, "guarantor name")
                   .set(GuarantorVatPage, VatNumberModel(true, Some("gurantor123")))
-                  .set(GuarantorAddressPage, testUserAddress)
+                  .set(GuarantorAddressPage, testUserAddress),
+                testGreatBritainWarehouseKeeperErn
               )
               helper.summaryList()(request, msgs).rows.length mustBe 6
             }
@@ -153,7 +154,8 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, value)
                   .set(ConsigneeBusinessNamePage, s"$value name")
-                  .set(ConsigneeAddressPage, testUserAddress)
+                  .set(ConsigneeAddressPage, testUserAddress),
+                testGreatBritainWarehouseKeeperErn
               )
               helper.summaryList()(request, msgs).rows.length mustBe 5
             }
@@ -166,7 +168,8 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
             FakeRequest(),
             emptyUserAnswers
               .set(DestinationTypePage, UkTaxWarehouse.GB)
-              .set(GuarantorRequiredPage, false)
+              .set(GuarantorRequiredPage, false),
+            testGreatBritainWarehouseKeeperErn
           )
           helper.summaryList()(request, msgs).rows.length mustBe 1
         }

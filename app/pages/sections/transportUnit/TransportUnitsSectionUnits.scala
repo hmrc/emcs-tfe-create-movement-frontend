@@ -16,12 +16,13 @@
 
 package pages.sections.transportUnit
 
-import models.Index
+import models.{GoodsType, Index}
 import models.requests.DataRequest
 import models.sections.transportUnit.TransportUnitType
 import pages.sections.Section
+import pages.sections.items.ItemExciseProductCodePage
 import play.api.libs.json.{JsArray, JsPath}
-import queries.TransportUnitsCount
+import queries.{ItemsCount, TransportUnitsCount}
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case object TransportUnitsSectionUnits extends Section[JsArray] {
@@ -43,12 +44,8 @@ case object TransportUnitsSectionUnits extends Section[JsArray] {
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
     TransportUnitsSection.canBeCompletedForTraderAndDestinationType
 
-  def containsTransportUnitType(transportUnitType: TransportUnitType)(implicit request: DataRequest[_]): Option[Boolean] =
-    request.userAnswers.get(TransportUnitsCount).map { transportUnitsCount =>
-      (0 until transportUnitsCount).exists { idx =>
-        request.userAnswers
-          .get(TransportUnitTypePage(idx))
-          .contains(transportUnitType)
-      }
+  def onlyContainsOrIsEmpty(transportUnitType: TransportUnitType*)(implicit request: DataRequest[_]): Boolean =
+    (0 until request.userAnswers.get(TransportUnitsCount).getOrElse(0)).forall { idx =>
+      TransportUnitTypePage(idx).value.exists(transportUnitType.contains)
     }
 }

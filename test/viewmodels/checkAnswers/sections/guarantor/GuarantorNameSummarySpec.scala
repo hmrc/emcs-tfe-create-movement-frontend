@@ -21,8 +21,8 @@ import fixtures.messages.sections.guarantor.GuarantorNameMessages
 import fixtures.messages.sections.guarantor.GuarantorNameMessages.ViewMessages
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
-import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheUk}
-import models.sections.journeyType.HowMovementTransported.{AirTransport, FixedTransportInstallations}
+import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheUk, UkTaxWarehouse}
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.{CheckMode, Mode, NormalMode}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeBusinessNamePage
@@ -47,7 +47,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
           value = Value(Text(value)),
           actions = if (!showChangeLink) Seq() else Seq(ActionItemViewModel(
             content = Text(messagesForLanguage.change),
-            href = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testDraftId, mode).url,
+            href = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testGreatBritainWarehouseKeeperErn, testDraftId, mode).url,
             id = "changeGuarantorName"
           ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
         )
@@ -59,171 +59,160 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
       s"when language is set to ${messagesForLanguage.lang.code}" - {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "and there is no answer for the GuarantorRequiredPage" - {
+        "when a Guarantor is always required (not optional)" - {
 
-          "when guarantorAlwaysRequired is true" - {
+          "GuarantorArranger is answered" - {
 
-            "GuarantorArranger is answered" - {
+            "then must return expected row" in {
 
-              "when guarantorAlwaysRequired is true" - {
-
-                "then must return expected row" in {
-
-                  implicit lazy val request = dataRequest(
-                    FakeRequest(),
-                    emptyUserAnswers
-                      .set(GuarantorArrangerPage, Consignee)
-                      .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                      .set(HowMovementTransportedPage, FixedTransportInstallations)
-                  )
-
-                  GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.consigneeNameNotProvided, false)
-                }
-              }
-
-              "when guarantorAlwaysRequiredNIToEU is true" - {
-
-                "then must return expected row" in {
-
-                  implicit lazy val request = dataRequest(
-                    FakeRequest(),
-                    emptyUserAnswers
-                      .set(GuarantorArrangerPage, Consignee)
-                      .set(DestinationTypePage, EuTaxWarehouse)
-                      .set(HowMovementTransportedPage, AirTransport)
-                  )
-
-                  GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.consigneeNameNotProvided, false)
-                }
-              }
-
-              "when guarantorAlwaysRequired and guarantorAlwaysRequiredNIToEU are false" - {
-
-                "then must return expected row" in {
-
-                  implicit lazy val request = dataRequest(
-                    FakeRequest(),
-                    emptyUserAnswers
-                      .set(GuarantorArrangerPage, Consignee)
-                  )
-
-                  GuarantorNameSummary.row mustBe None
-                }
-              }
-            }
-
-            "GuarantorArranger is NOT answered" - {
-
-              "then must return expected row" in {
-
-                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                )
-
-                GuarantorNameSummary.row mustBe None
-              }
-            }
-          }
-        }
-
-        "and there is a GuarantorRequiredPage answer of `no`" - {
-          "then must not return a row" in {
-            implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
-
-            GuarantorNameSummary.row mustBe None
-          }
-        }
-
-        "and there is a GuarantorRequiredPage answer of `yes`" - {
-
-          "and there is a GuarantorArrangerPage answer of `Consignee`" - {
-            "and that section hasn't been filled in yet" in {
-
-              implicit lazy val request: DataRequest[_] = dataRequest(
+              implicit lazy val request = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
-                  .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, Consignee)
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                  .set(HowMovementTransportedPage, FixedTransportInstallations),
+                testGreatBritainWarehouseKeeperErn
               )
 
               GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.consigneeNameNotProvided, false)
             }
+          }
 
-            "and that section has been filled in" in {
+          "GuarantorArranger is NOT answered" - {
+
+            "then must return expected row" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
+                testGreatBritainWarehouseKeeperErn
+              )
+
+              GuarantorNameSummary.row mustBe None
+            }
+          }
+        }
+
+        "when a Guarantor is optional" - {
+
+          "and there is a GuarantorRequiredPage answer of `no`" - {
+            "then must not return a row" in {
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Consignee)
-                  .set(ConsigneeBusinessNamePage, "consignee name here")
+                  .set(DestinationTypePage, UkTaxWarehouse.GB)
+                  .set(GuarantorRequiredPage, false),
+                testGreatBritainWarehouseKeeperErn
               )
 
-              GuarantorNameSummary.row mustBe expectedRow("consignee name here", false)
+              GuarantorNameSummary.row mustBe None
             }
           }
 
-          "and there is a GuarantorArrangerPage answer of `Consignor`" - {
-            "and that section has been filled in" in {
-              implicit lazy val request: DataRequest[_] = dataRequest(
-                FakeRequest(),
-                emptyUserAnswers
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Consignor)
-              )
+          "and there is a GuarantorRequiredPage answer of `yes`" - {
 
-              GuarantorNameSummary.row mustBe expectedRow(testMinTraderKnownFacts.traderName, false)
-            }
-          }
+            "and there is a GuarantorArrangerPage answer of `Consignee`" - {
+              "and that section hasn't been filled in yet" in {
 
-          "and there is a GuarantorArrangerPage answer of `GoodsOwner`" - {
-            "and that section hasn't been filled in yet" in {
+                implicit lazy val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(DestinationTypePage, UkTaxWarehouse.GB)
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, Consignee),
+                  testGreatBritainWarehouseKeeperErn
+                )
 
-              implicit lazy val request: DataRequest[_] = dataRequest(
-                FakeRequest(),
-                emptyUserAnswers
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, GoodsOwner)
-              )
+                GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.consigneeNameNotProvided, false)
+              }
 
-              GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
-            }
+              "and that section has been filled in" in {
+                implicit lazy val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(DestinationTypePage, UkTaxWarehouse.GB)
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, Consignee)
+                    .set(ConsigneeBusinessNamePage, "consignee name here"),
+                  testGreatBritainWarehouseKeeperErn
+                )
 
-            "and that section has been filled in" in {
-              implicit lazy val request: DataRequest[_] = dataRequest(
-                FakeRequest(),
-                emptyUserAnswers
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, GoodsOwner)
-                  .set(GuarantorNamePage, "guarantor name here")
-              )
-
-              GuarantorNameSummary.row mustBe expectedRow("guarantor name here", true)
-            }
-          }
-
-          "and there is a GuarantorArrangerPage answer of `Transporter`" - {
-            "and that section hasn't been filled in yet" in {
-
-              implicit lazy val request: DataRequest[_] = dataRequest(
-                FakeRequest(),
-                emptyUserAnswers
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Transporter)
-              )
-
-              GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
+                GuarantorNameSummary.row mustBe expectedRow("consignee name here", false)
+              }
             }
 
-            "and that section has been filled in" in {
-              implicit lazy val request: DataRequest[_] = dataRequest(
-                FakeRequest(),
-                emptyUserAnswers
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Transporter)
-                  .set(GuarantorNamePage, "transporter name here")
-              )
+            "and there is a GuarantorArrangerPage answer of `Consignor`" - {
+              "and that section has been filled in" in {
+                implicit lazy val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(DestinationTypePage, UkTaxWarehouse.GB)
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, Consignor),
+                  testGreatBritainWarehouseKeeperErn
+                )
 
-              GuarantorNameSummary.row mustBe expectedRow("transporter name here", true)
+                GuarantorNameSummary.row mustBe expectedRow(testMinTraderKnownFacts.traderName, false)
+              }
+            }
+
+            "and there is a GuarantorArrangerPage answer of `GoodsOwner`" - {
+              "and that section hasn't been filled in yet" in {
+
+                implicit lazy val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(DestinationTypePage, UkTaxWarehouse.GB)
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, GoodsOwner),
+                  testGreatBritainWarehouseKeeperErn
+                )
+
+                GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
+              }
+
+              "and that section has been filled in" in {
+                implicit lazy val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(DestinationTypePage, UkTaxWarehouse.GB)
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, GoodsOwner)
+                    .set(GuarantorNamePage, "guarantor name here"),
+                  testGreatBritainWarehouseKeeperErn
+                )
+
+                GuarantorNameSummary.row mustBe expectedRow("guarantor name here", true)
+              }
+            }
+
+            "and there is a GuarantorArrangerPage answer of `Transporter`" - {
+              "and that section hasn't been filled in yet" in {
+
+                implicit lazy val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(DestinationTypePage, UkTaxWarehouse.GB)
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, Transporter),
+                  testGreatBritainWarehouseKeeperErn
+                )
+
+                GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
+              }
+
+              "and that section has been filled in" in {
+                implicit lazy val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(DestinationTypePage, UkTaxWarehouse.GB)
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, Transporter)
+                    .set(GuarantorNamePage, "transporter name here"),
+                  testGreatBritainWarehouseKeeperErn
+                )
+
+                GuarantorNameSummary.row mustBe expectedRow("transporter name here", true)
+              }
             }
           }
         }

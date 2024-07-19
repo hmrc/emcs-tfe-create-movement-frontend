@@ -19,7 +19,7 @@ package pages.sections.items
 import base.SpecBase
 import config.Constants.BODYEADESAD
 import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
-import models.GoodsType
+import models.GoodsType._
 import models.requests.DataRequest
 import models.response.InvalidRegexException
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
@@ -300,74 +300,15 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
     }
   }
 
-  "checkGoodsType" - {
-
-    "when give an empty list" - {
-
-      "when there are NO GoodsTypes" - {
-
-        "return false" in {
-
-          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-
-          val expectedResult = false
-
-          val actualResult = ItemsSectionItems.checkGoodsType(Seq.empty)
-
-          actualResult mustBe expectedResult
-        }
-      }
-
-      "when there is one GoodsType" - {
-
-        "return false" in {
-
-          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
-          )
-
-          val expectedResult = false
-
-          val actualResult = ItemsSectionItems.checkGoodsType(Seq.empty)
-
-          actualResult mustBe expectedResult
-        }
-      }
-
-      "when there are multiple GoodsTypes" - {
-
-        "return false" in {
-
-          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-            .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
-            .set(ItemExciseProductCodePage(1), GoodsType.Beer.code)
-            .set(ItemExciseProductCodePage(2), GoodsType.Intermediate.code)
-          )
-
-          val expectedResult = false
-
-          val actualResult = ItemsSectionItems.checkGoodsType(Seq.empty)
-
-          actualResult mustBe expectedResult
-        }
-      }
-    }
+  "onlyContainsOrIsEmpty" - {
 
     "when give a list of one" - {
 
       "when there are NO GoodsTypes" - {
 
-        "return false" in {
-
+        "return true" in {
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-
-          val expectedResult = false
-
-          val actualResult = ItemsSectionItems.checkGoodsType(Seq(
-            GoodsType.Energy
-          ))
-
-          actualResult mustBe expectedResult
+          ItemsSectionItems.onlyContainsOrIsEmpty(Energy) mustBe true
         }
       }
 
@@ -376,36 +317,20 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
         "when the the goods type matches" - {
 
           "return true" in {
-
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
+              .set(ItemExciseProductCodePage(0), Energy.code)
             )
-
-            val expectedResult = true
-
-            val actualResult = ItemsSectionItems.checkGoodsType(Seq(
-              GoodsType.Energy
-            ))
-
-            actualResult mustBe expectedResult
+            ItemsSectionItems.onlyContainsOrIsEmpty(Energy) mustBe true
           }
         }
 
         "when the the goods type does NOT match" - {
 
           "return false" in {
-
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
+              .set(ItemExciseProductCodePage(0), Energy.code)
             )
-
-            val expectedResult = false
-
-            val actualResult = ItemsSectionItems.checkGoodsType(Seq(
-              GoodsType.Beer
-            ))
-
-            actualResult mustBe expectedResult
+            ItemsSectionItems.onlyContainsOrIsEmpty(Beer) mustBe false
           }
         }
       }
@@ -415,54 +340,48 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
         "when none match" - {
 
           "return false" in {
-
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
-              .set(ItemExciseProductCodePage(1), GoodsType.Beer.code)
-              .set(ItemExciseProductCodePage(2), GoodsType.Intermediate.code)
+              .set(ItemExciseProductCodePage(0), Energy.code)
+              .set(ItemExciseProductCodePage(1), Beer.code)
+              .set(ItemExciseProductCodePage(2), Intermediate.code)
             )
-
-            val expectedResult = false
-
-            val actualResult = ItemsSectionItems.checkGoodsType(Seq(GoodsType.Wine))
-
-            actualResult mustBe expectedResult
+            ItemsSectionItems.onlyContainsOrIsEmpty(Wine) mustBe false
           }
         }
 
         "when one matches" - {
 
-          "return true" in {
-
+          "return false" in {
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
-              .set(ItemExciseProductCodePage(1), GoodsType.Beer.code)
-              .set(ItemExciseProductCodePage(2), GoodsType.Intermediate.code)
+              .set(ItemExciseProductCodePage(0), Energy.code)
+              .set(ItemExciseProductCodePage(1), Beer.code)
+              .set(ItemExciseProductCodePage(2), Intermediate.code)
             )
-
-            val expectedResult = true
-
-            val actualResult = ItemsSectionItems.checkGoodsType(Seq(GoodsType.Energy))
-
-            actualResult mustBe expectedResult
+            ItemsSectionItems.onlyContainsOrIsEmpty(Energy) mustBe false
           }
         }
 
-        "when multiple match" - {
+        "when multiple match (but not all)" - {
+
+          "return false" in {
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(ItemExciseProductCodePage(0), Energy.code)
+              .set(ItemExciseProductCodePage(1), Beer.code)
+              .set(ItemExciseProductCodePage(2), Energy.code)
+            )
+            ItemsSectionItems.onlyContainsOrIsEmpty(Energy) mustBe false
+          }
+        }
+
+        "when multiple match (all)" - {
 
           "return true" in {
-
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
-              .set(ItemExciseProductCodePage(1), GoodsType.Beer.code)
-              .set(ItemExciseProductCodePage(2), GoodsType.Energy.code)
+              .set(ItemExciseProductCodePage(0), Energy.code)
+              .set(ItemExciseProductCodePage(1), Energy.code)
+              .set(ItemExciseProductCodePage(2), Energy.code)
             )
-
-            val expectedResult = true
-
-            val actualResult = ItemsSectionItems.checkGoodsType(Seq(GoodsType.Energy))
-
-            actualResult mustBe expectedResult
+            ItemsSectionItems.onlyContainsOrIsEmpty(Energy) mustBe true
           }
         }
       }
@@ -472,18 +391,9 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
 
       "when there are NO GoodsTypes" - {
 
-        "return false" in {
-
+        "return true" in {
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-
-          val expectedResult = false
-
-          val actualResult = ItemsSectionItems.checkGoodsType(Seq(
-            GoodsType.Energy,
-            GoodsType.Beer
-          ))
-
-          actualResult mustBe expectedResult
+          ItemsSectionItems.onlyContainsOrIsEmpty(Energy, Beer) mustBe true
         }
       }
 
@@ -492,19 +402,10 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
         "when the the goods type matches" - {
 
           "return true" in {
-
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
+              .set(ItemExciseProductCodePage(0), Energy.code)
             )
-
-            val expectedResult = true
-
-            val actualResult = ItemsSectionItems.checkGoodsType(Seq(
-              GoodsType.Energy,
-              GoodsType.Beer
-            ))
-
-            actualResult mustBe expectedResult
+            ItemsSectionItems.onlyContainsOrIsEmpty(Energy, Beer) mustBe true
           }
         }
 
@@ -513,17 +414,9 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
           "return false" in {
 
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
+              .set(ItemExciseProductCodePage(0), Energy.code)
             )
-
-            val expectedResult = false
-
-            val actualResult = ItemsSectionItems.checkGoodsType(Seq(
-              GoodsType.Wine,
-              GoodsType.Beer
-            ))
-
-            actualResult mustBe expectedResult
+            ItemsSectionItems.onlyContainsOrIsEmpty(Wine, Beer) mustBe false
           }
         }
       }
@@ -533,63 +426,48 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
         "when none match" - {
 
           "return false" in {
-
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
-              .set(ItemExciseProductCodePage(1), GoodsType.Beer.code)
-              .set(ItemExciseProductCodePage(2), GoodsType.Intermediate.code)
+              .set(ItemExciseProductCodePage(0), Energy.code)
+              .set(ItemExciseProductCodePage(1), Beer.code)
+              .set(ItemExciseProductCodePage(2), Intermediate.code)
             )
-
-            val expectedResult = false
-
-            val actualResult = ItemsSectionItems.checkGoodsType(Seq(
-              GoodsType.Spirits,
-              GoodsType.Wine
-            ))
-
-            actualResult mustBe expectedResult
+            ItemsSectionItems.onlyContainsOrIsEmpty(Spirits, Wine) mustBe false
           }
         }
 
         "when one matches" - {
 
-          "return true" in {
-
+          "return false" in {
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
-              .set(ItemExciseProductCodePage(1), GoodsType.Beer.code)
-              .set(ItemExciseProductCodePage(2), GoodsType.Intermediate.code)
+              .set(ItemExciseProductCodePage(0), Energy.code)
+              .set(ItemExciseProductCodePage(1), Beer.code)
+              .set(ItemExciseProductCodePage(2), Intermediate.code)
             )
-
-            val expectedResult = true
-
-            val actualResult = ItemsSectionItems.checkGoodsType(Seq(
-              GoodsType.Energy,
-              GoodsType.Wine
-            ))
-
-            actualResult mustBe expectedResult
+            ItemsSectionItems.onlyContainsOrIsEmpty(Energy, Wine) mustBe false
           }
         }
 
-        "when multiple match" - {
+        "when multiple match (but not all)" - {
+
+          "return false" in {
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(ItemExciseProductCodePage(0), Energy.code)
+              .set(ItemExciseProductCodePage(1), Beer.code)
+              .set(ItemExciseProductCodePage(2), Wine.code)
+            )
+            ItemsSectionItems.onlyContainsOrIsEmpty(Energy, Beer) mustBe false
+          }
+        }
+
+        "when multiple match (all)" - {
 
           "return true" in {
-
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(ItemExciseProductCodePage(0), GoodsType.Energy.code)
-              .set(ItemExciseProductCodePage(1), GoodsType.Beer.code)
-              .set(ItemExciseProductCodePage(2), GoodsType.Energy.code)
+              .set(ItemExciseProductCodePage(0), Energy.code)
+              .set(ItemExciseProductCodePage(1), Beer.code)
+              .set(ItemExciseProductCodePage(2), Energy.code)
             )
-
-            val expectedResult = true
-
-            val actualResult = ItemsSectionItems.checkGoodsType(Seq(
-              GoodsType.Energy,
-              GoodsType.Beer
-            ))
-
-            actualResult mustBe expectedResult
+            ItemsSectionItems.onlyContainsOrIsEmpty(Energy, Beer) mustBe true
           }
         }
       }

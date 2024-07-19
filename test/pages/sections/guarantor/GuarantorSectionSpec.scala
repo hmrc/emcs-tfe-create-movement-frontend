@@ -20,7 +20,7 @@ import base.SpecBase
 import models.{UserAddress, VatNumberModel}
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
-import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheUk}
 import pages.sections.info.DestinationTypePage
 import play.api.test.FakeRequest
 
@@ -55,6 +55,7 @@ class GuarantorSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
+            .set(DestinationTypePage, EuTaxWarehouse)
             .set(GuarantorRequiredPage, false)
         )
         GuarantorSection.isCompleted mustBe true

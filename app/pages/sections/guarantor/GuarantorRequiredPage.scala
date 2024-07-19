@@ -16,15 +16,12 @@
 
 package pages.sections.guarantor
 
-import config.Constants
-import models.GoodsType
+import models.GoodsType._
 import models.requests.DataRequest
-import models.sections.info.movementScenario.DestinationType.Export
 import models.sections.info.movementScenario.MovementScenario._
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.sections.transportUnit.TransportUnitType.FixedTransport
 import pages.QuestionPage
-import pages.sections.consignee.ConsigneeExcisePage
 import pages.sections.info.DestinationTypePage
 import pages.sections.items.ItemsSectionItems
 import pages.sections.journeyType.HowMovementTransportedPage
@@ -37,66 +34,20 @@ case object GuarantorRequiredPage extends QuestionPage[Boolean] {
   override val path: JsPath = GuarantorSection.path \ toString
 
   def isRequired()(implicit request: DataRequest[_]): Boolean =
-    guarantorAlwaysRequiredUk() || guarantorAlwaysRequiredNIToEU()
+    !(guarantorIsOptionalUKtoUK || guarantorIsOptionalNIToEU)
 
-  def guarantorAlwaysRequiredUk()(implicit request: DataRequest[_]): Boolean =
-    destinationTypeUkTaxWarehouseCondition || destinationTypeExportCondition || notGBOrXIConsigneeCondition
+  def guarantorIsOptionalUKtoUK(implicit request: DataRequest[_]): Boolean =
+    DestinationTypePage.isUKtoUKMovement && ItemsSectionItems.onlyContainsOrIsEmpty(Beer, Wine)
 
-  def guarantorAlwaysRequiredNIToEU()(implicit request: DataRequest[_]): Boolean =
-    destinationTypeToEUCondition && (isAlcoholOrTobaccoCondition || nonFixedMovementTransportTypeCondition || nonFixedTransportUnitTypeCondition)
-
-  private def destinationTypeExportCondition(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.get(DestinationTypePage).exists(_.destinationType == Export)
-
-  private def notGBOrXIConsigneeCondition(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.get(ConsigneeExcisePage) match {
-      case Some(value) => !value.startsWith(Constants.GB_PREFIX) && !value.startsWith(Constants.NI_PREFIX)
-      case None => false
-    }
-
-  private def destinationTypeUkTaxWarehouseCondition(implicit request: DataRequest[_]): Boolean = {
-
-    val isUkTaxWarehouse = request.userAnswers.get(DestinationTypePage)
-      .exists(UkTaxWarehouse.values.contains(_))
-
-    val hasRelevantGoodsTypes = ItemsSectionItems.checkGoodsType(Seq(
-      GoodsType.Spirits,
-      GoodsType.Intermediate,
-      GoodsType.Energy,
-      GoodsType.Tobacco
-    ))
-
-    isUkTaxWarehouse && hasRelevantGoodsTypes
+  def guarantorIsOptionalNIToEU(implicit request: DataRequest[_]): Boolean = {
+    DestinationTypePage.isNItoEuMovement && destinationTypeIsNotUnknownOrExempted && onlyFixedTransport &&
+      ItemsSectionItems.onlyContainsOrIsEmpty(Energy)
   }
 
-  private def destinationTypeToEUCondition(implicit request: DataRequest[_]): Boolean = {
+  private def destinationTypeIsNotUnknownOrExempted(implicit request: DataRequest[_]): Boolean =
+    !Seq(UnknownDestination, ExemptedOrganisation).exists(DestinationTypePage.is)
 
-    val relevantDestinationTypes = Seq(
-      EuTaxWarehouse,
-      ExemptedOrganisation,
-      UnknownDestination,
-      TemporaryRegisteredConsignee,
-      RegisteredConsignee,
-      TemporaryCertifiedConsignee,
-      CertifiedConsignee,
-      DirectDelivery
-    )
-
-    request.userAnswers.get(DestinationTypePage).exists(relevantDestinationTypes.contains(_))
-  }
-
-  private def isAlcoholOrTobaccoCondition(implicit request: DataRequest[_]): Boolean =
-    ItemsSectionItems.checkGoodsType(Seq(
-      GoodsType.Wine,
-      GoodsType.Beer,
-      GoodsType.Spirits,
-      GoodsType.Intermediate,
-      GoodsType.Tobacco
-    ))
-
-  private def nonFixedMovementTransportTypeCondition(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.get(HowMovementTransportedPage).exists(_ != FixedTransportInstallations)
-
-  private def nonFixedTransportUnitTypeCondition(implicit request: DataRequest[_]): Boolean =
-    !TransportUnitsSectionUnits.containsTransportUnitType(FixedTransport).getOrElse(true)
+  private def onlyFixedTransport(implicit request: DataRequest[_]): Boolean =
+    (HowMovementTransportedPage.is(FixedTransportInstallations) || HowMovementTransportedPage.isEmpty) &&
+      TransportUnitsSectionUnits.onlyContainsOrIsEmpty(FixedTransport)
 }

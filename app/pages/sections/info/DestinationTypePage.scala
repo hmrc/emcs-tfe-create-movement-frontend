@@ -18,6 +18,7 @@ package pages.sections.info
 
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementType.UkToUk
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
@@ -25,5 +26,6 @@ case object DestinationTypePage extends QuestionPage[MovementScenario] {
   override val toString: String = "destinationType"
   override val path: JsPath = InfoSection.path \ toString
 
+  def isUKtoUKMovement(implicit request: DataRequest[_]): Boolean = value.exists(_.movementType == UkToUk)
   def isNItoEuMovement(implicit request: DataRequest[_]): Boolean = value.exists(_.isNItoEU)
 }

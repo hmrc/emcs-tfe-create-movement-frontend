@@ -23,19 +23,13 @@ import play.api.test.FakeRequest
 
 class TransportUnitsSectionUnitsSpec extends SpecBase {
 
-  "containsTransportUnitType" - {
+  "onlyContainsOrIsEmpty()" - {
 
     "when TransportUnitCount is empty" - {
 
-      "return None" in {
-
+      "return true" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-
-        val expectedResult = None
-
-        val actualResult = TransportUnitsSectionUnits.containsTransportUnitType(TransportUnitType.FixedTransport)
-
-        actualResult mustBe expectedResult
+        TransportUnitsSectionUnits.onlyContainsOrIsEmpty(TransportUnitType.FixedTransport) mustBe true
       }
     }
 
@@ -44,32 +38,20 @@ class TransportUnitsSectionUnitsSpec extends SpecBase {
       "when the type matches the type checked for" - {
 
         "return true" in {
-
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
             .set(TransportUnitTypePage(0), TransportUnitType.FixedTransport)
           )
-
-          val expectedResult = Some(true)
-
-          val actualResult = TransportUnitsSectionUnits.containsTransportUnitType(TransportUnitType.FixedTransport)
-
-          actualResult mustBe expectedResult
+          TransportUnitsSectionUnits.onlyContainsOrIsEmpty(TransportUnitType.FixedTransport) mustBe true
         }
       }
 
       "when the type does NOT match the type checked for" - {
 
         "return true" in {
-
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
             .set(TransportUnitTypePage(0), TransportUnitType.Tractor)
           )
-
-          val expectedResult = Some(false)
-
-          val actualResult = TransportUnitsSectionUnits.containsTransportUnitType(TransportUnitType.FixedTransport)
-
-          actualResult mustBe expectedResult
+          TransportUnitsSectionUnits.onlyContainsOrIsEmpty(TransportUnitType.FixedTransport) mustBe false
         }
       }
     }
@@ -79,24 +61,18 @@ class TransportUnitsSectionUnitsSpec extends SpecBase {
       "when the all types match the type checked for" - {
 
         "return true" in {
-
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
             .set(TransportUnitTypePage(0), TransportUnitType.FixedTransport)
             .set(TransportUnitTypePage(1), TransportUnitType.FixedTransport)
             .set(TransportUnitTypePage(2), TransportUnitType.FixedTransport)
           )
-
-          val expectedResult = Some(true)
-
-          val actualResult = TransportUnitsSectionUnits.containsTransportUnitType(TransportUnitType.FixedTransport)
-
-          actualResult mustBe expectedResult
+          TransportUnitsSectionUnits.onlyContainsOrIsEmpty(TransportUnitType.FixedTransport) mustBe true
         }
       }
 
-      "when the type matches the type given" - {
+      "when the type matches the type given but other values exist" - {
 
-        "return true" in {
+        "return false" in {
 
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
             .set(TransportUnitTypePage(0), TransportUnitType.Tractor)
@@ -104,29 +80,19 @@ class TransportUnitsSectionUnitsSpec extends SpecBase {
             .set(TransportUnitTypePage(2), TransportUnitType.Tractor)
           )
 
-          val expectedResult = Some(true)
-
-          val actualResult = TransportUnitsSectionUnits.containsTransportUnitType(TransportUnitType.FixedTransport)
-
-          actualResult mustBe expectedResult
+          TransportUnitsSectionUnits.onlyContainsOrIsEmpty(TransportUnitType.FixedTransport) mustBe false
         }
       }
 
       "when the type does NOT match the type given" - {
 
-        "return true" in {
-
+        "return false" in {
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
             .set(TransportUnitTypePage(0), TransportUnitType.Tractor)
             .set(TransportUnitTypePage(1), TransportUnitType.Tractor)
             .set(TransportUnitTypePage(2), TransportUnitType.Tractor)
           )
-
-          val expectedResult = Some(false)
-
-          val actualResult = TransportUnitsSectionUnits.containsTransportUnitType(TransportUnitType.FixedTransport)
-
-          actualResult mustBe expectedResult
+          TransportUnitsSectionUnits.onlyContainsOrIsEmpty(TransportUnitType.FixedTransport) mustBe false
         }
       }
     }

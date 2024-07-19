@@ -18,7 +18,7 @@ package models.sections.info.movementScenario
 
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
-import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, RegisteredConsignee, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, RegisteredConsignee, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, UnknownDestination}
 import models.{Enumerable, WithName}
 import utils.Logging
 
@@ -37,6 +37,7 @@ sealed trait MovementScenario {
       Seq(
         DirectDelivery,
         ExemptedOrganisation,
+        UnknownDestination,
         RegisteredConsignee,
         EuTaxWarehouse,
         TemporaryRegisteredConsignee,

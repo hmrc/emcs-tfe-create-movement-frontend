@@ -53,14 +53,14 @@
             @govukInput(
                 InputViewModel(
                     field = form("value"),
-                    label = LabelViewModel(Text(messages("localReferenceNumber.deferred.label"))).hidden,
+                    label = LabelViewModel(Text(helper.inputLabel(isDeferred))).hidden,
                 ).withWidth(Full)
             )
         } else {
             @govukInput(
                 InputViewModel(
                     field = form("value"),
-                    label = LabelViewModel(Text(messages("localReferenceNumber.new.label"))),
+                    label = LabelViewModel(Text(helper.inputLabel(isDeferred))).withCssClass("govuk-!-font-weight-bold"),
                 ).withWidth(Full).withHint(HintViewModel(Text(messages("localReferenceNumber.new.hint"))))
             )
         }

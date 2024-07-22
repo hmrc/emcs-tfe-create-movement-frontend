@@ -28,7 +28,7 @@ object GuarantorArrangerSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    val guarantorRequiredAnswerIsTrue = request.userAnswers.get(GuarantorRequiredPage).contains(true)
+    val guarantorRequiredAnswerIsTrue = GuarantorRequiredPage.value.contains(true)
     val isAlwaysRequired = GuarantorRequiredPage.isRequired()
     val showSummaryRow = guarantorRequiredAnswerIsTrue || isAlwaysRequired
 
@@ -37,7 +37,7 @@ object GuarantorArrangerSummary {
 
   private def renderRow()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
-    val value: String = request.userAnswers.get(GuarantorArrangerPage) match {
+    val value: String = GuarantorArrangerPage.value match {
       case Some(answer) => messages(s"guarantorArranger.$answer")
       case None => messages("site.notProvided")
     }

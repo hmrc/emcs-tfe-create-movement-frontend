@@ -36,7 +36,7 @@ case class ItemWineOperationsChoiceSummary @Inject()(list: list) {
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     val page = ItemWineOperationsChoicePage(idx)
 
-    request.userAnswers.get(page).map {
+    page.value.map {
       answer =>
 
         val value = ValueViewModel(HtmlContent(

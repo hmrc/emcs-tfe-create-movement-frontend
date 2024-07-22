@@ -102,7 +102,7 @@ class DocumentsAddToListController @Inject()(
   }
 
   private def onMax[T](ifMax: => T, ifNotMax: => T)(implicit dataRequest: DataRequest[_]): T = {
-    dataRequest.userAnswers.get(DocumentsCount) match {
+    dataRequest.userAnswers.getCount(DocumentsCount) match {
       case Some(value) if value >= DocumentsSection.MAX => ifMax
       case _ => ifNotMax
     }

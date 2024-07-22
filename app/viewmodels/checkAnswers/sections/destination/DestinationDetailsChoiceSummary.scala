@@ -29,8 +29,8 @@ import viewmodels.implicits._
 object DestinationDetailsChoiceSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(DestinationDetailsChoicePage).flatMap { answer =>
-      request.userAnswers.get(DestinationTypePage).map { movementType =>
+    DestinationDetailsChoicePage.value.flatMap { answer =>
+      DestinationTypePage.value.map { movementType =>
 
         val value: String = if (answer) "site.yes" else "site.no"
 

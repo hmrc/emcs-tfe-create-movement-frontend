@@ -33,7 +33,7 @@ object TransportModeModel extends ModelConstructorHelpers {
 
   def apply(implicit request: DataRequest[_]): TransportModeModel = TransportModeModel(
     transportModeCode = mandatoryPage(HowMovementTransportedPage),
-    complementaryInformation = request.userAnswers.get(GiveInformationOtherTransportPage)
+    complementaryInformation = GiveInformationOtherTransportPage.value
   )
 
   implicit val fmt: OFormat[TransportModeModel] = Json.format

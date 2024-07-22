@@ -47,7 +47,7 @@ class ValidationService @Inject()(override val appConfig: AppConfig,
   }
 
   private def validateDateOfDispatch()(implicit request: DataRequest[_], messages: Messages): Seq[UIErrorModel[DispatchDetailsModel, LocalDate]] =
-    request.userAnswers.get(DispatchDetailsPage(isOnPreDraftFlow = false)) -> request.userAnswers.get(DeferredMovementPage(isOnPreDraftFlow = false)) match {
+    DispatchDetailsPage(isOnPreDraftFlow = false).value -> DeferredMovementPage(isOnPreDraftFlow = false).value match {
       case (Some(dispatchDetails), Some(isDeferred)) =>
         Seq(
           UIErrorModel(DispatchDateInPastValidationError, minDateCheck(isDeferred), dispatchDetails.date),

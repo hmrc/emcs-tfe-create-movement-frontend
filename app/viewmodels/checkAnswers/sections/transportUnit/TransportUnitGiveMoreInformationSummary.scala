@@ -34,7 +34,7 @@ object TransportUnitGiveMoreInformationSummary {
 
   def row(idx: Index, sectionComplete: Boolean)
          (implicit request: DataRequest[_], messages: Messages, link: views.html.components.link): Option[SummaryListRow] = {
-    val optMoreInformation = request.userAnswers.get(TransportUnitGiveMoreInformationPage(idx)).flatten
+    val optMoreInformation = TransportUnitGiveMoreInformationPage(idx).value.flatten
     Some(SummaryListRowViewModel(
       key = "transportUnitGiveMoreInformation.checkYourAnswersLabel",
       value = ValueViewModel(getValue(optMoreInformation,

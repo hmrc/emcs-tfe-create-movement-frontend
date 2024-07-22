@@ -31,7 +31,7 @@ case object SadSection extends Section[JsObject] {
   val MAX: Int = 99
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    (SadSectionDocuments.status, request.userAnswers.get(SadAddToListPage), request.userAnswers.get(SadCount)) match {
+    (SadSectionDocuments.status, SadAddToListPage.value, request.userAnswers.getCount(SadCount)) match {
       case (Completed, _, Some(MAX)) => Completed
       case (Completed, Some(SadAddToListModel.NoMoreToCome), _) => Completed
       case (Completed, Some(SadAddToListModel.Yes) | None, _) => InProgress

@@ -38,7 +38,7 @@ object DocumentCertificateModel extends ModelConstructorHelpers {
     val thereAnyDocumentCertificates = mandatoryPage(DocumentsCertificatesPage)
 
     if (!thereAnyDocumentCertificates) None else {
-      request.userAnswers.get(DocumentsCount) match {
+      request.userAnswers.getCount(DocumentsCount) match {
         case Some(0) | None => None
         case Some(value) =>
           Some((0 until value)

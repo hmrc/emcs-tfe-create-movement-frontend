@@ -29,7 +29,7 @@ import viewmodels.implicits._
 object DispatchAddressSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
-    request.userAnswers.get(DispatchAddressPage) match {
+    DispatchAddressPage.value match {
       case Some(address) => renderRow(ValueViewModel(address.toCheckYourAnswersFormat))
       case _ => renderRow(ValueViewModel(Text(messages("site.notProvided"))))
     }

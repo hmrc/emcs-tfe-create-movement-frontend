@@ -40,7 +40,7 @@ class ItemCheckAnswersPackagingHelper @Inject()(tagHelper: TagHelper,
 
 
   def allPackagesSummary(itemIdx: Index)(implicit request: DataRequest[_], messages: Messages): Seq[SummaryList] =
-    request.userAnswers.get(ItemsPackagingCount(itemIdx)) match {
+    request.userAnswers.getCount(ItemsPackagingCount(itemIdx)) match {
       case Some(value) => (0 until value).map(packagingIdx => summaryList(itemIdx, Index(packagingIdx)))
       case None => Nil
     }

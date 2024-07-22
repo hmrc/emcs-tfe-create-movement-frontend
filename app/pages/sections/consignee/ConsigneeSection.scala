@@ -33,12 +33,12 @@ case object ConsigneeSection extends Section[JsObject] {
     if(ConsigneeExcisePage.isMovementSubmissionError) {
       UpdateNeeded
     } else {
-      lazy val exportVatPageAnswer = request.userAnswers.get(ConsigneeExportVatPage)
-      lazy val exportEoriPageAnswer = request.userAnswers.get(ConsigneeExportEoriPage)
+      lazy val exportVatPageAnswer = ConsigneeExportVatPage.value
+      lazy val exportEoriPageAnswer = ConsigneeExportEoriPage.value
       val pagesToCheck = (
-        request.userAnswers.get(ConsigneeExportInformationPage),
-        request.userAnswers.get(ConsigneeExcisePage),
-        request.userAnswers.get(ConsigneeExemptOrganisationPage)
+        ConsigneeExportInformationPage.value,
+        ConsigneeExcisePage.value,
+        ConsigneeExemptOrganisationPage.value
       ) match {
         case (Some(value), _, _) =>
           value.toList match {
@@ -66,8 +66,8 @@ case object ConsigneeSection extends Section[JsObject] {
   private def checkBusinessNameAndAddressBothExistWithPage[A](pageGetResults: Seq[Option[A]])
                                                              (implicit request: DataRequest[_], @unused rds: Reads[A]): TaskListStatus = {
     val pages: Seq[Option[_]] = Seq(
-      request.userAnswers.get(ConsigneeBusinessNamePage),
-      request.userAnswers.get(ConsigneeAddressPage)
+      ConsigneeBusinessNamePage.value,
+      ConsigneeAddressPage.value
     ) ++ pageGetResults
 
     if (pages.forall(_.nonEmpty)) {
@@ -80,7 +80,7 @@ case object ConsigneeSection extends Section[JsObject] {
   }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.get(DestinationTypePage) match {
+    DestinationTypePage.value match {
       case Some(value) if value != UnknownDestination => true
       case _ => false
     }

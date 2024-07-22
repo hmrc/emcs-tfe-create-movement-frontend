@@ -41,7 +41,7 @@ class ConfirmationController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      (request.userAnswers.get(LocalReferenceNumberPage()), request.userAnswers.get(DeclarationPage)) match {
+      (LocalReferenceNumberPage().value, DeclarationPage.value) match {
         case (Some(submissionReference), Some(submissionTimestamp)) =>
           Ok(view(
             reference = submissionReference,

@@ -75,7 +75,7 @@ class SadAddToListController @Inject()(
     }
 
   private def onMax[D, T](ifMax: => T, ifNotMax: => T)(implicit dataRequest: DataRequest[_]): T = {
-    dataRequest.userAnswers.get(SadCount) match {
+    dataRequest.userAnswers.getCount(SadCount) match {
       case Some(value) if value >= SadSection.MAX => ifMax
       case _ => ifNotMax
     }

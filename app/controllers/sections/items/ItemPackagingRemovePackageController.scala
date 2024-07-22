@@ -80,7 +80,7 @@ class ItemPackagingRemovePackageController @Inject()(
                                             (implicit request: DataRequest[_]): Future[Result] = {
     if (shouldRemoveItem) {
 
-      val existingShippingMark = request.userAnswers.get(ItemPackagingShippingMarksPage(itemIdx, packageIdx))
+      val existingShippingMark = ItemPackagingShippingMarksPage(itemIdx, packageIdx).value
       val updatedAnswers = request.userAnswers.remove(ItemsPackagingSectionItems(itemIdx, packageIdx))
 
       val cleansedAnswers =

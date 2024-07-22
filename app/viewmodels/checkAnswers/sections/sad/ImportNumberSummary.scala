@@ -48,6 +48,6 @@ object ImportNumberSummary {
   }
 
   private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =
-    request.userAnswers.get(ImportNumberPage(idx)).fold(Text(messages("site.notProvided")))(answer => HtmlFormat.escape(answer).toString())
+    ImportNumberPage(idx).value.fold(Text(messages("site.notProvided")))(answer => HtmlFormat.escape(answer).toString())
 
 }

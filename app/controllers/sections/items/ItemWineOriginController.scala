@@ -55,7 +55,7 @@ class ItemWineOriginController @Inject()(
             val selectItems = SelectItemHelper.constructSelectItems(
               selectOptions = countries,
               defaultTextMessageKey = "itemWineOrigin.select.defaultValue",
-              existingAnswer = request.userAnswers.get(ItemWineOriginPage(idx)).map(_.countryCode)
+              existingAnswer = ItemWineOriginPage(idx).value.map(_.countryCode)
             )
             renderView(Ok, fillForm(ItemWineOriginPage(idx), formProvider(countries)), selectItems, idx, mode)
           }

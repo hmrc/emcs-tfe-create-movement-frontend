@@ -30,7 +30,7 @@ object InformationInvoiceDateSummary extends DateTimeUtils {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    val data: Option[InvoiceDetailsModel] = request.userAnswers.get(InvoiceDetailsPage())
+    val data: Option[InvoiceDetailsModel] = InvoiceDetailsPage().value
 
     val value: String = data match {
       case Some(invoiceDetailsPage) => invoiceDetailsPage.date.formatDateForUIOutput()

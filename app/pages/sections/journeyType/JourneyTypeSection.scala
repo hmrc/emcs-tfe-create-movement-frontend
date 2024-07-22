@@ -27,12 +27,12 @@ case object JourneyTypeSection extends Section[JsObject] {
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
     val pageAnswersExist = List(
-      request.userAnswers.get(HowMovementTransportedPage).isDefined,
-      request.userAnswers.get(JourneyTimeDaysPage).isDefined || request.userAnswers.get(JourneyTimeHoursPage).isDefined
+      HowMovementTransportedPage.value.isDefined,
+      JourneyTimeDaysPage.value.isDefined || JourneyTimeHoursPage.value.isDefined
     ) ++ {
-      if (request.userAnswers.get(HowMovementTransportedPage).contains(Other)) {
+      if (HowMovementTransportedPage.value.contains(Other)) {
         // GiveInformationOtherTransportPage is only mandatory when Other is selected
-        List(request.userAnswers.get(GiveInformationOtherTransportPage).isDefined)
+        List(GiveInformationOtherTransportPage.value.isDefined)
       } else {
         // if Other isn't selected
         List()

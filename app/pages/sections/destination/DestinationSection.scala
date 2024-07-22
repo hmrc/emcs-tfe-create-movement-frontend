@@ -57,7 +57,7 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
     if (DestinationWarehouseExcisePage.isMovementSubmissionError) {
       UpdateNeeded
     } else {
-      request.userAnswers.get(DestinationTypePage) match {
+      DestinationTypePage.value match {
         case Some(value) =>
           implicit val destinationTypePageAnswer: MovementScenario = value
           if (shouldStartFlowAtDestinationWarehouseExcise) {
@@ -76,9 +76,9 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
 
   private def startFlowAtDestinationWarehouseExciseStatus(implicit request: DataRequest[_]): TaskListStatus =
     (
-      request.userAnswers.get(DestinationWarehouseExcisePage),
-      request.userAnswers.get(DestinationBusinessNamePage),
-      request.userAnswers.get(DestinationAddressPage)
+      DestinationWarehouseExcisePage.value,
+      DestinationBusinessNamePage.value,
+      DestinationAddressPage.value
     ) match {
       case (Some(_), Some(_), Some(_)) => Completed
       case (None, None, None) => NotStarted
@@ -88,17 +88,17 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
   private def startFlowAtDestinationWarehouseVatStatus(implicit request: DataRequest[_], destinationTypePageAnswer: MovementScenario): TaskListStatus = {
 
     val destinationDetailsChoice = if (shouldSkipDestinationDetailsChoice) Some(true) else {
-      request.userAnswers.get(DestinationDetailsChoicePage)
+      DestinationDetailsChoicePage.value
     }
 
     (
       destinationDetailsChoice,
-      request.userAnswers.get(DestinationBusinessNamePage),
-      request.userAnswers.get(DestinationAddressPage)
+      DestinationBusinessNamePage.value,
+      DestinationAddressPage.value
     ) match {
       case (Some(false), _, _) => Completed
       case (Some(_), Some(_), Some(_)) => Completed
-      case _ if request.userAnswers.get(DestinationWarehouseVatPage).nonEmpty => InProgress
+      case _ if DestinationWarehouseVatPage.value.nonEmpty => InProgress
       case (_, None, None) => NotStarted
       case _ => InProgress
     }
@@ -106,8 +106,8 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
 
   private def startFlowAtDestinationBusinessNameStatus(implicit request: DataRequest[_]): TaskListStatus =
     (
-      request.userAnswers.get(DestinationBusinessNamePage),
-      request.userAnswers.get(DestinationAddressPage)
+      DestinationBusinessNamePage.value,
+      DestinationAddressPage.value
     ) match {
       case (Some(_), Some(_)) => Completed
       case (None, None) => NotStarted
@@ -115,7 +115,7 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
     }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.get(DestinationTypePage).exists {
+    DestinationTypePage.value.exists {
       movementScenario =>
         (UkTaxWarehouse.values ++ Seq(
           EuTaxWarehouse,

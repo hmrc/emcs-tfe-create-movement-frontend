@@ -90,7 +90,7 @@ class DeferredMovementController @Inject()(
               )
             )
           )
-          val mode = if(request.userAnswers.get(page).contains(value)) CheckMode else ReviewMode
+          val mode = if(page.value.contains(value)) CheckMode else ReviewMode
           saveAndRedirect(DeferredMovementPage(isOnPreDraftFlow = false), value, cleansedAnswers, mode)
         }
       )

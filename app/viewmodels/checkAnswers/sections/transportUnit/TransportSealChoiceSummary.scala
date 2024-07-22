@@ -48,5 +48,5 @@ object TransportSealChoiceSummary {
 
 
   private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =
-    request.userAnswers.get(TransportSealChoicePage(idx)).fold(Text(messages("site.notProvided")))(answer => if (answer) "site.yes" else "site.no")
+    TransportSealChoicePage(idx).value.fold(Text(messages("site.notProvided")))(answer => if (answer) "site.yes" else "site.no")
 }

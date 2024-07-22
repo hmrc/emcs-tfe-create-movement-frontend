@@ -27,10 +27,10 @@ import viewmodels.implicits._
 object ItemPackagingShippingMarksChoiceSummary {
 
   def row(itemIdx: Index, packagingIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ItemPackagingShippingMarksChoicePage(itemIdx, packagingIdx)).map {
+    ItemPackagingShippingMarksChoicePage(itemIdx, packagingIdx).value.map {
       answer =>
 
-        val isPackagingQuantityEqualToZero = request.userAnswers.get(ItemPackagingQuantityPage(itemIdx, packagingIdx)).exists(BigInt(_) == 0)
+        val isPackagingQuantityEqualToZero = ItemPackagingQuantityPage(itemIdx, packagingIdx).value.exists(BigInt(_) == 0)
 
         val value = (answer, isPackagingQuantityEqualToZero) match {
           case (true, true) => "itemPackagingShippingMarksChoice.checkYourAnswersLabel.yes.existing"

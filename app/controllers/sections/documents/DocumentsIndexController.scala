@@ -40,7 +40,7 @@ class DocumentsIndexController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      request.userAnswers.get(DocumentsCertificatesPage) match {
+      DocumentsCertificatesPage.value match {
         case Some(false) => Redirect(routes.DocumentsCheckAnswersController.onPageLoad(ern, draftId))
         case Some(true) => hasDocumentsRouting()
         case _ => Redirect(routes.DocumentsCertificatesController.onPageLoad(ern, draftId, NormalMode))
@@ -48,7 +48,7 @@ class DocumentsIndexController @Inject()(
     }
 
   private def hasDocumentsRouting()(implicit request: DataRequest[_]): Result = {
-    request.userAnswers.get(DocumentsCount) match {
+    request.userAnswers.getCount(DocumentsCount) match {
       case None | Some(0) =>
         Redirect(routes.DocumentsCertificatesController.onPageLoad(request.ern, request.draftId, NormalMode))
       case Some(_) =>

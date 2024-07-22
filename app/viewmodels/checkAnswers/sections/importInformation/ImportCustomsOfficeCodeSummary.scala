@@ -35,7 +35,7 @@ class ImportCustomsOfficeCodeSummary @Inject()(tagHelper: TagHelper) {
 
     val hasUnfixedError = ImportCustomsOfficeCodePage.isMovementSubmissionError
 
-    request.userAnswers.get(ImportCustomsOfficeCodePage).map {
+    ImportCustomsOfficeCodePage.value.map {
       answer =>
 
         SummaryListRowViewModel(

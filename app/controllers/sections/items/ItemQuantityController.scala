@@ -78,7 +78,7 @@ class ItemQuantityController @Inject()(
     }
 
   private[controllers] def withCnCodeInformation(idx: Index)(f: CnCodeInformation => Result)(implicit request: DataRequest[_]): Future[Result] = {
-    (request.userAnswers.get(ItemExciseProductCodePage(idx)), request.userAnswers.get(ItemCommodityCodePage(idx))) match {
+    (ItemExciseProductCodePage(idx).value, ItemCommodityCodePage(idx).value) match {
       case (Some(epc), Some(commodityCode)) =>
         cnCodeInformationService.getCnCodeInformation(Seq(CnCodeInformationItem(epc, commodityCode))).map { response =>
           response.headOption match {

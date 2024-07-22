@@ -33,7 +33,7 @@ object ItemPackagingShippingMarksSummary {
     answers.get(ItemPackagingShippingMarksPage(itemIdx, packagingIdx)).map {
       answer =>
 
-        val isPackagingQuantityEqualToZero = request.userAnswers.get(ItemPackagingQuantityPage(itemIdx, packagingIdx)).exists(BigInt(_) == 0)
+        val isPackagingQuantityEqualToZero = ItemPackagingQuantityPage(itemIdx, packagingIdx).value.exists(BigInt(_) == 0)
 
         val changeLinkUrl = if(isPackagingQuantityEqualToZero) {
           routes.ItemPackagingSelectShippingMarkController.onPageLoad(answers.ern, answers.draftId, itemIdx, packagingIdx, CheckMode).url

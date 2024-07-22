@@ -47,7 +47,7 @@ class DispatchIndexController @Inject()(
       } else {
         withAnswer(DestinationTypePage) {
           case CertifiedConsignee | TemporaryCertifiedConsignee =>
-            if(request.userAnswers.get(ConsignorAddressPage).nonEmpty) {
+            if(ConsignorAddressPage.value.nonEmpty) {
               Redirect(routes.DispatchUseConsignorDetailsController.onPageLoad(ern, draftId, NormalMode))
             } else {
               Redirect(routes.DispatchBusinessNameController.onPageLoad(ern, draftId, NormalMode))

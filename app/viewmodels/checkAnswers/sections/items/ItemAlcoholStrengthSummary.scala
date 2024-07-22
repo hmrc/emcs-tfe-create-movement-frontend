@@ -30,7 +30,7 @@ object ItemAlcoholStrengthSummary {
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     lazy val page = ItemAlcoholStrengthPage(idx)
 
-    request.userAnswers.get(ItemAlcoholStrengthPage(idx)).map { answer =>
+    ItemAlcoholStrengthPage(idx).value.map { answer =>
       SummaryListRowViewModel(
         key = s"$page.checkYourAnswersLabel",
         value = ValueViewModel(messages(s"$page.checkYourAnswersValue", answer)),

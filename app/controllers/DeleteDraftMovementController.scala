@@ -59,7 +59,7 @@ class DeleteDraftMovementController @Inject()(
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _),
         deleteDraft => if(deleteDraft) {
-          request.userAnswers.get(LocalReferenceNumberPage(isOnPreDraftFlow = false)).fold({
+          LocalReferenceNumberPage(isOnPreDraftFlow = false).value.fold({
             logger.error("Error trying to delete draft, LRN is missing - rendering ISE")
             Future(InternalServerError(errorHandler.internalServerErrorTemplate))
           })(

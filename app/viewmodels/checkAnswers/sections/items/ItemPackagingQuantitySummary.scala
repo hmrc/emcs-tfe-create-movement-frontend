@@ -30,7 +30,7 @@ object ItemPackagingQuantitySummary {
 
   def row(itemIdx: Index, packagingIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    request.userAnswers.get(ItemPackagingQuantityPage(itemIdx, packagingIdx)).map {
+    ItemPackagingQuantityPage(itemIdx, packagingIdx).value.map {
       value =>
         SummaryListRowViewModel(
           key = "itemPackagingQuantity.checkYourAnswersLabel",

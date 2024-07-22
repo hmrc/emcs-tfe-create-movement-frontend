@@ -79,7 +79,7 @@ class ItemPackagingShippingMarksChoiceController @Inject()(
   private def cleanseSaveAndRedirect(hasShippingMark: Boolean, itemIdx: Index, packageIdx: Index, mode: Mode)
                                     (implicit request: DataRequest[_]): Future[Result] = {
 
-    val existingShippingMark = request.userAnswers.get(ItemPackagingShippingMarksPage(itemIdx, packageIdx))
+    val existingShippingMark = ItemPackagingShippingMarksPage(itemIdx, packageIdx).value
     val updatedAnswers =
       (if(hasShippingMark) request.userAnswers else request.userAnswers.remove(ItemPackagingShippingMarksPage(itemIdx, packageIdx)))
         .set(ItemPackagingShippingMarksChoicePage(itemIdx, packageIdx), hasShippingMark)

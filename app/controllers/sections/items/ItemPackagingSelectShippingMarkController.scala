@@ -81,7 +81,7 @@ class ItemPackagingSelectShippingMarkController @Inject()(
     val selectItems = SelectItemHelper.constructSelectItems(
       selectOptions = seqOfValidShippingMarks.map(ShippingMarkOption(_)),
       defaultTextMessageKey = "itemPackagingSelectShippingMark.select.defaultValue",
-      existingAnswer = request.userAnswers.get(ItemPackagingShippingMarksPage(itemsIndex, packagingIdx))
+      existingAnswer = ItemPackagingShippingMarksPage(itemsIndex, packagingIdx).value
     )
     Future.successful(status(view(
       form = form,

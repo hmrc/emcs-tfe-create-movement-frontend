@@ -29,7 +29,7 @@ case object ExportInformationSection extends Section[JsObject] {
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
     if(ExportCustomsOfficePage.isMovementSubmissionError) {
       UpdateNeeded
-    } else if (request.userAnswers.get(ExportCustomsOfficePage).nonEmpty) {
+    } else if (ExportCustomsOfficePage.value.nonEmpty) {
       Completed
     } else {
       NotStarted
@@ -37,7 +37,7 @@ case object ExportInformationSection extends Section[JsObject] {
   }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.get(DestinationTypePage) match {
+    DestinationTypePage.value match {
       case Some(value) if Seq(ExportWithCustomsDeclarationLodgedInTheUk, ExportWithCustomsDeclarationLodgedInTheEu).contains(value) => true
       case _ => false
     }

@@ -27,7 +27,7 @@ import viewmodels.implicits._
 object DocumentsCertificatesSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(DocumentsCertificatesPage).map {
+    DocumentsCertificatesPage.value.map {
       answer =>
 
         val value = if (answer) "site.yes" else "site.no"

@@ -29,16 +29,16 @@ case object DispatchSection extends Section[JsObject] {
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
 
-    val isCertifiedConsigneeType = request.userAnswers.get(DestinationTypePage).fold(false)(Seq(
+    val isCertifiedConsigneeType = DestinationTypePage.value.fold(false)(Seq(
       TemporaryCertifiedConsignee,
       CertifiedConsignee
     ).contains(_))
 
     val hasDispatchWarehouseExciseOrCertifiedConsignee =
-      request.userAnswers.get(DispatchWarehouseExcisePage).isDefined || isCertifiedConsigneeType
+      DispatchWarehouseExcisePage.value.isDefined || isCertifiedConsigneeType
 
     def checkRemainingPages: TaskListStatus = {
-      val remainingPages: Seq[Option[_]] = Seq(request.userAnswers.get(DispatchBusinessNamePage), request.userAnswers.get(DispatchAddressPage))
+      val remainingPages: Seq[Option[_]] = Seq(DispatchBusinessNamePage.value, DispatchAddressPage.value)
       if (remainingPages.forall(_.isEmpty) && isCertifiedConsigneeType) {
         NotStarted
       } else if (remainingPages.forall(_.nonEmpty)) {
@@ -50,8 +50,8 @@ case object DispatchSection extends Section[JsObject] {
 
     if (DispatchWarehouseExcisePage.isMovementSubmissionError) UpdateNeeded else {
       if(hasDispatchWarehouseExciseOrCertifiedConsignee) {
-        request.userAnswers.get(DispatchUseConsignorDetailsPage) match {
-          case Some(true) if request.userAnswers.get(DispatchAddressPage).nonEmpty => Completed
+        DispatchUseConsignorDetailsPage.value match {
+          case Some(true) if DispatchAddressPage.value.nonEmpty => Completed
           case Some(true) => InProgress
           case _ => checkRemainingPages
         }

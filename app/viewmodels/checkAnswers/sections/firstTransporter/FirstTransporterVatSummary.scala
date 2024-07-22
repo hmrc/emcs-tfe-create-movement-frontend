@@ -29,7 +29,7 @@ object FirstTransporterVatSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    request.userAnswers.get(FirstTransporterVatPage).flatMap {
+    FirstTransporterVatPage.value.flatMap {
       _.vatNumber.map {
       vatNumber =>
         SummaryListRowViewModel(

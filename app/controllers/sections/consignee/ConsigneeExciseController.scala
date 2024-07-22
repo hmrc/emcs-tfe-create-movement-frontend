@@ -66,14 +66,14 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
 
   private def isNorthernIrishTemporaryRegisteredConsignee(implicit request: DataRequest[_]) = {
     val isTemporaryRegisteredConsignee: Boolean =
-      request.userAnswers.get(DestinationTypePage).contains(TemporaryRegisteredConsignee)
+      DestinationTypePage.value.contains(TemporaryRegisteredConsignee)
 
     isNorthernIrish && isTemporaryRegisteredConsignee
   }
 
   private def isNorthernIrishTemporaryCertifiedConsignee(implicit request: DataRequest[_]) = {
     val isTemporaryCertifiedConsignee: Boolean =
-      request.userAnswers.get(DestinationTypePage).contains(TemporaryCertifiedConsignee)
+      DestinationTypePage.value.contains(TemporaryCertifiedConsignee)
 
     isNorthernIrish && isTemporaryCertifiedConsignee
   }
@@ -92,7 +92,7 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
   private def cleanseSaveAndRedirect(value: String, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
     val cleansedAnswers = {
       //If the ERN has changed from GB -> XI or XI -> GB then Address MUST be re-captured. Hence, remove it.
-      if (request.userAnswers.get(ConsigneeExcisePage).exists(_.startsWith(value.take(2)))) request.userAnswers else {
+      if (ConsigneeExcisePage.value.exists(_.startsWith(value.take(2)))) request.userAnswers else {
         request.userAnswers.remove(ConsigneeAddressPage)
       }
     }

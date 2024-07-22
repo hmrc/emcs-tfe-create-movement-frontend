@@ -35,7 +35,7 @@ class InformationLocalReferenceNumberSummary @Inject()(tagHelper: TagHelper) {
 
     val hasUnfixedLRNError = LocalReferenceNumberPage(deferredMovement).isMovementSubmissionError
 
-    request.userAnswers.get(LocalReferenceNumberPage()).map { lrn =>
+    LocalReferenceNumberPage().value.map { lrn =>
 
       val deferredType: String = if (deferredMovement) "deferred" else "new"
 

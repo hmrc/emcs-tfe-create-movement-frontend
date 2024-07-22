@@ -65,8 +65,8 @@ class ItemCheckAnswersController @Inject()(
 
   private def getCnCodeInformation(idx: Index)(implicit request: DataRequest[_]): Future[Option[CnCodeInformation]] = {
     for {
-      epc <- request.userAnswers.get(ItemExciseProductCodePage(idx))
-      cnCode <- request.userAnswers.get(ItemCommodityCodePage(idx))
+      epc <- ItemExciseProductCodePage(idx).value
+      cnCode <- ItemCommodityCodePage(idx).value
     } yield {
       getCnCodeInformationService.getCnCodeInformation(Seq(CnCodeInformationItem(epc, cnCode))).map {
         case (_, cnCodeInformation) :: Nil =>
@@ -82,14 +82,14 @@ class ItemCheckAnswersController @Inject()(
   })
 
   private def renderView(itemIdx: Index, cnCodeInformation: CnCodeInformation)(implicit request: DataRequest[_]): Result = {
-    val nextPackagingIdx: Index = request.userAnswers.get(ItemsPackagingCount(itemIdx)).fold(0)(identity)
+    val nextPackagingIdx: Index = request.userAnswers.getCount(ItemsPackagingCount(itemIdx)).fold(0)(identity)
     Ok(view(
       idx = itemIdx,
       cnCodeInformation = cnCodeInformation,
       action = routes.ItemCheckAnswersController.onSubmit(request.ern, request.draftId, itemIdx),
       addMorePackagingCall = routes.ItemSelectPackagingController.onPageLoad(request.ern, request.draftId, itemIdx, nextPackagingIdx, NormalMode),
-      isBulk = request.userAnswers.get(ItemBulkPackagingChoicePage(itemIdx)).contains(true),
-      packagingCount = request.userAnswers.get(ItemsPackagingCount(itemIdx))
+      isBulk = ItemBulkPackagingChoicePage(itemIdx).value.contains(true),
+      packagingCount = request.userAnswers.getCount(ItemsPackagingCount(itemIdx))
     ))
   }
 

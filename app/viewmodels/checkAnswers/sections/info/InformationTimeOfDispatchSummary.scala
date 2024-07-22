@@ -30,7 +30,7 @@ object InformationTimeOfDispatchSummary extends DateTimeUtils {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    val data: Option[DispatchDetailsModel] = request.userAnswers.get(DispatchDetailsPage())
+    val data: Option[DispatchDetailsModel] = DispatchDetailsPage().value
 
     val value: String = data match {
       case Some(dispatchDetailsPage) => dispatchDetailsPage.time.formatTimeForUIOutput

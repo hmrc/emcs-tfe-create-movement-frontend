@@ -61,7 +61,7 @@ class GuarantorArrangerController @Inject()(
             Future.successful(renderView(BadRequest, formWithErrors, mode)),
           {
             case value@(GoodsOwner | Transporter) =>
-              if (Seq(Consignor, Consignee).exists(request.userAnswers.get(GuarantorArrangerPage).contains)) {
+              if (Seq(Consignor, Consignee).exists(GuarantorArrangerPage.value.contains)) {
                 saveAndRedirect(GuarantorArrangerPage, value, NormalMode)
               } else {
                 saveAndRedirect(GuarantorArrangerPage, value, mode)

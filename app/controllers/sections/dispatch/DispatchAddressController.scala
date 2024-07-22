@@ -53,7 +53,7 @@ class DispatchAddressController @Inject()(override val messagesApi: MessagesApi,
 
   override def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] = {
     authorisedDataRequest(ern, draftId) { implicit request =>
-      val prePopPage = (request.userAnswers.get(DispatchAddressPage), request.userAnswers.get(DispatchUseConsignorDetailsPage)) match {
+      val prePopPage = (DispatchAddressPage.value, DispatchUseConsignorDetailsPage.value) match {
         case (None, Some(true)) => ConsignorAddressPage
         case _ => DispatchAddressPage
       }

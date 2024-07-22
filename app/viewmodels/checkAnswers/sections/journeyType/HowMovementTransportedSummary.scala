@@ -31,7 +31,7 @@ import pages.sections.guarantor.GuarantorRequiredPage
 object HowMovementTransportedSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(HowMovementTransportedPage).map {
+    HowMovementTransportedPage.value.map {
       answer =>
 
         val value = ValueViewModel(
@@ -62,7 +62,7 @@ object HowMovementTransportedSummary {
 
   private def showChangeLink(implicit request: DataRequest[_]): Boolean = 
     !(
-      request.userAnswers.get(DestinationTypePage).exists(_.movementType == MovementType.UkToEu) &&
-        request.userAnswers.get(GuarantorRequiredPage).exists(!_)
+      DestinationTypePage.value.exists(_.movementType == MovementType.UkToEu) &&
+        GuarantorRequiredPage.value.exists(!_)
     )
 }

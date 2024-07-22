@@ -449,7 +449,7 @@ class ItemsNavigator @Inject() extends BaseNavigator {
   private def itemsAddToListRouting(mode: Mode): UserAnswers => Call = (userAnswers: UserAnswers) => {
     userAnswers.get(ItemsAddToListPage) match {
       case Some(ItemsAddToList.Yes) =>
-        val nextIdx: Index = userAnswers.get(ItemsCount).fold(0)(identity)
+        val nextIdx: Index = userAnswers.getCount(ItemsCount).fold(0)(identity)
         itemsRoutes.ItemExciseProductCodeController.onPageLoad(userAnswers.ern, userAnswers.draftId, nextIdx, mode)
       case _ =>
         controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)

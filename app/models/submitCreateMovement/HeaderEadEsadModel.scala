@@ -36,7 +36,7 @@ case class HeaderEadEsadModel(
 object HeaderEadEsadModel extends ModelConstructorHelpers {
 
   def apply(destinationType: DestinationType)(implicit request: DataRequest[_]): HeaderEadEsadModel = {
-    val journeyTime: String = (request.userAnswers.get(JourneyTimeHoursPage), request.userAnswers.get(JourneyTimeDaysPage)) match {
+    val journeyTime: String = (JourneyTimeHoursPage.value, JourneyTimeDaysPage.value) match {
       case (Some(hours), _) => s"$hours hours"
       case (_, Some(days)) => s"$days days"
       case _ =>

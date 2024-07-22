@@ -58,7 +58,7 @@ class ItemExciseProductCodeController @Inject()(
             val selectItems = SelectItemHelper.constructSelectItems(
               selectOptions = exciseProductCodes,
               defaultTextMessageKey = "itemExciseProductCode.select.defaultValue",
-              existingAnswer = request.userAnswers.get(ItemExciseProductCodePage(idx))
+              existingAnswer = ItemExciseProductCodePage(idx).value
             )
             renderView(Ok, formProvider(exciseProductCodes, idx), idx, selectItems, mode)
         }

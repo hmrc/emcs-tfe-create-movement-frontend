@@ -29,7 +29,7 @@ case class ImportSadModel(importSadNumber: String)
 object ImportSadModel extends ModelConstructorHelpers with Logging {
 
   def apply(implicit request: DataRequest[_]): Seq[ImportSadModel] = {
-    request.userAnswers.get(SadCount) match {
+    request.userAnswers.getCount(SadCount) match {
       case Some(0) | None =>
         logger.error("SadSection should contain at least one item")
         throw MissingMandatoryPage("SadSection should contain at least one item")

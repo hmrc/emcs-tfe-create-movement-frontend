@@ -34,7 +34,7 @@ import javax.inject.Inject
 class ItemWineMoreInformationSummary @Inject()(link: link) extends JsonOptionFormatter {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
-    request.userAnswers.get(ItemWineMoreInformationPage(idx)) match {
+    ItemWineMoreInformationPage(idx).value match {
       case Some(Some(answer)) if answer != "" =>
         SummaryListRowViewModel(
           key = s"itemWineMoreInformation.checkYourAnswers.label",

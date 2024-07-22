@@ -29,7 +29,7 @@ object DestinationBusinessNameSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
-    val value = request.userAnswers.get(DestinationBusinessNamePage).getOrElse(messages("destinationCheckAnswers.destination.notProvided"))
+    val value = DestinationBusinessNamePage.value.getOrElse(messages("destinationCheckAnswers.destination.notProvided"))
 
     SummaryListRowViewModel(
       key = "destinationBusinessName.checkYourAnswersLabel",

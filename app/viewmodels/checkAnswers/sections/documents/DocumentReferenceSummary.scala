@@ -30,7 +30,7 @@ import viewmodels.taskList.Completed
 object DocumentReferenceSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(DocumentReferencePage(idx)).map {
+    DocumentReferencePage(idx).value.map {
       answer =>
 
         DocumentSection(idx).status match {

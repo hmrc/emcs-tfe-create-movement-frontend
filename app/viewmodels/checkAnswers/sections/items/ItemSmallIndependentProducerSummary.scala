@@ -36,7 +36,7 @@ class ItemSmallIndependentProducerSummary @Inject()(p: p) {
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     lazy val page = ItemSmallIndependentProducerPage(idx)
 
-    request.userAnswers.get(page).map {
+    page.value.map {
       answerModel =>
 
         val declaration = ItemSmallIndependentProducerHelper.constructDeclarationPrefix(idx).dropRight(1)

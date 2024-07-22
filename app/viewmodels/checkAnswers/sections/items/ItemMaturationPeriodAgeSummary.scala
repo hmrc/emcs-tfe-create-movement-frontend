@@ -41,7 +41,7 @@ object ItemMaturationPeriodAgeSummary {
       ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
     )
 
-    request.userAnswers.get(page).map {
+    page.value.map {
       answer =>
         if (answer.hasMaturationPeriodAge) {
           answer.maturationPeriodAge

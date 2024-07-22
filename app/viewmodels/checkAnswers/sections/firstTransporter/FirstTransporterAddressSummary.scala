@@ -30,7 +30,7 @@ object FirstTransporterAddressSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
-    val value: Content = request.userAnswers.get(FirstTransporterAddressPage).fold[Content] {
+    val value: Content = FirstTransporterAddressPage.value.fold[Content] {
       Text(messages("site.notProvided"))
     } { address =>
       HtmlContent(

@@ -29,7 +29,7 @@ case object ItemsSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "items"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    (request.userAnswers.get(ItemsCount), request.userAnswers.get(ItemsAddToListPage), ItemsSectionItems.isMovementSubmissionError) match {
+    (request.userAnswers.getCount(ItemsCount), ItemsAddToListPage.value, ItemsSectionItems.isMovementSubmissionError) match {
       case (_, _, true) => UpdateNeeded
       case (Some(0) | None, _, _) => NotStarted
       case (_, Some(ItemsAddToList.No), _) =>
@@ -47,7 +47,7 @@ case object ItemsSection extends Section[JsObject] {
    */
   def retrieveAllShippingMarks()(implicit request: DataRequest[_]): Seq[String] =
     forEveryPackagingInsideEveryItem { (itemIdx, packagingIdx) =>
-      request.userAnswers.get(page = ItemPackagingShippingMarksPage(itemIdx, packagingIdx))
+      ItemPackagingShippingMarksPage(itemIdx, packagingIdx).value
     }
 
   /**
@@ -59,7 +59,7 @@ case object ItemsSection extends Section[JsObject] {
    */
   def retrieveShippingMarkLocationsMatching(valueToMatch: String)(implicit request: DataRequest[_]): Seq[(Index, Index)] =
     forEveryPackagingInsideEveryItem { (itemIdx, packagingIdx) =>
-      val optionalValue = request.userAnswers.get(page = ItemPackagingShippingMarksPage(itemIdx, packagingIdx))
+      val optionalValue = ItemPackagingShippingMarksPage(itemIdx, packagingIdx).value
       if (optionalValue.contains(valueToMatch)) {
         Seq((Index(itemIdx), Index(packagingIdx)))
       } else {
@@ -74,11 +74,11 @@ case object ItemsSection extends Section[JsObject] {
    * @return        for every item, for every packaging within that item, perform function f
    */
   private def forEveryPackagingInsideEveryItem[A](f: (Int, Int) => IterableOnce[A])(implicit request: DataRequest[_]): Seq[A] =
-    request.userAnswers.get(ItemsCount)
+    request.userAnswers.getCount(ItemsCount)
       .map {
         itemsCount =>
           (0 until itemsCount)
-            .flatMap(itemIdx => request.userAnswers.get(ItemsPackagingCount(itemIdx)).map {
+            .flatMap(itemIdx => request.userAnswers.getCount(ItemsPackagingCount(itemIdx)).map {
               packagingCount =>
                 (0 until packagingCount)
                   .flatMap {
@@ -92,13 +92,13 @@ case object ItemsSection extends Section[JsObject] {
 
   def shippingMarkForItemIsUsedOnOtherItems(itemIdx: Index, packageIdx: Index)(implicit request: DataRequest[_]): Boolean =
     (for {
-      quantity <- request.userAnswers.get(ItemPackagingQuantityPage(itemIdx, packageIdx))
-      shippingMark <- request.userAnswers.get(ItemPackagingShippingMarksPage(itemIdx, packageIdx))
+      quantity <- ItemPackagingQuantityPage(itemIdx, packageIdx).value
+      shippingMark <- ItemPackagingShippingMarksPage(itemIdx, packageIdx).value
     } yield {
       if (quantity == "0") false else {
         //Check if any items have the same shipping mark and a package quantity of zero
         retrieveShippingMarkLocationsMatching(shippingMark).exists { case (linkedItemIdx, linkedPackageIdx) =>
-          request.userAnswers.get(ItemPackagingQuantityPage(linkedItemIdx, linkedPackageIdx)).getOrElse("0") == "0"
+          ItemPackagingQuantityPage(linkedItemIdx, linkedPackageIdx).value.getOrElse("0") == "0"
         }
       }
     }).getOrElse(false)

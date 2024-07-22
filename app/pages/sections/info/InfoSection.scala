@@ -26,18 +26,18 @@ object InfoSection extends Section[JsObject] {
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
 
     val requiredPages: Seq[Option[_]] = Seq(
-      request.userAnswers.get(DestinationTypePage),
-      request.userAnswers.get(DeferredMovementPage()),
-      request.userAnswers.get(LocalReferenceNumberPage()),
-      request.userAnswers.get(InvoiceDetailsPage()),
-      request.userAnswers.get(DispatchDetailsPage())
+      DestinationTypePage.value,
+      DeferredMovementPage().value,
+      LocalReferenceNumberPage().value,
+      InvoiceDetailsPage().value,
+      DispatchDetailsPage().value
     )
 
     if(LocalReferenceNumberPage().isMovementSubmissionError || DispatchDetailsPage().isMovementSubmissionError) {
       UpdateNeeded
     } else if (requiredPages.forall(_.nonEmpty)) {
       if (request.userTypeFromErn == NorthernIrelandWarehouseKeeper) {
-        if (request.userAnswers.get(DispatchPlacePage).nonEmpty) {
+        if (DispatchPlacePage.value.nonEmpty) {
           Completed
         } else {
           InProgress

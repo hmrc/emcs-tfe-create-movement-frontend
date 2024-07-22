@@ -32,7 +32,7 @@ import javax.inject.Inject
 class DestinationWarehouseExciseSummary @Inject()(tagHelper: TagHelper) {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(DestinationWarehouseExcisePage).map {
+    DestinationWarehouseExcisePage.value.map {
       answer =>
 
         val hasUnfixedError = DestinationWarehouseExcisePage.isMovementSubmissionError

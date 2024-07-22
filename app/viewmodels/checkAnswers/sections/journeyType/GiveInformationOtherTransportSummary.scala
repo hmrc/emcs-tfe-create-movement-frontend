@@ -28,7 +28,7 @@ import viewmodels.implicits._
 object GiveInformationOtherTransportSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(GiveInformationOtherTransportPage).map {
+    GiveInformationOtherTransportPage.value.map {
       answer =>
 
         SummaryListRowViewModel(

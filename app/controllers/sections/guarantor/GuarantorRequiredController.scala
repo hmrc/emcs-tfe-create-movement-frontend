@@ -54,7 +54,7 @@ class GuarantorRequiredController @Inject()(
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _, mode),
-        value => if (request.userAnswers.get(GuarantorRequiredPage).contains(value)) {
+        value => if (GuarantorRequiredPage.value.contains(value)) {
           Future(Redirect(navigator.nextPage(GuarantorRequiredPage, mode, request.userAnswers)))
         } else {
 

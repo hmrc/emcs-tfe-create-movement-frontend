@@ -67,7 +67,7 @@ class DocumentsCertificatesController @Inject()(
     ))
 
   private def cleanseAndRedirect(answer: Boolean, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
-    if (request.userAnswers.get(DocumentsCertificatesPage).contains(answer)) {
+    if (DocumentsCertificatesPage.value.contains(answer)) {
       Future(Redirect(navigator.nextPage(DocumentsCertificatesPage, mode, request.userAnswers)))
     } else {
 

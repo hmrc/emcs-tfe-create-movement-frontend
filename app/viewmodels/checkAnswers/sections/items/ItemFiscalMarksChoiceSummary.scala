@@ -30,7 +30,7 @@ object ItemFiscalMarksChoiceSummary {
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     lazy val page = ItemFiscalMarksChoicePage(idx)
 
-    request.userAnswers.get(page).map {
+    page.value.map {
       answer =>
         val value = if (answer) "site.yes" else "site.no"
         SummaryListRowViewModel(

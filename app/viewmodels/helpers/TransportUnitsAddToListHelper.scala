@@ -37,14 +37,14 @@ import javax.inject.Inject
 class TransportUnitsAddToListHelper @Inject()(implicit link: link, tagHelper: TagHelper, span: span) {
 
   def allTransportUnitsSummary()(implicit request: DataRequest[_], messages: Messages): Seq[SummaryList] = {
-    request.userAnswers.get(TransportUnitsCount) match {
+    request.userAnswers.getCount(TransportUnitsCount) match {
       case Some(value) => (0 until value).map(int => summaryList(Index(int)))
       case None => Nil
     }
   }
 
   private def summaryList(idx: Index)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
-    val isTransportUnitAFixedTransportInstallation = request.userAnswers.get(TransportUnitTypePage(idx)).contains(FixedTransport)
+    val isTransportUnitAFixedTransportInstallation = TransportUnitTypePage(idx).value.contains(FixedTransport)
 
     val transportUnitSectionStatus = TransportUnitSection(idx).status
     val sectionComplete = transportUnitSectionStatus == Completed

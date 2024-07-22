@@ -32,7 +32,7 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
 
   def apply()(implicit request: DataRequest[_]): Form[String] = {
 
-    val keyPrefix = request.isNorthernIrelandErn -> request.userAnswers.get(DestinationTypePage) match {
+    val keyPrefix = request.isNorthernIrelandErn -> DestinationTypePage.value match {
       case true -> Some(TemporaryRegisteredConsignee) => "consigneeExcise.temporaryRegisteredConsignee"
       case true -> Some(TemporaryCertifiedConsignee) => "consigneeExcise.temporaryCertifiedConsignee"
       case _ => "consigneeExcise"

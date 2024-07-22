@@ -25,12 +25,12 @@ import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 case object TransportArrangerSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "transportArranger"
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = request.userAnswers.get(TransportArrangerPage) match {
+  override def status(implicit request: DataRequest[_]): TaskListStatus = TransportArrangerPage.value match {
     case Some(Consignee) | Some(Consignor) => Completed
     case Some(_) =>
-      if (request.userAnswers.get(TransportArrangerNamePage).nonEmpty &&
-        request.userAnswers.get(TransportArrangerVatPage).nonEmpty &&
-        request.userAnswers.get(TransportArrangerAddressPage).nonEmpty) {
+      if (TransportArrangerNamePage.value.nonEmpty &&
+        TransportArrangerVatPage.value.nonEmpty &&
+        TransportArrangerAddressPage.value.nonEmpty) {
         Completed
       } else {
         InProgress

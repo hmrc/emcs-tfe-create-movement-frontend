@@ -67,18 +67,18 @@ class AddressFormProvider @Inject() extends Mappings {
   private def getExtraPostcodeValidationForPage(page: Page)(implicit request: DataRequest[_]): Seq[Constraint[String]] = {
 
     def niPostcode(isNi: Boolean, page: Page): Seq[Constraint[String]] =
-      if(isNi) Seq(startsWith(XI_POSTCODE, s"address.postcode.error.$page.mustStartWithBT")) else {
+      if (isNi) Seq(startsWith(XI_POSTCODE, s"address.postcode.error.$page.mustStartWithBT")) else {
         Seq(doesNotStartWith(XI_POSTCODE, s"address.postcode.error.$page.mustNotStartWithBT"))
       }
 
     page match {
       case ConsignorAddressPage => niPostcode(request.isNorthernIrelandErn, page)
-      case ConsigneeAddressPage if request.userAnswers.get(ConsigneeExcisePage).nonEmpty =>
-        niPostcode(request.userAnswers.get(ConsigneeExcisePage).exists(_.startsWith(Constants.NI_PREFIX)), page)
-      case DispatchAddressPage if request.userAnswers.get(DispatchWarehouseExcisePage).nonEmpty =>
-        niPostcode(request.userAnswers.get(DispatchWarehouseExcisePage).exists(_.startsWith(Constants.NI_PREFIX)), page)
-      case DestinationAddressPage if request.userAnswers.get(DestinationWarehouseExcisePage).nonEmpty =>
-        niPostcode(request.userAnswers.get(DestinationWarehouseExcisePage).exists(_.startsWith(Constants.NI_PREFIX)), page)
+      case ConsigneeAddressPage if ConsigneeExcisePage.value.nonEmpty =>
+        niPostcode(ConsigneeExcisePage.value.exists(_.startsWith(Constants.NI_PREFIX)), page)
+      case DispatchAddressPage if DispatchWarehouseExcisePage.value.nonEmpty =>
+        niPostcode(DispatchWarehouseExcisePage.value.exists(_.startsWith(Constants.NI_PREFIX)), page)
+      case DestinationAddressPage if DestinationWarehouseExcisePage.value.nonEmpty =>
+        niPostcode(DestinationWarehouseExcisePage.value.exists(_.startsWith(Constants.NI_PREFIX)), page)
       case _ => Seq.empty
     }
   }

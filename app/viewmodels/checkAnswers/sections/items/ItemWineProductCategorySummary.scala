@@ -29,7 +29,7 @@ object ItemWineProductCategorySummary {
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     val page = ItemWineProductCategoryPage(idx)
 
-    request.userAnswers.get(page).map { answer =>
+    page.value.map { answer =>
 
       val value: String = messages(s"itemWineProductCategory.$answer")
 

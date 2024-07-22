@@ -30,7 +30,7 @@ object ItemPackagingSealTypeSummary {
 
   def row(itemIdx: Index, packagingIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    request.userAnswers.get(ItemPackagingSealTypePage(itemIdx, packagingIdx)).map {
+    ItemPackagingSealTypePage(itemIdx, packagingIdx).value.map {
       value =>
         SummaryListRowViewModel(
           key = "itemPackagingSealType.sealType.checkYourAnswersLabel",

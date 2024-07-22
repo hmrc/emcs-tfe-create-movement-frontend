@@ -27,7 +27,7 @@ import viewmodels.implicits._
 object DispatchUseConsignorDetailsSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(DispatchUseConsignorDetailsPage).map {
+    DispatchUseConsignorDetailsPage.value.map {
       answer =>
 
         val value = if (answer) "site.yes" else "site.no"

@@ -31,7 +31,7 @@ object ItemDensitySummary  {
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     lazy val page = ItemDensityPage(idx)
 
-    request.userAnswers.get(page).map {
+    page.value.map {
       answer =>
         SummaryListRowViewModel(
           key = KeyViewModel(HtmlContent(messages(s"$page.checkYourAnswersLabel"))),

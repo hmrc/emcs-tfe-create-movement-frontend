@@ -28,14 +28,14 @@ case object DocumentsSection extends Section[JsObject] {
   val MAX: Int = 9
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    request.userAnswers.get(DocumentsCertificatesPage) match {
+    DocumentsCertificatesPage.value match {
       case Some(false) => Completed
       case Some(true) => documentListStatus
       case None => NotStarted
     }
 
   private def documentListStatus(implicit request: DataRequest[_]): TaskListStatus =
-    (request.userAnswers.get(DocumentsCount), request.userAnswers.get(DocumentsAddToListPage)) match {
+    (request.userAnswers.getCount(DocumentsCount), DocumentsAddToListPage.value) match {
       case (_, Some(DocumentsAddToList.No)) => DocumentsSectionUnits.status
       case (Some(count), _) if count >= MAX => DocumentsSectionUnits.status
       case _ => InProgress

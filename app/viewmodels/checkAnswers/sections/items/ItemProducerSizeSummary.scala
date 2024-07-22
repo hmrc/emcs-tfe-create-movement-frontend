@@ -37,11 +37,11 @@ object ItemProducerSizeSummary {
     val productType = getProductType(idx)
 
     for {
-      itemSmallIndependentProducer <- request.userAnswers.get(ItemSmallIndependentProducerPage(idx))
+      itemSmallIndependentProducer <- ItemSmallIndependentProducerPage(idx).value
       if itemSmallIndependentProducer.producerType == SelfCertifiedIndependentSmallProducerAndConsignor || itemSmallIndependentProducer.producerType == SelfCertifiedIndependentSmallProducerAndNotConsignor
     } yield {
 
-      val value: Value = request.userAnswers.get(page) match {
+      val value: Value = page.value match {
         case Some(answer) => ValueViewModel(messages(s"$page.checkYourAnswersValue", HtmlFormat.escape(answer.toString).toString))
         case None => ValueViewModel(messages("site.notProvided"))
       }
@@ -59,8 +59,8 @@ object ItemProducerSizeSummary {
   }
 
   private def getProductType(idx: Index)(implicit request: DataRequest[_]): String = {
-    val destinationType = request.userAnswers.get(DestinationTypePage)
-    val itemExciseProductCode = request.userAnswers.get(ItemExciseProductCodePage(idx))
+    val destinationType = DestinationTypePage.value
+    val itemExciseProductCode = ItemExciseProductCodePage(idx).value
     if(destinationType.contains(UkTaxWarehouse.GB) || itemExciseProductCode.exists(Seq("S300", "S500").contains(_))) {
       "pure"
     } else {

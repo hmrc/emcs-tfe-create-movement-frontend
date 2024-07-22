@@ -37,7 +37,7 @@ class InformationDateOfDispatchSummary @Inject()(tagHelper: TagHelper) extends D
 
     val hasUnfixedError = DispatchDetailsPage(isOnPreDraftFlow = false).isMovementSubmissionError
 
-    val data: Option[DispatchDetailsModel] = request.userAnswers.get(DispatchDetailsPage())
+    val data: Option[DispatchDetailsModel] = DispatchDetailsPage().value
 
     val value: String = data match {
       case Some(dispatchDetailsPage) => dispatchDetailsPage.date.formatDateForUIOutput()

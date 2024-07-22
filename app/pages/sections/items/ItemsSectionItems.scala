@@ -32,7 +32,7 @@ case object ItemsSectionItems extends Section[JsObject] {
   val MAX: Int = 999
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    (request.userAnswers.get(ItemsCount), isMovementSubmissionError) match {
+    (request.userAnswers.getCount(ItemsCount), isMovementSubmissionError) match {
       case (_, true) => UpdateNeeded
       case (Some(0) | None, _) => NotStarted
       case (Some(count), _) =>
@@ -73,19 +73,19 @@ case object ItemsSectionItems extends Section[JsObject] {
       .distinct
 
   def getSubmissionFailuresForItems(isOnAddToList: Boolean = false)(implicit request: DataRequest[_]): Seq[SubmissionError] =
-    request.userAnswers.get(ItemsCount) match {
+    request.userAnswers.getCount(ItemsCount) match {
       case Some(0) | None => Seq.empty
       case Some(count) => (0 until count).flatMap(ItemsSectionItem(_).getSubmissionFailuresForItem(isOnAddToList))
     }
 
   def onlyContainsOrIsEmpty(goodsTypes: GoodsType*)(implicit request: DataRequest[_]): Boolean =
-    (0 until request.userAnswers.get(ItemsCount).getOrElse(0)).forall { idx =>
+    (0 until request.userAnswers.getCount(ItemsCount).getOrElse(0)).forall { idx =>
       request.userAnswers
         .get(ItemExciseProductCodePage(idx))
         .exists(code => goodsTypes.contains(GoodsType.apply(code)))
     }
 
-  def isEmpty(implicit request: DataRequest[_]): Boolean = request.userAnswers.get(ItemsCount).getOrElse(0) == 0
+  def isEmpty(implicit request: DataRequest[_]): Boolean = request.userAnswers.getCount(ItemsCount).getOrElse(0) == 0
 
   override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = getSubmissionFailuresForItems().nonEmpty
 

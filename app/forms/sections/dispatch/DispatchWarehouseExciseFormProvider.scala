@@ -48,7 +48,7 @@ class DispatchWarehouseExciseFormProvider @Inject() extends Mappings {
   private[dispatch] def validationForERNBasedOnConsignor(implicit request: DataRequest[_]): Constraint[String] = {
     if(request.isNorthernIrelandErn) {
       if(request.isWarehouseKeeper) {
-        request.userAnswers.get(DispatchPlacePage).map {
+        DispatchPlacePage.value.map {
           case DispatchPlace.GreatBritain => regexpUnlessEmpty(GB_00_EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.mustStartWithGB00")
           case DispatchPlace.NorthernIreland => regexpUnlessEmpty(XI_00_EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.mustStartWithXI00")
         }.getOrElse(throw MissingMandatoryPage(s"Missing mandatory page ${DispatchPlacePage.toString} for Northern Ireland Warehouse Keeper ${request.ern}"))

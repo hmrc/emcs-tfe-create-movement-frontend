@@ -20,7 +20,7 @@ import models.requests.DataRequest
 import pages.sections.info.InformationCheckAnswersPage
 
 package object info {
-  def isOnPreDraftFlow(implicit request: DataRequest[_]): Boolean = request.userAnswers.get(InformationCheckAnswersPage) match {
+  def isOnPreDraftFlow(implicit request: DataRequest[_]): Boolean = InformationCheckAnswersPage.value match {
     case Some(_) => false
     case None => true
   }

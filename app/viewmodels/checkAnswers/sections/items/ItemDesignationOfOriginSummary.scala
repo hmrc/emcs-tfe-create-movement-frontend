@@ -32,7 +32,7 @@ import javax.inject.Inject
 class ItemDesignationOfOriginSummary @Inject()(p: p) {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ItemDesignationOfOriginPage(idx)).map {
+    ItemDesignationOfOriginPage(idx).value.map {
       answer =>
 
         val marketingAndLabellingAnswer = answer.isSpiritMarketedAndLabelled.map(isSpiritMarketedAndLabelled =>

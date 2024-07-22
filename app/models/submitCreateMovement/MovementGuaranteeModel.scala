@@ -35,7 +35,7 @@ case class MovementGuaranteeModel(
 object MovementGuaranteeModel extends ModelConstructorHelpers {
 
   def apply(implicit request: DataRequest[_]): MovementGuaranteeModel = {
-    val guarantorRequired: Boolean = request.userAnswers.get(GuarantorRequiredPage) match {
+    val guarantorRequired: Boolean = GuarantorRequiredPage.value match {
       case Some(value) => value
       case None => GuarantorRequiredPage.isRequired()
     }

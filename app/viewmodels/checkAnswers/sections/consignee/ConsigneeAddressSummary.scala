@@ -28,7 +28,7 @@ import viewmodels.implicits._
 object ConsigneeAddressSummary {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ConsigneeAddressPage).map {
+    ConsigneeAddressPage.value.map {
       answer =>
 
         SummaryListRowViewModel(

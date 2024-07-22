@@ -42,10 +42,10 @@ object WineProductModel extends ModelConstructorHelpers with JsonOptionFormatter
       Some(
         WineProductModel(
           wineProductCategory = mandatoryPage(ItemWineProductCategoryPage(idx)),
-          wineGrowingZoneCode = request.userAnswers.get(ItemWineGrowingZonePage(idx)),
-          thirdCountryOfOrigin = request.userAnswers.get(ItemWineOriginPage(idx)).map(_.countryCode),
-          otherInformation = request.userAnswers.get(ItemWineMoreInformationPage(idx)).flatten,
-          wineOperations = request.userAnswers.get(ItemWineOperationsChoicePage(idx)).map(_.toSeq)
+          wineGrowingZoneCode = ItemWineGrowingZonePage(idx).value,
+          thirdCountryOfOrigin = ItemWineOriginPage(idx).value.map(_.countryCode),
+          otherInformation = ItemWineMoreInformationPage(idx).value.flatten,
+          wineOperations = ItemWineOperationsChoicePage(idx).value.map(_.toSeq)
         )
       )
     } else {

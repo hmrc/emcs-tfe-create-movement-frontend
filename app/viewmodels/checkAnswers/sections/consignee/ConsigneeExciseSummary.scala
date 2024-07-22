@@ -37,7 +37,7 @@ class ConsigneeExciseSummary @Inject()(tagHelper: TagHelper) {
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     val hasUnfixedConsigneeExciseError = ConsigneeExcisePage.isMovementSubmissionError
 
-    request.userAnswers.get(DestinationTypePage).flatMap { destinationType =>
+    DestinationTypePage.value.flatMap { destinationType =>
 
       val key -> changeHiddenKey = destinationType match {
         case TemporaryRegisteredConsignee =>
@@ -48,7 +48,7 @@ class ConsigneeExciseSummary @Inject()(tagHelper: TagHelper) {
           "consigneeExcise.checkYourAnswersLabel.ern" -> "consigneeExcise.change.hidden.ern"
       }
 
-      request.userAnswers.get(ConsigneeExcisePage).map { answer =>
+      ConsigneeExcisePage.value.map { answer =>
 
         SummaryListRowViewModel(
           key = key,

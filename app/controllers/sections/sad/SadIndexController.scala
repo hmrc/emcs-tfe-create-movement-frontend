@@ -40,7 +40,7 @@ class SadIndexController @Inject()(
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
       if (SadSection.canBeCompletedForTraderAndDestinationType) {
-        request.userAnswers.get(SadCount) match {
+        request.userAnswers.getCount(SadCount) match {
           case None | Some(0) => Redirect(
             controllers.sections.sad.routes.ImportNumberController.onPageLoad(request.ern, request.draftId, Index(0), NormalMode)
           )

@@ -47,6 +47,6 @@ object TransportUnitIdentitySummary {
     ))
 
   private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =
-    request.userAnswers.get(TransportUnitIdentityPage(idx)).fold(Text(messages("site.notProvided")))(answer => HtmlFormat.escape(answer).toString())
+    TransportUnitIdentityPage(idx).value.fold(Text(messages("site.notProvided")))(answer => HtmlFormat.escape(answer).toString())
 
 }

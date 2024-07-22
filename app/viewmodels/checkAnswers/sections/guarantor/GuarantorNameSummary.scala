@@ -32,8 +32,8 @@ object GuarantorNameSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    val guarantorArrangerAnswer = request.userAnswers.get(GuarantorArrangerPage)
-    val guarantorRequiredAnswerIsTrue = request.userAnswers.get(GuarantorRequiredPage).contains(true)
+    val guarantorArrangerAnswer = GuarantorArrangerPage.value
+    val guarantorRequiredAnswerIsTrue = GuarantorRequiredPage.value.contains(true)
     val isAlwaysRequired = GuarantorRequiredPage.isRequired()
     val showSummaryRow = guarantorRequiredAnswerIsTrue || isAlwaysRequired
 
@@ -50,7 +50,7 @@ object GuarantorNameSummary {
       actions = if (!showChangeLink(arranger)) {
         Seq()
       } else {
-        val mode = if (request.userAnswers.get(GuarantorNamePage).nonEmpty) CheckMode else NormalMode
+        val mode = if (GuarantorNamePage.value.nonEmpty) CheckMode else NormalMode
         Seq(
           ActionItemViewModel(
             "site.change",
@@ -65,12 +65,12 @@ object GuarantorNameSummary {
 
   private def businessName(arranger: GuarantorArranger)(implicit request: DataRequest[_], messages: Messages): String = arranger match {
     case Consignor => request.traderKnownFacts.traderName
-    case Consignee => request.userAnswers.get(ConsigneeBusinessNamePage) match {
+    case Consignee => ConsigneeBusinessNamePage.value match {
       case Some(answer) => HtmlFormat.escape(answer).toString()
       case None => messages("guarantorName.checkYourAnswers.notProvided", messages(s"guarantorArranger.$arranger"))
     }
     case _ =>
-      request.userAnswers.get(GuarantorNamePage) match {
+      GuarantorNamePage.value match {
         case Some(answer) => HtmlFormat.escape(answer).toString()
         case None => messages("site.notProvided")
       }

@@ -28,7 +28,7 @@ case object TransportUnitsSectionUnits extends Section[JsArray] {
   override val toString: String = "units"
   override val path: JsPath = TransportUnitsSection.path \ toString
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = request.userAnswers.get(TransportUnitsCount) match {
+  override def status(implicit request: DataRequest[_]): TaskListStatus = request.userAnswers.getCount(TransportUnitsCount) match {
     case Some(0) | None => NotStarted
     case Some(count) =>
       val statuses: Seq[TaskListStatus] = (0 until count).map(value => TransportUnitSection(Index(value)).status)
@@ -44,7 +44,7 @@ case object TransportUnitsSectionUnits extends Section[JsArray] {
     TransportUnitsSection.canBeCompletedForTraderAndDestinationType
 
   def onlyContainsOrIsEmpty(transportUnitType: TransportUnitType*)(implicit request: DataRequest[_]): Boolean =
-    (0 until request.userAnswers.get(TransportUnitsCount).getOrElse(0)).forall { idx =>
+    (0 until request.userAnswers.getCount(TransportUnitsCount).getOrElse(0)).forall { idx =>
       TransportUnitTypePage(idx).value.exists(transportUnitType.contains)
     }
 }

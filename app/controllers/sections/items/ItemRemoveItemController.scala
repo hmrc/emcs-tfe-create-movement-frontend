@@ -78,7 +78,7 @@ class ItemRemoveItemController @Inject()(
 
       val shippingMarksToRemove = ItemsSectionItem(index).packagingIndexes.flatMap { packagingIndex =>
         Option.when(ItemsSection.shippingMarkForItemIsUsedOnOtherItems(index, packagingIndex)) {
-          request.userAnswers.get(ItemPackagingShippingMarksPage(index, packagingIndex))
+          ItemPackagingShippingMarksPage(index, packagingIndex).value
         }
       }.flatten
 

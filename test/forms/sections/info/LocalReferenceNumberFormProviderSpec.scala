@@ -19,6 +19,7 @@ package forms.sections.info
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.info.LocalReferenceNumberMessages
+import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 import play.api.i18n.Messages
@@ -53,6 +54,8 @@ class LocalReferenceNumberFormProviderSpec extends SpecBase with StringFieldBeha
           boundForm.errors.headOption mustBe Some(FormError(fieldName, "localReferenceNumber.deferred.error.length", Seq(maxLength)))
         }
       }
+
+      fieldWithXSSCharacters(form, "value", FormError("value", "localReferenceNumber.deferred.error.invalid", Seq(XSS_REGEX)))
     }
 
     "when movement is NOT deferred (new)" - {
@@ -85,6 +88,8 @@ class LocalReferenceNumberFormProviderSpec extends SpecBase with StringFieldBeha
           boundForm.value mustBe Some("A" * maxLength)
         }
       }
+
+      fieldWithXSSCharacters(form, "value", FormError("value", "localReferenceNumber.new.error.invalid", Seq(XSS_REGEX)))
     }
 
     "when a submission failure exists and the input is the same as the previous one" - {

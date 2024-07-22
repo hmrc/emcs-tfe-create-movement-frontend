@@ -88,8 +88,17 @@ class LocalReferenceNumberHelperSpec extends SpecBase with GuiceOneAppPerSuite {
             "must output the expected title" in {
               helper.content(isDeferred = false) mustBe HtmlFormat.fill(Seq(
                 p()(Html(langMessages.newP1)),
-                p()(Html(langMessages.newP2))
               ))
+            }
+          }
+        }
+
+        "calling .inputLabel(isDeferred: Boolean)" - {
+
+          "when the movement is NOT deferred" - {
+
+            "must output the expected title" in {
+              helper.inputLabel(isDeferred = false) mustBe langMessages.newLabel
             }
           }
         }

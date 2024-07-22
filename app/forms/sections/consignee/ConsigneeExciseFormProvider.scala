@@ -20,7 +20,7 @@ import config.Constants
 import forms.mappings.Mappings
 import forms.{ALPHANUMERIC_REGEX, EXCISE_NUMBER_REGEX}
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, UkTaxWarehouse}
+import models.sections.info.movementScenario.MovementScenario.{TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, UkTaxWarehouse}
 import pages.sections.consignee.ConsigneeExcisePage
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form

@@ -34,13 +34,13 @@ trait BaseController extends FrontendBaseController with I18nSupport with Enumer
 
   def fillForm[A](page: QuestionPage[A], form: Form[A])
                  (implicit request: DataRequest[_], format: Format[A]): Form[A] =
-    request.userAnswers.get(page).fold(form)(form.fill)
+    page.value.fold(form)(form.fill)
 
   def withAnswer[A](
                      page: QuestionPage[A],
                      redirectRoute: Call = routes.JourneyRecoveryController.onPageLoad()
                    )(f: A => Result)(implicit request: DataRequest[_], rds: Reads[A]): Result =
-    request.userAnswers.get(page) match {
+    page.value match {
       case Some(value) => f(value)
       case None =>
         logger.warn(s"[withAnswerAsync] Could not retrieved required answer for page: $page")
@@ -51,7 +51,7 @@ trait BaseController extends FrontendBaseController with I18nSupport with Enumer
                           page: QuestionPage[A],
                           redirectRoute: Call = routes.JourneyRecoveryController.onPageLoad()
                         )(f: A => Future[Result])(implicit request: DataRequest[_], rds: Reads[A]): Future[Result] =
-    request.userAnswers.get(page) match {
+    page.value match {
       case Some(value) => f(value)
       case None =>
         logger.warn(s"[withAnswerAsync] Could not retrieved required answer for page: $page")

@@ -25,8 +25,9 @@ object LocalReferenceNumberMessages {
 
     val newHeading: String = "Create a unique reference for this movement"
     val newTitle: String = titleHelper(newHeading)
-    val newP1: String = "This is also known as a Local Reference Number (LRN)."
-    val newP2: String = "Use this reference to help you identify this movement in your records. The reference you create must not have been used for a previous movement."
+    val newP1: String = "This is also known as a Local Reference Number (LRN). Use this reference to help you identify this movement in your records."
+    val newLabel: String = "Enter a Local Reference Number (LRN)"
+    val newHint: String = "The reference can be up to 22 characters and must not have been used for a previous movement."
     val newErrorRequired: String = "Enter a unique reference"
     val newErrorLength: String = "Unique reference must be 22 characters or less"
     val newCyaLabel: String = "Unique reference (LRN)"

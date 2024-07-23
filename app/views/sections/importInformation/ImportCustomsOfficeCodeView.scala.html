@@ -36,13 +36,17 @@
 
 @(form: Form[_], action: Call, userType: UserType)(implicit request: DataRequest[_], messages: Messages)
 
+@headingContent(end: String) = @{
+    if(userType == GreatBritainRegisteredConsignor) {
+        messages(s"importCustomsOfficeCode.greatBritainRegisteredConsignor.$end")
+    } else {
+        messages(s"importCustomsOfficeCode.northernIrishRegisteredConsignor.$end")
+    }
+}
+
 @layout(pageTitle = title(
     form = form,
-    title = if(userType == GreatBritainRegisteredConsignor) {
-        messages("importCustomsOfficeCode.greatBritainRegisteredConsignor.title")
-    } else {
-        messages("importCustomsOfficeCode.northernIrishRegisteredConsignor.title")
-    }
+    title = headingContent("title")
 ), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
     @formHelper(action, Symbol("autoComplete") -> "off") {
@@ -53,26 +57,24 @@
           @errorNotificationBannerHelper.content(ImportCustomsOfficeCodePage.getMovementSubmissionErrors, hasContentHeading = false).map(notificationBanner(_))
         }
 
-        @h2(messages("importInformation.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h1(headingContent("heading"), Some(messages("importInformation.subHeading")), hiddenContent = Some(messages("subHeading.hidden")))
+
+        @paragraph
 
         @govukInput(
             InputViewModel(
                 field = form("value"),
                 label = LabelViewModel(HtmlContent(
-                    if(userType == GreatBritainRegisteredConsignor) {
-                        messages("importCustomsOfficeCode.greatBritainRegisteredConsignor.heading")
-                    } else {
-                        messages("importCustomsOfficeCode.northernIrishRegisteredConsignor.heading")
-                    }
-                )).asPageHeading(LabelSize.Large)
-            ).withHint(Hint(content = HtmlContent(hint)))
+                        messages("importCustomsOfficeCode.label")
+                )).withCssClass("govuk-!-font-weight-bold"),
+            ).withHint(Hint(content = HtmlContent(messages("importCustomsOfficeCode.hint"))))
         )
 
         @continueOrExit()
     }
 }
 
-@hint = @{
+@paragraph = @{
     p() {
         HtmlFormat.fill(
             Seq(
@@ -81,7 +83,7 @@
                     "importCustomsOfficeCode.ukLink",
                     withFullStop = userType == GreatBritainRegisteredConsignor,
                     opensInNewTab = true)
-            ).++ {
+            ) ++ {
                 if(userType == NorthernIrelandRegisteredConsignor) {
                     Seq(
                         Html(messages("importCustomsOfficeCode.afterLink")),

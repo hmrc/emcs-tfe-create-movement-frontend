@@ -18,7 +18,7 @@ package viewmodels
 
 import play.api.data.Form
 import play.api.i18n.Messages
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.Html
 import views.ViewUtils
 
 import javax.inject.Inject
@@ -35,22 +35,11 @@ class LocalReferenceNumberHelper @Inject()(p: views.html.components.p) {
     messageFor("heading")(isDeferred)
 
   def content(isDeferred: Boolean)(implicit messages: Messages): Html =
-    HtmlFormat.fill(
-      if (isDeferred) {
-        Seq(
-          p() {
-            Html(messageFor("p1")(isDeferred))
-          }
-        )
-      } else {
-        Seq(
-          p() {
-            Html(messageFor("p1")(isDeferred))
-          },
-          p() {
-            Html(messageFor("p2")(isDeferred))
-          }
-        )
-      })
+    p() {
+      Html(messageFor("p")(isDeferred))
+    }
+
+  def inputLabel(isDeferred: Boolean)(implicit messages: Messages): String =
+    messageFor("label")(isDeferred)
 
 }

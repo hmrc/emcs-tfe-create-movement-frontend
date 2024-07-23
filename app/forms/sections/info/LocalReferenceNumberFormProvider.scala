@@ -16,6 +16,7 @@
 
 package forms.sections.info
 
+import forms.XSS_REGEX
 import forms.mappings.Mappings
 import models.requests.DataRequest
 import pages.sections.info.LocalReferenceNumberPage
@@ -30,6 +31,7 @@ class LocalReferenceNumberFormProvider @Inject() extends Mappings {
       "value" -> text(errMsgForKey("required")(isDeferred))
         .verifying(maxLength(22, errMsgForKey("length")(isDeferred)))
         .verifying(isNotEqualToOptExistingAnswer(LocalReferenceNumberPage().getOriginalAttributeValue, "errors.704.lrn.input"))
+        .verifying(regexpUnlessEmpty(XSS_REGEX, errMsgForKey("invalid")(isDeferred)))
     )
   }
 

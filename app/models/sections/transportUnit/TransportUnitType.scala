@@ -21,6 +21,7 @@ import models.{Enumerable, WithName}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import viewmodels.govuk.all.HintViewModel
 
 
 sealed trait TransportUnitType
@@ -51,11 +52,16 @@ object TransportUnitType extends Enumerable.Implicits {
     Container, FixedTransport, Tractor, Trailer, Vehicle
   )
 
+  val hints: Seq[TransportUnitType] = Seq(
+    Tractor, Vehicle
+  )
+
   def options(implicit messages: Messages): Seq[RadioItem] = values.map { value =>
     RadioItem(
       content = Text(messages(s"transportUnitType.${value.toString}")),
       value = Some(value.toString),
-      id = Some(s"value_${value.toString}")
+      id = Some(s"value_${value.toString}"),
+      hint = {if (hints.contains(value)) Some(HintViewModel(Text(messages(s"transportUnitType.${value.toString}.hint"))))else None}
     )
   }
 

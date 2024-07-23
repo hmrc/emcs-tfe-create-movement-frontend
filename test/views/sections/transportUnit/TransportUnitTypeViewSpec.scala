@@ -57,6 +57,8 @@ class TransportUnitTypeViewSpec extends SpecBase with ViewBehaviours {
           Selectors.radioButton(1) -> messagesForLanguage.containerRadioOption,
           Selectors.radioButton(2) -> messagesForLanguage.fixedTransportRadioOption,
           Selectors.radioButton(3) -> messagesForLanguage.tractorRadioOption,
+          Selectors.radioButtonHint(3) -> messagesForLanguage.tractorRadioOptionHint,
+          Selectors.radioButtonHint(5) -> messagesForLanguage.vehicleRadioOptionHint,
           Selectors.radioButton(4) -> messagesForLanguage.trailerRadioOption,
           Selectors.radioButton(5) -> messagesForLanguage.vehicleRadioOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,

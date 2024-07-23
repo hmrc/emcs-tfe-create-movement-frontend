@@ -596,8 +596,10 @@ transportUnitType.hint = You can return to this page to select another option.
 transportUnitType.1 = Container
 transportUnitType.5 = Fixed transport installations
 transportUnitType.4 = Tractor
+transportUnitType.4.hint = You must also enter any trailers or containers that your tractor is towing as separate transport units.
 transportUnitType.3 = Trailer
 transportUnitType.2 = Vehicle
+transportUnitType.2.hint = You must also enter any trailers or containers that your vehicle is towing as separate transport units.
 
 transportUnitType.addToListLabel = Transport type
 transportUnitType.checkYourAnswersLabel = Type of transport

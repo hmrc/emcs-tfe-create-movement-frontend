@@ -16,10 +16,15 @@
 
 package pages.sections.destination
 
+import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario.{ExemptedOrganisation, RegisteredConsignee, TemporaryRegisteredConsignee}
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object DestinationWarehouseVatPage extends QuestionPage[String] {
   override val toString: String = "destinationWarehouseVat"
   override val path: JsPath = DestinationSection.path \ toString
+
+  def isSkippable(destinationType: MovementScenario): Boolean =
+    Seq(RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation).contains(destinationType)
 }

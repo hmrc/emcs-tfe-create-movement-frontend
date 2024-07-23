@@ -18,6 +18,7 @@
 @import models.sections.info.movementScenario.MovementScenario
 @import viewmodels.InputWidth._
 @import viewmodels.LabelSize
+@import pages.sections.destination.DestinationWarehouseVatPage
 
 @this(
     layout: templates.Layout,
@@ -26,6 +27,7 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     continueOrSaveOrSkip: components.continueOrSaveOrSkip,
+    continueOrExit: components.continueOrExit,
     h1: components.h1,
     h2: components.h2,
     p: components.p,
@@ -46,14 +48,17 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(Text(messages("destinationWarehouseVat.heading" , movementScenario.stringValue))).asPageHeading(LabelSize.Large)
+                label = LabelViewModel(Text(messages("destinationWarehouseVat.heading" , movementScenario.stringValue))).asPageHeading(LabelSize.Large),
             )
+            .withHint(HintViewModel(Text(messages("destinationWarehouseVat.hint"))))
             .withWidth(Full)
         )
 
-    @continueOrSaveOrSkip(skipQuestionCall.url)
-
-
+        @if(DestinationWarehouseVatPage.isSkippable(movementScenario)) {
+            @continueOrSaveOrSkip(skipQuestionCall.url)
+        } else {
+            @continueOrExit()
+        }
     }
 }
 

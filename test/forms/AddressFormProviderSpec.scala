@@ -273,6 +273,20 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
 
       xiForm.bind(formAnswersMap(Some(postcodeField), Some("BT1 1AA"))).errors mustBe empty
     }
+
+    "when the ERN is neither starting with GB nor XI" - {
+      val testErn = "FRWK123456789"
+
+      "must allow a postcode starting with GB" in {
+        val form = new AddressFormProvider()(ConsigneeAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
+        form.bind(formAnswersMap(Some(postcodeField), Some("GB1 1AA"))).errors mustBe empty
+      }
+
+      "must allow a postcode starting with XI" in {
+        val form = new AddressFormProvider()(ConsigneeAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
+        form.bind(formAnswersMap(Some(postcodeField), Some("XI1 1AA"))).errors mustBe empty
+      }
+    }
   }
 
   "for the DispatchAddress Page" - {
@@ -321,6 +335,20 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
         unknownErnForm.bind(formAnswersMap(Some(postcodeField), Some("BT1 1AA"))).errors mustBe empty
       }
     }
+
+    "when the ERN is neither starting with GB nor XI" - {
+      val testErn = "FRWK123456789"
+
+      "must allow a postcode starting with GB" in {
+        val form = new AddressFormProvider()(DispatchAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
+        form.bind(formAnswersMap(Some(postcodeField), Some("GB1 1AA"))).errors mustBe empty
+      }
+
+      "must allow a postcode starting with XI" in {
+        val form = new AddressFormProvider()(DispatchAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
+        form.bind(formAnswersMap(Some(postcodeField), Some("XI1 1AA"))).errors mustBe empty
+      }
+    }
   }
 
   "for the DestinationAddress Page" - {
@@ -367,6 +395,20 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
 
       "must bind BT postcode" in {
         unknownErnForm.bind(formAnswersMap(Some(postcodeField), Some("BT1 1AA"))).errors mustBe empty
+      }
+    }
+
+    "when the ERN is neither starting with GB nor XI" - {
+      val testErn = "FRWK123456789"
+
+      "must allow a postcode starting with GB" in {
+        val form = new AddressFormProvider()(DestinationAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
+        form.bind(formAnswersMap(Some(postcodeField), Some("GB1 1AA"))).errors mustBe empty
+      }
+
+      "must allow a postcode starting with XI" in {
+        val form = new AddressFormProvider()(DestinationAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
+        form.bind(formAnswersMap(Some(postcodeField), Some("XI1 1AA"))).errors mustBe empty
       }
     }
   }

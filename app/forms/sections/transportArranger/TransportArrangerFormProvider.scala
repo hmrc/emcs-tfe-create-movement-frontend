@@ -31,7 +31,7 @@ class TransportArrangerFormProvider @Inject() extends Mappings {
   def apply()(implicit request: DataRequest[_]): Form[TransportArranger] = {
 
     implicit val destinationEnumerable: Enumerable[TransportArranger] =
-      if (request.userAnswers.get(DestinationTypePage).contains(UnknownDestination)) {
+      if (DestinationTypePage.value.contains(UnknownDestination)) {
         TransportArranger.enumerableForUnknownDestination
       } else {
         TransportArranger.enumerable

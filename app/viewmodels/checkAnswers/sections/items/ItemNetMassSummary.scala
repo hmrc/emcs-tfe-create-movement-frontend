@@ -30,7 +30,7 @@ object ItemNetMassSummary {
   def row(idx: Index)(implicit messages: Messages, request: DataRequest[_]): Option[SummaryListRow] = {
     lazy val page = ItemNetGrossMassPage(idx)
 
-    request.userAnswers.get(page).map {
+    page.value.map {
       answer =>
         SummaryListRowViewModel(
           key = s"$page.netMass.checkYourAnswersLabel",

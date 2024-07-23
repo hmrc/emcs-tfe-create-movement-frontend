@@ -31,7 +31,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
   override val path: JsPath = ItemsSectionItems.path \ idx.position
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
+    ItemExciseProductCodePage(idx).value match {
       case None => NotStarted
       case Some(epc) =>
         implicit val goodsType: GoodsType = GoodsType(epc)
@@ -59,7 +59,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
       ).forall(_.isDefined)
 
   private[items] def packagingPagesComplete(implicit request: DataRequest[_]): Boolean =
-    (request.userAnswers.get(ItemExciseProductCodePage(idx)), request.userAnswers.get(ItemBulkPackagingChoicePage(idx))) match {
+    (ItemExciseProductCodePage(idx).value, ItemBulkPackagingChoicePage(idx).value) match {
       case (Some(_), Some(false)) =>
         ItemsPackagingSection(idx).isCompleted
       case (Some(_), Some(true)) =>
@@ -72,29 +72,29 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
     (wineBulkOperationAnswer ++
       wineBulkGrowingZoneAnswer ++
       bulkCommercialSeals :+
-      request.userAnswers.get(ItemBulkPackagingSelectPage(idx))
+      ItemBulkPackagingSelectPage(idx).value
       ).forall(_.isDefined)
 
   private def commonMandatoryAnswers(implicit request: DataRequest[_]): Seq[Option[_]] =
     Seq(
-      request.userAnswers.get(ItemExciseProductCodePage(idx)),
-      request.userAnswers.get(ItemCommodityCodePage(idx)),
-      request.userAnswers.get(ItemBrandNamePage(idx)),
-      request.userAnswers.get(ItemCommercialDescriptionPage(idx)),
-      request.userAnswers.get(ItemQuantityPage(idx)),
-      request.userAnswers.get(ItemNetGrossMassPage(idx)),
-      request.userAnswers.get(ItemBulkPackagingChoicePage(idx))
+      ItemExciseProductCodePage(idx).value,
+      ItemCommodityCodePage(idx).value,
+      ItemBrandNamePage(idx).value,
+      ItemCommercialDescriptionPage(idx).value,
+      ItemQuantityPage(idx).value,
+      ItemNetGrossMassPage(idx).value,
+      ItemBulkPackagingChoicePage(idx).value
     )
 
   private[items] def itemDensityAnswer(epc: String)(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(goodsType == Energy && !Seq("E470", "E500", "E600", "E930").contains(epc)) {
-      Seq(request.userAnswers.get(ItemDensityPage(idx)))
+      Seq(ItemDensityPage(idx).value)
     }
 
   private[items] def fiscalMarksAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(goodsType == Tobacco) {
-      request.userAnswers.get(ItemFiscalMarksChoicePage(idx)) match {
-        case fiscalMarksChoice@Some(true) => Seq(fiscalMarksChoice, request.userAnswers.get(ItemFiscalMarksPage(idx)))
+      ItemFiscalMarksChoicePage(idx).value match {
+        case fiscalMarksChoice@Some(true) => Seq(fiscalMarksChoice, ItemFiscalMarksPage(idx).value)
         case fiscalMarksChoice => Seq(fiscalMarksChoice)
       }
     }
@@ -103,8 +103,8 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
     mandatoryIf(
       ItemHelper.isWine(idx)(request.userAnswers)
     ) {
-      request.userAnswers.get(ItemWineMoreInformationChoicePage(idx)) match {
-        case wineInfoChoice@Some(true) => Seq(wineInfoChoice, request.userAnswers.get(ItemWineMoreInformationPage(idx)))
+      ItemWineMoreInformationChoicePage(idx).value match {
+        case wineInfoChoice@Some(true) => Seq(wineInfoChoice, ItemWineMoreInformationPage(idx).value)
         case wineInfoChoice => Seq(wineInfoChoice)
       }
     }
@@ -113,8 +113,8 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
     mandatoryIf(
       ItemHelper.isWine(idx)(request.userAnswers)
     ) {
-      request.userAnswers.get(ItemWineProductCategoryPage(idx)) match {
-        case wineImportedChoice@Some(ImportedWine) => Seq(wineImportedChoice, request.userAnswers.get(ItemWineOriginPage(idx)))
+      ItemWineProductCategoryPage(idx).value match {
+        case wineImportedChoice@Some(ImportedWine) => Seq(wineImportedChoice, ItemWineOriginPage(idx).value)
         case wineImportedChoice => Seq(wineImportedChoice)
       }
     }
@@ -123,43 +123,43 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
     mandatoryIf(goodsType.isAlcohol && (goodsType == Wine || goodsType == Intermediate || ExciseProductCodeHelper.isSpirituousBeverages(epc))) {
       //Whilst Statement of spirit marketing and labelling is required for S200 EPC's, the page (or specifically, the form) should
       //prevent the user from continuing if they hadn't selected an option
-      Seq(request.userAnswers.get(ItemDesignationOfOriginPage(idx)))
+      Seq(ItemDesignationOfOriginPage(idx).value)
     }
 
   private[items] def maturationAgeAnswer(epc: String)(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
-    mandatoryIf(goodsType == Spirits && ExciseProductCodeHelper.isSpirituousBeverages(epc))(Seq(request.userAnswers.get(ItemMaturationPeriodAgePage(idx))))
+    mandatoryIf(goodsType == Spirits && ExciseProductCodeHelper.isSpirituousBeverages(epc))(Seq(ItemMaturationPeriodAgePage(idx).value))
 
   private[items] def alcoholStrengthAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
-    mandatoryIf(goodsType.isAlcohol)(Seq(request.userAnswers.get(ItemAlcoholStrengthPage(idx))))
+    mandatoryIf(goodsType.isAlcohol)(Seq(ItemAlcoholStrengthPage(idx).value))
 
   private[items] def independentProducerAnswers(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
-    mandatoryIf(goodsType.isAlcohol && request.userAnswers.get(ItemAlcoholStrengthPage(idx)).exists(_ < 8.5))(
-      Seq(request.userAnswers.get(ItemSmallIndependentProducerPage(idx)))
+    mandatoryIf(goodsType.isAlcohol && ItemAlcoholStrengthPage(idx).value.exists(_ < 8.5))(
+      Seq(ItemSmallIndependentProducerPage(idx).value)
     )
 
   private[items] def degreesPlatoAnswer(implicit goodsType: GoodsType, request: DataRequest[_]): Seq[Option[_]] =
-    mandatoryIf(request.isNorthernIrelandErn && goodsType == Beer)(Seq(request.userAnswers.get(ItemDegreesPlatoPage(idx))))
+    mandatoryIf(request.isNorthernIrelandErn && goodsType == Beer)(Seq(ItemDegreesPlatoPage(idx).value))
 
   private[items] def bulkCommercialSeals(implicit request: DataRequest[_]): Seq[Option[_]] =
-    request.userAnswers.get(ItemBulkPackagingSealChoicePage(idx)) match {
-      case sealChoice@Some(true) => Seq(sealChoice, request.userAnswers.get(ItemBulkPackagingSealTypePage(idx)))
+    ItemBulkPackagingSealChoicePage(idx).value match {
+      case sealChoice@Some(true) => Seq(sealChoice, ItemBulkPackagingSealTypePage(idx).value)
       case sealChoice => Seq(sealChoice)
     }
 
   private[items] def wineBulkGrowingZoneAnswer(implicit request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(
       ItemHelper.isWine(idx)(request.userAnswers)
-    )((request.userAnswers.get(ItemQuantityPage(idx)), request.userAnswers.get(ItemWineProductCategoryPage(idx))) match {
-      case (Some(quantity), Some(productCategory)) if productCategory != ImportedWine && quantity > 60 => Seq(request.userAnswers.get(ItemWineGrowingZonePage(idx)))
+    )((ItemQuantityPage(idx).value, ItemWineProductCategoryPage(idx).value) match {
+      case (Some(quantity), Some(productCategory)) if productCategory != ImportedWine && quantity > 60 => Seq(ItemWineGrowingZonePage(idx).value)
       case _ => Seq()
     })
 
   private[items] def wineBulkOperationAnswer(implicit request: DataRequest[_]): Seq[Option[_]] =
     mandatoryIf(
       ItemHelper.isWine(idx)(request.userAnswers)
-    )(request.userAnswers.get(ItemQuantityPage(idx)) match {
+    )(ItemQuantityPage(idx).value match {
       case Some(quantity) if quantity > 60 =>
-        Seq(request.userAnswers.get(ItemWineOperationsChoicePage(idx)))
+        Seq(ItemWineOperationsChoicePage(idx).value)
       case _ => Seq()
     })
 
@@ -189,7 +189,7 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
     ItemsSection.canBeCompletedForTraderAndDestinationType
 
   def packagingIndexes(implicit request: DataRequest[_]): Seq[Index] =
-    request.userAnswers.get(ItemsPackagingCount(idx)) match {
+    request.userAnswers.getCount(ItemsPackagingCount(idx)) match {
       case Some(count) =>
         0 until count map Index.apply
       case None =>

@@ -68,7 +68,7 @@ class DestinationDetailsChoiceController @Inject()(override val messagesApi: Mes
                 movementScenario = movementScenario
               ))),
               value =>
-                if (request.userAnswers.get(DestinationDetailsChoicePage).contains(value)) {
+                if (DestinationDetailsChoicePage.value.contains(value)) {
                   Future(Redirect(navigator.nextPage(DestinationDetailsChoicePage, mode, request.userAnswers)))
                 } else {
 

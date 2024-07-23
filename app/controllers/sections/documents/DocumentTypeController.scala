@@ -75,7 +75,7 @@ class DocumentTypeController @Inject()(
     val selectItems = SelectItemHelper.constructSelectItems(
       selectOptions = documentTypes,
       defaultTextMessageKey = "documentType.select.defaultValue",
-      existingAnswer = request.userAnswers.get(DocumentTypePage(idx)).map(_.code)
+      existingAnswer = DocumentTypePage(idx).value.map(_.code)
     )
 
     Future(status(view(
@@ -87,7 +87,7 @@ class DocumentTypeController @Inject()(
 
   private def cleanseAndRedirect(answer: DocumentType, idx: Index, mode: Mode)
                                 (implicit request: DataRequest[_]): Future[Result] =
-    if (request.userAnswers.get(DocumentTypePage(idx)).contains(answer)) {
+    if (DocumentTypePage(idx).value.contains(answer)) {
       Future(Redirect(navigator.nextPage(DocumentTypePage(idx), mode, request.userAnswers)))
     } else {
 

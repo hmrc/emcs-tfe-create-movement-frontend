@@ -30,7 +30,7 @@ import viewmodels.taskList.Completed
 object DocumentTypeSummary {
 
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(DocumentTypePage(idx)).map {
+    DocumentTypePage(idx).value.map {
       answer =>
         DocumentSection(idx).status match {
           case Completed =>

@@ -34,8 +34,8 @@ object GuarantorErnVatSummary {
 
   def rows()(implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] = {
 
-    val guarantorArrangerAnswer = request.userAnswers.get(GuarantorArrangerPage)
-    val guarantorRequiredAnswerIsTrue = request.userAnswers.get(GuarantorRequiredPage).contains(true)
+    val guarantorArrangerAnswer = GuarantorArrangerPage.value
+    val guarantorRequiredAnswerIsTrue = GuarantorRequiredPage.value.contains(true)
     val isAlwaysRequired = GuarantorRequiredPage.isRequired()
     val showSummaryRow = guarantorRequiredAnswerIsTrue || isAlwaysRequired
 
@@ -76,9 +76,9 @@ object GuarantorErnVatSummary {
 
   private def getConsigneeSummary()(implicit request: DataRequest[_], messages: Messages): (String, String) =
     (
-      request.userAnswers.get(DestinationTypePage),
-      request.userAnswers.get(ConsigneeExcisePage),
-      request.userAnswers.get(ConsigneeExportVatPage)
+      DestinationTypePage.value,
+      ConsigneeExcisePage.value,
+      ConsigneeExportVatPage.value
     ) match {
 
       case (Some(TemporaryRegisteredConsignee), maybeErn, _) =>
@@ -104,7 +104,7 @@ object GuarantorErnVatSummary {
     }
 
   private def getGuarantorVatSummary()(implicit request: DataRequest[_], messages: Messages): Seq[(String, String)] =
-    request.userAnswers.get(GuarantorVatPage) match {
+    GuarantorVatPage.value match {
       case Some(VatNumberModel(true, Some(vatNumber))) =>
         Seq(
           "guarantorVat.checkYourAnswers.choice.label" -> messages("site.yes"),

@@ -29,7 +29,7 @@ import viewmodels.govuk.all._
 object ItemPackagingShippingMarksChoiceHelper extends HintFluency {
 
   def options(form: Form[_], itemIndex: Index, packagingIndex: Index)(implicit request: DataRequest[_], messages: Messages): Radios = {
-    val isQuantityMoreThanZero: Boolean = request.userAnswers.get(ItemPackagingQuantityPage(itemIndex, packagingIndex)).exists(BigInt(_) > 0)
+    val isQuantityMoreThanZero: Boolean = ItemPackagingQuantityPage(itemIndex, packagingIndex).value.exists(BigInt(_) > 0)
     val yesMessageKey = if(isQuantityMoreThanZero) "site.yes" else "itemPackagingShippingMarksChoice.choice.yes.existing"
     RadiosViewModel.apply(
       field = form("value"),

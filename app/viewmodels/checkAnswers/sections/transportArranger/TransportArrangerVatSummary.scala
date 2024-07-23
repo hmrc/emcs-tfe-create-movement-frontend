@@ -30,9 +30,9 @@ object TransportArrangerVatSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    request.userAnswers.get(TransportArrangerPage) match {
+    TransportArrangerPage.value match {
       case Some(GoodsOwner | Other) =>
-        request.userAnswers.get(TransportArrangerVatPage).flatMap { answer =>
+        TransportArrangerVatPage.value.flatMap { answer =>
           Option.when(answer.vatNumber.isDefined) {
             SummaryListRowViewModel(
               key = "transportArrangerVat.checkYourAnswers.input.label",

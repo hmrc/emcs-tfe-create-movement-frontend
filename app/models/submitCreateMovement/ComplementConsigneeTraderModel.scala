@@ -38,6 +38,6 @@ object ComplementConsigneeTraderModel {
     )
 
   def apply(implicit request: DataRequest[_]): Option[ComplementConsigneeTraderModel] = {
-    request.userAnswers.get(ConsigneeExemptOrganisationPage).map(exemptOrganisationDetailsModelToComplementConsigneeTraderModel)
+    ConsigneeExemptOrganisationPage.value.map(exemptOrganisationDetailsModelToComplementConsigneeTraderModel)
   }
 }

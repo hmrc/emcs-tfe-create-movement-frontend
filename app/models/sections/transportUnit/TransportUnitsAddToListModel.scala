@@ -44,7 +44,7 @@ object TransportUnitsAddToListModel extends Enumerable.Implicits {
 
     val showNoOption = TransportUnitsSectionUnits.status != InProgress
 
-    val numberOfTransportUnits = request.userAnswers.get(TransportUnitsCount).getOrElse(0)
+    val numberOfTransportUnits = request.userAnswers.getCount(TransportUnitsCount).getOrElse(0)
 
     def radioItem(value: TransportUnitsAddToListModel, index: Int): RadioItem = RadioItem(
       content = if (index == 1) {

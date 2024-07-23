@@ -32,8 +32,8 @@ object TransportSealInformationSummary {
 
   def row(idx: Index, sectionComplete: Boolean)
          (implicit request: DataRequest[_], messages: Messages, link: views.html.components.link): Option[SummaryListRow] =
-    request.userAnswers.get(TransportSealChoicePage(idx)).filter(identity).map { _ =>
-      request.userAnswers.get(TransportSealTypePage(idx)) match {
+    TransportSealChoicePage(idx).value.filter(identity).map { _ =>
+      TransportSealTypePage(idx).value match {
         case Some(TransportSealTypeModel(_, Some(info))) => SummaryListRowViewModel(
           key = "transportSealType.moreInfo.checkYourAnswersLabel",
           value = ValueViewModel(HtmlFormat.escape(info).toString()),

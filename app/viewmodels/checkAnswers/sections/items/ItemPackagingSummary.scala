@@ -37,7 +37,7 @@ class ItemPackagingSummary @Inject()(
                                     ) {
 
   def row(itemIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ItemBulkPackagingChoicePage(itemIdx)).flatMap {
+    ItemBulkPackagingChoicePage(itemIdx).value.flatMap {
       case true =>
         constructBulkPackagingSummary(itemIdx)
       case _ =>
@@ -52,11 +52,11 @@ class ItemPackagingSummary @Inject()(
     }
 
   private[items] def getPackagesForItem(itemIdx: Index)(implicit request: DataRequest[_]): Seq[ItemPackagingModel] =
-    request.userAnswers.get(ItemsPackagingCount(itemIdx)).fold[Seq[ItemPackagingModel]](Seq.empty) { count =>
+    request.userAnswers.getCount(ItemsPackagingCount(itemIdx)).fold[Seq[ItemPackagingModel]](Seq.empty) { count =>
       (0 until count).map(Index(_)).map { packageIdx =>
-        (request.userAnswers.get(ItemSelectPackagingPage(itemIdx, packageIdx)),
-          request.userAnswers.get(ItemPackagingQuantityPage(itemIdx, packageIdx)),
-          request.userAnswers.get(ItemPackagingShippingMarksPage(itemIdx, packageIdx)))
+        (ItemSelectPackagingPage(itemIdx, packageIdx).value,
+          ItemPackagingQuantityPage(itemIdx, packageIdx).value,
+          ItemPackagingShippingMarksPage(itemIdx, packageIdx).value)
       }.collect {
         case (Some(packaging), quantity, shippingMark) => ItemPackagingModel(packaging, quantity, shippingMark)
       }
@@ -88,7 +88,7 @@ class ItemPackagingSummary @Inject()(
   }
 
   private[items] def constructBulkPackagingSummary(itemIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    request.userAnswers.get(ItemBulkPackagingSelectPage(itemIdx)).map { bulkType =>
+    ItemBulkPackagingSelectPage(itemIdx).value.map { bulkType =>
       SummaryListRowViewModel(
         key = "itemsAddToList.packagesCyaLabel",
         value = ValueViewModel(HtmlContent(

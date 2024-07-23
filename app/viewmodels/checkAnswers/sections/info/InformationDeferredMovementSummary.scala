@@ -28,7 +28,7 @@ object InformationDeferredMovementSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    val value: String = request.userAnswers.get(DeferredMovementPage()) match {
+    val value: String = DeferredMovementPage().value match {
       case Some(answer) => if (answer) "site.yes" else "site.no"
       case None => messages("site.notProvided")
     }

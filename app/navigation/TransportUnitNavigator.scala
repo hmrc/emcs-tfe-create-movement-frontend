@@ -64,7 +64,7 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
     case TransportUnitsAddToListPage => (answers: UserAnswers) =>
       answers.get(TransportUnitsAddToListPage) match {
         case Some(TransportUnitsAddToListModel.Yes) =>
-          transportUnitRoutes.TransportUnitTypeController.onPageLoad(answers.ern, answers.draftId, Index(answers.get(TransportUnitsCount).getOrElse(0)), NormalMode)
+          transportUnitRoutes.TransportUnitTypeController.onPageLoad(answers.ern, answers.draftId, Index(answers.getCount(TransportUnitsCount).getOrElse(0)), NormalMode)
         case Some(TransportUnitsAddToListModel.NoMoreToCome | TransportUnitsAddToListModel.MoreToCome) =>
           routes.DraftMovementController.onPageLoad(answers.ern, answers.draftId)
         case _ =>

@@ -47,7 +47,7 @@ object TraderModel extends ModelConstructorHelpers {
       Some(TraderModel(
         // Consignee section has multiple entry points.
         // If the ConsigneeExcisePage is defined, use that, otherwise use the VAT number entered on the ConsigneeExportVatPage.
-        traderExciseNumber = (request.userAnswers.get(ConsigneeExcisePage), request.userAnswers.get(ConsigneeExportVatPage)) match {
+        traderExciseNumber = (ConsigneeExcisePage.value, ConsigneeExportVatPage.value) match {
           case (Some(ern), _) => Some(ern)
           case (_, Some(vatNumber)) => Some(vatNumber)
           case _ => None
@@ -55,7 +55,7 @@ object TraderModel extends ModelConstructorHelpers {
         traderName = Some(mandatoryPage(ConsigneeBusinessNamePage)),
         address = Some(AddressModel.fromUserAddress(consigneeAddress)),
         vatNumber = None,
-        eoriNumber = request.userAnswers.get(ConsigneeExportEoriPage)
+        eoriNumber = ConsigneeExportEoriPage.value
       ))
     } else {
       None
@@ -82,13 +82,13 @@ object TraderModel extends ModelConstructorHelpers {
 
   def applyPlaceOfDispatch(implicit request: DataRequest[_]): Option[TraderModel] = {
     if (DispatchSection.canBeCompletedForTraderAndDestinationType) {
-      val name = if(request.userAnswers.get(DispatchUseConsignorDetailsPage).contains(true)) {
+      val name = if(DispatchUseConsignorDetailsPage.value.contains(true)) {
         Some(request.traderKnownFacts.traderName)
       } else {
-        request.userAnswers.get(DispatchBusinessNamePage)
+        DispatchBusinessNamePage.value
       }
       Some(TraderModel(
-        traderExciseNumber = request.userAnswers.get(DispatchWarehouseExcisePage),
+        traderExciseNumber = DispatchWarehouseExcisePage.value,
         traderName = name,
         address = Some(AddressModel.fromUserAddress(mandatoryPage(DispatchAddressPage))),
         vatNumber = None,
@@ -115,15 +115,15 @@ object TraderModel extends ModelConstructorHelpers {
             if (DestinationSection.shouldSkipDestinationDetailsChoice(movementScenario)) true else mandatoryPage(DestinationDetailsChoicePage)
 
           Some(TraderModel(
-            traderExciseNumber = request.userAnswers.get(DestinationWarehouseVatPage),
-            traderName = Option.when(giveAddressAndBusinessName)(request.userAnswers.get(DestinationBusinessNamePage)).flatten,
-            address = Option.when(giveAddressAndBusinessName)(request.userAnswers.get(DestinationAddressPage).map(AddressModel.fromUserAddress)).flatten
+            traderExciseNumber = DestinationWarehouseVatPage.value,
+            traderName = Option.when(giveAddressAndBusinessName)(DestinationBusinessNamePage.value).flatten,
+            address = Option.when(giveAddressAndBusinessName)(DestinationAddressPage.value.map(AddressModel.fromUserAddress)).flatten
           ))
         case _ =>
           Some(TraderModel(
             traderExciseNumber = None,
-            traderName = request.userAnswers.get(DestinationBusinessNamePage),
-            address = request.userAnswers.get(DestinationAddressPage).map(AddressModel.fromUserAddress)
+            traderName = DestinationBusinessNamePage.value,
+            address = DestinationAddressPage.value.map(AddressModel.fromUserAddress)
           ))
       }
     } else {

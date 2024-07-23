@@ -29,7 +29,7 @@ import viewmodels.implicits._
 object ConsigneeExportEoriSummary  {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_],  messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ConsigneeExportEoriPage).map {
+    ConsigneeExportEoriPage.value.map {
       answer =>
 
         SummaryListRowViewModel(

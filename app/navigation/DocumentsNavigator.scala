@@ -60,7 +60,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
   private def documentsCertificatesRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
     userAnswers.get(DocumentsCertificatesPage) match {
       case Some(false) => routes.DocumentsCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
-      case _ => userAnswers.get(DocumentsCount) match {
+      case _ => userAnswers.getCount(DocumentsCount) match {
         case Some(0) | None => routes.DocumentTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, 0, mode)
         case _ => routes.DocumentsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       }
@@ -69,7 +69,7 @@ class DocumentsNavigator @Inject() extends BaseNavigator {
   private def documentsAddToListRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) => {
     userAnswers.get(DocumentsAddToListPage) match {
       case Some(DocumentsAddToList.Yes) =>
-        val idx: Index = userAnswers.get(DocumentsCount).fold(0)(identity)
+        val idx: Index = userAnswers.getCount(DocumentsCount).fold(0)(identity)
         routes.DocumentTypeController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, mode)
       case _ =>
         controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)

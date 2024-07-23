@@ -58,8 +58,8 @@ class ItemPackagingQuantityFormProvider @Inject() extends Mappings {
     Constraint {
       //If a shipping mark is defined for this packaging and the original quantity > 0 (i.e., this is the lead shipping mark)
       //show an error (user can't set a lead shipping mark quantity to 0)
-      case str if BigInt(str) == 0 && request.userAnswers.get(ItemPackagingQuantityPage(itemIndex, packagingIndex)).exists(BigInt(_) > 0) =>
-        if(request.userAnswers.get(ItemPackagingShippingMarksPage(itemIndex, packagingIndex)).isDefined) {
+      case str if BigInt(str) == 0 && ItemPackagingQuantityPage(itemIndex, packagingIndex).value.exists(BigInt(_) > 0) =>
+        if(ItemPackagingShippingMarksPage(itemIndex, packagingIndex).value.isDefined) {
           Invalid(cannotBeZeroMustBeMoreThanZeroErrorKey)
         } else {
           Valid

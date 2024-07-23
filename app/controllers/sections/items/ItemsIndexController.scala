@@ -40,7 +40,7 @@ class ItemsIndexController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      request.userAnswers.get(ItemsCount) match {
+      request.userAnswers.getCount(ItemsCount) match {
         case Some(value) if value > 1 || (ItemsSectionItems.isCompleted || ItemsSectionItems.status == UpdateNeeded) =>
           Redirect(routes.ItemsAddToListController.onPageLoad(request.ern, request.draftId))
         case _ =>

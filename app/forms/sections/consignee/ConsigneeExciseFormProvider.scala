@@ -20,7 +20,7 @@ import config.Constants
 import forms.mappings.Mappings
 import forms.{ALPHANUMERIC_REGEX, EXCISE_NUMBER_REGEX}
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, UkTaxWarehouse}
+import models.sections.info.movementScenario.MovementScenario.{TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, UkTaxWarehouse}
 import pages.sections.consignee.ConsigneeExcisePage
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
@@ -32,7 +32,7 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
 
   def apply()(implicit request: DataRequest[_]): Form[String] = {
 
-    val keyPrefix = request.isNorthernIrelandErn -> request.userAnswers.get(DestinationTypePage) match {
+    val keyPrefix = request.isNorthernIrelandErn -> DestinationTypePage.value match {
       case true -> Some(TemporaryRegisteredConsignee) => "consigneeExcise.temporaryRegisteredConsignee"
       case true -> Some(TemporaryCertifiedConsignee) => "consigneeExcise.temporaryCertifiedConsignee"
       case _ => "consigneeExcise"
@@ -54,10 +54,10 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
     )
   }
 
-  def validateErn(implicit request: DataRequest[_]): Constraint[String] =
+  private def validateErn(implicit request: DataRequest[_]): Constraint[String] =
     Constraint {
       case ern if DestinationTypePage.value.contains(UkTaxWarehouse.GB) =>
-        if (ern.startsWith(Constants.GBWK_PREFIX)) Valid else Invalid("consigneeExcise.error.mustStartWithGBWK")
+        if (Seq(Constants.GBWK_PREFIX, Constants.XIWK_PREFIX).exists(ern.startsWith)) Valid else Invalid("consigneeExcise.error.mustStartWithGBWKOrXIWK")
 
       case ern if DestinationTypePage.value.contains(UkTaxWarehouse.NI) =>
         if (ern.startsWith(Constants.XIWK_PREFIX)) Valid else Invalid("consigneeExcise.error.mustStartWithXIWK")

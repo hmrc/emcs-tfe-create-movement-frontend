@@ -51,7 +51,7 @@ class DestinationBusinessNameController @Inject()(override val messagesApi: Mess
     authorisedDataRequest(ern, draftId) { implicit request =>
       withAnswer(DestinationTypePage, controllers.sections.destination.routes.DestinationIndexController.onPageLoad(ern, draftId)) {
         destinationType =>
-          val prePopPage = (request.userAnswers.get(DestinationBusinessNamePage), request.userAnswers.get(DestinationConsigneeDetailsPage)) match {
+          val prePopPage = (DestinationBusinessNamePage.value, DestinationConsigneeDetailsPage.value) match {
             case (None, Some(true)) => ConsigneeBusinessNamePage
             case _ => DestinationBusinessNamePage
           }

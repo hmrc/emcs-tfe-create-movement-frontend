@@ -30,7 +30,7 @@ object ItemWineGrowingZoneSummary {
   def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     val page = ItemWineGrowingZonePage(idx)
 
-    request.userAnswers.get(page).map {
+    page.value.map {
       answer =>
         SummaryListRowViewModel(
           key = s"$page.checkYourAnswersLabel",

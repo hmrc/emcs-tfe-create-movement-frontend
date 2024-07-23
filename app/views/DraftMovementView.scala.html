@@ -66,10 +66,10 @@
     @h1(headerAndTitle, Some(messages("draftMovement.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
 
     @p("govuk-body govuk-!-margin-bottom-0") {
-        @messages("draftMovement.lrn", request.userAnswers.get(LocalReferenceNumberPage()).getOrElse(messages("draftMovement.notProvided")))
+        @messages("draftMovement.lrn", LocalReferenceNumberPage().value.getOrElse(messages("draftMovement.notProvided")))
     }
     @p("govuk-body govuk-!-margin-bottom-7") {
-        @messages("draftMovement.consignee", request.userAnswers.get(ConsigneeBusinessNamePage).getOrElse(messages("draftMovement.notProvided")))
+        @messages("draftMovement.consignee", ConsigneeBusinessNamePage.value.getOrElse(messages("draftMovement.notProvided")))
     }
 
     @p("govuk-body govuk-!-margin-bottom-9") {

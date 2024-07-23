@@ -32,8 +32,8 @@ object ItemFiscalMarksSummary {
     lazy val page = ItemFiscalMarksPage(idx)
 
     for {
-      fiscalMarksChoiceAnswer <- request.userAnswers.get(ItemFiscalMarksChoicePage(idx))
-      answer <- request.userAnswers.get(page)
+      fiscalMarksChoiceAnswer <- ItemFiscalMarksChoicePage(idx).value
+      answer <- page.value
       if fiscalMarksChoiceAnswer
     } yield {
       SummaryListRowViewModel(

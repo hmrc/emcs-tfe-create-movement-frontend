@@ -75,7 +75,7 @@ class DestinationWarehouseExciseController @Inject()(
   def cleanseSaveAndRedirect(value: String, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
     val cleansedAnswers = {
       //If the ERN has changed from GB -> XI or XI -> GB then Address MUST be re-captured. Hence, remove it.
-      if (request.userAnswers.get(DestinationWarehouseExcisePage).exists(_.startsWith(value.take(2)))) request.userAnswers else {
+      if (DestinationWarehouseExcisePage.value.exists(_.startsWith(value.take(2)))) request.userAnswers else {
         request.userAnswers.remove(DestinationAddressPage)
       }
     }

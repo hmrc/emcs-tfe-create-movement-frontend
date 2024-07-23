@@ -29,7 +29,7 @@ import javax.inject.Inject
 class TransportArrangerHelper @Inject() {
 
   def radioItems()(implicit request: DataRequest[_], messages: Messages): Seq[RadioItem] = {
-    val values: Seq[TransportArranger] = if (request.userAnswers.get(DestinationTypePage).contains(UnknownDestination)) {
+    val values: Seq[TransportArranger] = if (DestinationTypePage.value.contains(UnknownDestination)) {
       TransportArranger.valuesForUnknownDestination
     } else {
       TransportArranger.values

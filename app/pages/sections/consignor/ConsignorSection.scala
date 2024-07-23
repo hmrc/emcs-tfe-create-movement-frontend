@@ -28,8 +28,8 @@ case object ConsignorSection extends Section[JsObject] {
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
     (
       request.userTypeFromErn,
-      request.userAnswers.get(ConsignorPaidTemporaryAuthorisationCodePage),
-      request.userAnswers.get(ConsignorAddressPage)
+      ConsignorPaidTemporaryAuthorisationCodePage.value,
+      ConsignorAddressPage.value
     ) match {
       case (NorthernIrelandTemporaryCertifiedConsignor, Some(_), Some(_)) =>
         Completed

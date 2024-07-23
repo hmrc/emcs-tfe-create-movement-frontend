@@ -84,7 +84,7 @@ object SubmitCreateMovementModel extends ModelConstructorHelpers {
       case NorthernIrelandRegisteredConsignor | NorthernIrelandTemporaryCertifiedConsignor | NorthernIrelandCertifiedConsignor =>
         DispatchPlace.NorthernIreland + appConfig.destinationOfficeSuffix
       case NorthernIrelandWarehouseKeeper =>
-        val prefix: String = request.userAnswers.get(DispatchWarehouseExcisePage).getOrElse(mandatoryPage(DispatchPlacePage).toString).take(2)
+        val prefix: String = DispatchWarehouseExcisePage.value.getOrElse(mandatoryPage(DispatchPlacePage).toString).take(2)
         prefix + appConfig.destinationOfficeSuffix
       case _ =>
         DispatchPlace.GreatBritain + appConfig.destinationOfficeSuffix
@@ -103,10 +103,10 @@ object SubmitCreateMovementModel extends ModelConstructorHelpers {
       consigneeTrader = TraderModel.applyConsignee,
       consignorTrader = TraderModel.applyConsignor,
       placeOfDispatchTrader = TraderModel.applyPlaceOfDispatch,
-      dispatchImportOffice = request.userAnswers.get(ImportCustomsOfficeCodePage).map(OfficeModel(_)),
+      dispatchImportOffice = ImportCustomsOfficeCodePage.value.map(OfficeModel(_)),
       complementConsigneeTrader = ComplementConsigneeTraderModel.apply,
       deliveryPlaceTrader = TraderModel.applyDeliveryPlace(movementScenario),
-      deliveryPlaceCustomsOffice = request.userAnswers.get(ExportCustomsOfficePage).map(OfficeModel(_)),
+      deliveryPlaceCustomsOffice = ExportCustomsOfficePage.value.map(OfficeModel(_)),
       competentAuthorityDispatchOffice = dispatchOffice,
       transportArrangerTrader = TraderModel.applyTransportArranger,
       firstTransporterTrader = TraderModel.applyFirstTransporter,

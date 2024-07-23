@@ -111,7 +111,7 @@ trait BaseNavigationController extends BaseController with Logging {
   def cleanseUserAnswersIfValueHasChanged[T](page: QuestionPage[T],
                                              newAnswer: T,
                                              cleansingFunction: => UserAnswers)(implicit request: DataRequest[_], reads: Reads[T]): UserAnswers = {
-    request.userAnswers.get(page) match {
+    page.value match {
       case Some(answer) if answer != newAnswer => cleansingFunction
       case _ => request.userAnswers
     }
@@ -120,7 +120,7 @@ trait BaseNavigationController extends BaseController with Logging {
   def validateIndexForJourneyEntry[T, A](
                                           itemCount: Derivable[T, Int], idx: Index, max: Int = Int.MaxValue
                                         )(onSuccess: => A, onFailure: => A)(implicit request: DataRequest[_], reads: Reads[T]): A = {
-    request.userAnswers.get(itemCount) match {
+    request.userAnswers.getCount(itemCount) match {
       case Some(value) if (idx.position >= 0 && idx.position <= value) && idx.position < max => onSuccess
       case None if idx.position == 0 => onSuccess
       case _ => onFailure
@@ -130,7 +130,7 @@ trait BaseNavigationController extends BaseController with Logging {
   def validateIndex[T, A](
                            itemCount: Derivable[T, Int], idx: Index
                          )(onSuccess: => A, onFailure: => A)(implicit request: DataRequest[_], reads: Reads[T]): A = {
-    request.userAnswers.get(itemCount) match {
+    request.userAnswers.getCount(itemCount) match {
       case Some(value) if (idx.position >= 0 && idx.position < value) => onSuccess
       case _ => onFailure
     }

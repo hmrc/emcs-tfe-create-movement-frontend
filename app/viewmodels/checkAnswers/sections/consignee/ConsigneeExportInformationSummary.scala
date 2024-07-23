@@ -33,7 +33,7 @@ case class ConsigneeExportInformationSummary @Inject()(list: list) {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    request.userAnswers.get(ConsigneeExportInformationPage).flatMap {
+    ConsigneeExportInformationPage.value.flatMap {
       case identifications =>
         Some(
           summaryRow(

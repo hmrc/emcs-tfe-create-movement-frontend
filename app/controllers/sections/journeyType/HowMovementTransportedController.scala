@@ -55,7 +55,7 @@ class HowMovementTransportedController @Inject()(
                                                 ) extends BaseNavigationController with AuthActionHelper {
 
   private def guarantorNotRequiredEuGuard[T](onEuNotRequired: => T, default: => T)(implicit request: DataRequest[_]): T = {
-    (request.userAnswers.get(DestinationTypePage), request.userAnswers.get(GuarantorRequiredPage)) match {
+    (DestinationTypePage.value, GuarantorRequiredPage.value) match {
       case (Some(UnknownDestination), _) => default
       case (Some(scenario), Some(false)) if scenario.movementType == MovementType.UkToEu => onEuNotRequired
       case _ => default
@@ -70,7 +70,7 @@ class HowMovementTransportedController @Inject()(
     }
 
   private def redirect(answer: HowMovementTransported, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
-    if (request.userAnswers.get(HowMovementTransportedPage).contains(answer)) {
+    if (HowMovementTransportedPage.value.contains(answer)) {
       Future(Redirect(navigator.nextPage(HowMovementTransportedPage, mode, request.userAnswers)))
     } else {
       val newUserAnswers = cleanseAnswers(answer)
@@ -105,7 +105,7 @@ class HowMovementTransportedController @Inject()(
       request.userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0)).set(
         TransportUnitTypePage(Index(0)), FixedTransport
       )
-    } else if(request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations)) {
+    } else if(HowMovementTransportedPage.value.contains(FixedTransportInstallations)) {
       //If the user previously selected Fixed Transport Installation then clear the TU section (because the user did not actively enter any TU info)
       request.userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0))
     } else {

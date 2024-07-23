@@ -28,7 +28,7 @@ import viewmodels.implicits._
 object ConsigneeExemptOrganisationSummary {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ConsigneeExemptOrganisationPage).map {
+    ConsigneeExemptOrganisationPage.value.map {
       answer =>
 
         SummaryListRowViewModel(

@@ -29,7 +29,7 @@ object DestinationAddressSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
-    val value = request.userAnswers.get(DestinationAddressPage).fold[HtmlContent] {
+    val value = DestinationAddressPage.value.fold[HtmlContent] {
       HtmlContent(messages("destinationCheckAnswers.destination.notProvided"))
     } { _.toCheckYourAnswersFormat }
 

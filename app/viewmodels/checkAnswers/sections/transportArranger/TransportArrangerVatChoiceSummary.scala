@@ -29,9 +29,9 @@ object TransportArrangerVatChoiceSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    request.userAnswers.get(TransportArrangerPage) match {
+    TransportArrangerPage.value match {
       case Some(GoodsOwner | Other) =>
-        request.userAnswers.get(TransportArrangerVatPage).map { answer =>
+        TransportArrangerVatPage.value.map { answer =>
           val value = if(answer.hasVatNumber) "site.yes" else "site.no"
           SummaryListRowViewModel(
             key = "transportArrangerVat.checkYourAnswers.choice.label",

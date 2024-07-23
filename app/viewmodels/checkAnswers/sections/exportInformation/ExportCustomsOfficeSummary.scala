@@ -33,7 +33,7 @@ class ExportCustomsOfficeSummary @Inject()(tagHelper: TagHelper) {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
 
-    request.userAnswers.get(ExportCustomsOfficePage).map {
+    ExportCustomsOfficePage.value.map {
       answer =>
 
         val hasUnfixedExportCustomsOfficeNumberError = ExportCustomsOfficePage.isMovementSubmissionError

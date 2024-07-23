@@ -27,7 +27,7 @@ case class SadSectionItem(sadIndex: Index) extends Section[JsObject] {
   override val path: JsPath = SadSectionDocuments.path \ sadIndex.position
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    val importNumberAnswer = request.userAnswers.get(ImportNumberPage(sadIndex))
+    val importNumberAnswer = ImportNumberPage(sadIndex).value
 
     importNumberAnswer match {
       case Some(_) =>

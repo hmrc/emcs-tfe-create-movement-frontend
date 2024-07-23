@@ -177,7 +177,7 @@ class UserAnswersSpec extends SpecBase with MovementSubmissionFailureFixtures {
       }
 
       "must return None if the data for the page doesnt exist" in {
-        emptyUserAnswers.get(TestDerivable) mustBe None
+        emptyUserAnswers.getCount(TestDerivable) mustBe None
       }
 
       "must perform the derive function if page exists" in {
@@ -188,7 +188,7 @@ class UserAnswersSpec extends SpecBase with MovementSubmissionFailureFixtures {
             Json.obj("TestPage" -> "wizz")
           )
         ))
-        withData.get(TestDerivable) mustBe Some(3)
+        withData.getCount(TestDerivable) mustBe Some(3)
       }
     }
 

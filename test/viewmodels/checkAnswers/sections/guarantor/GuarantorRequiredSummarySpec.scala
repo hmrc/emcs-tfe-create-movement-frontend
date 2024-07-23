@@ -32,7 +32,7 @@ import viewmodels.govuk.summarylist._
 
 class GuarantorRequiredSummarySpec extends SpecBase {
 
-  private def expectedRow(value: String, ern: String = testErn)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
+  private def expectedRow(value: String, ern: String)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
     Some(
       SummaryListRowViewModel(
         key = Key(Text(messagesForLanguage.cyaLabel)),

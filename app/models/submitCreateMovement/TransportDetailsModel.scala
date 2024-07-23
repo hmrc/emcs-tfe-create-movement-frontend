@@ -38,7 +38,7 @@ case class TransportDetailsModel(
 object TransportDetailsModel extends ModelConstructorHelpers with Logging with JsonOptionFormatter {
 
   def apply(implicit request: DataRequest[_]): Seq[TransportDetailsModel] = {
-    request.userAnswers.get(TransportUnitsCount) match {
+    request.userAnswers.getCount(TransportUnitsCount) match {
       case Some(0) | None =>
         logger.error("TransportUnitSection should contain at least one item")
         throw MissingMandatoryPage("TransportUnitSection should contain at least one item")
@@ -47,12 +47,12 @@ object TransportDetailsModel extends ModelConstructorHelpers with Logging with J
           .map(Index(_))
         .map {
           idx =>
-            val sealType: Option[TransportSealTypeModel] = request.userAnswers.get(TransportSealTypePage(idx))
+            val sealType: Option[TransportSealTypeModel] = TransportSealTypePage(idx).value
             TransportDetailsModel(
               transportUnitCode = mandatoryPage(TransportUnitTypePage(idx)),
-              identityOfTransportUnits = request.userAnswers.get(TransportUnitIdentityPage(idx)),
+              identityOfTransportUnits = TransportUnitIdentityPage(idx).value,
               commercialSealIdentification = sealType.map(_.sealType),
-              complementaryInformation = request.userAnswers.get(TransportUnitGiveMoreInformationPage(idx)).flatten,
+              complementaryInformation = TransportUnitGiveMoreInformationPage(idx).value.flatten,
               sealInformation = sealType.flatMap(_.moreInfo)
             )
         }

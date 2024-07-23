@@ -28,7 +28,7 @@ object InformationDestinationTypeSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    request.userAnswers.get(DestinationTypePage).map { destinationType =>
+    DestinationTypePage.value.map { destinationType =>
 
       val value: String = messages(s"destinationType.$destinationType")
 

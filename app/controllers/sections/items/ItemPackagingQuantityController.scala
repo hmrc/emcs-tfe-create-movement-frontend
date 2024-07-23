@@ -64,7 +64,7 @@ class ItemPackagingQuantityController @Inject()(override val messagesApi: Messag
           formProvider(itemsIndex, packagingIdx).bindFromRequest().fold(
             renderView(BadRequest, _, itemsIndex, packagingIdx, mode),
             answer => {
-              val newUserAnswers = request.userAnswers.get(ItemPackagingQuantityPage(itemsIndex, packagingIdx)) match {
+              val newUserAnswers = ItemPackagingQuantityPage(itemsIndex, packagingIdx).value match {
                 case Some(current) if (BigInt(answer) > 0 && current == "0") || (BigInt(current) > 0 && answer == "0") =>
                   request.userAnswers
                     .remove(ItemPackagingShippingMarksChoicePage(itemsIndex, packagingIdx))

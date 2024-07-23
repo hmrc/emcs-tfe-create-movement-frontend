@@ -35,7 +35,7 @@ case class PackageModel(
 object PackageModel extends ModelConstructorHelpers {
 
   def applyBulkPackaging(idx: Index)(implicit request: DataRequest[_]): Seq[PackageModel] = {
-    val sealType: Option[ItemPackagingSealTypeModel] = request.userAnswers.get(ItemBulkPackagingSealTypePage(idx))
+    val sealType: Option[ItemPackagingSealTypeModel] = ItemBulkPackagingSealTypePage(idx).value
     Seq(
       PackageModel(
         kindOfPackages = mandatoryPage(ItemBulkPackagingSelectPage(idx)).packagingType.toString,
@@ -48,18 +48,18 @@ object PackageModel extends ModelConstructorHelpers {
   }
 
   def applyIndividualPackaging(idx: Index)(implicit request: DataRequest[_]): Seq[PackageModel] = {
-    request.userAnswers.get(ItemsPackagingCount(idx)) match {
+    request.userAnswers.getCount(ItemsPackagingCount(idx)) match {
       case Some(0) | None => Seq()
       case Some(value) =>
         (0 until value)
           .map(Index(_))
           .map {
             packagingIdx =>
-              val sealType: Option[ItemPackagingSealTypeModel] = request.userAnswers.get(ItemPackagingSealTypePage(idx, packagingIdx))
+              val sealType: Option[ItemPackagingSealTypeModel] = ItemPackagingSealTypePage(idx, packagingIdx).value
               PackageModel(
                 kindOfPackages = mandatoryPage(ItemSelectPackagingPage(idx, packagingIdx)).packagingType,
                 numberOfPackages = Some(mandatoryPage(ItemPackagingQuantityPage(idx, packagingIdx)).toInt),
-                shippingMarks = request.userAnswers.get(ItemPackagingShippingMarksPage(idx, packagingIdx)),
+                shippingMarks = ItemPackagingShippingMarksPage(idx, packagingIdx).value,
                 commercialSealIdentification = sealType.map(_.sealType),
                 sealInformation = sealType.flatMap(_.optSealInformation)
               )

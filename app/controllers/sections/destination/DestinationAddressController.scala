@@ -53,7 +53,7 @@ class DestinationAddressController @Inject()(override val messagesApi: MessagesA
 
   override def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      val prePopPage = (request.userAnswers.get(addressPage), request.userAnswers.get(DestinationConsigneeDetailsPage)) match {
+      val prePopPage = (addressPage.value, DestinationConsigneeDetailsPage.value) match {
         case (None, Some(true)) => ConsigneeAddressPage
         case _ => addressPage
       }

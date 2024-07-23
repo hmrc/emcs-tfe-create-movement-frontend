@@ -31,7 +31,7 @@ object GuarantorRequiredSummary {
 
   private def renderSummary(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
-    val value = request.userAnswers.get(GuarantorRequiredPage) match {
+    val value = GuarantorRequiredPage.value match {
       case Some(answer) => if (answer) "site.yes" else "site.no"
       case None => "site.notProvided"
     }

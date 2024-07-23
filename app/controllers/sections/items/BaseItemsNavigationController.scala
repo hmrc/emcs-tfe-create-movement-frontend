@@ -51,7 +51,7 @@ trait BaseItemsNavigationController extends BaseNavigationController {
   }
 
   def withGoodsType(idx: Index)(f: GoodsType => Result)(implicit request: DataRequest[_]): Result =
-    request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
+    ItemExciseProductCodePage(idx).value match {
       case Some(epc) =>
         f(GoodsType.apply(epc))
       case None =>
@@ -59,7 +59,7 @@ trait BaseItemsNavigationController extends BaseNavigationController {
     }
 
   def withGoodsTypeAsync(idx: Index)(f: GoodsType => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
-    request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
+    ItemExciseProductCodePage(idx).value match {
       case Some(epc) =>
         f(GoodsType.apply(epc))
       case None =>
@@ -67,13 +67,13 @@ trait BaseItemsNavigationController extends BaseNavigationController {
     }
 
   def withExciseProductCode(idx: Index)(f: String => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
-    request.userAnswers.get(ItemExciseProductCodePage(idx)) match {
+    ItemExciseProductCodePage(idx).value match {
       case Some(epc) => f(epc)
       case None => Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
     }
 
   def withItemBulkPackaging(itemIdx: Index)(f: String => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
-    request.userAnswers.get(ItemBulkPackagingSelectPage(itemIdx)) match {
+    ItemBulkPackagingSelectPage(itemIdx).value match {
       case Some(itemPackaging) =>
         f(itemPackaging.description)
       case None =>
@@ -81,7 +81,7 @@ trait BaseItemsNavigationController extends BaseNavigationController {
     }
 
   def withItemPackaging(itemIdx: Index, packagingIdx: Index)(f: String => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
-    request.userAnswers.get(ItemSelectPackagingPage(itemIdx, packagingIdx)) match {
+    ItemSelectPackagingPage(itemIdx, packagingIdx).value match {
       case Some(itemPackaging) =>
         f(itemPackaging.description)
       case None =>
@@ -89,17 +89,17 @@ trait BaseItemsNavigationController extends BaseNavigationController {
     }
 
   def withItemPackagingQuantity(itemsIdx: Index, packagingIdx: Index)(f: String => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
-    request.userAnswers.get(ItemPackagingQuantityPage(itemsIdx, packagingIdx)) match {
+    ItemPackagingQuantityPage(itemsIdx, packagingIdx).value match {
       case Some(quantity) => f(quantity)
       case None => Future.successful(Redirect(routes.ItemsPackagingIndexController.onPageLoad(request.ern, request.draftId, itemsIdx)))
     }
   }
 
   def removingAnyItemsWithoutEPCandCnCode(request: DataRequest[_])(f: DataRequest[_] => Future[Result]): Future[Result] =
-    request.userAnswers.get(ItemsCount).fold(f(request)) { count =>
-
+    request.userAnswers.getCount(ItemsCount).fold(f(request)) { count =>
+      implicit val r: DataRequest[_] = request
       val indexesOfItemsToBeRemoved = (0 until count).map(Index(_)).collect {
-        case idx if request.userAnswers.get(ItemExciseProductCodePage(idx)).isEmpty || request.userAnswers.get(ItemCommodityCodePage(idx)).isEmpty =>
+        case idx if ItemExciseProductCodePage(idx).value.isEmpty || ItemCommodityCodePage(idx).value.isEmpty =>
           idx
       }
 

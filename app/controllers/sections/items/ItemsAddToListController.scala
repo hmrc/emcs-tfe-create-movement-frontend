@@ -101,14 +101,14 @@ class ItemsAddToListController @Inject()(
   }
 
   private def onMax[T](maxF: => T, notMaxF: => T)(implicit request: DataRequest[_]): T = {
-    request.userAnswers.get(ItemsCount) match {
+    request.userAnswers.getCount(ItemsCount) match {
       case Some(value) if value >= ItemsSectionItems.MAX => maxF
       case _ => notMaxF
     }
   }
 
   private def withAtLeastOneItem(f: => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
-    request.userAnswers.get(ItemsCount) match {
+    request.userAnswers.getCount(ItemsCount) match {
       case Some(value) if value > 0 => f
       case _ => Future.successful(Redirect(routes.ItemsIndexController.onPageLoad(request.ern, request.draftId)))
     }

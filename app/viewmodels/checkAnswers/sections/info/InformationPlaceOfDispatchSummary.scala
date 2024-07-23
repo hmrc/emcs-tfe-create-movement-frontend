@@ -28,7 +28,7 @@ object InformationPlaceOfDispatchSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    request.userAnswers.get(DispatchPlacePage).map { dispatchPlace =>
+    DispatchPlacePage.value.map { dispatchPlace =>
 
       val value: String = messages(s"dispatchPlace.$dispatchPlace")
 

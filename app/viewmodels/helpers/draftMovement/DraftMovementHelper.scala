@@ -55,7 +55,7 @@ class DraftMovementHelper @Inject()(list: list, p: p) extends Logging {
     def dispatchPlaceHeading(dispatchPlace: DispatchPlace, destinationType: MovementScenario): String =
       messages("draftMovement.heading.dispatchPlaceTo", messages(s"dispatchPlace.$dispatchPlace"), messages(Seq(s"draftMovement.heading.$destinationType", s"destinationType.$destinationType")))
 
-    (request.userTypeFromErn, request.userAnswers.get(DestinationTypePage)) match {
+    (request.userTypeFromErn, DestinationTypePage.value) match {
       case (GreatBritainWarehouseKeeper, Some(UkTaxWarehouse.GB)) =>
         messages("draftMovement.heading.gbTaxWarehouseTo", messages(Seq(s"draftMovement.heading.${UkTaxWarehouse.GB}", s"destinationType.${UkTaxWarehouse.GB}")))
 
@@ -63,7 +63,7 @@ class DraftMovementHelper @Inject()(list: list, p: p) extends Logging {
         messages("draftMovement.heading.gbTaxWarehouseTo", messages(Seq(s"draftMovement.heading.${UkTaxWarehouse.NI}", s"destinationType.${UkTaxWarehouse.NI}")))
 
       case (NorthernIrelandWarehouseKeeper, Some(destinationType@(UkTaxWarehouse.GB | UkTaxWarehouse.NI | EuTaxWarehouse | DirectDelivery | RegisteredConsignee | TemporaryRegisteredConsignee | ExemptedOrganisation | UnknownDestination))) =>
-        request.userAnswers.get(DispatchPlacePage) match {
+        DispatchPlacePage.value match {
           case Some(dispatchPlace) =>
             dispatchPlaceHeading(dispatchPlace, destinationType)
           case None =>

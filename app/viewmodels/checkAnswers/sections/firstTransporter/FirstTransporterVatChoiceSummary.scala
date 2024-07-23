@@ -27,7 +27,7 @@ import viewmodels.implicits._
 object FirstTransporterVatChoiceSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    request.userAnswers.get(FirstTransporterVatPage).map { vatModel =>
+    FirstTransporterVatPage.value.map { vatModel =>
       val value = if (vatModel.hasVatNumber) "site.yes" else "site.no"
       SummaryListRowViewModel(
         key = "firstTransporterVat.hasVat.checkYourAnswers.label",

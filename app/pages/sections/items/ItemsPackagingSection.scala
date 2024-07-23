@@ -28,7 +28,7 @@ case class ItemsPackagingSection(itemIndex: Index) extends Section[JsObject] {
   val MAX: Int = 99
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    request.userAnswers.get(ItemsPackagingCount(itemIndex)) match {
+    request.userAnswers.getCount(ItemsPackagingCount(itemIndex)) match {
       case Some(0) | None => NotStarted
       case Some(count) =>
         val statuses: Seq[TaskListStatus] = (0 until count).map(ItemsPackagingSectionItems(itemIndex, _).status)

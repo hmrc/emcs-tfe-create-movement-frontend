@@ -37,7 +37,7 @@ class SadNavigator @Inject() extends BaseNavigator {
     case SadAddToListPage => (answers: UserAnswers) =>
       answers.get(SadAddToListPage) match {
         case Some(SadAddToListModel.Yes) =>
-          sadRoutes.ImportNumberController.onPageLoad(answers.ern, answers.draftId, Index(answers.get(SadCount).getOrElse(0)), NormalMode)
+          sadRoutes.ImportNumberController.onPageLoad(answers.ern, answers.draftId, Index(answers.getCount(SadCount).getOrElse(0)), NormalMode)
         case Some(SadAddToListModel.NoMoreToCome) =>
           routes.DraftMovementController.onPageLoad(answers.ern, answers.draftId)
         case _ =>

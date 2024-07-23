@@ -92,9 +92,9 @@ object ItemSmallIndependentProducerHelper {
 
   def constructDeclarationPrefix(itemIndex: Index)(implicit request: DataRequest[_], messages: Messages): String =
     (
-      request.userAnswers.get(DestinationTypePage),
-      request.userAnswers.get(ItemExciseProductCodePage(itemIndex)),
-      request.userAnswers.get(ItemCommodityCodePage(itemIndex))
+      DestinationTypePage.value,
+      ItemExciseProductCodePage(itemIndex).value,
+      ItemCommodityCodePage(itemIndex).value
     ) match {
       case (Some(UkTaxWarehouse.GB | UkTaxWarehouse.NI | ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu), _, _) =>
         messages("itemSmallIndependentProducer.certifiedStatement.smallProducer")

@@ -57,7 +57,7 @@ class ItemSelectPackagingController @Inject()(
             val selectItems = SelectItemHelper.constructSelectItems(
               selectOptions = nonCountablePackagingTypes,
               defaultTextMessageKey = "itemSelectPackaging.select.defaultValue",
-              existingAnswer = request.userAnswers.get(ItemSelectPackagingPage(itemsIndex, packagingIdx)).map(_.code)
+              existingAnswer = ItemSelectPackagingPage(itemsIndex, packagingIdx).value.map(_.code)
             )
             renderView(Ok, fillForm(ItemSelectPackagingPage(itemsIndex, packagingIdx), formProvider(itemsIndex, nonCountablePackagingTypes)),
               itemsIndex, packagingIdx, goodsType, selectItems, mode)

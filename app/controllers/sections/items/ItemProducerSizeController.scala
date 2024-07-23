@@ -75,8 +75,8 @@ class ItemProducerSizeController @Inject()(
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)
                         (implicit request: DataRequest[_]): Result = withGoodsType(idx) { goodsType =>
 
-    val destinationType = request.userAnswers.get(DestinationTypePage)
-    val itemExciseProductCode = request.userAnswers.get(ItemExciseProductCodePage(idx))
+    val destinationType = DestinationTypePage.value
+    val itemExciseProductCode = ItemExciseProductCodePage(idx).value
 
     val showAlcoholProductionContent = destinationType.contains(UkTaxWarehouse.GB) || itemExciseProductCode.exists(Seq("S300", "S500").contains(_))
 

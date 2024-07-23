@@ -33,7 +33,7 @@ object TransportArrangerAddressSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
-    val transportArranger = request.userAnswers.get(TransportArrangerPage)
+    val transportArranger = TransportArrangerPage.value
 
     val addressPage: QuestionPage[UserAddress] = transportArranger match {
       case Some(Consignor) => ConsignorAddressPage
@@ -43,7 +43,7 @@ object TransportArrangerAddressSummary {
 
     val showChangeLink: Boolean = transportArranger.contains(GoodsOwner) || transportArranger.contains(Other)
 
-    val value: Content = request.userAnswers.get(addressPage).fold[Content] {
+    val value: Content = addressPage.value.fold[Content] {
       transportArranger match {
         case Some(Consignor) => Text(messages("transportArrangerAddress.checkYourAnswers.notProvided", messages(s"transportArranger.$Consignor")))
         case Some(Consignee) => Text(messages("transportArrangerAddress.checkYourAnswers.notProvided", messages(s"transportArranger.$Consignee")))

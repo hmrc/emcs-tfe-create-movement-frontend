@@ -26,7 +26,7 @@ case object DocumentsSectionUnits extends Section[JsArray] {
   override val toString: String = "units"
   override val path: JsPath = DocumentsSection.path \ toString
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = request.userAnswers.get(DocumentsCount) match {
+  override def status(implicit request: DataRequest[_]): TaskListStatus = request.userAnswers.getCount(DocumentsCount) match {
     case Some(0) | None => NotStarted
     case Some(count) =>
       val statuses: Seq[TaskListStatus] = (0 until count).map(value => DocumentSection(value).status)

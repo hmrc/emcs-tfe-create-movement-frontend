@@ -21,11 +21,9 @@ import fixtures.messages.sections.guarantor.GuarantorArrangerMessages
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages.ViewMessages
 import models.CheckMode
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
-import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheUk, UkTaxWarehouse}
-import models.sections.journeyType.HowMovementTransported.AirTransport
+import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheUk, UkTaxWarehouse}
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import pages.sections.info.DestinationTypePage
-import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Key, Value}

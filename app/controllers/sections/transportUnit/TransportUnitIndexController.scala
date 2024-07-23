@@ -42,7 +42,7 @@ class TransportUnitIndexController @Inject()(
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      (request.userAnswers.get(TransportUnitsCount), request.userAnswers.get(HowMovementTransportedPage)) match {
+      (request.userAnswers.getCount(TransportUnitsCount), HowMovementTransportedPage.value) match {
         case (_, Some(FixedTransportInstallations)) => Redirect(
           controllers.sections.transportUnit.routes.TransportUnitCheckAnswersController.onPageLoad(request.ern, request.draftId)
         )

@@ -28,7 +28,7 @@ case object ImportInformationSection extends Section[JsObject] {
   override def status(implicit request: DataRequest[_]): TaskListStatus =
     if (ImportCustomsOfficeCodePage.isMovementSubmissionError) {
       UpdateNeeded
-    } else if (request.userAnswers.get(ImportCustomsOfficeCodePage).nonEmpty) {
+    } else if (ImportCustomsOfficeCodePage.value.nonEmpty) {
       Completed
     } else {
       NotStarted

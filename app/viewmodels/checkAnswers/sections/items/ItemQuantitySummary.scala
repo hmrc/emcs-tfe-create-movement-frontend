@@ -37,7 +37,7 @@ class ItemQuantitySummary @Inject()(tagHelper: TagHelper) {
     lazy val page = ItemQuantityPage(idx)
     lazy val hasUnfixedQuantityError = page.isMovementSubmissionError
 
-    request.userAnswers.get(page).map {
+    page.value.map {
       answer =>
         SummaryListRowViewModel(
           key = s"$page.checkYourAnswersLabel",

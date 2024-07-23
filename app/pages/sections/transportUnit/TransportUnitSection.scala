@@ -27,9 +27,9 @@ case class TransportUnitSection(transportUnitIndex: Index) extends Section[JsObj
   override val path: JsPath = TransportUnitsSectionUnits.path \ transportUnitIndex.position
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    val unitTypeAnswer = request.userAnswers.get(TransportUnitTypePage(transportUnitIndex))
-    val identityAnswer = request.userAnswers.get(TransportUnitIdentityPage(transportUnitIndex))
-    val sealChoiceAnswer = request.userAnswers.get(TransportSealChoicePage(transportUnitIndex))
+    val unitTypeAnswer = TransportUnitTypePage(transportUnitIndex).value
+    val identityAnswer = TransportUnitIdentityPage(transportUnitIndex).value
+    val sealChoiceAnswer = TransportSealChoicePage(transportUnitIndex).value
 
     (unitTypeAnswer, identityAnswer, sealChoiceAnswer) match {
       case (Some(FixedTransport), _, _) => Completed
@@ -49,7 +49,7 @@ case class TransportUnitSection(transportUnitIndex: Index) extends Section[JsObj
   }
 
   private def sealPagesAreCompleted(sealChoiceAnswer: Boolean)(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.get(TransportSealTypePage(transportUnitIndex)) match {
+    TransportSealTypePage(transportUnitIndex).value match {
       case Some(_) if sealChoiceAnswer => true
       case _ if !sealChoiceAnswer => true
       case _ => false

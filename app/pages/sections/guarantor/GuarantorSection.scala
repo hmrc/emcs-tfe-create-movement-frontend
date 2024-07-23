@@ -28,13 +28,13 @@ case object GuarantorSection extends Section[JsObject] {
   //noinspection ScalaStyle
   override def status(implicit request: DataRequest[_]): TaskListStatus =
     if(GuarantorRequiredPage.isRequired()) {
-      if (request.userAnswers.get(GuarantorArrangerPage).nonEmpty) {
+      if (GuarantorArrangerPage.value.nonEmpty) {
         guarantorStatus
       } else {
         NotStarted
       }
     } else {
-      request.userAnswers.get(GuarantorRequiredPage) match {
+      GuarantorRequiredPage.value match {
         case Some(true) => guarantorStatus
         case Some(false) => Completed
         case None => NotStarted
@@ -42,13 +42,13 @@ case object GuarantorSection extends Section[JsObject] {
     }
 
   private def guarantorStatus(implicit request: DataRequest[_]): TaskListStatus = {
-    request.userAnswers.get(GuarantorArrangerPage) match {
+    GuarantorArrangerPage.value match {
       case Some(Consignee) | Some(Consignor) => Completed
       case Some(_) =>
         if (
-          request.userAnswers.get(GuarantorNamePage).nonEmpty &&
-            request.userAnswers.get(GuarantorVatPage).nonEmpty &&
-            request.userAnswers.get(GuarantorAddressPage).nonEmpty) {
+          GuarantorNamePage.value.nonEmpty &&
+            GuarantorVatPage.value.nonEmpty &&
+            GuarantorAddressPage.value.nonEmpty) {
           Completed
         } else {
           InProgress

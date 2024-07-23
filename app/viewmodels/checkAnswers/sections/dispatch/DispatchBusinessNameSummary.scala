@@ -28,10 +28,10 @@ import viewmodels.implicits._
 object DispatchBusinessNameSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
-    request.userAnswers.get(DispatchUseConsignorDetailsPage) match {
+    DispatchUseConsignorDetailsPage.value match {
       case Some(true) => renderRow(request.traderKnownFacts.traderName, withChangeLink = false)
       case _ =>
-        request.userAnswers.get(DispatchBusinessNamePage) match {
+        DispatchBusinessNamePage.value match {
           case Some(name) => renderRow(name)
           case _ => renderRow(messages("site.notProvided"))
         }

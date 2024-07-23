@@ -35,8 +35,8 @@ object GuarantorAddressSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    val guarantorArrangerAnswer = request.userAnswers.get(GuarantorArrangerPage)
-    val guarantorRequiredAnswerIsTrue = request.userAnswers.get(GuarantorRequiredPage).contains(true)
+    val guarantorArrangerAnswer = GuarantorArrangerPage.value
+    val guarantorRequiredAnswerIsTrue = GuarantorRequiredPage.value.contains(true)
     val isAlwaysRequired = GuarantorRequiredPage.isRequired()
     val showSummaryRow = guarantorRequiredAnswerIsTrue || isAlwaysRequired
 
@@ -56,7 +56,7 @@ object GuarantorAddressSummary {
 
     val showChangeLink: Boolean = guarantorArranger == GoodsOwner || guarantorArranger == Transporter
 
-    val value: Content = request.userAnswers.get(addressPage).fold[Content] {
+    val value: Content = addressPage.value.fold[Content] {
       guarantorArranger match {
         case Consignor => Text(messages("address.guarantorAddress.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignor")))
         case Consignee => Text(messages("address.guarantorAddress.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignee")))

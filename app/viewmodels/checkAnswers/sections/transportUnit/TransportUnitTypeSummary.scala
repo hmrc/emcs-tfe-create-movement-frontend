@@ -28,7 +28,7 @@ import viewmodels.implicits._
 object TransportUnitTypeSummary {
 
   def row(idx: Index, sectionComplete: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(TransportUnitTypePage(idx)).map {
+    TransportUnitTypePage(idx).value.map {
       answer =>
         SummaryListRowViewModel(
           key = "transportUnitType.addToListLabel",
@@ -48,7 +48,7 @@ object TransportUnitTypeSummary {
     }
 
   def checkYourAnswersRow(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(TransportUnitTypePage(idx)).map {
+    TransportUnitTypePage(idx).value.map {
       answer => {
         SummaryListRowViewModel(
           key = "transportUnitType.checkYourAnswersLabel",

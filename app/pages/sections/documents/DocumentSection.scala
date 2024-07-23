@@ -28,8 +28,8 @@ case class DocumentSection(idx: Index) extends Section[JsObject] {
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
     (
-      request.userAnswers.get(DocumentTypePage(idx)),
-      request.userAnswers.get(DocumentReferencePage(idx))
+      DocumentTypePage(idx).value,
+      DocumentReferencePage(idx).value
     ) match {
       case (Some(_), Some(_)) => Completed
       case (None, None) => NotStarted

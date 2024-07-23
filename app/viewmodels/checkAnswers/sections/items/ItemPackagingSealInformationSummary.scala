@@ -32,7 +32,7 @@ import javax.inject.Inject
 class ItemPackagingSealInformationSummary @Inject()(link: views.html.components.link) {
 
   def row(itemIdx: Index, packagingIdx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ItemPackagingSealTypePage(itemIdx, packagingIdx)).map(_.optSealInformation match {
+    ItemPackagingSealTypePage(itemIdx, packagingIdx).value.map(_.optSealInformation match {
       case Some(info) =>
         SummaryListRowViewModel(
           key = "itemPackagingSealType.sealInformation.checkYourAnswersLabel",

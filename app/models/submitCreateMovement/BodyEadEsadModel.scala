@@ -91,19 +91,19 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
   }
 
   private[submitCreateMovement] def designationOfOrigin(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[String] =
-    request.userAnswers.get(ItemDesignationOfOriginPage(idx)) match {
+    ItemDesignationOfOriginPage(idx).value match {
       case Some(designationOfOrigin) => Some(designationOfOriginAnswer(answer = designationOfOrigin))
       case _ => None
     }
 
   private[submitCreateMovement] def smallIndependentProducer(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[String] =
-    request.userAnswers.get(ItemSmallIndependentProducerPage(idx)) match {
+    ItemSmallIndependentProducerPage(idx).value match {
       case Some(smallIndependentProducer) => Some(smallIndependentProducerAnswer(idx, smallIndependentProducer))
       case _ => None
     }
 
   def apply(implicit request: DataRequest[_], messages: Messages): Seq[BodyEadEsadModel] = {
-    request.userAnswers.get(ItemsCount) match {
+    request.userAnswers.getCount(ItemsCount) match {
       case Some(0) | None =>
         logger.error("ItemsSection should contain at least one item")
         throw MissingMandatoryPage("ItemsSection should contain at least one item")
@@ -125,17 +125,17 @@ object BodyEadEsadModel extends ModelConstructorHelpers with Logging {
                 quantity = mandatoryPage(ItemQuantityPage(idx)),
                 grossMass = netGrossMass.grossMass,
                 netMass = netGrossMass.netMass,
-                alcoholicStrengthByVolumeInPercentage = request.userAnswers.get(ItemAlcoholStrengthPage(idx)),
-                degreePlato = request.userAnswers.get(ItemDegreesPlatoPage(idx)).flatMap(_.degreesPlato),
-                fiscalMark = request.userAnswers.get(ItemFiscalMarksPage(idx)),
-                fiscalMarkUsedFlag = request.userAnswers.get(ItemFiscalMarksChoicePage(idx)),
+                alcoholicStrengthByVolumeInPercentage = ItemAlcoholStrengthPage(idx).value,
+                degreePlato = ItemDegreesPlatoPage(idx).value.flatMap(_.degreesPlato),
+                fiscalMark = ItemFiscalMarksPage(idx).value,
+                fiscalMarkUsedFlag = ItemFiscalMarksChoicePage(idx).value,
                 designationOfOrigin = designationOfOrigin(idx),
                 independentSmallProducersDeclaration = smallIndependentProducer(idx),
-                sizeOfProducer = request.userAnswers.get(ItemProducerSizePage(idx)),
-                density = request.userAnswers.get(ItemDensityPage(idx)),
-                commercialDescription = request.userAnswers.get(ItemCommercialDescriptionPage(idx)),
+                sizeOfProducer = ItemProducerSizePage(idx).value,
+                density = ItemDensityPage(idx).value,
+                commercialDescription = ItemCommercialDescriptionPage(idx).value,
                 brandNameOfProducts = mandatoryPage(ItemBrandNamePage(idx)).brandName,
-                maturationPeriodOrAgeOfProducts = request.userAnswers.get(ItemMaturationPeriodAgePage(idx)).flatMap(_.maturationPeriodAge),
+                maturationPeriodOrAgeOfProducts = ItemMaturationPeriodAgePage(idx).value.flatMap(_.maturationPeriodAge),
                 packages = if (packagingIsBulk) PackageModel.applyBulkPackaging(idx) else PackageModel.applyIndividualPackaging(idx),
                 wineProduct = WineProductModel.applyAtIdx(idx)
               )

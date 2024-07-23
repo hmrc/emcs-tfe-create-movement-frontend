@@ -41,7 +41,7 @@ object ItemBrandNameSummary {
       ).withVisuallyHiddenText(messages(s"$page.change.hidden")))
     )
 
-    request.userAnswers.get(ItemBrandNamePage(idx)).map {
+    ItemBrandNamePage(idx).value.map {
       answer =>
         if (answer.hasBrandName) {
           answer

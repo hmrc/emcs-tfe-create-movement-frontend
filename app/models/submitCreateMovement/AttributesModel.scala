@@ -40,6 +40,6 @@ object AttributesModel extends ModelConstructorHelpers {
 
   def apply(implicit request: DataRequest[_]): AttributesModel = AttributesModel(
     submissionMessageType = deriveSubmissionMessageType(request.ern),
-    deferredSubmissionFlag = request.userAnswers.get(DeferredMovementPage())
+    deferredSubmissionFlag = DeferredMovementPage().value
   )
 }

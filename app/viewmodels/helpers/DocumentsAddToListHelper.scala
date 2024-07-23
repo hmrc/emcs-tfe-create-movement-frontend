@@ -37,7 +37,7 @@ class DocumentsAddToListHelper @Inject()(tagHelper: TagHelper, span: views.html.
 
 
   def allDocumentsSummary()(implicit request: DataRequest[_], messages: Messages): Seq[SummaryList] = {
-    request.userAnswers.get(DocumentsCount) match {
+    request.userAnswers.getCount(DocumentsCount) match {
       case Some(value) => (0 until value).map(int => summaryList(Index(int)))
       case None => Nil
     }

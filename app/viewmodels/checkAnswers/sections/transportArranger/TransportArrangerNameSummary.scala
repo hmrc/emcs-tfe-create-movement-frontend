@@ -33,7 +33,7 @@ object TransportArrangerNameSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
-    val transportArranger: Option[TransportArranger] = request.userAnswers.get(TransportArrangerPage)
+    val transportArranger: Option[TransportArranger] = TransportArrangerPage.value
 
     val showChangeLink: Boolean = transportArranger.contains(GoodsOwner) || transportArranger.contains(Other)
 
@@ -58,13 +58,13 @@ object TransportArrangerNameSummary {
   private[transportArranger] def transportArrangerNameValue(transportArranger: Option[TransportArranger])(implicit request: DataRequest[_], messages: Messages): String = {
     transportArranger match {
       case Some(Consignor) => request.traderKnownFacts.traderName
-      case Some(Consignee) => request.userAnswers.get(ConsigneeBusinessNamePage).map(HtmlFormat.escape(_).toString()).getOrElse(
+      case Some(Consignee) => ConsigneeBusinessNamePage.value.map(HtmlFormat.escape(_).toString()).getOrElse(
         messages("transportArrangerName.checkYourAnswers.notProvided", messages(s"transportArranger.$Consignee"))
       )
-      case Some(arranger) => request.userAnswers.get(TransportArrangerNamePage).map(HtmlFormat.escape(_).toString()).getOrElse(
+      case Some(arranger) => TransportArrangerNamePage.value.map(HtmlFormat.escape(_).toString()).getOrElse(
         messages("transportArrangerName.checkYourAnswers.notProvided", messages(s"transportArranger.$arranger"))
       )
-      case _ => request.userAnswers.get(TransportArrangerNamePage).map(HtmlFormat.escape(_).toString()).getOrElse(messages("site.notProvided"))
+      case _ => TransportArrangerNamePage.value.map(HtmlFormat.escape(_).toString()).getOrElse(messages("site.notProvided"))
     }
   }
 }

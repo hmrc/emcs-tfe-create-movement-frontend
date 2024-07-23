@@ -30,7 +30,7 @@ import viewmodels.implicits._
 object TransportSealTypeSummary {
 
   def row(idx: Index, sectionComplete: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    request.userAnswers.get(TransportSealChoicePage(idx)).filter(identity).map { _ =>
+    TransportSealChoicePage(idx).value.filter(identity).map { _ =>
       SummaryListRowViewModel(
         key = "transportSealType.sealType.checkYourAnswersLabel",
         value = ValueViewModel(getValue(idx)),
@@ -50,5 +50,5 @@ object TransportSealTypeSummary {
   }
 
   private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =
-    request.userAnswers.get(TransportSealTypePage(idx)).fold(Text(messages("site.notProvided")))(answer => HtmlFormat.escape(answer.sealType).toString())
+    TransportSealTypePage(idx).value.fold(Text(messages("site.notProvided")))(answer => HtmlFormat.escape(answer.sealType).toString())
 }

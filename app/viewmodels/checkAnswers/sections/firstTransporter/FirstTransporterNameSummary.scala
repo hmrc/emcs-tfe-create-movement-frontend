@@ -35,7 +35,7 @@ object FirstTransporterNameSummary {
 
     SummaryListRowViewModel(
       key = "firstTransporterName.checkYourAnswers.label",
-      value = ValueViewModel(Text(request.userAnswers.get(namePage).map(HtmlFormat.escape(_).toString).getOrElse(messages("site.notProvided")))),
+      value = ValueViewModel(Text(namePage.value.map(HtmlFormat.escape(_).toString).getOrElse(messages("site.notProvided")))),
       actions = Seq(
         ActionItemViewModel(
           content = "site.change",

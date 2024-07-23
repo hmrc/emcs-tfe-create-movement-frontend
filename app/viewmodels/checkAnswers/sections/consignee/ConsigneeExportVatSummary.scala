@@ -28,7 +28,7 @@ import viewmodels.implicits._
 object ConsigneeExportVatSummary {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ConsigneeExportVatPage).map {
+    ConsigneeExportVatPage.value.map {
       answer =>
 
         SummaryListRowViewModel(

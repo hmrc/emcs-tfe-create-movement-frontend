@@ -31,7 +31,7 @@ import javax.inject.Inject
 class SadAddToListHelper @Inject()() {
 
   def allSadSummary()(implicit request: DataRequest[_], messages: Messages): Seq[SummaryList] = {
-    request.userAnswers.get(SadCount) match {
+    request.userAnswers.getCount(SadCount) match {
       case Some(value) => (0 until value).map(int => summaryList(Index(int)))
       case None => Nil
     }

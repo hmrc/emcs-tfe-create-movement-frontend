@@ -33,7 +33,7 @@ class ItemBulkPackagingSealTypeSummary @Inject()(link: link) {
 
   def rows(idx: Index)(implicit request: DataRequest[_], messages: Messages): Seq[SummaryListRow] = {
 
-    request.userAnswers.get(ItemBulkPackagingSealTypePage(idx)).map {
+    ItemBulkPackagingSealTypePage(idx).value.map {
       value =>
         Seq(
           SummaryListRowViewModel(

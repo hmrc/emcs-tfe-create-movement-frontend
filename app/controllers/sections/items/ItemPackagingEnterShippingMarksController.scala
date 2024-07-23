@@ -81,7 +81,7 @@ class ItemPackagingEnterShippingMarksController @Inject()(
 
   private[items] def updateAllShippingMarksToNewValueAndReturnUpdatedUserAnswers(itemsIdx: Index, packagingIdx: Index, newValue: String)
                                                                              (implicit request: DataRequest[_]): UserAnswers =
-    request.userAnswers.get(ItemPackagingShippingMarksPage(itemsIdx, packagingIdx)) match {
+    ItemPackagingShippingMarksPage(itemsIdx, packagingIdx).value match {
       case Some(currentAnswer) => {
         ItemsSection.retrieveShippingMarkLocationsMatching(currentAnswer).foldLeft(request.userAnswers) {
           case (currentUserAnswers, (ii, pi)) =>

@@ -30,7 +30,7 @@ object ItemBulkPackagingChoiceSummary {
 
   def row(idx: Index, goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     val page = ItemBulkPackagingChoicePage(idx)
-    request.userAnswers.get(page).map {
+    page.value.map {
       answer =>
 
         val value = if (answer) "site.yes" else "site.no"

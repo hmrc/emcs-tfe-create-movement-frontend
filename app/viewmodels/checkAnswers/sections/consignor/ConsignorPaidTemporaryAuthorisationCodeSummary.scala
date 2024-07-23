@@ -28,7 +28,7 @@ import viewmodels.implicits._
 object ConsignorPaidTemporaryAuthorisationCodeSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ConsignorPaidTemporaryAuthorisationCodePage).flatMap { ptaCode =>
+    ConsignorPaidTemporaryAuthorisationCodePage.value.flatMap { ptaCode =>
       Option.when(request.userTypeFromErn == NorthernIrelandTemporaryCertifiedConsignor) {
         SummaryListRowViewModel(
           key = "checkYourAnswersConsignor.paidTemporaryAuthorisationCode",

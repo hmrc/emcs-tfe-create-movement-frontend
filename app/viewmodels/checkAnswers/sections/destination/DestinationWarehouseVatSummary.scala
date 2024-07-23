@@ -32,7 +32,7 @@ object DestinationWarehouseVatSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    val wasShownVatPage: Option[Boolean] = request.userAnswers.get(DestinationTypePage).map(
+    val wasShownVatPage: Option[Boolean] = DestinationTypePage.value.map(
       Seq(
         RegisteredConsignee,
         TemporaryRegisteredConsignee,
@@ -42,7 +42,7 @@ object DestinationWarehouseVatSummary {
       ).contains(_)
     )
 
-    val vatPageAnswer: Option[String] = request.userAnswers.get(DestinationWarehouseVatPage)
+    val vatPageAnswer: Option[String] = DestinationWarehouseVatPage.value
 
     val answer = (wasShownVatPage, vatPageAnswer) match {
       case (_, Some(answer)) => Some(HtmlFormat.escape(answer).toString())

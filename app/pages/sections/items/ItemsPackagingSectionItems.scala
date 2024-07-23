@@ -27,12 +27,12 @@ case class ItemsPackagingSectionItems(itemsIndex: Index, packagingIndex: Index) 
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
     (
-      request.userAnswers.get(ItemSelectPackagingPage(itemsIndex, packagingIndex)),
-      request.userAnswers.get(ItemPackagingQuantityPage(itemsIndex, packagingIndex)),
-      request.userAnswers.get(ItemPackagingShippingMarksChoicePage(itemsIndex, packagingIndex)),
-      request.userAnswers.get(ItemPackagingShippingMarksPage(itemsIndex, packagingIndex)),
-      request.userAnswers.get(ItemPackagingSealChoicePage(itemsIndex, packagingIndex)),
-      request.userAnswers.get(ItemPackagingSealTypePage(itemsIndex, packagingIndex))
+      ItemSelectPackagingPage(itemsIndex, packagingIndex).value,
+      ItemPackagingQuantityPage(itemsIndex, packagingIndex).value,
+      ItemPackagingShippingMarksChoicePage(itemsIndex, packagingIndex).value,
+      ItemPackagingShippingMarksPage(itemsIndex, packagingIndex).value,
+      ItemPackagingSealChoicePage(itemsIndex, packagingIndex).value,
+      ItemPackagingSealTypePage(itemsIndex, packagingIndex).value
     ) match {
       case (Some(_), Some(_), Some(false), _, Some(false), _) => Completed
       case (Some(_), Some(_), Some(false), _, Some(true), Some(_)) => Completed

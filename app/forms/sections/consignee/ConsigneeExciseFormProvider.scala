@@ -57,7 +57,7 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
   def validateErn(implicit request: DataRequest[_]): Constraint[String] =
     Constraint {
       case ern if DestinationTypePage.value.contains(UkTaxWarehouse.GB) =>
-        if (ern.startsWith(Constants.GBWK_PREFIX)) Valid else Invalid("consigneeExcise.error.mustStartWithGBWK")
+        if (ern.startsWith(Constants.GBWK_PREFIX) || ern.startsWith(Constants.XIWK_PREFIX)) Valid else Invalid("consigneeExcise.error.mustStartWithGBWKorXIWK")
 
       case ern if DestinationTypePage.value.contains(UkTaxWarehouse.NI) =>
         if (ern.startsWith(Constants.XIWK_PREFIX)) Valid else Invalid("consigneeExcise.error.mustStartWithXIWK")

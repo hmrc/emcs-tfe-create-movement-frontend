@@ -180,12 +180,12 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
 
       val form = new ConsigneeExciseFormProvider().apply()(gbTaxWarehouseDestination)
 
-      "when ERN does not start with GBWK" - {
+      "when ERN does not start with GBWK or XIWK" - {
 
         "must return an error with correct message" in {
 
-          val boundForm = form.bind(Map(fieldName -> testNorthernIrelandErn))
-          boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.mustStartWithGBWK", Seq()))
+          val boundForm = form.bind(Map(fieldName -> testErn))
+          boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.mustStartWithGBWKorXIWK", Seq()))
         }
       }
 
@@ -196,6 +196,16 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
           val boundForm = form.bind(Map(fieldName -> testGreatBritainWarehouseKeeperErn))
           boundForm.errors.headOption mustBe None
           boundForm.value mustBe Some(testGreatBritainWarehouseKeeperErn)
+        }
+      }
+
+      "when ERN starts with XIWK" - {
+
+        "must return success" in {
+
+          val boundForm = form.bind(Map(fieldName -> testNorthernIrelandErn))
+          boundForm.errors.headOption mustBe None
+          boundForm.value mustBe Some(testNorthernIrelandErn)
         }
       }
     }

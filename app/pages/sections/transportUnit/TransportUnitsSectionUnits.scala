@@ -43,12 +43,8 @@ case object TransportUnitsSectionUnits extends Section[JsArray] {
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
     TransportUnitsSection.canBeCompletedForTraderAndDestinationType
 
-  def containsTransportUnitType(transportUnitType: TransportUnitType)(implicit request: DataRequest[_]): Option[Boolean] =
-    request.userAnswers.get(TransportUnitsCount).map { transportUnitsCount =>
-      (0 until transportUnitsCount).exists { idx =>
-        request.userAnswers
-          .get(TransportUnitTypePage(idx))
-          .contains(transportUnitType)
-      }
+  def onlyContainsOrIsEmpty(transportUnitType: TransportUnitType*)(implicit request: DataRequest[_]): Boolean =
+    (0 until request.userAnswers.get(TransportUnitsCount).getOrElse(0)).forall { idx =>
+      TransportUnitTypePage(idx).value.exists(transportUnitType.contains)
     }
 }

@@ -78,12 +78,14 @@ case object ItemsSectionItems extends Section[JsObject] {
       case Some(count) => (0 until count).flatMap(ItemsSectionItem(_).getSubmissionFailuresForItem(isOnAddToList))
     }
 
-  def checkGoodsType(goodsTypes: Seq[GoodsType])(implicit request: DataRequest[_]): Boolean =
-    (0 until request.userAnswers.get(ItemsCount).getOrElse(0)).exists { idx =>
+  def onlyContainsOrIsEmpty(goodsTypes: GoodsType*)(implicit request: DataRequest[_]): Boolean =
+    (0 until request.userAnswers.get(ItemsCount).getOrElse(0)).forall { idx =>
       request.userAnswers
         .get(ItemExciseProductCodePage(idx))
         .exists(code => goodsTypes.contains(GoodsType.apply(code)))
     }
+
+  def isEmpty(implicit request: DataRequest[_]): Boolean = request.userAnswers.get(ItemsCount).getOrElse(0) == 0
 
   override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = getSubmissionFailuresForItems().nonEmpty
 

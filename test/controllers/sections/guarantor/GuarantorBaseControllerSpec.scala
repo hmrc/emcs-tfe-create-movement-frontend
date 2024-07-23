@@ -85,7 +85,9 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
 
     "must redirect to GuarantorIndexController" - {
 
-      "when GuarantorRequiredPage is not present in UserAnswers" in new Test(emptyUserAnswers) {
+      "when GuarantorRequiredPage is not present in UserAnswers (and Guarantor is optional)" in new Test(emptyUserAnswers
+        .set(DestinationTypePage, EuTaxWarehouse)
+      ) {
 
         val result: Future[Result] = TestController.withGuarantorRequiredAnswer(Future.successful(Ok("beans")))
 
@@ -95,7 +97,10 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
     }
     "must redirect to guarantor CYA" - {
 
-      "when guarantor is not required" in new Test(emptyUserAnswers.set(GuarantorRequiredPage, false)) {
+      "when guarantor is not required (and Guarantor is optional)" in new Test(emptyUserAnswers
+        .set(DestinationTypePage, EuTaxWarehouse)
+        .set(GuarantorRequiredPage, false)
+      ) {
 
         val result: Future[Result] = TestController.withGuarantorRequiredAnswer(Future.successful(Ok("beans")))
 

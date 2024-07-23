@@ -45,5 +45,9 @@ trait QuestionPage[+A] extends Page with Gettable[A] with Settable[A] {
       case error if possibleErrors.map(_.code).contains(error.errorType) && !error.hasBeenFixed => SubmissionError(error.errorType)
     }
 
+  def is[T >: A](t: T)(implicit request: DataRequest[_], reads: Reads[T]): Boolean = value[T].contains(t)
+
   def value[T >: A](implicit request: DataRequest[_], reads: Reads[T]): Option[T] = request.userAnswers.get[T](this)
+
+  def isEmpty[T >: A](implicit request: DataRequest[_], reads: Reads[T]): Boolean = value[T].isEmpty
 }

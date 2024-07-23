@@ -26,10 +26,8 @@ import viewmodels.implicits._
 
 object GuarantorRequiredSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    val guarantorAlwaysRequired = GuarantorRequiredPage.isRequired()
-    if(guarantorAlwaysRequired) None else Some(renderSummary)
-  }
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    Option.when(!GuarantorRequiredPage.isRequired())(renderSummary)
 
   private def renderSummary(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 

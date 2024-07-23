@@ -233,7 +233,6 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
       "must return the user answers with the guarantor section removed" - {
         "when ExciseProductCodeRules.GBNoGuarantorRules.shouldResetGuarantorSectionOnSubmission returns true" in new Fixture(Some(
           emptyUserAnswers
-            .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
             .set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB)
             .set(GuarantorRequiredPage, false)
         )) {
@@ -241,11 +240,10 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
 
           val result: UserAnswers = controller.userAnswersWithGuarantorSectionMaybeRemoved(userAnswers.get, testEpcTobacco)
 
-          result mustBe emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco).set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB)
+          result mustBe emptyUserAnswers.set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB)
         }
         "when ExciseProductCodeRules.NINoGuarantorRules.shouldResetGuarantorSectionOnSubmission returns true" in new Fixture(Some(
           emptyUserAnswers
-            .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
             .set(DestinationTypePage, MovementScenario.DirectDelivery)
             .set(GuarantorRequiredPage, false)
         )) {
@@ -253,7 +251,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
 
           val result: UserAnswers = controller.userAnswersWithGuarantorSectionMaybeRemoved(userAnswers.get, testEpcTobacco)
 
-          result mustBe emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco).set(DestinationTypePage, MovementScenario.DirectDelivery)
+          result mustBe emptyUserAnswers.set(DestinationTypePage, MovementScenario.DirectDelivery)
         }
       }
 

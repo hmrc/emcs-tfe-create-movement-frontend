@@ -27,6 +27,7 @@ class DestinationTypePageSpec extends SpecBase {
   val niValues = Seq(
     DirectDelivery,
     ExemptedOrganisation,
+    UnknownDestination,
     RegisteredConsignee,
     EuTaxWarehouse,
     TemporaryRegisteredConsignee,

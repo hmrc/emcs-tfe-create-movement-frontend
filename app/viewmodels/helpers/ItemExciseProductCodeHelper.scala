@@ -22,7 +22,7 @@ import play.api.i18n.Messages
 
 class ItemExciseProductCodeHelper {
   def insetText()(implicit request: DataRequest[_], messages: Messages): Option[String] = {
-    if (ExciseProductCodeRules.GBNoGuarantorRules.shouldDisplayInset()) {
+    if (ExciseProductCodeRules.UKNoGuarantorRules.shouldDisplayInset()) {
       Some(messages("itemExciseProductCode.inset.GBNoGuarantor"))
     } else if (ExciseProductCodeRules.NINoGuarantorRules.shouldDisplayInset()) {
       Some(messages("itemExciseProductCode.inset.XINoGuarantor"))

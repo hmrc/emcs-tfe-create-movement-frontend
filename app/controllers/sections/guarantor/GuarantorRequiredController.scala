@@ -71,27 +71,20 @@ class GuarantorRequiredController @Inject()(
     }
 
   private def renderView(status: Status, form: Form[_], mode: Mode)
-                        (implicit request: DataRequest[_]): Future[Result] = {
-
-    if(GuarantorRequiredPage.guarantorAlwaysRequiredUk()) {
-      Future(status(view(
-        form = form,
-        onwardRoute = routes.GuarantorRequiredController.enterGuarantorDetails(request.ern, request.draftId),
-        requiredGuarantee = true
-      )))
-    } else if(GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU()) {
-      Future(status(view(
-        form = form,
-        onwardRoute = routes.GuarantorRequiredController.enterGuarantorDetails(request.ern, request.draftId),
-        requiredGuaranteeNIToEU = true
-      )))
-    } else {
+                        (implicit request: DataRequest[_]): Future[Result] =
+    if(GuarantorRequiredPage.guarantorIsOptionalUKtoUK || GuarantorRequiredPage.guarantorIsOptionalNIToEU) {
       Future(status(view(
         form = form,
         onwardRoute = routes.GuarantorRequiredController.onSubmit(request.ern, request.draftId, mode)
       )))
+    } else {
+      Future(status(view(
+        form = form,
+        onwardRoute = routes.GuarantorRequiredController.enterGuarantorDetails(request.ern, request.draftId),
+        requiredGuarantee = request.isGreatBritainErn,
+        requiredGuaranteeNIToEU = request.isNorthernIrelandErn
+      )))
     }
-  }
 
   def enterGuarantorDetails(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>

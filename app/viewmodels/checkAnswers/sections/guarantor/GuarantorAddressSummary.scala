@@ -79,8 +79,8 @@ object GuarantorAddressSummary {
         ActionItemViewModel(
           content = "site.change",
           href = controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(
-            ern = request.userAnswers.ern,
-            draftId = request.userAnswers.draftId,
+            ern = request.ern,
+            draftId = request.draftId,
             mode = CheckMode
           ).url,
           id = "changeGuarantorAddress"

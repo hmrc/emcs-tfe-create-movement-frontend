@@ -17,13 +17,12 @@
 package pages.sections.guarantor
 
 import base.SpecBase
-import models.GoodsType
 import models.GoodsType._
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario._
+import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, _}
 import models.sections.journeyType.HowMovementTransported._
 import models.sections.transportUnit.TransportUnitType._
-import pages.sections.consignee.ConsigneeExcisePage
 import pages.sections.info.DestinationTypePage
 import pages.sections.items.ItemExciseProductCodePage
 import pages.sections.journeyType.HowMovementTransportedPage
@@ -34,7 +33,7 @@ class GuarantorRequiredPageSpec extends SpecBase {
 
   "guarantorRequired()" - {
 
-    "when guarantorAlwaysRequiredUk() returns true" - {
+    "when guarantorIsOptionalUKtoUK returns false" - {
 
       "must return true" in {
 
@@ -42,14 +41,29 @@ class GuarantorRequiredPageSpec extends SpecBase {
           request = FakeRequest(),
           answers = emptyUserAnswers
             .set(DestinationTypePage, UkTaxWarehouse.GB)
-            .set(ItemExciseProductCodePage(0), Tobacco.code)
+            .set(ItemExciseProductCodePage(0), Tobacco.code),
+          ern = testGreatBritainErn
         )
 
         GuarantorRequiredPage.isRequired() mustBe true
       }
     }
 
-    "when guarantorAlwaysRequiredNIToEU() returns true" - {
+    "when guarantorIsOptionalUKtoUK returns true" - {
+
+      "must return false" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(
+          request = FakeRequest(),
+          answers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB),
+          ern = testGreatBritainWarehouseKeeperErn
+        )
+
+        GuarantorRequiredPage.isRequired() mustBe false
+      }
+    }
+
+    "when guarantorIsOptionalNIToEU returns false" - {
 
       "must return true" in {
 
@@ -65,395 +79,290 @@ class GuarantorRequiredPageSpec extends SpecBase {
       }
     }
 
-    "when neither guarantorAlwaysRequiredNIToEU() or guarantorAlwaysRequiredUk() return true" - {
+    "when guarantorIsOptionalNIToEU returns true" - {
 
       "must return false" in {
 
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+        implicit val dr: DataRequest[_] = dataRequest(
+          request = FakeRequest(),
+          answers = emptyUserAnswers.set(DestinationTypePage, EuTaxWarehouse)
+        )
 
         GuarantorRequiredPage.isRequired() mustBe false
       }
     }
   }
 
-  "guarantorAlwaysRequiredUk()" - {
+  "guarantorIsOptionalUKtoUK" - {
 
-    Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI).foreach{ destinationType =>
+    "when the movement is UK to UK" - {
 
-      s"when the Destination Type is UKTaxWarehouse: ${destinationType.toString}" - {
+      UkTaxWarehouse.values.foreach { destinationType =>
 
-        Seq(Spirits, Intermediate, Energy, Tobacco).foreach { goodsType =>
+        s"when destinationType is $destinationType" - {
 
-          s"there is a GoodsType of ${goodsType.code}" - {
+          "when no items have been added yet" - {
 
-            "return true" in {
+            "must return true" in {
+
+              implicit val dr: DataRequest[_] = dataRequest(
+                request = FakeRequest(),
+                answers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB),
+                ern = testGreatBritainWarehouseKeeperErn
+              )
+
+              GuarantorRequiredPage.guarantorIsOptionalUKtoUK mustBe true
+            }
+          }
+
+          "when items added only include beer or wine" - {
+
+            "must return true" in {
 
               implicit val dr: DataRequest[_] = dataRequest(
                 request = FakeRequest(),
                 answers = emptyUserAnswers
-                  .set(DestinationTypePage, destinationType)
-                  .set(ItemExciseProductCodePage(0), goodsType.code)
+                  .set(DestinationTypePage, UkTaxWarehouse.GB)
+                  .set(ItemExciseProductCodePage(testIndex1), "B000")
+                  .set(ItemExciseProductCodePage(testIndex2), "W200"),
+                ern = testGreatBritainWarehouseKeeperErn
               )
 
-              GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe true
+              GuarantorRequiredPage.guarantorIsOptionalUKtoUK mustBe true
             }
           }
-        }
 
-        Seq(Wine, Beer).foreach { goodsType =>
+          "when items added include any other type of product" - {
 
-          s"there is a GoodsType of ${goodsType.code}" - {
-
-            "return false" in {
+            "must return false" in {
 
               implicit val dr: DataRequest[_] = dataRequest(
                 request = FakeRequest(),
                 answers = emptyUserAnswers
-                  .set(DestinationTypePage, destinationType)
-                  .set(ItemExciseProductCodePage(0), goodsType.code)
+                  .set(DestinationTypePage, UkTaxWarehouse.GB)
+                  .set(ItemExciseProductCodePage(testIndex1), "B000")
+                  .set(ItemExciseProductCodePage(testIndex2), "W200")
+                  .set(ItemExciseProductCodePage(testIndex3), "T200"),
+                ern = testGreatBritainWarehouseKeeperErn
               )
 
-              GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe false
+              GuarantorRequiredPage.guarantorIsOptionalUKtoUK mustBe false
             }
-          }
-        }
-
-
-        "there are ONLY items with GoodsTypes Spirit, Intermediate, Energy or Tobacco" - {
-
-          "return true" in {
-
-            implicit val dr: DataRequest[_] = dataRequest(
-              request = FakeRequest(),
-              answers = emptyUserAnswers
-                .set(DestinationTypePage, destinationType)
-                .set(ItemExciseProductCodePage(0), GoodsType.Spirits.code)
-                .set(ItemExciseProductCodePage(1), GoodsType.Intermediate.code)
-                .set(ItemExciseProductCodePage(2), GoodsType.Energy.code)
-                .set(ItemExciseProductCodePage(3), GoodsType.Tobacco.code)
-            )
-
-            GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe true
-          }
-        }
-
-        "there is a mix of GoodsTypes including Spirit, Intermediate, Energy or Tobacco" - {
-
-          "return true" in {
-
-            implicit val dr: DataRequest[_] = dataRequest(
-              request = FakeRequest(),
-              answers = emptyUserAnswers
-                .set(DestinationTypePage, destinationType)
-                .set(ItemExciseProductCodePage(0), GoodsType.Beer.code)
-                .set(ItemExciseProductCodePage(1), GoodsType.Spirits.code)
-                .set(ItemExciseProductCodePage(2), GoodsType.Wine.code)
-                .set(ItemExciseProductCodePage(3), GoodsType.Intermediate.code)
-            )
-
-            GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe true
-          }
-        }
-
-        "there are NO Items with the GoodsType Spirit, Intermediate, Energy or Tobacco" - {
-
-          "return false" in {
-
-            implicit val dr: DataRequest[_] = dataRequest(
-              request = FakeRequest(),
-              answers = emptyUserAnswers
-                .set(DestinationTypePage, destinationType)
-                .set(ItemExciseProductCodePage(0), GoodsType.Beer.code)
-                .set(ItemExciseProductCodePage(1), GoodsType.Wine.code)
-            )
-
-            GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe false
           }
         }
       }
     }
 
-    Seq(ExportWithCustomsDeclarationLodgedInTheUk, ExportWithCustomsDeclarationLodgedInTheEu).foreach { destinationType =>
+    "when the movement is NOT UK to UK" - {
 
-      s"when the Destination Type is Export: ${destinationType.toString}" - {
+      MovementScenario.values
+        .filterNot(UkTaxWarehouse.values.contains)
+        .filterNot(valuesForDutyPaidTraders.contains)
+        .foreach { destinationType =>
 
-        "return true" in {
+        s"when destinationType is $destinationType" - {
 
-          implicit val dr: DataRequest[_] = dataRequest(
-            request = FakeRequest(),
-            answers = emptyUserAnswers.set(DestinationTypePage, destinationType)
-          )
-
-          GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe true
-        }
-      }
-    }
-
-    Seq(DirectDelivery, ExemptedOrganisation, RegisteredConsignee, EuTaxWarehouse, TemporaryRegisteredConsignee, UnknownDestination).foreach{ destinationType =>
-
-      s"when the Destination Type is NOT UKTaxWarehouse or Export: ${destinationType.toString}" - {
-
-        "when the Consignee ERN is NOT GB or XI" - {
-
-          "return true" in {
-
-            val nonGBorXIErn = "AA1234567890"
+          "must return false" in {
 
             implicit val dr: DataRequest[_] = dataRequest(
               request = FakeRequest(),
-              answers = emptyUserAnswers
-                .set(DestinationTypePage, DirectDelivery)
-                .set(ConsigneeExcisePage, nonGBorXIErn)
+              answers = emptyUserAnswers.set(DestinationTypePage, destinationType),
+              ern = testGreatBritainWarehouseKeeperErn
             )
 
-            GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe true
-          }
-        }
-
-        Seq(testGreatBritainErn, testNorthernIrelandErn).foreach { ern =>
-
-          s"when the Consignee ERN is GB or XI: $ern" - {
-
-            "return true" in {
-
-              implicit val dr: DataRequest[_] = dataRequest(
-                request = FakeRequest(),
-                answers = emptyUserAnswers
-                  .set(DestinationTypePage, DirectDelivery)
-                  .set(ConsigneeExcisePage, ern)
-              )
-
-              GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe false
-            }
-          }
-        }
-
-        Seq(Intermediate, Energy, Tobacco).foreach { goodsType =>
-
-          s"there is a GoodsType of ${goodsType.code}" - {
-
-            "return false" in {
-
-              implicit val dr: DataRequest[_] = dataRequest(
-                request = FakeRequest(),
-                answers = emptyUserAnswers
-                  .set(DestinationTypePage, destinationType)
-                  .set(ItemExciseProductCodePage(0), goodsType.code)
-              )
-
-              GuarantorRequiredPage.guarantorAlwaysRequiredUk() mustBe false
-            }
+            GuarantorRequiredPage.guarantorIsOptionalUKtoUK mustBe false
           }
         }
       }
     }
   }
 
-  "guarantorAlwaysRequiredNIToEU()" - {
+  "guarantorIsOptionalNItoEU" - {
 
-    Seq(
-      EuTaxWarehouse,
-      ExemptedOrganisation,
-      UnknownDestination,
-      TemporaryRegisteredConsignee,
-      RegisteredConsignee,
-      DirectDelivery,
-      CertifiedConsignee,
-      TemporaryCertifiedConsignee
-    ).foreach { destinationType =>
+    "when the movement is NI to EU" - {
 
-      s"when Destination Type is to EU: ${destinationType.toString}" - {
+      "when not UnknownDestination or ExemptedOrganisation" - {
 
-        Seq(Wine, Beer, Spirits, Intermediate, Tobacco).foreach { goodsType =>
+        Seq(
+          DirectDelivery,
+          RegisteredConsignee,
+          EuTaxWarehouse,
+          TemporaryRegisteredConsignee,
+          CertifiedConsignee,
+          TemporaryCertifiedConsignee
+        ).foreach { destinationType =>
 
-          s"when GoodsType is Alcohol or Tobacco: ${goodsType.code}" - {
+          s"where destination type is $destinationType" - {
 
-            s"when MovementTransportType is ${FixedTransportInstallations.toString}" - {
+            "when no items have been added yet" - {
 
-              "return true" in {
+              "when no Journey Type has been answered yet" - {
 
-                implicit val dr: DataRequest[_] = dataRequest(
-                  request = FakeRequest(),
-                  answers = emptyUserAnswers
-                    .set(DestinationTypePage, destinationType)
-                    .set(ItemExciseProductCodePage(0), goodsType.code)
-                    .set(HowMovementTransportedPage, FixedTransportInstallations)
+                "when no Transport Units have been added" - {
 
-                )
+                  "must return true" - {
 
-                GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe true
-              }
-            }
+                    implicit val dr: DataRequest[_] = dataRequest(
+                      request = FakeRequest(),
+                      answers = emptyUserAnswers.set(DestinationTypePage, destinationType),
+                      ern = testNorthernIrelandErn
+                    )
 
-            s"when TransportUnitType is ${FixedTransport.toString}" - {
-
-              "return true" in {
-
-                implicit val dr: DataRequest[_] = dataRequest(
-                  request = FakeRequest(),
-                  answers = emptyUserAnswers
-                    .set(DestinationTypePage, destinationType)
-                    .set(ItemExciseProductCodePage(0), goodsType.code)
-                    .set(TransportUnitTypePage(0), FixedTransport)
-                )
-
-                GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe true
-              }
-            }
-
-            s"when neither MovementTransportType or TransportUnitType are Fixed" - {
-
-              "return true" in {
-
-                implicit val dr: DataRequest[_] = dataRequest(
-                  request = FakeRequest(),
-                  answers = emptyUserAnswers
-                    .set(DestinationTypePage, destinationType)
-                    .set(ItemExciseProductCodePage(0), goodsType.code)
-                    .set(HowMovementTransportedPage, InlandWaterwayTransport)
-                    .set(TransportUnitTypePage(0), Tractor)
-
-                )
-
-                GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe true
-              }
-            }
-          }
-        }
-
-        s"when GoodsType is NOT Alcohol or Tobacco: ${Energy.code}" - {
-
-          Seq(AirTransport, InlandWaterwayTransport, PostalConsignment, RailTransport, RoadTransport, SeaTransport, Other).foreach { howMovementTransported =>
-
-            s"when MovementTransportType is NOT FixedMovement: ${howMovementTransported.toString}" - {
-
-              "when no TransportUnitType has been selected" - {
-
-                "return true" in {
-
-                  implicit val dr: DataRequest[_] = dataRequest(
-                    request = FakeRequest(),
-                    answers = emptyUserAnswers
-                      .set(DestinationTypePage, destinationType)
-                      .set(ItemExciseProductCodePage(0), Energy.code)
-                      .set(HowMovementTransportedPage, howMovementTransported)
-                  )
-
-                  GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe true
+                    GuarantorRequiredPage.guarantorIsOptionalNIToEU mustBe true
+                  }
                 }
-              }
 
-              Seq(Container, FixedTransport, Tractor, Trailer, Vehicle).foreach { transportUnitType =>
+                "when Transport Units have been added (only Fixed Transport)" - {
 
-                s"when ANY TransportUnitType has been selected: ${transportUnitType.toString}" - {
-
-                  "return true" in {
+                  "must return true" - {
 
                     implicit val dr: DataRequest[_] = dataRequest(
                       request = FakeRequest(),
                       answers = emptyUserAnswers
                         .set(DestinationTypePage, destinationType)
-                        .set(ItemExciseProductCodePage(0), Energy.code)
-                        .set(HowMovementTransportedPage, howMovementTransported)
+                        .set(TransportUnitTypePage(testIndex1), FixedTransport)
+                        .set(TransportUnitTypePage(testIndex2), FixedTransport)
+                      ,
+                      ern = testNorthernIrelandErn
                     )
 
-                    GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe true
+                    GuarantorRequiredPage.guarantorIsOptionalNIToEU mustBe true
+                  }
+                }
+
+                "when Transport Units have been added (including something other than FixedTransport)" - {
+
+                  "must return false" - {
+
+                    implicit val dr: DataRequest[_] = dataRequest(
+                      request = FakeRequest(),
+                      answers = emptyUserAnswers
+                        .set(DestinationTypePage, destinationType)
+                        .set(TransportUnitTypePage(testIndex1), FixedTransport)
+                        .set(TransportUnitTypePage(testIndex2), Tractor)
+                      ,
+                      ern = testNorthernIrelandErn
+                    )
+
+                    GuarantorRequiredPage.guarantorIsOptionalNIToEU mustBe false
+                  }
+                }
+              }
+
+              "when Journey Type has been answered" - {
+
+                "when Journey Type is fixed" - {
+
+                  "must return true" - {
+
+                    implicit val dr: DataRequest[_] = dataRequest(
+                      request = FakeRequest(),
+                      answers = emptyUserAnswers
+                        .set(DestinationTypePage, destinationType)
+                        .set(HowMovementTransportedPage, FixedTransportInstallations),
+                      ern = testNorthernIrelandErn
+                    )
+
+                    GuarantorRequiredPage.guarantorIsOptionalNIToEU mustBe true
+                  }
+                }
+
+                "when Journey Type is not fixed" - {
+
+                  "must return false" - {
+
+                    implicit val dr: DataRequest[_] = dataRequest(
+                      request = FakeRequest(),
+                      answers = emptyUserAnswers
+                        .set(DestinationTypePage, destinationType)
+                        .set(HowMovementTransportedPage, AirTransport),
+                      ern = testNorthernIrelandErn
+                    )
+
+                    GuarantorRequiredPage.guarantorIsOptionalNIToEU mustBe false
                   }
                 }
               }
             }
-          }
 
-          s"when MovementTransportType is ${FixedTransportInstallations.toString}" - {
+            "when items have been added" - {
 
-            Seq(Container, Tractor, Trailer, Vehicle).foreach{ transportUnitType =>
+              "when items are only Energy" - {
 
-              s"when a NON fixed TransportUnitType is selected: ${transportUnitType.toString}" - {
-
-                "return true" in {
+                "must return true" in {
 
                   implicit val dr: DataRequest[_] = dataRequest(
                     request = FakeRequest(),
                     answers = emptyUserAnswers
                       .set(DestinationTypePage, destinationType)
-                      .set(ItemExciseProductCodePage(0), Energy.code)
-                      .set(HowMovementTransportedPage, FixedTransportInstallations)
-                      .set(TransportUnitTypePage(0), transportUnitType)
+                      .set(ItemExciseProductCodePage(testIndex1), "E450")
+                      .set(ItemExciseProductCodePage(testIndex2), "E500"),
+                    ern = testNorthernIrelandErn
                   )
 
-                  GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe true
+                  GuarantorRequiredPage.guarantorIsOptionalNIToEU mustBe true
                 }
               }
-            }
 
-            s"when TransportUnitType is ${FixedTransport.toString}" - {
+              "when items include things other than Energy" - {
 
-              "return false" in {
-
-                implicit val dr: DataRequest[_] = dataRequest(
-                  request = FakeRequest(),
-                  answers = emptyUserAnswers
-                    .set(DestinationTypePage, destinationType)
-                    .set(ItemExciseProductCodePage(0), Energy.code)
-                    .set(HowMovementTransportedPage, FixedTransportInstallations)
-                    .set(TransportUnitTypePage(0), FixedTransport)
-                )
-
-                GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe false
-              }
-            }
-
-            "when NO TransportUnitType" - {
-
-              "return true" in {
-
-                implicit val dr: DataRequest[_] = dataRequest(
-                  request = FakeRequest(),
-                  answers = emptyUserAnswers
-                    .set(DestinationTypePage, destinationType)
-                    .set(ItemExciseProductCodePage(0), Energy.code)
-                    .set(HowMovementTransportedPage, FixedTransportInstallations)
-                )
-
-                GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe false
-              }
-            }
-          }
-
-          s"when MovementTransportType is not answered" - {
-
-            "when no TransportUnitType has been selected" - {
-
-              "return true" in {
-
-                implicit val dr: DataRequest[_] = dataRequest(
-                  request = FakeRequest(),
-                  answers = emptyUserAnswers
-                    .set(DestinationTypePage, destinationType)
-                    .set(ItemExciseProductCodePage(0), Energy.code)
-                )
-
-                GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe false
-              }
-            }
-
-            Seq(Container, FixedTransport, Tractor, Trailer, Vehicle).foreach { transportUnitType =>
-
-              s"when ANY TransportUnitType has been selected: ${transportUnitType.toString}" - {
-
-                "return true" in {
+                "must return false" in {
 
                   implicit val dr: DataRequest[_] = dataRequest(
                     request = FakeRequest(),
                     answers = emptyUserAnswers
                       .set(DestinationTypePage, destinationType)
-                      .set(ItemExciseProductCodePage(0), Energy.code)
+                      .set(ItemExciseProductCodePage(testIndex1), "B200"),
+                    ern = testNorthernIrelandErn
                   )
 
-                  GuarantorRequiredPage.guarantorAlwaysRequiredNIToEU() mustBe false
+                  GuarantorRequiredPage.guarantorIsOptionalNIToEU mustBe false
                 }
               }
             }
+          }
+        }
+      }
+
+      "when UnknownDestination or ExemptedOrganisation" - {
+
+        Seq(
+          UnknownDestination,
+          ExemptedOrganisation
+        ).foreach { destinationType =>
+
+          s"where destination type is $destinationType" - {
+
+            "must return false" - {
+
+              implicit val dr: DataRequest[_] = dataRequest(
+                request = FakeRequest(),
+                answers = emptyUserAnswers.set(DestinationTypePage, destinationType),
+                ern = testNorthernIrelandErn
+              )
+
+              GuarantorRequiredPage.guarantorIsOptionalNIToEU mustBe false
+            }
+          }
+        }
+      }
+    }
+
+    "when the movement is not NI to EU" - {
+
+      MovementScenario.valuesExportUkAndUkTaxWarehouse.foreach { destinationType =>
+
+        s"where destination type is $destinationType" - {
+
+          "must return false" - {
+
+            implicit val dr: DataRequest[_] = dataRequest(
+              request = FakeRequest(),
+              answers = emptyUserAnswers.set(DestinationTypePage, destinationType),
+              ern = testNorthernIrelandErn
+            )
+
+            GuarantorRequiredPage.guarantorIsOptionalNIToEU mustBe false
           }
         }
       }

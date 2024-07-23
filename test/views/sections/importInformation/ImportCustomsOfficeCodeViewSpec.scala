@@ -67,6 +67,8 @@ class ImportCustomsOfficeCodeViewSpec extends SpecBase with ViewBehaviours with 
                 Selectors.h1 -> messagesForLanguage.heading(userType),
                 Selectors.subHeadingCaptionSelector -> messagesForLanguage.importInformationSection,
                 Selectors.p(1) -> messagesForLanguage.paragraph(userType),
+                Selectors.label("value") -> messagesForLanguage.label,
+                Selectors.hint -> messagesForLanguage.hint,
                 Selectors.button -> messagesForLanguage.saveAndContinue,
                 Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
               ))

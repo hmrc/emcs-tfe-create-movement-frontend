@@ -26,9 +26,9 @@ object ImportCustomsOfficeCodeMessages {
 
     def heading(userType: UserType): String =
       if (userType == NorthernIrelandRegisteredConsignor) {
-        "Enter the customs office code for the place where the goods originally entered the EU or UK"
+        "Customs office code for the place where the goods originally entered the EU or UK"
       } else {
-        "Enter the customs office code for the place where the goods originally entered the UK"
+        "Customs office code for the place where the goods originally entered the UK"
       }
 
     def title(userType: UserType): String = titleHelper(heading(userType))
@@ -39,6 +39,9 @@ object ImportCustomsOfficeCodeMessages {
       } else {
         "This code is also known as a customs office reference number. Search for UK customs office codes (opens in new tab)."
       }
+
+    val label = "Enter the customs office code"
+    val hint = "The code starts with 2 letters representing the member state, followed by 6 numbers or mixed letters and numbers. For example, GB000060."
 
     val importCustomsOffice704Error = "The import customs office code you have entered is not valid"
 

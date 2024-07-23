@@ -941,10 +941,12 @@ destinationWarehouseExcise.change.hidden = Warehouse excise ID
 informationCheckAnswers.title = Check your answers
 informationCheckAnswers.heading = Check your answers
 
-importCustomsOfficeCode.greatBritainRegisteredConsignor.title = Enter the customs office code for the place where the goods originally entered the UK
-importCustomsOfficeCode.greatBritainRegisteredConsignor.heading = Enter the customs office code for the place where the goods originally entered the UK
-importCustomsOfficeCode.northernIrishRegisteredConsignor.title = Enter the customs office code for the place where the goods originally entered the EU or UK
-importCustomsOfficeCode.northernIrishRegisteredConsignor.heading = Enter the customs office code for the place where the goods originally entered the EU or UK
+importCustomsOfficeCode.greatBritainRegisteredConsignor.title = Customs office code for the place where the goods originally entered the UK
+importCustomsOfficeCode.greatBritainRegisteredConsignor.heading = Customs office code for the place where the goods originally entered the UK
+importCustomsOfficeCode.northernIrishRegisteredConsignor.title = Customs office code for the place where the goods originally entered the EU or UK
+importCustomsOfficeCode.northernIrishRegisteredConsignor.heading = Customs office code for the place where the goods originally entered the EU or UK
+importCustomsOfficeCode.label = Enter the customs office code
+importCustomsOfficeCode.hint = The code starts with 2 letters representing the member state, followed by 6 numbers or mixed letters and numbers. For example, GB000060.
 importCustomsOfficeCode.preLink = This code is also known as a customs office reference number.
 importCustomsOfficeCode.ukLink = Search for UK customs office codes
 importCustomsOfficeCode.afterLink = &nbsp;or&nbsp;

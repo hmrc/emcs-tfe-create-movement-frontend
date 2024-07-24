@@ -828,7 +828,7 @@ destinationDetailsChoice.change.hidden = Give details of {0}
 
 destinationWarehouseVat.title = Enter an identifier for the {0}
 destinationWarehouseVat.heading = Enter an identifier for the {0}
-destinationWarehouseVat.hint = This can be a VAT registration number or other identifier, such as an excise ID.
+destinationWarehouseVat.hint = This can be a VAT registration number or any other identifier, such as an excise ID.
 destinationWarehouseVat.error.required.skippable = Enter an identifier or use link to skip this question
 destinationWarehouseVat.error.required = Enter an identifier
 destinationWarehouseVat.error.invalidCharacters = Identifier must not include < and > and : and ;

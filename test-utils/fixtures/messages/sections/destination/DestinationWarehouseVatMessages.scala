@@ -23,7 +23,7 @@ object DestinationWarehouseVatMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading: String => String = "Enter an identifier for the " + _
     val title: String => String = destinationType => titleHelper(heading(destinationType))
-    val hint: String = "This can be a VAT registration number or other identifier, such as an excise ID."
+    val hint: String = "This can be a VAT registration number or any other identifier, such as an excise ID."
     val cyaLabel: String = "Identifier"
     val cyaChangeHidden: String = "identifier"
     val errorRequired: String = "Enter an identifier"

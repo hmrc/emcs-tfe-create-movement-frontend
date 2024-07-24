@@ -62,7 +62,7 @@ class DestinationWarehouseVatViewSpec extends SpecBase with ViewBehaviours {
             Selectors.h1 -> messagesForLanguage.heading(RegisteredConsignee.stringValue),
             Selectors.hint -> messagesForLanguage.hint,
             Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.link(1) -> messagesForLanguage.skipThisQuestion
+            Selectors.link(1) -> messagesForLanguage.skipQuestion
           ))
         }
 

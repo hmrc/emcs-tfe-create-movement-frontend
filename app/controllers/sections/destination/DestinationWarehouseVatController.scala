@@ -51,7 +51,7 @@ class DestinationWarehouseVatController @Inject()(
         withAnswer(DestinationTypePage) {
           movementScenario =>
             Ok(view(
-              form = fillForm(DestinationWarehouseVatPage, formProvider()),
+              form = fillForm(DestinationWarehouseVatPage, formProvider(movementScenario)),
               action = routes.DestinationWarehouseVatController.onSubmit(ern, draftId, mode),
               movementScenario = movementScenario,
               skipQuestionCall = routes.DestinationWarehouseVatController.skipThisQuestion(ern, draftId, mode)
@@ -65,7 +65,7 @@ class DestinationWarehouseVatController @Inject()(
       implicit request =>
         withAnswerAsync(DestinationTypePage) {
           movementScenario =>
-            formProvider().bindFromRequest().fold(
+            formProvider(movementScenario).bindFromRequest().fold(
               formWithErrors =>
                 Future.successful(BadRequest(view(
                   formWithErrors,

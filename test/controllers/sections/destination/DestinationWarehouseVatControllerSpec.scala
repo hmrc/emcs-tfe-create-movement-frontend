@@ -38,7 +38,7 @@ import scala.concurrent.Future
 class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswersService {
 
   lazy val formProvider: DestinationWarehouseVatFormProvider = new DestinationWarehouseVatFormProvider()
-  lazy val form: Form[String] = formProvider()
+  lazy val form: Form[String] = formProvider(RegisteredConsignee)
   lazy val view: DestinationWarehouseVatView = app.injector.instanceOf[DestinationWarehouseVatView]
 
   lazy val destinationWarehouseVatRoute: String =

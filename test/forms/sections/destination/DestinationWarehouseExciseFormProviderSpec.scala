@@ -119,6 +119,22 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase
 
             result mustBe Valid
           }
+          "must return Valid when the input contains spaces" in {
+            val result =
+              new DestinationWarehouseExciseFormProvider()
+                .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.GB)
+                .apply("GB 0 012 3456789")
+
+            result mustBe Valid
+          }
+          "must return Valid when the input contains lowercase" in {
+            val result =
+              new DestinationWarehouseExciseFormProvider()
+                .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.GB)
+                .apply("gb00123456789")
+
+            result mustBe Valid
+          }
           "must return Invalid when the input starts with XI00" in {
             val result: ValidationResult =
               new DestinationWarehouseExciseFormProvider()
@@ -152,6 +168,22 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase
               new DestinationWarehouseExciseFormProvider()
                 .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.NI)
                 .apply("XI00123456789")
+
+            result mustBe Valid
+          }
+          "must return Valid when the input contains spaces" in {
+            val result =
+              new DestinationWarehouseExciseFormProvider()
+                .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.NI)
+                .apply("XI 0 012 3456789")
+
+            result mustBe Valid
+          }
+          "must return Valid when the input contains lowercase" in {
+            val result =
+              new DestinationWarehouseExciseFormProvider()
+                .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.NI)
+                .apply("xi00123456789")
 
             result mustBe Valid
           }
@@ -191,6 +223,22 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase
                     new DestinationWarehouseExciseFormProvider()
                       .inputIsValidForDestinationType(movementScenario)
                       .apply("FR00123456789")
+
+                  result mustBe Valid
+                }
+                "must return Valid when the input doesn't start with XI or GB and contains spaces" in {
+                  val result =
+                    new DestinationWarehouseExciseFormProvider()
+                      .inputIsValidForDestinationType(movementScenario)
+                      .apply("FR 00 12 3456789")
+
+                  result mustBe Valid
+                }
+                "must return Valid when the input doesn't start with XI or GB and contains lowercase" in {
+                  val result =
+                    new DestinationWarehouseExciseFormProvider()
+                      .inputIsValidForDestinationType(movementScenario)
+                      .apply("fr00123456789")
 
                   result mustBe Valid
                 }

@@ -200,6 +200,24 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
           })
         }
       }
+
+      "when ERN starts with lowercase" - {
+
+        "must return success" in {
+            val boundForm = form.bind(Map(fieldName -> "gbwk123456789"))
+            boundForm.errors.headOption mustBe None
+            boundForm.value mustBe Some("GBWK123456789")
+        }
+      }
+
+      "when ERN contains spaces" - {
+
+        "must return success" in {
+          val boundForm = form.bind(Map(fieldName -> "GBWK1 2 3 4 56789"))
+          boundForm.errors.headOption mustBe None
+          boundForm.value mustBe Some("GBWK123456789")
+        }
+      }
     }
 
     "when Destination is NI tax warehouse" - {

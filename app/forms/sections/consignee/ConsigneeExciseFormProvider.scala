@@ -40,12 +40,12 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
 
     Form(
       "value" -> text(s"$keyPrefix.error.noInput")
+        .transform[String](_.toUpperCase.replace(" ", ""), identity)
         .verifying(firstError(
           fixedLength(13, s"$keyPrefix.error.length"),
           regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"$keyPrefix.error.invalidCharacters"),
           regexpUnlessEmpty(EXCISE_NUMBER_REGEX, s"$keyPrefix.error.format")
         ))
-        .transform[String](_.toUpperCase, identity)
         .verifying(validateErn)
         .verifying(isNotEqualToOptExistingAnswer(
           existingAnswer = ConsigneeExcisePage.getOriginalAttributeValue,

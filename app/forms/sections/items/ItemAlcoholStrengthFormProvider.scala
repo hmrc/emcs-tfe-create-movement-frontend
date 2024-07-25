@@ -28,6 +28,7 @@ class ItemAlcoholStrengthFormProvider @Inject() extends Mappings {
   def apply(): Form[BigDecimal] =
     Form(
       fieldName -> text(requiredErrorKey)
+        .transform[String](_.replace(" ", ""), identity)
         .verifying(isDecimal(nonNumericErrorKey))
         .transform[BigDecimal](BigDecimal(_), _.toString())
         .verifying(decimalRange(minValue, maxValue, rangeErrorKey))

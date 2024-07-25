@@ -56,6 +56,13 @@ class ItemAlcoholStrengthFormProviderSpec extends BooleanFieldBehaviours {
         boundForm.errors mustBe Seq()
         boundForm.value mustBe Some(BigDecimal(100))
       }
+
+      "amount with spaces" in {
+
+        val boundForm = form.bind(Map(fieldName -> " 1     0 0.   0   0        "))
+        boundForm.errors mustBe Seq()
+        boundForm.value mustBe Some(BigDecimal(100))
+      }
     }
   }
 

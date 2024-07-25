@@ -33,6 +33,7 @@ class DispatchWarehouseExciseFormProvider @Inject() extends Mappings {
   def apply()(implicit request: DataRequest[_]): Form[String] = {
     Form(
       "value" -> text("dispatchWarehouseExcise.error.required")
+        .transform[String](_.toUpperCase.replace(" ", ""), identity)
         .verifying(firstError(
           fixedLength(13, "dispatchWarehouseExcise.error.length"),
           regexpUnlessEmpty(XSS_REGEX, "dispatchWarehouseExcise.error.xss"),

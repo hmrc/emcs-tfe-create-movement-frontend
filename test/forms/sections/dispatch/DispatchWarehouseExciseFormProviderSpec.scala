@@ -76,6 +76,16 @@ class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours with
       formatError = formatError
     )
 
+    "must transform the inputted Excise into uppercase" in {
+      val boundForm = form.bind(Map(fieldName -> "gb00123456789"))
+      boundForm.value.value mustBe "GB00123456789"
+    }
+
+    "must transform the inputted Excise removing any spaces" in {
+      val boundForm = form.bind(Map(fieldName -> "gb0 01234 56789 "))
+      boundForm.value.value mustBe "GB00123456789"
+    }
+
     "when the consignor is a GB trader" - {
 
       val form = new DispatchWarehouseExciseFormProvider()()(dataRequest(FakeRequest(), ern = testGreatBritainErn))

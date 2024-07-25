@@ -30,6 +30,7 @@ class ItemQuantityFormProvider @Inject() extends Mappings {
   def apply(idx: Index)(implicit dataRequest: DataRequest[_]): Form[BigDecimal] =
     Form(
       fieldName -> text(requiredErrorKey)
+        .transform[String](_.replace(" ", ""), identity)
         .verifying(isDecimal(nonNumericErrorKey))
         .transform[BigDecimal](BigDecimal(_), _.toString())
         .verifying(decimalRange(minValue, maxValue, rangeErrorKey))

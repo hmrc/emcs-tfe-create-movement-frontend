@@ -58,6 +58,13 @@ class ItemQuantityFormProviderSpec extends BooleanFieldBehaviours with SpecBase 
         boundForm.errors mustBe Seq()
         boundForm.value mustBe Some(BigDecimal("999999999999.999"))
       }
+
+      "values with spaces" in {
+
+        val boundForm = form.bind(Map(fieldName -> "    9   9 9 9999    9 9 99     9  .   9  9 9       "))
+        boundForm.errors mustBe Seq()
+        boundForm.value mustBe Some(BigDecimal("999999999999.999"))
+      }
     }
   }
 

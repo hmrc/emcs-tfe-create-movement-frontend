@@ -26,16 +26,23 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     h1: components.h1,
+    continueOrSkip: components.continueOrSkip,
     continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], addressPage: QuestionPage[UserAddress], call: Call, headingKey: Option[String] = None)(implicit request: DataRequest[_], messages: Messages)
+@(
+    form: Form[_],
+    addressPage: QuestionPage[UserAddress],
+    onSubmit: Call,
+    onSkip: Option[Call] = None,
+    headingKey: Option[String] = None
+)(implicit request: DataRequest[_], messages: Messages)
 
 @defining(headingKey.getOrElse(addressPage.toString)) { msgKey =>
 
     @layout(pageTitle = title(form, messages(s"address.$msgKey.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
 
-        @formHelper(action = call) {
+        @formHelper(action = onSubmit) {
 
             @if(form.errors.nonEmpty) {
                 @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -79,7 +86,11 @@
                         .withAutocomplete("postal-code")
             )
 
-            @continueOrExit()
+            @onSkip.fold{
+                @continueOrExit()
+            } { call =>
+                @continueOrSkip(call.url, "site.saveAndContinue", "site.skipThisQuestion")
+            }
 
         }
     }

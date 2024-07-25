@@ -53,6 +53,9 @@ object AddressMessages {
     val dispatchAddressHeading = "Enter the place of dispatch address"
     val dispatchAddressTitle = titleHelper(dispatchAddressHeading)
 
+    val dispatchAddressOptionalHeading = "Enter the place of dispatch address (optional)"
+    val dispatchAddressOptionalTitle = titleHelper(dispatchAddressOptionalHeading)
+
     def guarantorAddressHeading(guarantorArranger: GuarantorArranger): String = guarantorArranger match {
       case GoodsOwner => "Enter the good owner’s business address"
       case Transporter => "Enter the transporter’s business address"

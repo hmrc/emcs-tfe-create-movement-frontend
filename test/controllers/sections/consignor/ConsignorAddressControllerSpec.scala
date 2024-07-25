@@ -69,7 +69,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
       contentAsString(result) mustEqual view(
         form = form,
         addressPage = ConsignorAddressPage,
-        call = consignorAddressOnSubmit()
+        onSubmit = consignorAddressOnSubmit()
       )(dataRequest(request, ern = testGreatBritainErn), messages(request)).toString
     }
 
@@ -82,7 +82,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
       contentAsString(result) mustEqual view(
         form = form.fill(userAddressModelMax),
         addressPage = ConsignorAddressPage,
-        call = consignorAddressOnSubmit()
+        onSubmit = consignorAddressOnSubmit()
       )(dataRequest(request, ern = testGreatBritainErn), messages(request)).toString
     }
 
@@ -115,7 +115,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
       contentAsString(result) mustEqual view(
         form = boundForm,
         addressPage = ConsignorAddressPage,
-        call = consignorAddressOnSubmit()
+        onSubmit = consignorAddressOnSubmit()
       )(dataRequest(req, ern = testGreatBritainErn), messages(req)).toString
     }
 
@@ -130,7 +130,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
       contentAsString(result) mustEqual view(
         form = boundForm,
         addressPage = ConsignorAddressPage,
-        call = consignorAddressOnSubmit()
+        onSubmit = consignorAddressOnSubmit()
       )(dataRequest(req, ern = testGreatBritainErn), messages(req)).toString
     }
 
@@ -145,7 +145,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
       contentAsString(result) mustEqual view(
         form = boundForm,
         addressPage = ConsignorAddressPage,
-        call = consignorAddressOnSubmit(testErn)
+        onSubmit = consignorAddressOnSubmit(testErn)
       )(dataRequest(req, ern = testErn), messages(req)).toString
     }
 

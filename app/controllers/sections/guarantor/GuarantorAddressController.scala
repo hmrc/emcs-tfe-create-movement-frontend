@@ -54,7 +54,7 @@ class GuarantorAddressController @Inject()(override val messagesApi: MessagesApi
       status(view(
         form = form,
         addressPage = addressPage,
-        call = onwardCall(mode),
+        onSubmit = onwardCall(mode),
         headingKey = Some(s"guarantorAddress.$guarantorArranger")
       ))
     }

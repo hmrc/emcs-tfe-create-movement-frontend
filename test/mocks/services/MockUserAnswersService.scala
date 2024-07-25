@@ -37,7 +37,7 @@ trait MockUserAnswersService extends MockFactory {
 
     def set(userAnswers: UserAnswers): CallHandler2[UserAnswers, HeaderCarrier, Future[UserAnswers]] =
       (mockUserAnswersService.set(_: UserAnswers)(_: HeaderCarrier))
-        .expects(where { (actualAnswers, _) =>
+        .expects( where { (actualAnswers, _) =>
           actualAnswers.ern == userAnswers.ern &&
             //Declaration page stores a LocalDateTime which can't be asserted against reliably
             actualAnswers.data - DeclarationPage == userAnswers.data - DeclarationPage &&

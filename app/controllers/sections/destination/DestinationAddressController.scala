@@ -64,7 +64,7 @@ class DestinationAddressController @Inject()(override val messagesApi: MessagesA
     status(view(
       form = form,
       addressPage = addressPage,
-      call = onwardCall(mode),
+      onSubmit = onwardCall(mode),
       headingKey = Some("destinationAddress")
     ))
 

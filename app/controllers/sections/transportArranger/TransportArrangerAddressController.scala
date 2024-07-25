@@ -57,7 +57,7 @@ class TransportArrangerAddressController @Inject()(override val messagesApi: Mes
       status(view(
         form = form,
         addressPage = addressPage,
-        call = onwardCall(mode),
+        onSubmit = onwardCall(mode),
         headingKey = Some(s"$TransportArrangerAddressPage.$arranger")
       ))
     }

@@ -76,7 +76,7 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
           contentAsString(result) mustEqual view(
             form = form,
             addressPage = GuarantorAddressPage,
-            call = addressOnSubmit,
+            onSubmit = addressOnSubmit,
             headingKey = Some(s"guarantorAddress.$guarantorArranger")
           )(dataRequest(request), messages(request)).toString
         }
@@ -107,7 +107,7 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
           contentAsString(result) mustEqual view(
             form = boundForm,
             addressPage = GuarantorAddressPage,
-            call = addressOnSubmit,
+            onSubmit = addressOnSubmit,
             headingKey = Some(s"guarantorAddress.$guarantorArranger")
           )(dataRequest(request), messages(request)).toString
         }

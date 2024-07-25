@@ -90,7 +90,11 @@ object TraderModel extends ModelConstructorHelpers {
       Some(TraderModel(
         traderExciseNumber = DispatchWarehouseExcisePage.value,
         traderName = name,
-        address = Some(AddressModel.fromUserAddress(mandatoryPage(DispatchAddressPage))),
+        address = if(request.isCertifiedConsignor) {
+          Some(AddressModel.fromUserAddress(mandatoryPage(DispatchAddressPage)))
+        } else {
+          DispatchAddressPage.value.map(AddressModel.fromUserAddress)
+        },
         vatNumber = None,
         eoriNumber = None
       ))

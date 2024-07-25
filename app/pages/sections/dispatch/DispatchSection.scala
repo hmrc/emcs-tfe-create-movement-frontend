@@ -38,13 +38,14 @@ case object DispatchSection extends Section[JsObject] {
       DispatchWarehouseExcisePage.value.isDefined || isCertifiedConsigneeType
 
     def checkRemainingPages: TaskListStatus = {
-      val remainingPages: Seq[Option[_]] = Seq(DispatchBusinessNamePage.value, DispatchAddressPage.value)
-      if (remainingPages.forall(_.isEmpty) && isCertifiedConsigneeType) {
-        NotStarted
-      } else if (remainingPages.forall(_.nonEmpty)) {
-        Completed
-      } else {
-        InProgress
+
+      val businessName = DispatchBusinessNamePage.value
+      val address = DispatchAddressPage.value.isDefined || !request.isCertifiedConsignor
+
+      (businessName, address, isCertifiedConsigneeType) match {
+        case (None, false, true) => NotStarted
+        case (Some(_), true, _) => Completed
+        case _ => InProgress
       }
     }
 

@@ -263,6 +263,8 @@ address.destinationAddress.change.hidden = Address
 
 address.dispatchAddress.title = Enter the place of dispatch address
 address.dispatchAddress.heading = Enter the place of dispatch address
+address.dispatchAddress.optional.title = Enter the place of dispatch address (optional)
+address.dispatchAddress.optional.heading = Enter the place of dispatch address (optional)
 address.dispatchAddress.subheading = Place of dispatch information
 address.dispatchAddress.checkYourAnswersLabel = Address
 address.dispatchAddress.change.hidden = Address

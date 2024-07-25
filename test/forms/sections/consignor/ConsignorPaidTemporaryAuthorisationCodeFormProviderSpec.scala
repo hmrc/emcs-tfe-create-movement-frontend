@@ -38,6 +38,18 @@ class ConsignorPaidTemporaryAuthorisationCodeFormProviderSpec extends StringFiel
       result.errors mustBe empty
     }
 
+    "bind when the PTA code contains spaces" in {
+      val result = form.bind(Map(fieldName -> "XIPTA 12 34 5 678"))
+      result.errors mustBe empty
+      result.value.value mustBe "XIPTA12345678"
+    }
+
+    "bind when the PTA code contains lowercase" in {
+      val result = form.bind(Map(fieldName -> "xipta12345678"))
+      result.errors mustBe empty
+      result.value.value mustBe "XIPTA12345678"
+    }
+
     behave like fieldWithMaxLength(
       form,
       fieldName,

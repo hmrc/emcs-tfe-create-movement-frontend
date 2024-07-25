@@ -29,6 +29,7 @@ class ConsignorPaidTemporaryAuthorisationCodeFormProvider @Inject() extends Mapp
   def apply(): Form[String] =
     Form(
       "value" -> text("consignorPaidTemporaryAuthorisationCode.error.required")
+        .transform[String](_.toUpperCase.replace(" ", ""), identity)
         .verifying(
           firstError(
             maxLength(MAX_LENGTH, "consignorPaidTemporaryAuthorisationCode.error.length"),

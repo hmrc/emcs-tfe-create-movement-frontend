@@ -35,6 +35,7 @@ class ExportCustomsOfficeFormProvider @Inject() extends Mappings with Logging {
     val optOriginalValueSentInPreviousSubmission = ExportCustomsOfficePage.getOriginalAttributeValue
     Form(
       "value" -> text("exportCustomsOffice.error.required")
+        .transform[String](_.toUpperCase.replace(" ", ""), identity)
         .verifying(
           firstError(
             fixedLength(8, "exportCustomsOffice.error.length"),

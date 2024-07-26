@@ -23,7 +23,7 @@ object FirstTransporterVatMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Is the first transporter VAT registered in the UK?"
     val title = titleHelper(heading)
-    val hint = "A UK VAT registration number is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789."
+    val hint = "A UK VAT registration number is 9 numbers, sometimes with ‘GB’ at the start, for example 123456789 or GB123456789."
     val input = "UK VAT registration number"
 
     val cyaLabel: String = "VAT registration number"

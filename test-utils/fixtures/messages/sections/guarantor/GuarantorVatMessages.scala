@@ -35,7 +35,7 @@ object GuarantorVatMessages {
       case _ => "Is the transporter VAT registered in the UK?"
     }
 
-    val hint = "A UK VAT registration number is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789."
+    val hint = "A UK VAT registration number is 9 numbers, sometimes with ‘GB’ at the start, for example 123456789 or GB123456789."
     val label = "UK VAT registration number"
 
     val cyaLabel = "VAT registration number"

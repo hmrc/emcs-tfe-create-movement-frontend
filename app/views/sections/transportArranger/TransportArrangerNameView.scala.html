@@ -34,7 +34,7 @@
 
 @(form: Form[_], transportArranger: TransportArranger, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = helper.title(form, transportArranger), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
+@layout(pageTitle = helper.title(form, transportArranger), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.transportArranger.routes.TransportArrangerNameController.onSubmit(request.ern, request.draftId, mode)) {
 

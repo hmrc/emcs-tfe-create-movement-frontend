@@ -48,7 +48,7 @@ class ExportInformationCheckAnswersControllerSpec extends SpecBase with SummaryL
       mockUserAnswersService,
       new FakeExportInformationNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       mockExportInformationCheckAnswersHelper,

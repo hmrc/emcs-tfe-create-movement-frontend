@@ -55,5 +55,5 @@ trait SpecBase extends AnyFreeSpec with Matchers with OptionValues with ScalaFut
     UserRequest(request, ern, testInternalId, testCredId, testSessionId, hasMultipleErns = false)
 
   def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers, ern: String = testErn): DataRequest[A] =
-    DataRequest(userRequest(request, ern), testDraftId, answers, testMinTraderKnownFacts, Some(testMessageStatistics))
+    DataRequest(userRequest(request, ern), testDraftId, answers, testMinTraderKnownFacts)
 }

@@ -41,7 +41,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
       messagesApi,
       fakeAuthAction,
       fakeBetaAllowListAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeConsigneeNavigator(testOnwardRoute),
       mockUserAnswersService,

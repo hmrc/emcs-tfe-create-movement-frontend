@@ -31,7 +31,7 @@
 
 @(form: Form[_], indexOfSad: Index)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("sadRemoveDocument.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
+@layout(pageTitle = title(form, messages("sadRemoveDocument.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.sad.routes.SadRemoveDocumentController.onSubmit(request.ern, request.draftId, indexOfSad), 'autoComplete -> "off") {
 

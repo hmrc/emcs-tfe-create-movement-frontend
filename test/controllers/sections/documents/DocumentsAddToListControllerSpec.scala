@@ -53,7 +53,7 @@ class DocumentsAddToListControllerSpec extends SpecBase with MockUserAnswersServ
       fakeBetaAllowListAction,
       new FakeDocumentsNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(startingUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(startingUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       formProvider,
       messagesControllerComponents,

@@ -17,7 +17,6 @@
 package models.requests
 
 import models._
-import models.response.emcsTfe.GetMessageStatisticsResponse
 import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import pages.sections.info.DispatchPlacePage
@@ -27,8 +26,7 @@ import utils.Logging
 case class DataRequest[A](request: UserRequest[A],
                           draftId: String,
                           userAnswers: UserAnswers,
-                          traderKnownFacts: TraderKnownFacts,
-                          messageStatistics: Option[GetMessageStatisticsResponse]) extends WrappedRequest[A](request) with Logging {
+                          traderKnownFacts: TraderKnownFacts) extends WrappedRequest[A](request) with Logging {
 
   lazy val internalId: String = request.internalId
   lazy val ern: String = request.ern

@@ -49,7 +49,7 @@ class DispatchCheckAnswersControllerSpec extends SpecBase with MockUserAnswersSe
       fakeBetaAllowListAction,
       new FakeDispatchNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       messagesControllerComponents,
       mockDispatchCheckAnswersHelper,

@@ -33,7 +33,7 @@
 
 @(form: Form[_], transportUnitType: TransportUnitType, idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages(s"transportUnitIdentity.title.$transportUnitType")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
+@layout(pageTitle = title(form, messages(s"transportUnitIdentity.title.$transportUnitType")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitIdentityController.onSubmit(request.ern, request.draftId, idx, mode)) {
 

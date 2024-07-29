@@ -41,7 +41,7 @@ class SubmitCreateMovementConnectorISpec extends AnyFreeSpec
       .build()
 
   implicit lazy val dr: DataRequest[_] =
-    DataRequest(UserRequest(FakeRequest(), testErn, "", "", "", false), testDraftId, emptyUserAnswers, testMinTraderKnownFacts, Some(testMessageStatistics))
+    DataRequest(UserRequest(FakeRequest(), testErn, "", "", "", false), testDraftId, emptyUserAnswers, testMinTraderKnownFacts)
 
   private lazy val connector: SubmitCreateMovementConnector = app.injector.instanceOf[SubmitCreateMovementConnector]
 

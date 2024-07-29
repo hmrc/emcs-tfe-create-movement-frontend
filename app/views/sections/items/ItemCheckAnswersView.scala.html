@@ -36,7 +36,7 @@
 
 @(idx: Index, cnCodeInformation: CnCodeInformation, action: Call, addMorePackagingCall: Call, isBulk: Boolean, packagingCount: Option[Int])(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("itemCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
+@layout(pageTitle = titleNoForm(messages("itemCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action) {
 

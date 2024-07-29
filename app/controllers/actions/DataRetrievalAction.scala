@@ -18,7 +18,7 @@ package controllers.actions
 
 import models.requests.{OptionalDataRequest, UserRequest}
 import play.api.mvc.ActionTransformer
-import services.{GetMessageStatisticsService, GetTraderKnownFactsService, UserAnswersService}
+import services.{GetTraderKnownFactsService, UserAnswersService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -26,8 +26,7 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class DataRetrievalActionImpl @Inject()(val userAnswersService: UserAnswersService,
-                                        getTraderKnownFactsService: GetTraderKnownFactsService,
-                                        getMessageStatisticsService: GetMessageStatisticsService)
+                                        getTraderKnownFactsService: GetTraderKnownFactsService)
                                        (implicit val ec: ExecutionContext) extends DataRetrievalAction {
 
   def apply(draftId: String): ActionTransformer[UserRequest, OptionalDataRequest] = new ActionTransformer[UserRequest, OptionalDataRequest] {
@@ -41,9 +40,8 @@ class DataRetrievalActionImpl @Inject()(val userAnswersService: UserAnswersServi
       for {
         userAnswers <- userAnswersService.get(request.ern, draftId)
         traderKnownFacts <- getTraderKnownFactsService.getTraderKnownFacts(request.ern)
-        messageStatistics <- getMessageStatisticsService.getMessageStatistics(request.ern)(hc)
       } yield {
-        OptionalDataRequest(request, draftId, userAnswers, traderKnownFacts, messageStatistics)
+        OptionalDataRequest(request, draftId, userAnswers, traderKnownFacts)
       }
     }
   }

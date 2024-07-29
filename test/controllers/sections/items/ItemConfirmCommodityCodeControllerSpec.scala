@@ -57,7 +57,7 @@ class ItemConfirmCommodityCodeControllerSpec extends SpecBase
       messagesApi,
       fakeAuthAction,
       fakeBetaAllowListAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       mockUserAnswersService,
       dataRequiredAction,
       mockGetCnCodeInformationService,

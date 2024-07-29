@@ -45,7 +45,7 @@ class CheckYourAnswersJourneyTypeControllerSpec extends SpecBase with SummaryLis
       mockUserAnswersService,
       new FakeJourneyTypeNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       mockCheckYourAnswersJourneyTypeHelper,

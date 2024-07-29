@@ -37,7 +37,7 @@ class ExportInformationIndexControllerSpec extends SpecBase with MockUserAnswers
       mockUserAnswersService,
       new FakeExportInformationNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       messagesControllerComponents

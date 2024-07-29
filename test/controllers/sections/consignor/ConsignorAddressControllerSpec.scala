@@ -52,7 +52,7 @@ class ConsignorAddressControllerSpec extends SpecBase with MockUserAnswersServic
       mockUserAnswersService,
       new FakeConsignorNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       formProvider,

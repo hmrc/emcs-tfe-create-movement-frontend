@@ -32,7 +32,7 @@
 
 @(reference: String, dateOfSubmission: LocalDate, exciseEnquiriesLink: String, returnToAccountLink: String, feedbackLink: String)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("confirmation.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages))), showBackLink = false) {
+@layout(pageTitle = titleNoForm(messages("confirmation.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), showBackLink = false) {
 
     @confirmationPanel("confirmation.heading")
 

@@ -51,7 +51,7 @@ class DeleteDraftMovementControllerSpec extends SpecBase with MockUserAnswersSer
       fakeBetaAllowListAction,
       new FakeNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       formProvider,
       mockDeleteDraftMovementService,

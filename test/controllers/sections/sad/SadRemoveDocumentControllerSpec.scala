@@ -46,7 +46,7 @@ class SadRemoveDocumentControllerSpec extends SpecBase with MockUserAnswersServi
       fakeBetaAllowListAction,
       app.injector.instanceOf[SadNavigator],
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),

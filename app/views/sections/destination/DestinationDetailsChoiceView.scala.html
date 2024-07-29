@@ -30,7 +30,7 @@
 
 @(form: Form[_], action: Call, movementScenario: MovementScenario)(implicit request: DataRequest[_], messages: Messages)
 
-    @layout(pageTitle = title(form, messages("destinationDetailsChoice.title", movementScenario.stringValue)), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
+    @layout(pageTitle = title(form, messages("destinationDetailsChoice.title", movementScenario.stringValue)), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
         @formHelper(action, Symbol("autoComplete") -> "off") {
 

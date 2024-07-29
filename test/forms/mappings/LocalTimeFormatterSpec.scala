@@ -54,7 +54,7 @@ class LocalTimeFormatterSpec extends AnyFreeSpec with Matchers with OptionValues
     "515" -> LocalTime.of(5, 15),
     "0515pm" -> LocalTime.of(17, 15),
     "05:15am" -> LocalTime.of(5, 15),
-    "05.15am" -> LocalTime.of(5, 15),
+    "05.15 am" -> LocalTime.of(5, 15),
     "5:00am" -> LocalTime.of(5, 0),
     "13" -> LocalTime.of(13, 0),
     "5" -> LocalTime.of(5, 0),
@@ -65,7 +65,9 @@ class LocalTimeFormatterSpec extends AnyFreeSpec with Matchers with OptionValues
     "9am" -> LocalTime.of(9, 0),
     "14:00" -> LocalTime.of(14, 0),
     "12am" -> LocalTime.of(0,0),
-    "12pm" -> LocalTime.of(12, 0)
+    "12PM" -> LocalTime.of(12, 0),
+    "12 p m"-> LocalTime.of(12, 0)
+
   )
   // scalastyle:on magic.number
 
@@ -73,7 +75,6 @@ class LocalTimeFormatterSpec extends AnyFreeSpec with Matchers with OptionValues
     "9;15am",
     "17:15am",
     "1715am",
-    "515a m",
     "8am-9am",
     "tbc",
     "12noon"

@@ -73,7 +73,7 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
         contentAsString(result) mustEqual view(
           form = form,
           addressPage = TransportArrangerAddressPage,
-          call = transportArrangerAddressOnSubmit,
+          onSubmit = transportArrangerAddressOnSubmit,
           headingKey = Some(s"$TransportArrangerAddressPage.$GoodsOwner")
         )(dataRequest(request, userAnswers.get), messages(request)).toString
       }
@@ -92,7 +92,7 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
         contentAsString(result) mustEqual view(
           form = form.fill(userAddressModelMax),
           addressPage = TransportArrangerAddressPage,
-          call = transportArrangerAddressOnSubmit,
+          onSubmit = transportArrangerAddressOnSubmit,
           headingKey = Some(s"$TransportArrangerAddressPage.$Other")
         )(dataRequest(request, userAnswers.get), messages(request)).toString
       }
@@ -123,7 +123,7 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
         contentAsString(result) mustEqual view(
           form = boundForm,
           addressPage = TransportArrangerAddressPage,
-          call = transportArrangerAddressOnSubmit,
+          onSubmit = transportArrangerAddressOnSubmit,
           headingKey = Some(s"$TransportArrangerAddressPage.$GoodsOwner")
         )(dataRequest(request, userAnswers.get), messages(request)).toString
       }

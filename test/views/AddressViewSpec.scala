@@ -60,7 +60,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
             implicit val doc: Document = Jsoup.parse(view(
               form = form,
               addressPage = addressPage,
-              call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.draftId, NormalMode)).toString()
+              onSubmit = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.draftId, NormalMode)).toString()
             )
 
             behave like pageWithExpectedElementsAndMessages(Seq(
@@ -85,7 +85,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
             addressPage = TransportArrangerAddressPage,
-            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.draftId, NormalMode),
+            onSubmit = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.draftId, NormalMode),
             headingKey = Some(s"$TransportArrangerAddressPage.$GoodsOwner")
           ).toString())
 
@@ -107,7 +107,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
             addressPage = TransportArrangerAddressPage,
-            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.draftId, NormalMode),
+            onSubmit = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.draftId, NormalMode),
             headingKey = Some(s"$TransportArrangerAddressPage.$Other")
           ).toString())
 
@@ -124,7 +124,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
           addressPage = FirstTransporterAddressPage,
-          call = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onSubmit(request.ern, request.draftId, NormalMode),
+          onSubmit = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onSubmit(request.ern, request.draftId, NormalMode),
           headingKey = Some("firstTransporterAddress")
         ).toString())
 
@@ -143,24 +143,50 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
 
       "when rendered for DispatchAddress page" - new Fixture(messagesForLanguage.lang, DispatchAddressPage) {
 
-        implicit val doc: Document = Jsoup.parse(view(
-          form = form,
-          addressPage = DispatchAddressPage,
-          call = controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(request.ern, request.draftId, NormalMode),
-          headingKey = Some("dispatchAddress")
-        ).toString())
+        "when answer is optional" - {
 
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.dispatchAddressTitle,
-          Selectors.h1 -> messagesForLanguage.dispatchAddressHeading,
-          Selectors.h2(1) -> messagesForLanguage.subheading(DispatchAddressPage),
-          Selectors.label("property") -> messagesForLanguage.property,
-          Selectors.label("street") -> messagesForLanguage.street,
-          Selectors.label("town") -> messagesForLanguage.town,
-          Selectors.label("postcode") -> messagesForLanguage.postcode,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
-        ))
+          implicit val doc: Document = Jsoup.parse(view(
+            form = form,
+            addressPage = DispatchAddressPage,
+            onSubmit = controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(request.ern, request.draftId, NormalMode),
+            onSkip = Some(controllers.sections.dispatch.routes.DispatchAddressController.onSkip(request.ern, request.draftId, NormalMode)),
+            headingKey = Some("dispatchAddress.optional")
+          ).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.dispatchAddressOptionalTitle,
+            Selectors.h1 -> messagesForLanguage.dispatchAddressOptionalHeading,
+            Selectors.h2(1) -> messagesForLanguage.subheading(DispatchAddressPage),
+            Selectors.label("property") -> messagesForLanguage.property,
+            Selectors.label("street") -> messagesForLanguage.street,
+            Selectors.label("town") -> messagesForLanguage.town,
+            Selectors.label("postcode") -> messagesForLanguage.postcode,
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.link(1) -> messagesForLanguage.skipQuestion
+          ))
+        }
+
+        "when answer is NOT optional" - {
+
+          implicit val doc: Document = Jsoup.parse(view(
+            form = form,
+            addressPage = DispatchAddressPage,
+            onSubmit = controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(request.ern, request.draftId, NormalMode),
+            headingKey = Some("dispatchAddress")
+          ).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.dispatchAddressTitle,
+            Selectors.h1 -> messagesForLanguage.dispatchAddressHeading,
+            Selectors.h2(1) -> messagesForLanguage.subheading(DispatchAddressPage),
+            Selectors.label("property") -> messagesForLanguage.property,
+            Selectors.label("street") -> messagesForLanguage.street,
+            Selectors.label("town") -> messagesForLanguage.town,
+            Selectors.label("postcode") -> messagesForLanguage.postcode,
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.link(1) -> messagesForLanguage.returnToDraft
+          ))
+        }
       }
 
       "when rendered for DestinationAddress page" - new Fixture(messagesForLanguage.lang, DestinationAddressPage) {
@@ -168,7 +194,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
           addressPage = DestinationAddressPage,
-          call = controllers.sections.destination.routes.DestinationAddressController.onSubmit(request.ern, request.draftId, NormalMode),
+          onSubmit = controllers.sections.destination.routes.DestinationAddressController.onSubmit(request.ern, request.draftId, NormalMode),
           headingKey = Some("destinationAddress")
         ).toString())
 
@@ -197,7 +223,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
               implicit val doc: Document = Jsoup.parse(view(
                 form = form,
                 addressPage = GuarantorAddressPage,
-                call = controllers.sections.guarantor.routes.GuarantorAddressController.onSubmit(request.ern, request.draftId, NormalMode),
+                onSubmit = controllers.sections.guarantor.routes.GuarantorAddressController.onSubmit(request.ern, request.draftId, NormalMode),
                 headingKey = Some(s"guarantorAddress.$guarantorArranger")
               ).toString())
 

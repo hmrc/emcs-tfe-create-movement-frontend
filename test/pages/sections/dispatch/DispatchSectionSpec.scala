@@ -37,6 +37,7 @@ class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixture
           .set(DispatchAddressPage, testUserAddress)
           .set(DispatchUseConsignorDetailsPage, true)
         )
+
         DispatchSection.isCompleted mustBe true
       }
 
@@ -48,6 +49,7 @@ class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixture
           .set(DispatchBusinessNamePage, "beans")
           .set(DispatchAddressPage, testUserAddress)
         )
+
         DispatchSection.isCompleted mustBe true
       }
 
@@ -59,6 +61,7 @@ class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixture
           .set(DispatchBusinessNamePage, "beans")
           .set(DispatchAddressPage, testUserAddress)
         )
+
         DispatchSection.isCompleted mustBe true
       }
     }
@@ -76,6 +79,7 @@ class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixture
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(DispatchWarehouseExcisePage, "beans")
         )
+
         DispatchSection.isCompleted mustBe false
       }
 
@@ -84,8 +88,8 @@ class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixture
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(DispatchWarehouseExcisePage, "beans")
           .set(DispatchUseConsignorDetailsPage, false)
-          .set(DispatchBusinessNamePage, "beans")
         )
+
         DispatchSection.isCompleted mustBe false
       }
 
@@ -96,6 +100,7 @@ class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixture
           .set(DispatchUseConsignorDetailsPage, true)
           .set(DispatchBusinessNamePage, "beans")
         )
+
         DispatchSection.isCompleted mustBe false
       }
 
@@ -106,12 +111,15 @@ class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixture
           .set(DispatchUseConsignorDetailsPage, false)
           .set(DispatchAddressPage, testUserAddress)
         )
+
         DispatchSection.isCompleted mustBe false
       }
     }
 
     "must return UpdateNeeded" - {
+
       "when there is a Dispatch Submission Error" in {
+
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(DispatchWarehouseExcisePage, "beans")
@@ -120,6 +128,7 @@ class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixture
             .set(DispatchAddressPage, testUserAddress)
             .copy(submissionFailures = Seq(dispatchWarehouseInvalidOrMissingOnSeedError))
         )
+
         DispatchSection.status mustBe UpdateNeeded
       }
     }

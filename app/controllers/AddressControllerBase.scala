@@ -53,6 +53,6 @@ trait AddressControllerBase extends BaseNavigationController with AuthActionHelp
     status(view(
       form = form,
       addressPage = addressPage,
-      call = onwardCall(mode)
+      onSubmit = onwardCall(mode)
     ))
 }

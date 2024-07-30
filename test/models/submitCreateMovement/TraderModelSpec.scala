@@ -210,41 +210,78 @@ class TraderModelSpec extends SpecBase {
   }
 
   "applyPlaceOfDispatch" - {
-    "must return a TraderModel" - {
-      "when __WK and use consignor details = true" in {
-        Seq("GBWK123", "XIWK123").foreach {
-          ern =>
-            implicit val dr: DataRequest[_] = dataRequest(
-              fakeRequest,
-              emptyUserAnswers
-                .set(DispatchUseConsignorDetailsPage, true)
-                .set(DispatchAddressPage, testUserAddress.copy(street = "dispatch street"))
-                .set(DispatchWarehouseExcisePage, "dispatch ern"),
-              ern
-            )
 
-            TraderModel.applyPlaceOfDispatch mustBe Some(placeOfDispatchTrader.copy(
-              traderName = consignorTrader.traderName
-            ))
+    "must return a TraderModel" - {
+
+      "when __WK and use consignor details = true" in {
+
+        Seq("GBWK123", "XIWK123").foreach { ern =>
+          implicit val dr: DataRequest[_] = dataRequest(
+            fakeRequest,
+            emptyUserAnswers
+              .set(DispatchUseConsignorDetailsPage, true)
+              .set(DispatchAddressPage, testUserAddress.copy(street = "dispatch street"))
+              .set(DispatchWarehouseExcisePage, "dispatch ern"),
+            ern
+          )
+
+          TraderModel.applyPlaceOfDispatch mustBe Some(placeOfDispatchTrader.copy(
+            traderName = consignorTrader.traderName
+          ))
         }
       }
-      "when __WK and use consignor details = false" in {
-        Seq("GBWK123", "XIWK123").foreach {
-          ern =>
-            implicit val dr: DataRequest[_] = dataRequest(
-              fakeRequest,
-              emptyUserAnswers
-                .set(DispatchUseConsignorDetailsPage, false)
-                .set(DispatchBusinessNamePage, "dispatch name")
-                .set(DispatchAddressPage, testUserAddress.copy(street = "dispatch street"))
-                .set(DispatchWarehouseExcisePage, "dispatch ern"),
-              ern
-            )
 
-            TraderModel.applyPlaceOfDispatch mustBe Some(placeOfDispatchTrader)
+      "when __WK and use consignor details = false" in {
+
+        Seq("GBWK123", "XIWK123").foreach { ern =>
+          implicit val dr: DataRequest[_] = dataRequest(
+            fakeRequest,
+            emptyUserAnswers
+              .set(DispatchUseConsignorDetailsPage, false)
+              .set(DispatchBusinessNamePage, "dispatch name")
+              .set(DispatchAddressPage, testUserAddress.copy(street = "dispatch street"))
+              .set(DispatchWarehouseExcisePage, "dispatch ern"),
+            ern
+          )
+
+          TraderModel.applyPlaceOfDispatch mustBe Some(placeOfDispatchTrader)
+        }
+      }
+
+      "when isCertifiedConsignor is false and DispatchAddressPage has not been answered" in {
+
+        Seq("GBWK123", "XIWK123").foreach { ern =>
+
+          implicit val dr: DataRequest[_] = dataRequest(
+            fakeRequest,
+            emptyUserAnswers
+              .set(DispatchUseConsignorDetailsPage, false)
+              .set(DispatchBusinessNamePage, "dispatch name")
+              .set(DispatchWarehouseExcisePage, "dispatch ern"),
+            ern
+          )
+
+          TraderModel.applyPlaceOfDispatch mustBe Some(placeOfDispatchTrader.copy(address = None))
+        }
+      }
+
+      "when isCertifiedConsignor is true" in {
+        Seq("XIPA123", "XIPC123").foreach { ern =>
+          implicit val dr: DataRequest[_] = dataRequest(
+            fakeRequest,
+            emptyUserAnswers
+              .set(DispatchUseConsignorDetailsPage, false)
+              .set(DispatchBusinessNamePage, "dispatch name")
+              .set(DispatchAddressPage, testUserAddress.copy(street = "dispatch street"))
+              .set(DispatchWarehouseExcisePage, "dispatch ern"),
+            ern
+          )
+
+          TraderModel.applyPlaceOfDispatch mustBe Some(placeOfDispatchTrader)
         }
       }
     }
+
     "must return None" - {
       "when __RC" in {
         Seq("GBRC123", "XIRC123").foreach {

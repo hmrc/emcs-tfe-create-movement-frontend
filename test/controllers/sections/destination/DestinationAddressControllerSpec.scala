@@ -72,7 +72,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
       contentAsString(result) mustEqual view(
         form = form,
         addressPage = DestinationAddressPage,
-        call = destinationAddressOnSubmit,
+        onSubmit = destinationAddressOnSubmit,
         headingKey = Some("destinationAddress")
       )(dataRequest(request), messages(request)).toString
     }
@@ -88,7 +88,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
       contentAsString(result) mustEqual view(
         form = form.fill(testUserAddress.copy(street = "Consignee")),
         addressPage = DestinationAddressPage,
-        call = destinationAddressOnSubmit,
+        onSubmit = destinationAddressOnSubmit,
         headingKey = Some("destinationAddress")
       )(dataRequest(request), messages(request)).toString
     }
@@ -105,7 +105,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
       contentAsString(result) mustEqual view(
         form = form.fill(testUserAddress.copy(street = "Destination")),
         addressPage = DestinationAddressPage,
-        call = destinationAddressOnSubmit,
+        onSubmit = destinationAddressOnSubmit,
         headingKey = Some("destinationAddress")
       )(dataRequest(request), messages(request)).toString
     }
@@ -139,7 +139,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
       contentAsString(result) mustEqual view(
         form = boundForm,
         addressPage = DestinationAddressPage,
-        call = destinationAddressOnSubmit,
+        onSubmit = destinationAddressOnSubmit,
         headingKey = Some("destinationAddress")
       )(dataRequest(request), messages(request)).toString
     }

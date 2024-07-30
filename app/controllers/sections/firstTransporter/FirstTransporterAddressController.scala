@@ -53,7 +53,7 @@ class FirstTransporterAddressController @Inject()(override val messagesApi: Mess
     status(view(
       form = form,
       addressPage = addressPage,
-      call = onwardCall(mode),
+      onSubmit = onwardCall(mode),
       headingKey = Some("firstTransporterAddress")
     ))
 

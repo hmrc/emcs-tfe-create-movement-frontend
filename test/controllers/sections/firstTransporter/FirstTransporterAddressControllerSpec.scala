@@ -69,7 +69,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
       contentAsString(result) mustEqual view(
         form = form,
         addressPage = FirstTransporterAddressPage,
-        call = firstTransporterAddressOnSubmit,
+        onSubmit = firstTransporterAddressOnSubmit,
         headingKey = Some("firstTransporterAddress")
       )(dataRequest(request), messages(request)).toString
     }
@@ -100,7 +100,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
       contentAsString(result) mustEqual view(
         form = boundForm,
         addressPage = FirstTransporterAddressPage,
-        call = firstTransporterAddressOnSubmit,
+        onSubmit = firstTransporterAddressOnSubmit,
         headingKey = Some("firstTransporterAddress")
       )(dataRequest(request), messages(request)).toString
     }

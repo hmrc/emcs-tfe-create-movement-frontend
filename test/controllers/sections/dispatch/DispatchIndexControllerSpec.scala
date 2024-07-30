@@ -52,21 +52,22 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService w
   "DispatchIndexController" - {
 
     "when DispatchSection.status is UpdateNeeded" -{
-      "must redirect to DispatchCheckAnswersController" in new Fixture(
-          Some(emptyUserAnswers
-            .set(DispatchWarehouseExcisePage, "beans")
-            .set(DispatchUseConsignorDetailsPage, true)
-            .set(DispatchAddressPage, testUserAddress)
-            .copy(submissionFailures = Seq(dispatchWarehouseInvalidOrMissingOnSeedError))
-          )) {
 
-          val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
+      "must redirect to DispatchCheckAnswersController" in new Fixture(Some(emptyUserAnswers
+        .set(DispatchWarehouseExcisePage, "beans")
+        .set(DispatchUseConsignorDetailsPage, true)
+        .set(DispatchAddressPage, testUserAddress)
+        .copy(submissionFailures = Seq(dispatchWarehouseInvalidOrMissingOnSeedError))
+      )) {
 
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result) mustBe
-            Some(controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId).url)
-        }
+        val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
+
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe
+          Some(controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(testErn, testDraftId).url)
+      }
     }
+
     "when DispatchSection.isCompleted" - {
 
       "must redirect to the CYA controller" in new Fixture(Some(emptyUserAnswers

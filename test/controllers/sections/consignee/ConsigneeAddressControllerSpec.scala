@@ -52,7 +52,7 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
       mockUserAnswersService,
       new FakeConsigneeNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       formProvider,

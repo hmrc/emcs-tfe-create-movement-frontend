@@ -19,6 +19,7 @@ package models.requests
 import config.Constants
 import models._
 import play.api.mvc.{Request, WrappedRequest}
+import play.twirl.api.Html
 import utils.Logging
 
 case class UserRequest[A](request: Request[A],
@@ -26,7 +27,8 @@ case class UserRequest[A](request: Request[A],
                           internalId: String,
                           credId: String,
                           sessionId: String,
-                          hasMultipleErns: Boolean) extends WrappedRequest[A](request) with Logging {
+                          hasMultipleErns: Boolean,
+                          override val navBar: Option[Html] = None) extends WrappedRequest[A](request) with Logging with NavBarRequest {
 
   lazy val isNorthernIrelandErn: Boolean = ern.startsWith(Constants.NI_PREFIX)
   lazy val isGreatBritainErn: Boolean = ern.startsWith(Constants.GB_PREFIX)

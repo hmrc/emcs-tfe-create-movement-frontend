@@ -32,6 +32,7 @@ import play.api.Play.materializer
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.{MessagesControllerComponents, Request}
 import play.api.test.Helpers.stubPlayBodyParsers
+import play.twirl.api.Html
 
 trait SpecBase extends AnyFreeSpec with Matchers with OptionValues with ScalaFutures with BaseFixtures with GuiceOneAppPerSuite {
 
@@ -51,9 +52,9 @@ trait SpecBase extends AnyFreeSpec with Matchers with OptionValues with ScalaFut
   val fakeAuthAction = new FakeAuthAction(stubPlayBodyParsers)
   val fakeBetaAllowListAction = new FakeBetaAllowListAction()
 
-  def userRequest[A](request: Request[A], ern: String = testErn): UserRequest[A] =
-    UserRequest(request, ern, testInternalId, testCredId, testSessionId, hasMultipleErns = false)
+  def userRequest[A](request: Request[A], ern: String = testErn, navBar: Option[Html] = None): UserRequest[A] =
+    UserRequest(request, ern, testInternalId, testCredId, testSessionId, hasMultipleErns = false, navBar)
 
-  def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers, ern: String = testErn): DataRequest[A] =
-    DataRequest(userRequest(request, ern), testDraftId, answers, testMinTraderKnownFacts, Some(testMessageStatistics))
+  def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers, ern: String = testErn, navBar: Option[Html] = None): DataRequest[A] =
+    DataRequest(userRequest(request, ern, navBar), testDraftId, answers, testMinTraderKnownFacts)
 }

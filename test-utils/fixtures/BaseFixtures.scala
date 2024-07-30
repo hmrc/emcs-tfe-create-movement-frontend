@@ -18,7 +18,6 @@ package fixtures
 
 import models._
 import models.response.SubmitCreateMovementResponse
-import models.response.emcsTfe.GetMessageStatisticsResponse
 import models.response.referenceData.ItemPackaging
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.{DestinationType, MovementType, OriginType}
@@ -226,9 +225,4 @@ trait BaseFixtures {
     SubmitCreateMovementResponse(receipt = testConfirmationReference, downstreamService = "EIS", submittedDraftId = testDraftId)
   val submitCreateMovementResponseChRIS: SubmitCreateMovementResponse =
     SubmitCreateMovementResponse(receipt = testConfirmationReference, downstreamService = "ChRIS", submittedDraftId = testDraftId)
-
-  val testMessageStatistics: GetMessageStatisticsResponse = GetMessageStatisticsResponse(
-    countOfAllMessages = 10,
-    countOfNewMessages = 5
-  )
 }

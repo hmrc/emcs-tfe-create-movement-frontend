@@ -58,7 +58,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
       mockUserAnswersService,
       new FakeJourneyTypeNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),

@@ -50,7 +50,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
       fakeBetaAllowListAction,
       new FakeTransportUnitNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),

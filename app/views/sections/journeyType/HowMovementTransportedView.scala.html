@@ -41,7 +41,7 @@
   )
 }
 
-@layout(pageTitle = title(form, messages("howMovementTransported.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
+@layout(pageTitle = title(form, messages("howMovementTransported.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.journeyType.routes.HowMovementTransportedController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
 

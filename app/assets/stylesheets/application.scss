@@ -4,7 +4,6 @@ $hmrc-assets-path: "/emcs/create-movement/assets/lib/hmrc-frontend/hmrc/assets/"
 @import "lib/govuk-frontend/govuk/all";
 @import "lib/hmrc-frontend/hmrc/all";
 @import "taskList.scss";
-@import "primary-navigation";
 
 .js-visible {
   display: none;

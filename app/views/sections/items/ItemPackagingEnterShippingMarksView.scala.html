@@ -33,7 +33,7 @@
 
 @(form: Form[_], action: Call, packagingIndex: Index, itemIndex: Index, packagingDescription: String, packagingQuantity: String)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemPackagingEnterShippingMarks.title", packagingIndex.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
+@layout(pageTitle = title(form, messages("itemPackagingEnterShippingMarks.title", packagingIndex.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = action) {
 

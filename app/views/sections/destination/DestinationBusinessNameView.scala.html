@@ -39,7 +39,7 @@ messages("destinationBusinessName.directDelivery.title")
 } else {
 messages("destinationBusinessName.title")
 }
-), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
+), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = onSubmitCall) {
 

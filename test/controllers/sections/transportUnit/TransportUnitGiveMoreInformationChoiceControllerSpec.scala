@@ -52,7 +52,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
       fakeBetaAllowListAction,
       app.injector.instanceOf[TransportUnitNavigator],
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),

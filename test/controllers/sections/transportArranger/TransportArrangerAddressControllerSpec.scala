@@ -51,7 +51,7 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
       mockUserAnswersService,
       new FakeTransportArrangerNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       formProvider,

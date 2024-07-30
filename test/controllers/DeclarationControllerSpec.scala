@@ -60,7 +60,7 @@ class DeclarationControllerSpec extends SpecBase
       messagesApi,
       fakeAuthAction,
       fakeBetaAllowListAction,
-      new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
       app.injector.instanceOf[DataRequiredAction],
       Helpers.stubMessagesControllerComponents(),
       mockUserAnswersService,

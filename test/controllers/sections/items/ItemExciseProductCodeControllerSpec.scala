@@ -66,7 +66,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
       mockUserAnswersService,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       formProvider,

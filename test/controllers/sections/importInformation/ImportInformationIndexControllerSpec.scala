@@ -35,7 +35,7 @@ class ImportInformationIndexControllerSpec extends SpecBase with MockUserAnswers
 
     lazy val controller = new ImportInformationIndexController(
       fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       Helpers.stubMessagesControllerComponents()

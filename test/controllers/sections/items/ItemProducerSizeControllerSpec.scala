@@ -53,7 +53,7 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
       userAnswersService = mockUserAnswersService,
       navigator = new FakeItemsNavigator(testOnwardRoute),
       auth = fakeAuthAction,
-      getData = new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      getData = new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       requireData = dataRequiredAction,
       betaAllowList = fakeBetaAllowListAction,
       formProvider = formProvider,

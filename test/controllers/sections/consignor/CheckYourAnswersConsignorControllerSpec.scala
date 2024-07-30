@@ -47,7 +47,7 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase with MockConsigno
       messagesApi,
       fakeAuthAction,
       fakeBetaAllowListAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       messagesControllerComponents,
       new FakeConsignorNavigator(testOnwardRoute),

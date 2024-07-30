@@ -32,7 +32,7 @@
 
 @(form: Form[_], guarantorArranger: GuarantorArranger, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages(s"guarantorName.$guarantorArranger.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
+@layout(pageTitle = title(form, messages(s"guarantorName.$guarantorArranger.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.guarantor.routes.GuarantorNameController.onSubmit(request.ern, request.draftId, mode)) {
 

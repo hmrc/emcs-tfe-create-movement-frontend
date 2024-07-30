@@ -18,7 +18,7 @@ package controllers.actions.predraft
 
 import models.requests.{OptionalDataRequest, UserRequest}
 import play.api.mvc.ActionTransformer
-import services.{GetMessageStatisticsService, GetTraderKnownFactsService, PreDraftService}
+import services.{GetTraderKnownFactsService, PreDraftService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -26,8 +26,7 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class PreDraftDataRetrievalActionImpl @Inject()(val preDraftService: PreDraftService,
-                                                val getTraderKnownFactsService: GetTraderKnownFactsService,
-                                                getMessageStatisticsService: GetMessageStatisticsService)
+                                                val getTraderKnownFactsService: GetTraderKnownFactsService)
                                                (implicit val ec: ExecutionContext) extends PreDraftDataRetrievalAction {
 
   def apply(): ActionTransformer[UserRequest, OptionalDataRequest] = new ActionTransformer[UserRequest, OptionalDataRequest] {
@@ -41,9 +40,8 @@ class PreDraftDataRetrievalActionImpl @Inject()(val preDraftService: PreDraftSer
       for {
         userAnswers <- preDraftService.get(request.ern, request.sessionId)
         traderKnownFacts <- getTraderKnownFactsService.getTraderKnownFacts(request.ern)
-        messageStatistics <- getMessageStatisticsService.getMessageStatistics(request.ern)(hc)
       } yield {
-        OptionalDataRequest(request, request.sessionId, userAnswers, traderKnownFacts, messageStatistics)
+        OptionalDataRequest(request, request.sessionId, userAnswers, traderKnownFacts)
       }
     }
   }

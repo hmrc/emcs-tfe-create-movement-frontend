@@ -59,7 +59,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
       mockUserAnswersService,
       new FakeDestinationNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       formProvider,
       messagesControllerComponents,

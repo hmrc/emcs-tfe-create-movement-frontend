@@ -17,7 +17,7 @@
 package controllers.actions
 
 import base.SpecBase
-import mocks.services.{MockGetMessageStatisticsService, MockGetTraderKnownFactsService, MockUserAnswersService}
+import mocks.services.{MockGetTraderKnownFactsService, MockUserAnswersService}
 import models.requests.{OptionalDataRequest, UserRequest}
 import play.api.mvc.ActionTransformer
 import play.api.test.FakeRequest
@@ -28,14 +28,12 @@ import scala.concurrent.Future
 class DataRetrievalActionSpec
   extends SpecBase
     with MockUserAnswersService
-    with MockGetTraderKnownFactsService
-    with MockGetMessageStatisticsService {
+    with MockGetTraderKnownFactsService {
 
   lazy val dataRetrievalAction: ActionTransformer[UserRequest, OptionalDataRequest] =
     new DataRetrievalActionImpl(
       mockUserAnswersService,
-      mockGetTraderKnownFactsService,
-      mockGetMessageStatisticsService
+      mockGetTraderKnownFactsService
     ).apply(testDraftId)
 
   "Data Retrieval Action" - {
@@ -43,7 +41,6 @@ class DataRetrievalActionSpec
       "must set userAnswers to 'None' in the request" in {
         MockUserAnswersService.get(testErn, testDraftId).returns(Future.successful(None))
         MockGetTraderKnownFactsService.getTraderKnownFacts(testErn).returns(Future.successful(Some(testMinTraderKnownFacts)))
-        MockGetMessageStatisticsService.getMessageStatistics(testErn).returns(Future.successful(Some(testMessageStatistics)))
 
         val result = dataRetrievalAction.refine(UserRequest(FakeRequest(), testErn, testInternalId, testCredId, testSessionId, false)).futureValue.toOption.get
 
@@ -52,7 +49,6 @@ class DataRetrievalActionSpec
       "must set TraderKnownFacts to 'None' in the request" in {
         MockUserAnswersService.get(testErn, testDraftId).returns(Future.successful(None))
         MockGetTraderKnownFactsService.getTraderKnownFacts(testErn).returns(Future.successful(None))
-        MockGetMessageStatisticsService.getMessageStatistics(testErn).returns(Future.successful(Some(testMessageStatistics)))
 
         val result = dataRetrievalAction.refine(UserRequest(FakeRequest(), testErn, testInternalId, testCredId, testSessionId, false)).futureValue.toOption.get
 
@@ -64,7 +60,6 @@ class DataRetrievalActionSpec
       "must build a userAnswers object and add it to the request" in {
         MockUserAnswersService.get(testErn, testDraftId).returns(Future(Some(emptyUserAnswers)))
         MockGetTraderKnownFactsService.getTraderKnownFacts(testErn).returns(Future.successful(Some(testMinTraderKnownFacts)))
-        MockGetMessageStatisticsService.getMessageStatistics(testErn).returns(Future.successful(Some(testMessageStatistics)))
 
         val result = dataRetrievalAction.refine(UserRequest(FakeRequest(), testErn, testInternalId, testCredId, testSessionId, false)).futureValue.toOption.get
 
@@ -74,7 +69,6 @@ class DataRetrievalActionSpec
       "must build a TraderKnownFacts object and add it to the request" in {
         MockUserAnswersService.get(testErn, testDraftId).returns(Future(Some(emptyUserAnswers)))
         MockGetTraderKnownFactsService.getTraderKnownFacts(testErn).returns(Future.successful(Some(testMinTraderKnownFacts)))
-        MockGetMessageStatisticsService.getMessageStatistics(testErn).returns(Future.successful(Some(testMessageStatistics)))
 
         val result = dataRetrievalAction.refine(UserRequest(FakeRequest(), testErn, testInternalId, testCredId, testSessionId, false)).futureValue.toOption.get
 

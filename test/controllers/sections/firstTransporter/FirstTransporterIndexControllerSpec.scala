@@ -36,7 +36,7 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
       mockUserAnswersService,
       new FakeFirstTransporterNavigator(testOnwardRoute),
       fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       fakeBetaAllowListAction,
       messagesControllerComponents

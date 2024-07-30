@@ -46,7 +46,7 @@
   <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
 }
 
-@layout(pageTitle = title(form = form, title = messages("itemCommodityCode.title", goodsType.toSingularOutput())), additionalCss = autocompleteCss(), additionalScripts = scripts, maybeShowActiveTrader = maybeShowActiveTrader(request), maybeShowNavigationBanner = Some(NavigationBannerInfo(request.ern, request.messageStatistics.map(_.countOfNewMessages)))) {
+@layout(pageTitle = title(form = form, title = messages("itemCommodityCode.title", goodsType.toSingularOutput())), additionalCss = autocompleteCss(), additionalScripts = scripts, maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action) {
         @if(form.errors.nonEmpty) {

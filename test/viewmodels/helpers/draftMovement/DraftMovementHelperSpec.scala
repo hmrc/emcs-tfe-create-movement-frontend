@@ -62,7 +62,7 @@ class DraftMovementHelperSpec extends SpecBase {
       implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
       def dataRequest(ern: String, userAnswers: UserAnswers) = DataRequest(
-        userRequest(FakeRequest(), ern), testDraftId, userAnswers, testMinTraderKnownFacts, Some(testMessageStatistics)
+        userRequest(FakeRequest(), ern), testDraftId, userAnswers, testMinTraderKnownFacts
       )
 
       "heading" - {

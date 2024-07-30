@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,22 @@
 
 package mocks.connectors
 
-import connectors.emcsTfe.GetMessageStatisticsConnector
-import models.response.ErrorResponse
-import models.response.emcsTfe.GetMessageStatisticsResponse
+import connectors.emcsTfeFrontend.NavBarPartialConnector
 import org.scalamock.handlers.CallHandler3
 import org.scalamock.scalatest.MockFactory
+import play.twirl.api.Html
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
+trait MockNavBarPartialConnector extends MockFactory {
 
-trait MockGetMessageStatisticsConnector extends MockFactory {
+  lazy val mockNavBarPartialConnector: NavBarPartialConnector = mock[NavBarPartialConnector]
 
-  lazy val mockGetMessageStatisticsConnector: GetMessageStatisticsConnector = mock[GetMessageStatisticsConnector]
+  object MockNavBarPartialConnector {
 
-  object MockGetMessageStatisticsConnector {
-    def getMessageStatistics(ern: String): CallHandler3[String, HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, GetMessageStatisticsResponse]]] =
-      (mockGetMessageStatisticsConnector.getMessageStatistics(_: String)(_: HeaderCarrier, _: ExecutionContext))
+    def getNavBar(ern: String): CallHandler3[String, HeaderCarrier, ExecutionContext, Future[Option[Html]]] =
+      (mockNavBarPartialConnector.getNavBar(_: String)(_: HeaderCarrier, _: ExecutionContext))
         .expects(ern, *, *)
   }
 }

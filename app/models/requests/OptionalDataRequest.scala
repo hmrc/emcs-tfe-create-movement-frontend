@@ -16,15 +16,15 @@
 
 package models.requests
 
-import models.response.emcsTfe.GetMessageStatisticsResponse
 import models.{TraderKnownFacts, UserAnswers}
 import play.api.mvc.WrappedRequest
+import play.twirl.api.Html
 
 case class OptionalDataRequest[A](request: UserRequest[A],
                                   draftId: String,
                                   userAnswers: Option[UserAnswers],
-                                  traderKnownFacts: Option[TraderKnownFacts],
-                                  messageStatistics: Option[GetMessageStatisticsResponse]) extends WrappedRequest[A](request) {
+                                  traderKnownFacts: Option[TraderKnownFacts]) extends WrappedRequest[A](request) with NavBarRequest {
   val internalId = request.internalId
   val ern = request.ern
+  override val navBar: Option[Html] = request.navBar
 }

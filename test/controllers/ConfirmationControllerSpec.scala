@@ -59,7 +59,7 @@ class ConfirmationControllerSpec extends SpecBase with MockFactory {
     messagesApi,
     fakeAuthAction,
     fakeBetaAllowListAction,
-    new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts), Some(testMessageStatistics)),
+    new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
     requireData = dataRequiredAction,
     controllerComponents = messagesControllerComponents,
     config = app.injector.instanceOf[AppConfig],

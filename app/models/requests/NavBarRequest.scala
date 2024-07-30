@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package models.response.emcsTfe
+package models.requests
 
-import play.api.libs.json.{Json, OFormat}
+import play.twirl.api.Html
 
-case class GetMessageStatisticsResponse(countOfAllMessages: Int,
-                                        countOfNewMessages: Int)
-
-object GetMessageStatisticsResponse {
-  implicit val fmt: OFormat[GetMessageStatisticsResponse] = Json.format
+trait NavBarRequest {
+  val navBar: Option[Html]
 }

@@ -21,12 +21,13 @@ import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import pages.sections.info.DispatchPlacePage
 import play.api.mvc.WrappedRequest
+import play.twirl.api.Html
 import utils.Logging
 
 case class DataRequest[A](request: UserRequest[A],
                           draftId: String,
                           userAnswers: UserAnswers,
-                          traderKnownFacts: TraderKnownFacts) extends WrappedRequest[A](request) with Logging {
+                          traderKnownFacts: TraderKnownFacts) extends WrappedRequest[A](request) with Logging with NavBarRequest {
 
   lazy val internalId: String = request.internalId
   lazy val ern: String = request.ern
@@ -48,4 +49,6 @@ case class DataRequest[A](request: UserRequest[A],
       logger.debug(s"[dispatchPlace] Invalid value for DISPATCH_PLACE: $value")
       None
   }
+
+  override val navBar: Option[Html] = request.navBar
 }

@@ -17,6 +17,7 @@
 package controllers.actions
 
 import config.{AppConfig, EnrolmentKeys}
+import connectors.emcsTfeFrontend.NavBarPartialConnector
 import models.requests.UserRequest
 import models.{GreatBritainWarehouse, NorthernIrelandTemporaryCertifiedConsignor, NorthernIrelandWarehouse, Unknown, UserType}
 import play.api.mvc.Results._
@@ -38,6 +39,7 @@ trait AuthAction {
 
 @Singleton
 class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
+                               navBarPartialConnector: NavBarPartialConnector,
                                config: AppConfig,
                                val bodyParser: BodyParsers.Default
                               )(implicit val ec: ExecutionContext) extends AuthAction with AuthorisedFunctions with Logging {
@@ -90,7 +92,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
                                                 credId: String,
                                                 sessionId: Option[SessionId]
                                                )(block: UserRequest[A] => Future[Result])
-                                               (implicit request: Request[A]): Future[Result] =
+                                               (implicit request: Request[A], hc: HeaderCarrier): Future[Result] =
     enrolments.enrolments.filter(enrolment => enrolment.key == EnrolmentKeys.EMCS_ENROLMENT) match {
       case emcsEnrolments if emcsEnrolments.isEmpty =>
         logger.debug(s"[checkOrganisationEMCSEnrolment] No ${EnrolmentKeys.EMCS_ENROLMENT} enrolment found")
@@ -114,8 +116,10 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
                                             sessionId: Option[SessionId],
                                             hasMultipleEnrolments: Boolean
                                            )(block: UserRequest[A] => Future[Result])
-                                           (implicit request: Request[A]): Future[Result] = {
-    lazy val success = block(UserRequest(request, ernFromUrl, internalId, credId, sessionId.get.value, hasMultipleEnrolments))
+                                           (implicit request: Request[A], hc: HeaderCarrier): Future[Result] = {
+    lazy val success = navBarPartialConnector.getNavBar(ernFromUrl).flatMap { navBar =>
+      block(UserRequest(request, ernFromUrl, internalId, credId, sessionId.get.value, hasMultipleEnrolments, navBar))
+    }
     val userType = UserType(ernFromUrl)
 
     if (Seq(Unknown, GreatBritainWarehouse, NorthernIrelandWarehouse).contains(userType)) {

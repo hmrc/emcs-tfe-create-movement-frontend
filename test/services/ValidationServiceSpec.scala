@@ -31,7 +31,7 @@ import play.api.test.{DefaultAwaitTimeout, FakeRequest}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.TimeMachine
 
-import java.time.{LocalDate, LocalDateTime, LocalTime}
+import java.time.{Instant, LocalDate, LocalDateTime, LocalTime}
 import scala.concurrent.{ExecutionContext, Future}
 
 class ValidationServiceSpec extends SpecBase
@@ -48,6 +48,7 @@ class ValidationServiceSpec extends SpecBase
 
   val mockTimeMachine = new TimeMachine {
     override def now(): LocalDateTime = dateTime
+    override def instant(): Instant = Instant.now
   }
 
   class Test(val userAnswers: UserAnswers) {

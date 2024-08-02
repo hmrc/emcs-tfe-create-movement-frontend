@@ -69,7 +69,7 @@ class DeclarationController @Inject()(
   def onSubmit(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withSubmitCreateMovementModel { submitCreateMovementModel =>
-        service.submit(submitCreateMovementModel).flatMap {
+        service.submit(submitCreateMovementModel, ern).flatMap {
           case Right(response) =>
             logger.debug(s"[onSubmit] response received from downstream service ${response.downstreamService}: ${response.receipt}")
             val updatedAnswers = request.userAnswers.copy(hasBeenSubmitted = true, submittedDraftId = Some(response.submittedDraftId))

@@ -16,11 +16,14 @@
 
 package services
 
+import config.AppConfig
 import connectors.emcsTfe.SubmitCreateMovementConnector
+import featureswitch.core.config.{EnableNRS, FeatureSwitching}
 import models.audit.SubmitCreateMovementAudit
 import models.requests.DataRequest
 import models.response.{ErrorResponse, SubmitCreateMovementResponse}
 import models.submitCreateMovement.SubmitCreateMovementModel
+import services.nrs.NRSBrokerService
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{Logging, TimeMachine}
 
@@ -29,18 +32,29 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class SubmitCreateMovementService @Inject()(
                                              connector: SubmitCreateMovementConnector,
+                                             nrsBrokerService: NRSBrokerService,
                                              auditingService: AuditingService,
-                                             timeMachine: TimeMachine
-                                           )(implicit ec: ExecutionContext) extends Logging {
+                                             timeMachine: TimeMachine,
+                                             override val config: AppConfig
+                                           )(implicit ec: ExecutionContext) extends Logging with FeatureSwitching {
 
-  def submit(submitCreateMovementModel: SubmitCreateMovementModel)
+  def submit(submitCreateMovementModel: SubmitCreateMovementModel, ern: String)
             (implicit request: DataRequest[_], hc: HeaderCarrier): Future[Either[ErrorResponse, SubmitCreateMovementResponse]] = {
+    if(isEnabled(EnableNRS)) {
+      nrsBrokerService.submitPayload(submitCreateMovementModel, ern).flatMap { _ =>
+        handleSubmission(submitCreateMovementModel)
+      }
+    } else {
+      handleSubmission(submitCreateMovementModel)
+    }
+  }
 
+  private def handleSubmission(submitCreateMovementModel: SubmitCreateMovementModel)
+                              (implicit hc: HeaderCarrier, request: DataRequest[_]): Future[Either[ErrorResponse, SubmitCreateMovementResponse]] =
     connector.submit(submitCreateMovementModel).map { response =>
       writeAudit(submitCreateMovementModel, response)
       response
     }
-  }
 
   private def writeAudit(
                           submissionRequest: SubmitCreateMovementModel,

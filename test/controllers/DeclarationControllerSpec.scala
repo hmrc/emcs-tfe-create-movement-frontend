@@ -154,7 +154,7 @@ class DeclarationControllerSpec extends SpecBase
       "when downstream call is successful" - {
         "must save the timestamp and redirect" in new Test() {
           MockAppConfig.destinationOfficeSuffix.returns("004098")
-          MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel).returns(Future.successful(Right(submitCreateMovementResponseEIS)))
+          MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel, ern).returns(Future.successful(Right(submitCreateMovementResponseEIS)))
           MockUserAnswersService.set(baseFullUserAnswers.copy(hasBeenSubmitted = true, submittedDraftId = Some(testDraftId))).returns(Future.successful(
             baseFullUserAnswers.copy(hasBeenSubmitted = true, submittedDraftId = Some(testDraftId))
               .set(DeclarationPage, LocalDateTime.now())
@@ -182,7 +182,7 @@ class DeclarationControllerSpec extends SpecBase
               itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
             ))
           MockAppConfig.destinationOfficeSuffix.returns("004098")
-          MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel).returns(Future.successful(Right(submitCreateMovementResponseEIS)))
+          MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel, ern).returns(Future.successful(Right(submitCreateMovementResponseEIS)))
           MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
 
           val res = controller.onSubmit(ern, testDraftId)(request)
@@ -196,7 +196,7 @@ class DeclarationControllerSpec extends SpecBase
         "when downstream returns a 422" - {
           "must redirect to the DraftMovementController" in new Test() {
             MockAppConfig.destinationOfficeSuffix.returns("004098")
-            MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel).returns(Future.successful(Left(UnexpectedDownstreamDraftSubmissionResponseError(UNPROCESSABLE_ENTITY))))
+            MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel, ern).returns(Future.successful(Left(UnexpectedDownstreamDraftSubmissionResponseError(UNPROCESSABLE_ENTITY))))
 
             val res = controller.onSubmit(ern, testDraftId)(request)
 
@@ -209,7 +209,7 @@ class DeclarationControllerSpec extends SpecBase
             // arbitrary 5xx status codes
             Seq(INTERNAL_SERVER_ERROR, BAD_GATEWAY, SERVICE_UNAVAILABLE, GATEWAY_TIMEOUT).foreach { responseStatus =>
               MockAppConfig.destinationOfficeSuffix.returns("004098")
-              MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel).returns(Future.successful(Left(UnexpectedDownstreamDraftSubmissionResponseError(responseStatus))))
+              MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel, ern).returns(Future.successful(Left(UnexpectedDownstreamDraftSubmissionResponseError(responseStatus))))
 
               val res = controller.onSubmit(ern, testDraftId)(request)
 

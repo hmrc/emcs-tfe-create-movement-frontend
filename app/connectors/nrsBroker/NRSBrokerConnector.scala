@@ -34,7 +34,7 @@ class NRSBrokerConnector @Inject()(http: HttpClient, config: AppConfig) extends 
     )
   }.recover {
     error =>
-      logger.warn(s"[check] Unexpected error from NRS broker: ${error.getClass} ${error.getMessage.take(10000)}")
+      logger.warn(s"[submitPayload] Unexpected error from NRS broker: ${error.getClass} ${error.getMessage.take(10000)}")
       Left(UnexpectedDownstreamResponseError)
   }
 }

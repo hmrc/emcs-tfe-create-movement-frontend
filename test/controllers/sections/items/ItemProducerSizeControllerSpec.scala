@@ -31,7 +31,7 @@ import play.api.test.{FakeRequest, Helpers}
 import utils.TimeMachine
 import views.html.sections.items.ItemProducerSizeView
 
-import java.time.LocalDateTime
+import java.time.{Instant, LocalDateTime}
 import scala.concurrent.Future
 
 class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService with MockUserAnswersService with ItemFixtures {
@@ -41,6 +41,8 @@ class ItemProducerSizeControllerSpec extends SpecBase with MockPreDraftService w
     object FakeTimeMachine extends TimeMachine {
       override def now(): LocalDateTime =
         LocalDateTime.of(2023, monthValue, 12, 1, 1, 1)
+
+      override def instant(): Instant = Instant.now()
     }
 
     val formProvider = new ItemProducerSizeFormProvider()

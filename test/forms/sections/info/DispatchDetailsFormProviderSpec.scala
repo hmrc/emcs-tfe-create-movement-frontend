@@ -23,12 +23,15 @@ import play.api.data.FormError
 import play.api.i18n.Messages
 import utils.{DateTimeUtils, TimeMachine}
 
-import java.time.LocalDateTime
+import java.time.{Instant, LocalDateTime}
 
 class DispatchDetailsFormProviderSpec extends SpecBase with StringFieldBehaviours with DateTimeUtils {
 
-  val now = LocalDateTime.now()
-  val timeMachine: TimeMachine = () => now
+  val dateTimeNow = LocalDateTime.now()
+  val timeMachine: TimeMachine = new TimeMachine {
+    override def now(): LocalDateTime = dateTimeNow
+    override def instant(): Instant = Instant.now
+  }
 
   val dateField = "value"
   val dayField = "value.day"
@@ -38,10 +41,10 @@ class DispatchDetailsFormProviderSpec extends SpecBase with StringFieldBehaviour
 
   def form(isDeferred: Boolean = false) = new DispatchDetailsFormProvider(appConfig, timeMachine)(isDeferred)
 
-  def formAnswersMap(day: String = dispatchDetailsModel(now.toLocalDate).date.getDayOfMonth.toString,
-                     month: String = dispatchDetailsModel(now.toLocalDate).date.getMonthValue.toString,
-                     year: String = dispatchDetailsModel(now.toLocalDate).date.getYear.toString,
-                     time: String = dispatchDetailsModel(now.toLocalDate).time.formatTimeForUIOutput()
+  def formAnswersMap(day: String = dispatchDetailsModel(dateTimeNow.toLocalDate).date.getDayOfMonth.toString,
+                     month: String = dispatchDetailsModel(dateTimeNow.toLocalDate).date.getMonthValue.toString,
+                     year: String = dispatchDetailsModel(dateTimeNow.toLocalDate).date.getYear.toString,
+                     time: String = dispatchDetailsModel(dateTimeNow.toLocalDate).time.formatTimeForUIOutput()
                     ): Map[String, String] = {
     Map(
       dayField -> day,
@@ -57,7 +60,7 @@ class DispatchDetailsFormProviderSpec extends SpecBase with StringFieldBehaviour
 
       val data = formAnswersMap()
 
-      val expectedResult = Some(dispatchDetailsModel(now.toLocalDate))
+      val expectedResult = Some(dispatchDetailsModel(dateTimeNow.toLocalDate))
       val expectedErrors = Seq.empty
 
       val actualResult = form().bind(data)
@@ -110,14 +113,14 @@ class DispatchDetailsFormProviderSpec extends SpecBase with StringFieldBehaviour
           }
 
           "when the date is equal to todays date" in {
-            val data = formAnswersMap(day = now.getDayOfMonth.toString, month = now.getMonthValue.toString, year = now.getYear.toString)
+            val data = formAnswersMap(day = dateTimeNow.getDayOfMonth.toString, month = dateTimeNow.getMonthValue.toString, year = dateTimeNow.getYear.toString)
             val actualResult = form(isDeferred = true).bind(data)
 
             actualResult.errors mustBe Seq()
           }
 
           "when the date is after todays date" in {
-            val tomorrow = now.plusDays(1)
+            val tomorrow = dateTimeNow.plusDays(1)
             val data = formAnswersMap(day = tomorrow.getDayOfMonth.toString, month = tomorrow.getMonthValue.toString, year = tomorrow.getYear.toString)
             val expectedResult = Seq(FormError(dateField, s"dispatchDetails.$dateField.error.latestDate.deferred", Seq(appConfig.maxDispatchDateFutureDays)))
             val actualResult = form(isDeferred = true).bind(data)
@@ -129,7 +132,7 @@ class DispatchDetailsFormProviderSpec extends SpecBase with StringFieldBehaviour
         "when is NOT a deferred movement" - {
 
           "when the date is before today" in {
-            val yesterday = now.minusDays(1)
+            val yesterday = dateTimeNow.minusDays(1)
             val data = formAnswersMap(day = yesterday.getDayOfMonth.toString, month = yesterday.getMonthValue.toString, year = yesterday.getYear.toString)
             val expectedResult = Seq(FormError(dateField, s"dispatchDetails.$dateField.error.earliestDate"))
             val actualResult = form().bind(data)
@@ -138,14 +141,14 @@ class DispatchDetailsFormProviderSpec extends SpecBase with StringFieldBehaviour
           }
 
           "when the date is equal to today" in {
-            val data = formAnswersMap(day = now.getDayOfMonth.toString, month = now.getMonthValue.toString, year = now.getYear.toString)
+            val data = formAnswersMap(day = dateTimeNow.getDayOfMonth.toString, month = dateTimeNow.getMonthValue.toString, year = dateTimeNow.getYear.toString)
             val actualResult = form().bind(data)
 
             actualResult.errors mustBe Seq()
           }
 
           s"when the date is equal to todays date + max days in future" in {
-            val maxDate = now.plusDays(appConfig.maxDispatchDateFutureDays)
+            val maxDate = dateTimeNow.plusDays(appConfig.maxDispatchDateFutureDays)
             val data = formAnswersMap(day = maxDate.getDayOfMonth.toString, month = maxDate.getMonthValue.toString, year = maxDate.getYear.toString)
             val actualResult = form().bind(data)
 
@@ -153,7 +156,7 @@ class DispatchDetailsFormProviderSpec extends SpecBase with StringFieldBehaviour
           }
 
           "when the date is after todays date + max days in future" in {
-            val tomorrow = now.plusDays(appConfig.maxDispatchDateFutureDays + 1)
+            val tomorrow = dateTimeNow.plusDays(appConfig.maxDispatchDateFutureDays + 1)
             val data = formAnswersMap(day = tomorrow.getDayOfMonth.toString, month = tomorrow.getMonthValue.toString, year = tomorrow.getYear.toString)
             val expectedResult = Seq(FormError(dateField, s"dispatchDetails.$dateField.error.latestDate", Seq(appConfig.maxDispatchDateFutureDays)))
             val actualResult = form().bind(data)

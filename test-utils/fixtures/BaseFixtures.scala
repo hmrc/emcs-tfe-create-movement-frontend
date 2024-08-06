@@ -33,6 +33,7 @@ import java.time.{Instant, LocalDate, LocalDateTime, LocalTime}
 
 trait BaseFixtures {
 
+  val testAuthToken = "Bearer token"
   val testSessionId: String = "1234-5678-4321"
   val testCredId: String = "credId"
   val testInternalId: String = "internalId"

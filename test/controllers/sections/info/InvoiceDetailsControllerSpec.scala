@@ -32,14 +32,17 @@ import play.api.test.{FakeRequest, Helpers}
 import utils.{DateTimeUtils, TimeMachine}
 import views.html.sections.info.InvoiceDetailsView
 
-import java.time.LocalDate
+import java.time.{Instant, LocalDate, LocalDateTime}
 import scala.concurrent.Future
 
 class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService with MockPreDraftService with DateTimeUtils {
 
   val testLocalDate: LocalDate = LocalDate.of(2023, 2, 9)
 
-  val timeMachine: TimeMachine = () => testLocalDate.atStartOfDay()
+  val timeMachine: TimeMachine = new TimeMachine {
+    override def now(): LocalDateTime = testLocalDate.atStartOfDay()
+    override def instant(): Instant = Instant.now
+  }
 
   lazy val invoiceDetailsPreDraftSubmitRoute: Call = controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(testErn, NormalMode)
   lazy val invoiceDetailsSubmitRoute: Call = controllers.sections.info.routes.InvoiceDetailsController.onSubmit(testErn, testDraftId, CheckMode)

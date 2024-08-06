@@ -17,6 +17,7 @@
 package mocks.config
 
 import config.AppConfig
+import featureswitch.core.models.FeatureSwitch
 import org.scalamock.handlers.{CallHandler0, CallHandler1}
 import org.scalamock.scalatest.MockFactory
 
@@ -33,8 +34,12 @@ trait MockAppConfig extends MockFactory {
     def betaAllowListCheckingEnabled: CallHandler0[Boolean] = (mockAppConfig.betaAllowListCheckingEnabled _).expects()
     def maxDispatchDateFutureDays: CallHandler0[Int] = (mockAppConfig.maxDispatchDateFutureDays _).expects()
     def earliestDispatchDate: CallHandler0[LocalDate] = (mockAppConfig.earliestDispatchDate _).expects()
+    def nrsBrokerBaseUrl: CallHandler0[String] = (mockAppConfig.nrsBrokerBaseUrl _).expects()
 
     def messageStatisticsNotificationEnabled: CallHandler0[Boolean] = (() => mockAppConfig.messageStatisticsNotificationEnabled).expects()
-
+    def getFeatureSwitchValue(feature: FeatureSwitch): CallHandler1[String, Boolean] = {
+      val featureSwitchName = feature.configName
+      (mockAppConfig.getFeatureSwitchValue(_: String)).expects(featureSwitchName)
+    }
   }
 }

@@ -17,8 +17,11 @@
 package services
 
 import base.SpecBase
+import featureswitch.core.config.EnableNRS
+import fixtures.NRSBrokerFixtures
+import mocks.config.MockAppConfig
 import mocks.connectors.MockSubmitCreateMovementConnector
-import mocks.services.MockAuditingService
+import mocks.services.{MockAuditingService, MockNRSBrokerService}
 import models.audit.SubmitCreateMovementAudit
 import models.response.UnexpectedDownstreamDraftSubmissionResponseError
 import play.api.http.Status.INTERNAL_SERVER_ERROR
@@ -26,49 +29,75 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.TimeMachine
 
-import java.time.LocalDateTime
+import java.time.{Instant, LocalDateTime}
 import scala.concurrent.{ExecutionContext, Future}
 
-class SubmitCreateMovementServiceSpec extends SpecBase with MockSubmitCreateMovementConnector with MockAuditingService {
+class SubmitCreateMovementServiceSpec extends SpecBase
+  with MockSubmitCreateMovementConnector
+  with MockAuditingService
+  with MockNRSBrokerService
+  with MockAppConfig
+  with NRSBrokerFixtures {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.global
 
-  val timeMachine: TimeMachine = () => LocalDateTime.parse(testReceiptDateTime)
+  val timeMachine: TimeMachine = new TimeMachine {
+    override def now(): LocalDateTime = LocalDateTime.parse(testReceiptDateTime)
+    override def instant(): Instant = Instant.now()
+  }
 
-  lazy val testService = new SubmitCreateMovementService(mockSubmitCreateMovementConnector, mockAuditingService, timeMachine)
+  lazy val testService = new SubmitCreateMovementService(mockSubmitCreateMovementConnector, mockNRSBrokerService, mockAuditingService, timeMachine, mockAppConfig)
+
+  class Fixture(isNRSEnabled: Boolean) {
+
+    MockAppConfig.getFeatureSwitchValue(EnableNRS).returns(isNRSEnabled)
+
+    if (isNRSEnabled) {
+      MockNRSBrokerService.submitPayload(minimumSubmitCreateMovementModel, testErn)
+        .returns(Future.successful(Right(nrsBrokerResponseModel)))
+    } else {
+      MockNRSBrokerService.submitPayload(minimumSubmitCreateMovementModel, testErn).never()
+    }
+  }
 
   ".submit(ern: String, submission: SubmitCreateMovementModel)" - {
 
-    "should return Success response" - {
+    Seq(true, false).foreach { nrsEnabled =>
 
-      "when Connector returns success from downstream" in {
+      s"when NRS enabled is '$nrsEnabled'" - {
 
-        val request = dataRequest(FakeRequest())
+        "should return Success response" - {
 
-        MockSubmitCreateMovementConnector.submit(minimumSubmitCreateMovementModel).returns(Future.successful(Right(submitCreateMovementResponseEIS)))
+          "when Connector returns success from downstream" in new Fixture(nrsEnabled) {
 
-        MockAuditingService
-          .audit(SubmitCreateMovementAudit(testErn, testReceiptDateTime, minimumSubmitCreateMovementModel, Right(submitCreateMovementResponseEIS)))
-          .once()
+            val request = dataRequest(FakeRequest())
 
-        testService.submit(minimumSubmitCreateMovementModel)(request, hc).futureValue mustBe Right(submitCreateMovementResponseEIS)
-      }
-    }
+            MockSubmitCreateMovementConnector.submit(minimumSubmitCreateMovementModel).returns(Future.successful(Right(submitCreateMovementResponseEIS)))
 
-    "should return Failure response" - {
+            MockAuditingService
+              .audit(SubmitCreateMovementAudit(testErn, testReceiptDateTime, minimumSubmitCreateMovementModel, Right(submitCreateMovementResponseEIS)))
+              .once()
 
-      "when Connector returns failure from downstream" in {
+            testService.submit(minimumSubmitCreateMovementModel, testErn)(request, hc).futureValue mustBe Right(submitCreateMovementResponseEIS)
+          }
+        }
 
-        val request = dataRequest(FakeRequest())
+        "should return Failure response" - {
 
-        MockSubmitCreateMovementConnector.submit(minimumSubmitCreateMovementModel).returns(Future.successful(Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))))
+          "when Connector returns failure from downstream" in new Fixture(nrsEnabled) {
 
-        MockAuditingService
-          .audit(SubmitCreateMovementAudit(testErn, testReceiptDateTime, minimumSubmitCreateMovementModel, Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))))
-          .once()
+            val request = dataRequest(FakeRequest())
 
-        testService.submit(minimumSubmitCreateMovementModel)(request, hc).futureValue mustBe Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))
+            MockSubmitCreateMovementConnector.submit(minimumSubmitCreateMovementModel).returns(Future.successful(Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))))
+
+            MockAuditingService
+              .audit(SubmitCreateMovementAudit(testErn, testReceiptDateTime, minimumSubmitCreateMovementModel, Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))))
+              .once()
+
+            testService.submit(minimumSubmitCreateMovementModel, testErn)(request, hc).futureValue mustBe Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))
+          }
+        }
       }
     }
   }

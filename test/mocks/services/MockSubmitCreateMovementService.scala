@@ -19,7 +19,7 @@ package mocks.services
 import models.requests.DataRequest
 import models.response.{ErrorResponse, SubmitCreateMovementResponse}
 import models.submitCreateMovement.SubmitCreateMovementModel
-import org.scalamock.handlers.CallHandler3
+import org.scalamock.handlers.CallHandler4
 import org.scalamock.scalatest.MockFactory
 import services.SubmitCreateMovementService
 import uk.gov.hmrc.http.HeaderCarrier
@@ -32,7 +32,8 @@ trait MockSubmitCreateMovementService extends MockFactory {
 
   object MockSubmitCreateMovementService {
 
-    def submit(model: SubmitCreateMovementModel): CallHandler3[SubmitCreateMovementModel, DataRequest[_], HeaderCarrier, Future[Either[ErrorResponse, SubmitCreateMovementResponse]]] =
-      (mockSubmitCreateMovementService.submit(_: SubmitCreateMovementModel)(_: DataRequest[_], _: HeaderCarrier)).expects(model, *, *)
+    def submit(model: SubmitCreateMovementModel, ern: String): CallHandler4[SubmitCreateMovementModel, String, DataRequest[_], HeaderCarrier, Future[Either[ErrorResponse, SubmitCreateMovementResponse]]] =
+      (mockSubmitCreateMovementService.submit(_: SubmitCreateMovementModel, _: String)(_: DataRequest[_], _: HeaderCarrier))
+        .expects(model, ern, *, *)
   }
 }

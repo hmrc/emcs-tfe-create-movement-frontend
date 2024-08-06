@@ -193,6 +193,23 @@ class ItemConfirmCommodityCodeControllerSpec extends SpecBase
           status(result) mustBe SEE_OTHER
           redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
         }
+
+        "when service returns a list which doesn't match the EPC/CN Code searched for" in new Fixture(Some(
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+            .set(ItemCommodityCodePage(testIndex1), testCnCodeTobacco)
+        )) {
+          val item: CnCodeInformationItem = CnCodeInformationItem(testEpcWine, testCnCodeWine)
+
+          MockGetCnCodeInformationService
+            .getCnCodeInformationWithMovementItems(Seq(CnCodeInformationItem(testEpcTobacco, testCnCodeTobacco)))
+            .returns(Future.successful(Seq(item -> testCommodityCodeWine)))
+
+          val result: Future[Result] = controller.withCnCodeInformation(testIndex1)(cnCodeSuccessFunction)(dataRequest(request, userAnswers.get))
+
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result).value mustBe controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
       "must load the success function" - {
         "when both EPC and CN Code are in userAnswers and service returns a list with one item" in new Fixture(Some(

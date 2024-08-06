@@ -16,9 +16,9 @@
 
 package fixtures
 
-import models.nrs.{CreateMovementNRSSubmission, IdentityData, NRSMetadata, NRSPayload, SearchKeys}
+import models.nrs._
 import models.response.nrsBroker.NRSBrokerInsertPayloadResponse
-import play.api.libs.json.{JsObject, JsValue, Json, Writes}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve._

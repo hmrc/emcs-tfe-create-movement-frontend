@@ -44,9 +44,9 @@ class DateTimeUtilsSpec extends SpecBase with DateTimeUtils {
   ".formatTimeForUIOutput()" - {
 
     Seq(
-      LocalTime.of(0,0) -> "0:00",
+      LocalTime.of(0,0) -> "00:00",
       LocalTime.of(12,0) -> "12:00",
-      LocalTime.of(5,15) -> "5:15",
+      LocalTime.of(5,15) -> "05:15",
       LocalTime.of(13,0) -> "13:00",
       LocalTime.of(20,1) -> "20:01"
     ).foreach {

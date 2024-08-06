@@ -71,7 +71,9 @@ class ItemConfirmCommodityCodeController @Inject()(override val messagesApi: Mes
     (ItemExciseProductCodePage(idx).value, ItemCommodityCodePage(idx).value) match {
       case (Some(epc), Some(commodityCode)) =>
         cnCodeInformationService.getCnCodeInformation(Seq(CnCodeInformationItem(epc, commodityCode))).map { response =>
-          response.headOption match {
+          response.find {
+            case (item, _) => item.productCode == epc && item.cnCode == commodityCode
+          } match {
             case Some((_, cnCodeInfo)) =>
               f(cnCodeInfo)
             case _ =>

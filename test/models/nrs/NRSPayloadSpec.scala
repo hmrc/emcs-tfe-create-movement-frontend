@@ -18,6 +18,7 @@ package models.nrs
 
 import base.SpecBase
 import fixtures.NRSBrokerFixtures
+import models.requests.DataRequest
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.{Authorization, HeaderCarrier}
@@ -27,7 +28,7 @@ import java.time.Instant
 class NRSPayloadSpec extends SpecBase with NRSBrokerFixtures {
 
   val hc = HeaderCarrier()
-  implicit val request = dataRequest(FakeRequest())
+  implicit val request: DataRequest[_] = dataRequest(FakeRequest())
 
   ".apply" - {
 

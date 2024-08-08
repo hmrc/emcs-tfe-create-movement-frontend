@@ -49,8 +49,13 @@ class DeclarationViewSpec extends SpecBase with ViewBehaviours {
             Selectors.title -> messagesForLanguage.title,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.draftMovementSection,
             Selectors.h1 -> messagesForLanguage.heading,
-            Selectors.p(1) -> messagesForLanguage.content
+            Selectors.p(1) -> messagesForLanguage.content,
+            Selectors.button -> messagesForLanguage.submit
           ))
+
+          "submit button should have prevent double click" in {
+            doc.select(Selectors.button).attr("data-prevent-double-click") mustBe "true"
+          }
         }
       }
     }

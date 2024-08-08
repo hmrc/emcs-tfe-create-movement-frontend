@@ -38,9 +38,7 @@
             @messages("declaration.content")
         }
 
-        @govukButton(Button(
-            content = Text(messages("declaration.submit"))
-        ))
+        @govukButton(ButtonViewModel(messages("declaration.submit")).preventingDoubleClick())
     }
 }
 

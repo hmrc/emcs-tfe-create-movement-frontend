@@ -23,7 +23,7 @@ import fixtures.messages.sections.items.ItemPackagingEnterShippingMarksMessages.
 import forms.behaviours.StringFieldBehaviours
 import models.requests.DataRequest
 import models.response.referenceData.ItemPackaging
-import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingQuantityPage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
 import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
@@ -102,6 +102,25 @@ class ItemPackagingEnterShippingMarksFormProviderSpec extends SpecBase with Stri
 
       new ItemPackagingEnterShippingMarksFormProvider()(testIndex2, testPackagingIndex1)(noOtherShippingMarksDataRequest, msgs)
         .bind(Map(fieldName -> "shipping mark 1")).hasErrors mustBe false
+    }
+
+    "not display an error when a shipping mark value is not changed from it's current value" in {
+      val noOtherShippingMarksDataRequest = dataRequest(
+        FakeRequest(),
+        emptyUserAnswers
+          .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+
+          .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), ItemPackaging("BO", "Box"))
+          .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "0")
+          .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "mark 1")
+
+          .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex2), ItemPackaging("BO", "Box"))
+          .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex2), "10")
+          .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "mark 1")
+      )
+
+      new ItemPackagingEnterShippingMarksFormProvider()(testIndex1, testPackagingIndex1)(noOtherShippingMarksDataRequest, msgs)
+        .bind(Map(fieldName -> "mark 1")).hasErrors mustBe false
     }
 
   }

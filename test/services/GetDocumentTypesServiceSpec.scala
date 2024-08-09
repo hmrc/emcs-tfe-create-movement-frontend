@@ -20,6 +20,7 @@ import base.SpecBase
 import fixtures.DocumentTypeFixtures
 import mocks.connectors.MockGetDocumentTypesConnector
 import models.response.{DocumentTypesException, UnexpectedDownstreamResponseError}
+import models.sections.documents.DocumentType
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -34,8 +35,7 @@ class GetDocumentTypesServiceSpec extends SpecBase with MockGetDocumentTypesConn
 
   ".getDocumentTypes" - {
 
-    "should return Seq[DocumentType] with other at the end" - {
-
+    "should return a Seq[DocumentType]" - {
       "when Connector returns success from downstream" in {
 
         val expectedResult = Seq(
@@ -51,6 +51,37 @@ class GetDocumentTypesServiceSpec extends SpecBase with MockGetDocumentTypesConn
             documentTypeModel
           )
         )))
+
+        val actualResults = testService.getDocumentTypes().futureValue
+
+        actualResults mustBe expectedResult
+      }
+    }
+
+    "should return a Seq[DocumentType] sorted by numeric and alphanumeric codes and description" - {
+      "when Connector returns document types with mixed codes" in {
+
+        val documentTypes = Seq(
+          DocumentType("C1", "B"),
+          DocumentType("0", "A"),
+          DocumentType("A1", "A"),
+          DocumentType("C1", "A"),
+          DocumentType("1", "A"),
+          DocumentType("0", "B"),
+          DocumentType("A2", "B")
+        )
+
+        val expectedResult = Seq(
+          DocumentType("0", "A"),
+          DocumentType("0", "B"),
+          DocumentType("1", "A"),
+          DocumentType("A1", "A"),
+          DocumentType("A2", "B"),
+          DocumentType("C1", "A"),
+          DocumentType("C1", "B")
+        )
+
+        MockGetDocumentTypesConnector.getDocumentTypes().returns(Future(Right(documentTypes)))
 
         val actualResults = testService.getDocumentTypes().futureValue
 

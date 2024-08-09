@@ -26,18 +26,40 @@ import javax.inject.Inject
 
 class ConsigneeCheckAnswersHelper @Inject()(list: list, consigneeExciseSummary: ConsigneeExciseSummary) {
 
-  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
-    SummaryListViewModel(
-      rows = Seq(
-        ConsigneeExportInformationSummary(list).row(),
-        ConsigneeBusinessNameSummary.row(showActionLinks = true),
-        consigneeExciseSummary.row(showActionLinks = true),
-        ConsigneeExportVatSummary.row(showActionLinks = true),
-        ConsigneeExportEoriSummary.row(showActionLinks = true),
-        ConsigneeExemptOrganisationSummary.row(showActionLinks = true),
-        ConsigneeAddressSummary.row(showActionLinks = true)
-      ).flatten
-    )
+  def summaryList(consigneeReviewVatEori: Boolean = false, consigneeReviewBusinessName: Boolean = false)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+
+    if (consigneeReviewVatEori == true) {
+      SummaryListViewModel(
+        rows = Seq(
+          ConsigneeExportInformationSummary(list).row(),
+          ConsigneeExportVatSummary.row(showActionLinks = true),
+          ConsigneeExportEoriSummary.row(showActionLinks = true),
+        ).flatten
+      )
+    }
+    else if (consigneeReviewBusinessName == true) {
+      SummaryListViewModel(
+        rows = Seq(
+          ConsigneeBusinessNameSummary.row(showActionLinks = true),
+          ConsigneeAddressSummary.row(showActionLinks = true),
+          consigneeExciseSummary.row(showActionLinks = true),
+          ConsigneeExemptOrganisationSummary.row(showActionLinks = true)
+        ).flatten
+      )
+
+    }else{
+      SummaryListViewModel(
+        rows = Seq(
+          ConsigneeExportInformationSummary(list).row(),
+          ConsigneeBusinessNameSummary.row(showActionLinks = true),
+          consigneeExciseSummary.row(showActionLinks = true),
+          ConsigneeExportVatSummary.row(showActionLinks = true),
+          ConsigneeExportEoriSummary.row(showActionLinks = true),
+          ConsigneeExemptOrganisationSummary.row(showActionLinks = true),
+          ConsigneeAddressSummary.row(showActionLinks = true)
+        ).flatten
+      )
+    }
   }
 
 }

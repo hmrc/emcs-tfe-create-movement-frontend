@@ -131,7 +131,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
           testErn,
           testDraftId,
-          ernSummaryList
+          Seq(ernSummaryList)
         )(testDataRequest, msgs).toString
 
         status(result) mustBe OK
@@ -156,7 +156,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
           testErn,
           testDraftId,
-          exemptSummaryList
+          Seq(exemptSummaryList)
         )(testDataRequest, msgs).toString
 
         status(result) mustBe OK
@@ -182,7 +182,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
           testErn,
           testDraftId,
-          eoriSummaryList
+          Seq(eoriSummaryList)
         )(testDataRequest, msgs).toString
 
         status(result) mustBe OK
@@ -208,7 +208,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
           testErn,
           testDraftId,
-          vatSummaryList
+          Seq(vatSummaryList)
         )(testDataRequest, msgs).toString
 
         status(result) mustBe OK

@@ -19,6 +19,7 @@ package controllers.sections.consignee
 import controllers.BaseController
 import controllers.actions._
 import models.NormalMode
+import models.sections.info.movementScenario.DestinationType
 import navigation.ConsigneeNavigator
 import pages.sections.consignee.{CheckAnswersConsigneePage, ConsigneeAddressPage, ConsigneeBusinessNamePage}
 import pages.sections.info.DestinationTypePage
@@ -48,12 +49,17 @@ class CheckYourAnswersConsigneeController @Inject()(override val messagesApi: Me
             withAnswer(ConsigneeAddressPage, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, draftId)) {
               _ =>
                 withAnswer(DestinationTypePage) {
-                  _ =>
+                  destinationType =>
                     Ok(view(
                       controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(ern, draftId),
                       ern,
                       draftId,
-                      checkYourAnswersConsigneeHelper.summaryList
+                      if (destinationType.destinationType == DestinationType.Export){
+                        Seq(checkYourAnswersConsigneeHelper.summaryList(true), checkYourAnswersConsigneeHelper.summaryList(consigneeReviewBusinessName = true))
+                      }else{
+                        Seq(checkYourAnswersConsigneeHelper.summaryList())
+                      },
+                      destinationType.destinationType == DestinationType.Export
                     ))
                 }
             }

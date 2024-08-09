@@ -53,6 +53,7 @@ class ConsigneeExportInformationViewSpec extends SpecBase with ViewBehaviours {
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
+          Selectors.hint -> messagesForLanguage.hint,
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.consigneeInformationSection,
           Selectors.checkboxItem(1) -> messagesForLanguage.checkboxItemForVat,
           Selectors.checkboxItem(2) -> messagesForLanguage.checkboxItemForEori,

@@ -21,7 +21,7 @@ import forms.sections.items.ItemPackagingEnterShippingMarksFormProvider.maxLengt
 import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
 import models.Index
 import models.requests.DataRequest
-import pages.sections.items.ItemsSection
+import pages.sections.items.{ItemPackagingShippingMarksPage, ItemsSection}
 import play.api.data.Form
 import play.api.data.validation.{Constraint, Invalid, Valid}
 import play.api.i18n.Messages
@@ -41,17 +41,23 @@ class ItemPackagingEnterShippingMarksFormProvider @Inject() extends Mappings {
 
 
   private def shippingMarkUnique(currentItemsIdx: Index, currentPackagingIdx: Index)
-                                (implicit request: DataRequest[_], messages: Messages): Constraint[String] = {
+                                (implicit request: DataRequest[_], messages: Messages): Constraint[String] =
     Constraint {
-      shippingMarkEntered =>
-        ItemsSection
-          .retrieveShippingMarkLocationsMatching(valueToMatch = shippingMarkEntered)
-          .filterNot(_ == (currentItemsIdx, currentPackagingIdx)) match {
-          case Nil => Valid
-          case _ => Invalid(messages("itemPackagingEnterShippingMarks.error.not.unique", currentItemsIdx.displayIndex))
+      shippingMarkEntered => {
+        val shippingMarkValueFromDB = ItemPackagingShippingMarksPage(currentItemsIdx, currentPackagingIdx).value
+
+        if (shippingMarkValueFromDB.contains(shippingMarkEntered)) {
+          Valid
+        } else {
+          ItemsSection
+            .retrieveShippingMarkLocationsMatching(valueToMatch = shippingMarkEntered)
+            .filterNot(_ == (currentItemsIdx, currentPackagingIdx)) match {
+            case Nil => Valid
+            case _ => Invalid(messages("itemPackagingEnterShippingMarks.error.not.unique", currentItemsIdx.displayIndex))
+          }
         }
+      }
     }
-  }
 }
 
 object ItemPackagingEnterShippingMarksFormProvider {

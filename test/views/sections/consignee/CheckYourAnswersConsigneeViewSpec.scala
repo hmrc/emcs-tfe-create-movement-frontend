@@ -68,11 +68,11 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
         testErn,
         testDraftId,
-        SummaryList(Seq(
+        Seq(SummaryList(Seq(
           ConsigneeBusinessNameSummary.row(true),
           consigneeExciseSummary.row(true),
           ConsigneeAddressSummary.row(true)
-        ).flatten)
+        ).flatten))
       ).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
@@ -116,9 +116,9 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
         testErn,
         testDraftId,
-        SummaryList(Seq(
+        Seq(SummaryList(Seq(
           consigneeExciseSummary.row(true),
-        ).flatten)
+        ).flatten))
       ).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
@@ -166,11 +166,11 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
         testErn,
         testDraftId,
-        SummaryList(Seq(
+        Seq(SummaryList(Seq(
           ConsigneeBusinessNameSummary.row(true),
           consigneeExciseSummary.row(true),
           ConsigneeAddressSummary.row(true)
-        ).flatten)
+        ).flatten))
       ).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
@@ -215,11 +215,11 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
         testErn,
         testDraftId,
-        SummaryList(Seq(
+        Seq(SummaryList(Seq(
           ConsigneeBusinessNameSummary.row(true),
           consigneeExciseSummary.row(true),
           ConsigneeAddressSummary.row(true)
-        ).flatten)
+        ).flatten))
       ).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
@@ -264,11 +264,11 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
         testErn,
         testDraftId,
-        SummaryList(Seq(
+        Seq(SummaryList(Seq(
           ConsigneeBusinessNameSummary.row(true),
           ConsigneeExemptOrganisationSummary.row(true),
           ConsigneeAddressSummary.row(true)
-        ).flatten)
+        ).flatten))
       ).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
@@ -316,12 +316,12 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
         testErn,
         testDraftId,
-        SummaryList(Seq(
+        Seq(SummaryList(Seq(
           ConsigneeBusinessNameSummary.row(true),
           ConsigneeExportInformationSummary(list).row(),
           ConsigneeExportVatSummary.row(true),
           ConsigneeAddressSummary.row(true)
-        ).flatten)
+        ).flatten))
       ).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
@@ -375,12 +375,12 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
         testErn,
         testDraftId,
-        SummaryList(Seq(
+        Seq(SummaryList(Seq(
           ConsigneeBusinessNameSummary.row(true),
           ConsigneeExportInformationSummary(list).row(),
           ConsigneeExportEoriSummary.row(true),
           ConsigneeAddressSummary.row(true)
-        ).flatten)
+        ).flatten))
       ).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
@@ -393,6 +393,76 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         Selectors.govukSummaryListKey(4) -> English.address,
         Selectors.button -> English.confirmAnswers,
       ))
+
+      "have a link to change business name" in {
+        doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
+          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url
+      }
+
+      "have a link to change identifications" in {
+        doc.getElementById("changeConsigneeExportInformation").attr("href") mustBe
+          controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, NormalMode).url
+      }
+
+      "have a link to change Eori Number" in {
+        doc.getElementById("changeConsigneeExportEori").attr("href") mustBe
+          controllers.sections.consignee.routes.ConsigneeExportEoriController.onPageLoad(testErn, testDraftId, CheckMode).url
+      }
+
+      "have a link to change Address" in {
+        doc.getElementById("changeConsigneeAddress").attr("href") mustBe
+          controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testDraftId, CheckMode).url
+      }
+    }
+
+    s"when being rendered in lang code of '${English.lang.code}' for Export'" - {
+
+      implicit val msgs: Messages = messages(Seq(English.lang))
+      implicit val request: DataRequest[AnyContentAsEmpty.type] =
+        dataRequest(FakeRequest(), emptyUserAnswers
+          .set(ConsigneeAddressPage, testUserAddress)
+          .set(ConsigneeBusinessNamePage, testBusinessName)
+          .set(ConsigneeExportInformationPage, Set(EoriNumber, VatNumber))
+          .set(ConsigneeExportEoriPage, testEori)
+          .set(ConsigneeExportVatPage, testVat)
+          .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+        )
+
+      lazy val list: list = app.injector.instanceOf[list]
+
+      implicit val doc: Document = Jsoup.parse(view(
+        controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
+        testErn,
+        testDraftId,
+        Seq(SummaryList(Seq(
+          ConsigneeExportInformationSummary(list).row(),
+          ConsigneeExportEoriSummary.row(true),
+          ConsigneeExportVatSummary.row(true),
+        ).flatten),
+          SummaryList(Seq(
+            ConsigneeBusinessNameSummary.row(true),
+            ConsigneeAddressSummary.row(true),
+          ).flatten)
+        ),
+        true
+      ).toString())
+
+      behave like pageWithExpectedElementsAndMessages(Seq(
+        Selectors.title -> English.title,
+        Selectors.h1 -> English.heading,
+        Selectors.h2(1) -> English.caption,
+        Selectors.govukSummaryListKey(1) -> English.identificationProvided,
+        Selectors.govukSummaryListKey(2) -> English.eori,
+        Selectors.govukSummaryListKey(3) -> English.vat,
+        Selectors.h2(2) -> English.exportOffice,
+        Selectors.h2(3) -> English.consigneeDetails,
+        Selectors.button -> English.confirmAnswers,
+      ))
+
+      "have the correct summary list for Consignee details" in {
+        val summaryList = doc.getElementsByClass("govuk-summary-list").get(1)
+        summaryList.getElementsByClass("govuk-summary-list__key").get(0).text mustBe English.traderName
+      }
 
       "have a link to change business name" in {
         doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe

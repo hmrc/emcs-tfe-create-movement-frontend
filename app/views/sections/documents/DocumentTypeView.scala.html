@@ -65,7 +65,8 @@
                     content = Text(messages("documentType.heading"))
                 ),
                 items = selectOptions,
-                errorMessage = errorMessage
+                errorMessage = errorMessage,
+                hint = Some(Hint(content = Text(messages("documentType.hint"))))
             ).asAccessibleAutocomplete(
                 Some(
                     AccessibleAutocomplete(

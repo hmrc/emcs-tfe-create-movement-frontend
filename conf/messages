@@ -981,8 +981,9 @@ documentsCertificates.hintText = For example, a delivery note, invoice or electr
 documentsCertificates.error.required = Select yes if there are documents associated with this movement
 documentsCertificates.change.hidden = Documents Certificates
 
-documentType.title = What type of document do you want to add?
-documentType.heading = What type of document do you want to add?
+documentType.title = Select a document associated with this movement
+documentType.heading = Select a document associated with this movement
+documentType.hint = Start typing to see suggestions. This is for reference only and you will not upload the document.
 documentType.checkYourAnswersLabel = Document type
 documentType.error.required = Select the document you want to add
 documentType.select.defaultValue = Choose document type

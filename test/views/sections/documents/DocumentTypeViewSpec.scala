@@ -57,6 +57,7 @@ class DocumentTypeViewSpec extends SpecBase with ViewBehaviours {
         Selectors.hiddenText -> English.hiddenSectionContent,
         Selectors.title -> English.title,
         Selectors.h1 -> English.heading,
+        Selectors.hint -> English.hint,
         Selectors.selectOption(1) -> English.defaultSelectOption,
         Selectors.selectOption(2) -> English.firstSelectionOption,
         Selectors.button -> English.saveAndContinue,

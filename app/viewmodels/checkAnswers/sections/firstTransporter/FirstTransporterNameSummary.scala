@@ -18,8 +18,7 @@ package viewmodels.checkAnswers.sections.firstTransporter
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.QuestionPage
-import pages.sections.firstTransporter.FirstTransporterNamePage
+import pages.sections.firstTransporter.FirstTransporterAddressPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -31,15 +30,18 @@ object FirstTransporterNameSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
-    val namePage: QuestionPage[String] = FirstTransporterNamePage
-
     SummaryListRowViewModel(
       key = "firstTransporterName.checkYourAnswers.label",
-      value = ValueViewModel(Text(namePage.value.map(HtmlFormat.escape(_).toString).getOrElse(messages("site.notProvided")))),
+      value = ValueViewModel(Text(
+        FirstTransporterAddressPage.value match {
+          case Some(addressPage) =>  HtmlFormat.escape(addressPage.businessName.getOrElse("")).toString
+          case None => messages("site.notProvided")
+        }
+      )),
       actions = Seq(
         ActionItemViewModel(
           content = "site.change",
-          href = controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(
+          href = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(
             ern = request.userAnswers.ern,
             draftId = request.userAnswers.draftId,
             mode = CheckMode

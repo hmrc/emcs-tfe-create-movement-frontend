@@ -20,8 +20,9 @@ import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger._
 import models.{CheckMode, NormalMode}
-import pages.sections.consignee.ConsigneeBusinessNamePage
-import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage, GuarantorRequiredPage}
+import pages.sections.consignee.ConsigneeAddressPage
+import pages.sections.consignor.ConsignorAddressPage
+import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -50,11 +51,11 @@ object GuarantorNameSummary {
       actions = if (!showChangeLink(arranger)) {
         Seq()
       } else {
-        val mode = if (GuarantorNamePage.value.nonEmpty) CheckMode else NormalMode
+        val mode = if (GuarantorAddressPage.value.nonEmpty) CheckMode else NormalMode
         Seq(
           ActionItemViewModel(
             "site.change",
-            controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(request.ern, request.draftId, mode).url,
+            controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(request.ern, request.draftId, mode).url,
             "changeGuarantorName"
           ).withVisuallyHiddenText(messages("guarantorName.change.hidden"))
         )
@@ -64,14 +65,17 @@ object GuarantorNameSummary {
   private def showChangeLink(arranger: GuarantorArranger): Boolean = arranger == GoodsOwner || arranger == Transporter
 
   private def businessName(arranger: GuarantorArranger)(implicit request: DataRequest[_], messages: Messages): String = arranger match {
-    case Consignor => request.traderKnownFacts.traderName
-    case Consignee => ConsigneeBusinessNamePage.value match {
-      case Some(answer) => HtmlFormat.escape(answer).toString()
+    case Consignor => ConsignorAddressPage().value match {
+      case Some(answer) => HtmlFormat.escape(answer.businessName.getOrElse("")).toString()
+      case None => messages("guarantorName.checkYourAnswers.notProvided", messages(s"guarantorArranger.$arranger"))
+    }
+    case Consignee => ConsigneeAddressPage.value match {
+      case Some(answer) => HtmlFormat.escape(answer.businessName.getOrElse("")).toString()
       case None => messages("guarantorName.checkYourAnswers.notProvided", messages(s"guarantorArranger.$arranger"))
     }
     case _ =>
-      GuarantorNamePage.value match {
-        case Some(answer) => HtmlFormat.escape(answer).toString()
+      GuarantorAddressPage.value match {
+        case Some(answer) => HtmlFormat.escape(answer.businessName.getOrElse("")).toString()
         case None => messages("site.notProvided")
       }
   }

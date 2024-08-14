@@ -20,10 +20,11 @@ import controllers.AddressControllerBase
 import controllers.actions._
 import forms.AddressFormProvider
 import models.requests.DataRequest
+import models.sections.guarantor.GuarantorArranger
 import models.{Mode, UserAddress}
 import navigation.GuarantorNavigator
 import pages.QuestionPage
-import pages.sections.guarantor.GuarantorAddressPage
+import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Call, MessagesControllerComponents, Result}
@@ -46,6 +47,13 @@ class GuarantorAddressController @Inject()(override val messagesApi: MessagesApi
 
   override val addressPage: QuestionPage[UserAddress] = GuarantorAddressPage
 
+  override def isConsignorPageOrUsingConsignorDetails(implicit request: DataRequest[_]): Boolean = {
+    GuarantorArrangerPage.value match {
+      case Some(GuarantorArranger.Consignor) => true
+      case _ => false
+    }
+  }
+
   override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
     controllers.sections.guarantor.routes.GuarantorAddressController.onSubmit(request.ern, request.draftId, mode)
 
@@ -55,6 +63,7 @@ class GuarantorAddressController @Inject()(override val messagesApi: MessagesApi
         form = form,
         addressPage = addressPage,
         onSubmit = onwardCall(mode),
+        isConsignorPageOrUsingConsignorDetails = isConsignorPageOrUsingConsignorDetails,
         headingKey = Some(s"guarantorAddress.$guarantorArranger")
       ))
     }

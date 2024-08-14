@@ -28,15 +28,11 @@ class DataRequiredActionImpl @Inject()(implicit val executionContext: ExecutionC
 
   override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
 
-    request.traderKnownFacts match {
-      case Some(traderKnownFacts) =>
-        request.userAnswers match {
-          case None =>
-            Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
-          case Some(data) =>
-            Future.successful(Right(DataRequest(request.request, request.draftId, data, traderKnownFacts)))
-        }
-      case None => Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
+    request.userAnswers match {
+      case None =>
+        Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
+      case Some(data) =>
+        Future.successful(Right(DataRequest(request.request, request.draftId, data, request.traderKnownFacts)))
     }
   }
 }

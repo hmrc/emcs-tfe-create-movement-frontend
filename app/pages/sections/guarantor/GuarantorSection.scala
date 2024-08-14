@@ -46,7 +46,6 @@ case object GuarantorSection extends Section[JsObject] {
       case Some(Consignee) | Some(Consignor) => Completed
       case Some(_) =>
         if (
-          GuarantorNamePage.value.nonEmpty &&
             GuarantorVatPage.value.nonEmpty &&
             GuarantorAddressPage.value.nonEmpty) {
           Completed

@@ -31,7 +31,13 @@ object DestinationAddressSummary {
 
     val value = DestinationAddressPage.value.fold[HtmlContent] {
       HtmlContent(messages("destinationCheckAnswers.destination.notProvided"))
-    } { _.toCheckYourAnswersFormat }
+    } { address =>
+      if (Seq(address.property, address.street, address.town, address.postcode).forall(_.isEmpty)) {
+        HtmlContent(messages("destinationCheckAnswers.destination.notProvided"))
+      } else {
+        address.toCheckYourAnswersFormat
+      }
+    }
 
     SummaryListRowViewModel(
       key = "address.destinationAddress.checkYourAnswers.label",

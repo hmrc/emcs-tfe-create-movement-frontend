@@ -17,9 +17,9 @@
 package controllers.sections.destination
 
 
-import controllers.AddressControllerBase
+import controllers.BaseNavigationController
 import controllers.actions._
-import forms.AddressFormProvider
+import forms.sections.destination.DestinationAddressFormProvider
 import models.requests.DataRequest
 import models.{Mode, UserAddress}
 import navigation.DestinationNavigator
@@ -30,9 +30,10 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc._
 import services.UserAnswersService
-import views.html.AddressView
+import views.html.sections.destination.DestinationAddressView
 
 import javax.inject.Inject
+import scala.concurrent.Future
 
 class DestinationAddressController @Inject()(override val messagesApi: MessagesApi,
                                              override val userAnswersService: UserAnswersService,
@@ -41,31 +42,37 @@ class DestinationAddressController @Inject()(override val messagesApi: MessagesA
                                              override val getData: DataRetrievalAction,
                                              override val requireData: DataRequiredAction,
                                              override val betaAllowList: BetaAllowListAction,
-                                             override val formProvider: AddressFormProvider,
+                                             val formProvider: DestinationAddressFormProvider,
                                              override val controllerComponents: MessagesControllerComponents,
-                                             override val view: AddressView
-                                            ) extends AddressControllerBase {
+                                             val view: DestinationAddressView
+                                            ) extends BaseNavigationController with AuthActionHelper {
 
-  override val addressPage: QuestionPage[UserAddress] = DestinationAddressPage
+  val addressPage: QuestionPage[UserAddress] = DestinationAddressPage
 
-  override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
+  def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
     controllers.sections.destination.routes.DestinationAddressController.onSubmit(request.ern, request.draftId, mode)
 
-  override def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      val prePopPage = (addressPage.value, DestinationConsigneeDetailsPage.value) match {
+      val prePopPage: QuestionPage[UserAddress] = (addressPage.value, DestinationConsigneeDetailsPage.value) match {
         case (None, Some(true)) => ConsigneeAddressPage
         case _ => addressPage
       }
-      renderView(Ok, fillForm(prePopPage, formProvider(addressPage)), mode)
+      renderView(Ok, fillForm(prePopPage, formProvider()(request)), mode)
     }
 
-  override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      formProvider().bindFromRequest().fold(
+        formWithErrors => Future.successful(renderView(BadRequest, formWithErrors, mode)),
+        saveAndRedirect(addressPage, _, mode)
+      )
+    }
+
+  def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
     status(view(
       form = form,
-      addressPage = addressPage,
-      onSubmit = onwardCall(mode),
-      headingKey = Some("destinationAddress")
+      onSubmit = onwardCall(mode)
     ))
 
   }

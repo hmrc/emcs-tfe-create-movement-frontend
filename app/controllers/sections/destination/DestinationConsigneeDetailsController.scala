@@ -22,7 +22,7 @@ import forms.sections.destination.DestinationConsigneeDetailsFormProvider
 import models.requests.DataRequest
 import models.{Mode, NormalMode}
 import navigation.DestinationNavigator
-import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage, DestinationConsigneeDetailsPage}
+import pages.sections.destination.{DestinationAddressPage, DestinationConsigneeDetailsPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -66,9 +66,7 @@ class DestinationConsigneeDetailsController @Inject()(
 
   private def cleanseSaveAndRedirect(value: Boolean)(implicit request: DataRequest[_]): Future[Result] = {
     val cleansedAnswers = cleanseUserAnswersIfValueHasChanged(DestinationConsigneeDetailsPage, value, {
-      request.userAnswers
-        .remove(DestinationBusinessNamePage)
-        .remove(DestinationAddressPage)
+      request.userAnswers.remove(DestinationAddressPage)
     })
     saveAndRedirect(DestinationConsigneeDetailsPage, value, cleansedAnswers, NormalMode)
   }

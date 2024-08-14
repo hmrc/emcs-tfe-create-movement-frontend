@@ -39,12 +39,11 @@ case object DispatchSection extends Section[JsObject] {
 
     def checkRemainingPages: TaskListStatus = {
 
-      val businessName = DispatchBusinessNamePage.value
       val address = DispatchAddressPage.value.isDefined || !request.isCertifiedConsignor
 
-      (businessName, address, isCertifiedConsigneeType) match {
-        case (None, false, true) => NotStarted
-        case (Some(_), true, _) => Completed
+      (address, isCertifiedConsigneeType) match {
+        case (false, true) => NotStarted
+        case (true, _) => Completed
         case _ => InProgress
       }
     }

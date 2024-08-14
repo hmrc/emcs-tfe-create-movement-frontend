@@ -48,26 +48,29 @@ class DispatchAddressController @Inject()(override val messagesApi: MessagesApi,
 
   override val addressPage: QuestionPage[UserAddress] = DispatchAddressPage
 
+  override def isConsignorPageOrUsingConsignorDetails(implicit request: DataRequest[_]): Boolean = DispatchUseConsignorDetailsPage.value.contains(true)
+
   override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
     controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(request.ern, request.draftId, mode)
 
   override def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
       val prePopPage = (DispatchAddressPage.value, DispatchUseConsignorDetailsPage.value) match {
-        case (None, Some(true)) => ConsignorAddressPage
+        case (None, Some(true)) => ConsignorAddressPage()
         case _ => DispatchAddressPage
       }
-      renderView(Ok, fillForm(prePopPage, formProvider(addressPage)), mode)
+      renderView(Ok, fillForm(prePopPage, formProvider(addressPage, isConsignorPageOrUsingConsignorDetails)), mode)
     }
 
   override def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
-    val isOptional = !request.isCertifiedConsignor
+    val isMandatory = DispatchUseConsignorDetailsPage.value.contains(true) || request.isCertifiedConsignor
     status(view(
       form = form,
       addressPage = addressPage,
       onSubmit = onwardCall(mode),
-      onSkip = Option.when(isOptional)(routes.DispatchAddressController.onSkip(request.ern, request.draftId, mode)),
-      headingKey = Some(if(isOptional) "dispatchAddress.optional" else "dispatchAddress")
+      isConsignorPageOrUsingConsignorDetails = isConsignorPageOrUsingConsignorDetails,
+      onSkip = Option.when(!isMandatory)(routes.DispatchAddressController.onSkip(request.ern, request.draftId, mode)),
+      headingKey = Some(if(!isMandatory) "dispatchAddress.optional" else "dispatchAddress")
     ))
   }
 

@@ -16,26 +16,26 @@
 
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
-@import models.NormalMode
 @import pages.QuestionPage
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton,
-    h1: components.h1,
-    continueOrSkip: components.continueOrSkip,
-    continueOrExit: components.continueOrExit
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukInput: GovukInput,
+        govukButton: GovukButton,
+        h1: components.h1,
+        continueOrSkip: components.continueOrSkip,
+        continueOrExit: components.continueOrExit
 )
 
 @(
-    form: Form[_],
-    addressPage: QuestionPage[UserAddress],
-    onSubmit: Call,
-    onSkip: Option[Call] = None,
-    headingKey: Option[String] = None
+        form: Form[_],
+        addressPage: QuestionPage[UserAddress],
+        onSubmit: Call,
+        isConsignorPageOrUsingConsignorDetails: Boolean,
+        onSkip: Option[Call] = None,
+        headingKey: Option[String] = None
 )(implicit request: DataRequest[_], messages: Messages)
 
 @defining(headingKey.getOrElse(addressPage.toString)) { msgKey =>
@@ -50,13 +50,26 @@
 
             @h1(s"address.$msgKey.heading", Some(messages(s"address.$addressPage.subheading")), "govuk-heading-l")
 
+            @if(isConsignorPageOrUsingConsignorDetails && request.traderKnownFacts.isDefined) {
+                <p class="govuk-body">Business name <br> <span class="govuk-body govuk-!-font-weight-bold">@request.traderKnownFacts.get.traderName</span></p>
+            } else {
+                @govukInput(
+                    InputViewModel(
+                        field = form("businessName"),
+                        label = LabelViewModel(Text(messages("address.businessName")))
+                    )
+                    .withWidth(Full)
+                    .withAutocomplete("organization")
+                )
+            }
+
             @govukInput(
                 InputViewModel(
                     field = form("property"),
                     label = LabelViewModel(Text(messages("address.property")))
                 )
-                        .withWidth(Full)
-                        .withAutocomplete("address-line1")
+                .withWidth(Full)
+                .withAutocomplete("address-line1")
             )
 
             @govukInput(
@@ -64,8 +77,8 @@
                     field = form("street"),
                     label = LabelViewModel(Text(messages("address.street")))
                 )
-                        .withWidth(Full)
-                        .withAutocomplete("address-line2")
+                .withWidth(Full)
+                .withAutocomplete("address-line2")
             )
 
             @govukInput(
@@ -73,8 +86,8 @@
                     field = form("town"),
                     label = LabelViewModel(Text(messages("address.town")))
                 )
-                        .withWidth(TwoThirds)
-                        .withAutocomplete("address-level1")
+                .withWidth(TwoThirds)
+                .withAutocomplete("address-level1")
             )
 
             @govukInput(
@@ -82,11 +95,11 @@
                     field = form("postcode"),
                     label = LabelViewModel(Text(messages("address.postcode")))
                 )
-                        .withWidth(OneThird)
-                        .withAutocomplete("postal-code")
+                .withWidth(OneThird)
+                .withAutocomplete("postal-code")
             )
 
-            @onSkip.fold{
+            @onSkip.fold {
                 @continueOrExit()
             } { call =>
                 @continueOrSkip(call.url, "site.saveAndContinue", "site.skipThisQuestion")

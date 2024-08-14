@@ -28,9 +28,7 @@ case object TransportArrangerSection extends Section[JsObject] {
   override def status(implicit request: DataRequest[_]): TaskListStatus = TransportArrangerPage.value match {
     case Some(Consignee) | Some(Consignor) => Completed
     case Some(_) =>
-      if (TransportArrangerNamePage.value.nonEmpty &&
-        TransportArrangerVatPage.value.nonEmpty &&
-        TransportArrangerAddressPage.value.nonEmpty) {
+      if (TransportArrangerVatPage.value.nonEmpty && TransportArrangerAddressPage.value.nonEmpty) {
         Completed
       } else {
         InProgress

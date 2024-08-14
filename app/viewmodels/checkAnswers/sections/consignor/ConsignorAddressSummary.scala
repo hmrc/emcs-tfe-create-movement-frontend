@@ -27,7 +27,7 @@ import viewmodels.implicits._
 object ConsignorAddressSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
-    ConsignorAddressPage.value.map {
+    ConsignorAddressPage().value.map {
       address =>
         SummaryListRowViewModel(
           key = "checkYourAnswersConsignor.address",

@@ -20,6 +20,7 @@ import controllers.AddressControllerBase
 import controllers.actions._
 import forms.AddressFormProvider
 import models.requests.DataRequest
+import models.sections.transportArranger.TransportArranger
 import models.{Mode, UserAddress}
 import navigation.TransportArrangerNavigator
 import pages.QuestionPage
@@ -46,6 +47,13 @@ class TransportArrangerAddressController @Inject()(override val messagesApi: Mes
 
   override val addressPage: QuestionPage[UserAddress] = TransportArrangerAddressPage
 
+  override def isConsignorPageOrUsingConsignorDetails(implicit request: DataRequest[_]): Boolean = {
+    TransportArrangerPage.value match {
+      case Some(TransportArranger.Consignor) => true
+      case _ => false
+    }
+  }
+
   override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
     controllers.sections.transportArranger.routes.TransportArrangerAddressController.onSubmit(request.ern, request.draftId, mode)
 
@@ -58,6 +66,7 @@ class TransportArrangerAddressController @Inject()(override val messagesApi: Mes
         form = form,
         addressPage = addressPage,
         onSubmit = onwardCall(mode),
+        isConsignorPageOrUsingConsignorDetails = isConsignorPageOrUsingConsignorDetails,
         headingKey = Some(s"$TransportArrangerAddressPage.$arranger")
       ))
     }

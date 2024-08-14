@@ -28,9 +28,9 @@ object AddressModel {
 
   def fromUserAddress(userAddress: UserAddress): AddressModel = AddressModel(
     streetNumber = userAddress.property,
-    street = Some(userAddress.street),
-    postcode = Some(userAddress.postcode),
-    city = Some(userAddress.town)
+    street = userAddress.street,
+    postcode = userAddress.postcode,
+    city = userAddress.town
   )
 
   implicit val fmt: Format[AddressModel] = Json.format

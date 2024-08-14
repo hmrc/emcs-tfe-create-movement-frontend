@@ -11,11 +11,6 @@ POST        /trader/:ern/draft/:draftId/guarantor/arranger                      
 GET         /trader/:ern/draft/:draftId/guarantor/arranger/change                       controllers.sections.guarantor.GuarantorArrangerController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
 POST        /trader/:ern/draft/:draftId/guarantor/arranger/change                       controllers.sections.guarantor.GuarantorArrangerController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
 
-GET         /trader/:ern/draft/:draftId/guarantor/name                                  controllers.sections.guarantor.GuarantorNameController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
-POST        /trader/:ern/draft/:draftId/guarantor/name                                  controllers.sections.guarantor.GuarantorNameController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
-GET         /trader/:ern/draft/:draftId/guarantor/name/change                           controllers.sections.guarantor.GuarantorNameController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
-POST        /trader/:ern/draft/:draftId/guarantor/name/change                           controllers.sections.guarantor.GuarantorNameController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
-
 GET         /trader/:ern/draft/:draftId/guarantor/vat                                   controllers.sections.guarantor.GuarantorVatController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
 POST        /trader/:ern/draft/:draftId/guarantor/vat                                   controllers.sections.guarantor.GuarantorVatController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
 GET         /trader/:ern/draft/:draftId/guarantor/vat/change                            controllers.sections.guarantor.GuarantorVatController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)

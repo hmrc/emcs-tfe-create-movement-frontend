@@ -34,16 +34,18 @@ trait AddressControllerBase extends BaseNavigationController with AuthActionHelp
   val view: AddressView
   val addressPage: QuestionPage[UserAddress]
 
+  def isConsignorPageOrUsingConsignorDetails(implicit request: DataRequest[_]): Boolean
+
   def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      renderView(Ok, fillForm(addressPage, formProvider(addressPage)), mode)
+      renderView(Ok, fillForm(addressPage, formProvider(addressPage, isConsignorPageOrUsingConsignorDetails)), mode)
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      formProvider(addressPage).bindFromRequest().fold(
+      formProvider(addressPage, isConsignorPageOrUsingConsignorDetails).bindFromRequest().fold(
         formWithErrors => Future.successful(renderView(BadRequest, formWithErrors, mode)),
         saveAndRedirect(addressPage, _, mode)
       )
@@ -53,6 +55,7 @@ trait AddressControllerBase extends BaseNavigationController with AuthActionHelp
     status(view(
       form = form,
       addressPage = addressPage,
+      isConsignorPageOrUsingConsignorDetails = isConsignorPageOrUsingConsignorDetails,
       onSubmit = onwardCall(mode)
     ))
 }

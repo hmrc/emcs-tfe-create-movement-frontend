@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.consignee
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.sections.consignee.ConsigneeBusinessNamePage
+import pages.sections.consignee.ConsigneeAddressPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -29,16 +29,16 @@ import viewmodels.implicits._
 object ConsigneeBusinessNameSummary {
 
   def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    ConsigneeBusinessNamePage.value.map {
+    ConsigneeAddressPage.value.map {
       answer =>
 
         SummaryListRowViewModel(
           key = "consigneeBusinessName.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
+          value = ValueViewModel(HtmlFormat.escape(answer.businessName.getOrElse("")).toString),
           actions = if (!showActionLinks) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+              href = controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(request.ern, request.draftId, CheckMode).url,
               id = "changeConsigneeBusinessName"
             ).withVisuallyHiddenText(messages("consigneeBusinessName.change.hidden"))
           )

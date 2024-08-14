@@ -33,14 +33,11 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
       userAnswers.get(TransportArrangerPage) match {
 
         case Some(GoodsOwner) | Some(Other) =>
-          controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+          controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
         case _ =>
           controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       }
-
-    case TransportArrangerNamePage => (userAnswers: UserAnswers) =>
-      controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case TransportArrangerVatPage => (userAnswers: UserAnswers) =>
       controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
@@ -59,7 +56,6 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
     case TransportArrangerPage => (userAnswers: UserAnswers) =>
       if (
         (userAnswers.get(TransportArrangerPage).contains(GoodsOwner) || userAnswers.get(TransportArrangerPage).contains(Other)) &&
-          userAnswers.get(TransportArrangerNamePage).isEmpty ||
           userAnswers.get(TransportArrangerVatPage).isEmpty ||
           userAnswers.get(TransportArrangerAddressPage).isEmpty
       ) {

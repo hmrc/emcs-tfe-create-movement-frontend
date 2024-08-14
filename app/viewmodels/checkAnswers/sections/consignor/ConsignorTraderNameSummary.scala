@@ -16,18 +16,30 @@
 
 package viewmodels.checkAnswers.sections.consignor
 
+import models.{CheckMode, UserAddress}
 import models.requests.DataRequest
+import pages.sections.consignor.ConsignorAddressPage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object ConsignorTraderNameSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
-    SummaryListRowViewModel(
-      key = "checkYourAnswersConsignor.traderName",
-      value = ValueViewModel(request.traderKnownFacts.traderName),
-      actions = Seq.empty
-    )
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = ConsignorAddressPage().value.map {
+    case UserAddress(businessName, _, _, _, _) =>
+      SummaryListRowViewModel(
+        key = "checkYourAnswersConsignor.traderName",
+        value = ValueViewModel(HtmlFormat.escape(businessName.getOrElse("")).toString),
+        actions = if (request.traderKnownFacts.isDefined) Seq() else Seq(
+          ActionItemViewModel(
+            content = "site.change",
+            href = controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+            id = "changeConsignorName"
+          ).withVisuallyHiddenText(messages("checkYourAnswersConsignor.businessName.change.hidden"))
+        )
+      )
+  }
 }

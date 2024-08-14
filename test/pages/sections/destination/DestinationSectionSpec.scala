@@ -342,7 +342,7 @@ class DestinationSectionSpec extends SpecBase
           ).foreach {
             implicit destinationTypePageAnswer =>
               assert(
-                DestinationSection.shouldStartFlowAtDestinationBusinessName === true,
+                DestinationSection.shouldStartFlowAtDestinationAddress === true,
                 s"shouldStartFlowAtDestinationBusinessName returned false for MovementScenario $destinationTypePageAnswer"
               )
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
@@ -362,7 +362,7 @@ class DestinationSectionSpec extends SpecBase
           ).foreach {
             implicit destinationTypePageAnswer =>
               assert(
-                DestinationSection.shouldStartFlowAtDestinationBusinessName === true,
+                DestinationSection.shouldStartFlowAtDestinationAddress === true,
                 s"shouldStartFlowAtDestinationBusinessName returned false for MovementScenario $destinationTypePageAnswer"
               )
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers

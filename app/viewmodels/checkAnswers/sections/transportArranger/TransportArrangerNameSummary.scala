@@ -20,8 +20,9 @@ import models.CheckMode
 import models.requests.DataRequest
 import models.sections.transportArranger.TransportArranger
 import models.sections.transportArranger.TransportArranger.{Consignee, Consignor, GoodsOwner, Other}
-import pages.sections.consignee.ConsigneeBusinessNamePage
-import pages.sections.transportArranger.{TransportArrangerNamePage, TransportArrangerPage}
+import pages.sections.consignee.ConsigneeAddressPage
+import pages.sections.consignor.ConsignorAddressPage
+import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerPage}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -43,7 +44,7 @@ object TransportArrangerNameSummary {
       actions = if (!showChangeLink) Seq() else Seq(
         ActionItemViewModel(
           content = "site.change",
-          href = controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(
+          href = controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(
             ern = request.userAnswers.ern,
             draftId = request.userAnswers.draftId,
             mode = CheckMode
@@ -55,16 +56,19 @@ object TransportArrangerNameSummary {
     )
   }
 
-  private[transportArranger] def transportArrangerNameValue(transportArranger: Option[TransportArranger])(implicit request: DataRequest[_], messages: Messages): String = {
+  private[transportArranger] def transportArrangerNameValue(transportArranger: Option[TransportArranger])
+                                                           (implicit request: DataRequest[_], messages: Messages): String = {
     transportArranger match {
-      case Some(Consignor) => request.traderKnownFacts.traderName
-      case Some(Consignee) => ConsigneeBusinessNamePage.value.map(HtmlFormat.escape(_).toString()).getOrElse(
+      case Some(Consignor) => ConsignorAddressPage().value.map(address => HtmlFormat.escape(address.businessName.getOrElse("")).toString()).getOrElse(
+        messages("transportArrangerName.checkYourAnswers.notProvided", messages(s"transportArranger.$Consignor"))
+      )
+      case Some(Consignee) => ConsigneeAddressPage.value.map(address => HtmlFormat.escape(address.businessName.getOrElse("")).toString()).getOrElse(
         messages("transportArrangerName.checkYourAnswers.notProvided", messages(s"transportArranger.$Consignee"))
       )
-      case Some(arranger) => TransportArrangerNamePage.value.map(HtmlFormat.escape(_).toString()).getOrElse(
+      case Some(arranger) => TransportArrangerAddressPage.value.map(address => HtmlFormat.escape(address.businessName.getOrElse("")).toString()).getOrElse(
         messages("transportArrangerName.checkYourAnswers.notProvided", messages(s"transportArranger.$arranger"))
       )
-      case _ => TransportArrangerNamePage.value.map(HtmlFormat.escape(_).toString()).getOrElse(messages("site.notProvided"))
+      case _ => TransportArrangerAddressPage.value.map(address => HtmlFormat.escape(address.businessName.getOrElse("")).toString()).getOrElse(messages("site.notProvided"))
     }
   }
 }

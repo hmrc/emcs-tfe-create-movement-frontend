@@ -18,6 +18,7 @@ package viewmodels.checkAnswers.sections.dispatch
 
 import models.CheckMode
 import models.requests.DataRequest
+import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.dispatch._
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -29,10 +30,14 @@ object DispatchBusinessNameSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
     DispatchUseConsignorDetailsPage.value match {
-      case Some(true) => renderRow(request.traderKnownFacts.traderName, withChangeLink = false)
+      case Some(true) =>
+        ConsignorAddressPage().value match {
+          case Some(value) => renderRow(value.businessName.getOrElse(""), withChangeLink = false)
+          case None => renderRow(messages("site.notProvided"))
+        }
       case _ =>
-        DispatchBusinessNamePage.value match {
-          case Some(name) => renderRow(name)
+        DispatchAddressPage.value match {
+          case Some(name) => renderRow(name.businessName.getOrElse(""))
           case _ => renderRow(messages("site.notProvided"))
         }
     }
@@ -44,7 +49,7 @@ object DispatchBusinessNameSummary {
       actions = if (!withChangeLink) Seq() else Seq(
         ActionItemViewModel(
           content = "site.change",
-          href = controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+          href = controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(request.ern, request.draftId, CheckMode).url,
           id = "changeDispatchBusinessName"
         ).withVisuallyHiddenText(messages("dispatchBusinessName.change.hidden"))
       )

@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.destination
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.sections.destination.DestinationBusinessNamePage
+import pages.sections.destination.DestinationAddressPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -29,7 +29,7 @@ object DestinationBusinessNameSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
-    val value = DestinationBusinessNamePage.value.getOrElse(messages("destinationCheckAnswers.destination.notProvided"))
+    val value: String = DestinationAddressPage.value.flatMap(_.businessName).getOrElse(messages("destinationCheckAnswers.destination.notProvided"))
 
     SummaryListRowViewModel(
       key = "destinationBusinessName.checkYourAnswersLabel",
@@ -37,7 +37,7 @@ object DestinationBusinessNameSummary {
       actions = Seq(
         ActionItemViewModel(
           content = "site.change",
-          href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(request.ern, request.draftId, CheckMode).url,
+          href = controllers.sections.destination.routes.DestinationAddressController.onPageLoad(request.ern, request.draftId, CheckMode).url,
           id = "changeDestinationBusinessName"
         ).withVisuallyHiddenText(messages("destinationBusinessName.change.hidden"))
       )

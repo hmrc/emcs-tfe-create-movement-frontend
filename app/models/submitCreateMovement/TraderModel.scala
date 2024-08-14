@@ -52,7 +52,7 @@ object TraderModel extends ModelConstructorHelpers {
           case (_, Some(vatNumber)) => Some(vatNumber)
           case _ => None
         },
-        traderName = Some(mandatoryPage(ConsigneeBusinessNamePage)),
+        traderName = consigneeAddress.businessName,
         address = Some(AddressModel.fromUserAddress(consigneeAddress)),
         vatNumber = None,
         eoriNumber = ConsigneeExportEoriPage.value
@@ -63,7 +63,7 @@ object TraderModel extends ModelConstructorHelpers {
   }
 
   def applyConsignor(implicit request: DataRequest[_]): TraderModel = {
-    val consignorAddress: UserAddress = mandatoryPage(ConsignorAddressPage)
+    val consignorAddress: UserAddress = mandatoryPage(ConsignorAddressPage())
 
     val ern = if (request.userTypeFromErn == NorthernIrelandTemporaryCertifiedConsignor) {
       mandatoryPage(ConsignorPaidTemporaryAuthorisationCodePage)
@@ -73,7 +73,7 @@ object TraderModel extends ModelConstructorHelpers {
 
     TraderModel(
       traderExciseNumber = Some(ern),
-      traderName = Some(request.traderKnownFacts.traderName),
+      traderName = consignorAddress.businessName,
       address = Some(AddressModel.fromUserAddress(consignorAddress)),
       vatNumber = None,
       eoriNumber = None
@@ -82,15 +82,15 @@ object TraderModel extends ModelConstructorHelpers {
 
   def applyPlaceOfDispatch(implicit request: DataRequest[_]): Option[TraderModel] = {
     if (DispatchSection.canBeCompletedForTraderAndDestinationType) {
-      val name = if(DispatchUseConsignorDetailsPage.value.contains(true)) {
-        Some(request.traderKnownFacts.traderName)
+      val name: Option[String] = if (DispatchUseConsignorDetailsPage.value.contains(true)) {
+        mandatoryPage(ConsignorAddressPage()).businessName
       } else {
-        DispatchBusinessNamePage.value
+        DispatchAddressPage.value.flatMap(_.businessName)
       }
       Some(TraderModel(
         traderExciseNumber = DispatchWarehouseExcisePage.value,
         traderName = name,
-        address = if(request.isCertifiedConsignor) {
+        address = if (request.isCertifiedConsignor) {
           Some(AddressModel.fromUserAddress(mandatoryPage(DispatchAddressPage)))
         } else {
           DispatchAddressPage.value.map(AddressModel.fromUserAddress)
@@ -108,10 +108,11 @@ object TraderModel extends ModelConstructorHelpers {
       DestinationSection.shouldStartFlowAtDestinationWarehouseExcise(movementScenario) ->
         DestinationSection.shouldStartFlowAtDestinationWarehouseVat(movementScenario) match {
         case (true, _) =>
+          val address = mandatoryPage(DestinationAddressPage)
           Some(TraderModel(
             traderExciseNumber = Some(mandatoryPage(DestinationWarehouseExcisePage)),
-            traderName = Some(mandatoryPage(DestinationBusinessNamePage)),
-            address = Some(AddressModel.fromUserAddress(mandatoryPage(DestinationAddressPage)))
+            traderName = address.businessName,
+            address = Some(AddressModel.fromUserAddress(address))
           ))
         case (_, true) =>
 
@@ -120,13 +121,13 @@ object TraderModel extends ModelConstructorHelpers {
 
           Some(TraderModel(
             traderExciseNumber = DestinationWarehouseVatPage.value,
-            traderName = Option.when(giveAddressAndBusinessName)(DestinationBusinessNamePage.value).flatten,
+            traderName = Option.when(giveAddressAndBusinessName)(DestinationAddressPage.value.flatMap(_.businessName)).flatten,
             address = Option.when(giveAddressAndBusinessName)(DestinationAddressPage.value.map(AddressModel.fromUserAddress)).flatten
           ))
         case _ =>
           Some(TraderModel(
             traderExciseNumber = None,
-            traderName = DestinationBusinessNamePage.value,
+            traderName = DestinationAddressPage.value.flatMap(_.businessName),
             address = DestinationAddressPage.value.map(AddressModel.fromUserAddress)
           ))
       }
@@ -141,25 +142,28 @@ object TraderModel extends ModelConstructorHelpers {
     transportArranger match {
       case TransportArranger.Consignor => None
       case TransportArranger.Consignee => None
-      case _ => Some(TraderModel(
-        traderExciseNumber = None,
-        traderName = Some(mandatoryPage(TransportArrangerNamePage)),
-        address = Some(AddressModel.fromUserAddress(mandatoryPage(TransportArrangerAddressPage))),
-        /*
-          On the TransportArrangerVatPage when the user clicks No we set the `vatNumber` to None
-          We need to default this to NONGBVAT hence the getOrElse.
-         */
-        vatNumber = Some(mandatoryPage(TransportArrangerVatPage).vatNumber.getOrElse(NONGBVAT)),
-        eoriNumber = None
-      ))
+      case _ =>
+        val address = mandatoryPage(TransportArrangerAddressPage)
+        Some(TraderModel(
+          traderExciseNumber = None,
+          traderName = address.businessName,
+          address = Some(AddressModel.fromUserAddress(address)),
+          /*
+            On the TransportArrangerVatPage when the user clicks No we set the `vatNumber` to None
+            We need to default this to NONGBVAT hence the getOrElse.
+           */
+          vatNumber = Some(mandatoryPage(TransportArrangerVatPage).vatNumber.getOrElse(NONGBVAT)),
+          eoriNumber = None
+        ))
     }
   }
 
   def applyFirstTransporter(implicit request: DataRequest[_]): Option[TraderModel] = {
+    val address = mandatoryPage(FirstTransporterAddressPage)
     Some(TraderModel(
       traderExciseNumber = None,
-      traderName = Some(mandatoryPage(FirstTransporterNamePage)),
-      address = Some(AddressModel.fromUserAddress(mandatoryPage(FirstTransporterAddressPage))),
+      traderName = address.businessName,
+      address = Some(AddressModel.fromUserAddress(address)),
       vatNumber = Some(mandatoryPage(FirstTransporterVatPage).vatNumber.getOrElse(NONGBVAT)),
       eoriNumber = None
     ))
@@ -171,13 +175,15 @@ object TraderModel extends ModelConstructorHelpers {
       case GuarantorArranger.Consignee => None
       case GuarantorArranger.NoGuarantorRequired => None
       case GuarantorArranger.NoGuarantorRequiredUkToEu => None
-      case _ => Some(TraderModel(
-        traderExciseNumber = None,
-        traderName = Some(mandatoryPage(GuarantorNamePage)),
-        address = Some(AddressModel.fromUserAddress(mandatoryPage(GuarantorAddressPage))),
-        vatNumber = Some(mandatoryPage(GuarantorVatPage).vatNumber.getOrElse(NONGBVAT)),
-        eoriNumber = None
-      ))
+      case _ =>
+        val address = mandatoryPage(GuarantorAddressPage)
+        Some(TraderModel(
+          traderExciseNumber = None,
+          traderName = address.businessName,
+          address = Some(AddressModel.fromUserAddress(address)),
+          vatNumber = Some(mandatoryPage(GuarantorVatPage).vatNumber.getOrElse(NONGBVAT)),
+          eoriNumber = None
+        ))
     }
   }
 

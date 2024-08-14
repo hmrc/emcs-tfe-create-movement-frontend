@@ -47,10 +47,10 @@ class DispatchIndexController @Inject()(
       } else {
         withAnswer(DestinationTypePage) {
           case CertifiedConsignee | TemporaryCertifiedConsignee =>
-            if(ConsignorAddressPage.value.nonEmpty) {
+            if(ConsignorAddressPage().value.nonEmpty) {
               Redirect(routes.DispatchUseConsignorDetailsController.onPageLoad(ern, draftId, NormalMode))
             } else {
-              Redirect(routes.DispatchBusinessNameController.onPageLoad(ern, draftId, NormalMode))
+              Redirect(routes.DispatchAddressController.onPageLoad(ern, draftId, NormalMode))
             }
           case _ =>
             Redirect(routes.DispatchWarehouseExciseController.onPageLoad(ern, draftId, NormalMode))

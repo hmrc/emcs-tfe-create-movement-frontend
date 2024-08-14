@@ -28,7 +28,7 @@ import viewmodels.implicits._
 
 object ConsignorTraderNameSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = ConsignorAddressPage().value.map {
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = ConsignorAddressPage.value.map {
     case UserAddress(businessName, _, _, _, _) =>
       SummaryListRowViewModel(
         key = "checkYourAnswersConsignor.traderName",

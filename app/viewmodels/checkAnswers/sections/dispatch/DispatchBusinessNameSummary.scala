@@ -31,7 +31,7 @@ object DispatchBusinessNameSummary {
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
     DispatchUseConsignorDetailsPage.value match {
       case Some(true) =>
-        ConsignorAddressPage().value match {
+        ConsignorAddressPage.value match {
           case Some(value) => renderRow(value.businessName.getOrElse(""), withChangeLink = false)
           case None => renderRow(messages("site.notProvided"))
         }

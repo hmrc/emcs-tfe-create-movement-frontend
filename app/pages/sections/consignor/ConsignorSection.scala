@@ -29,7 +29,7 @@ case object ConsignorSection extends Section[JsObject] {
     (
       request.userTypeFromErn,
       ConsignorPaidTemporaryAuthorisationCodePage.value,
-      ConsignorAddressPage().value
+      ConsignorAddressPage.value
     ) match {
       case (NorthernIrelandTemporaryCertifiedConsignor, Some(_), Some(_)) =>
         Completed

@@ -63,7 +63,7 @@ object TraderModel extends ModelConstructorHelpers {
   }
 
   def applyConsignor(implicit request: DataRequest[_]): TraderModel = {
-    val consignorAddress: UserAddress = mandatoryPage(ConsignorAddressPage())
+    val consignorAddress: UserAddress = mandatoryPage(ConsignorAddressPage)
 
     val ern = if (request.userTypeFromErn == NorthernIrelandTemporaryCertifiedConsignor) {
       mandatoryPage(ConsignorPaidTemporaryAuthorisationCodePage)
@@ -83,7 +83,7 @@ object TraderModel extends ModelConstructorHelpers {
   def applyPlaceOfDispatch(implicit request: DataRequest[_]): Option[TraderModel] = {
     if (DispatchSection.canBeCompletedForTraderAndDestinationType) {
       val name: Option[String] = if (DispatchUseConsignorDetailsPage.value.contains(true)) {
-        mandatoryPage(ConsignorAddressPage()).businessName
+        mandatoryPage(ConsignorAddressPage).businessName
       } else {
         DispatchAddressPage.value.flatMap(_.businessName)
       }

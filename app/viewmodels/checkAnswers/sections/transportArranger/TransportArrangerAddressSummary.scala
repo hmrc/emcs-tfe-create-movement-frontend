@@ -36,7 +36,7 @@ object TransportArrangerAddressSummary {
     val transportArranger = TransportArrangerPage.value
 
     val addressPage: QuestionPage[UserAddress] = transportArranger match {
-      case Some(Consignor) => ConsignorAddressPage()
+      case Some(Consignor) => ConsignorAddressPage
       case Some(Consignee) => ConsigneeAddressPage
       case _ => TransportArrangerAddressPage
     }

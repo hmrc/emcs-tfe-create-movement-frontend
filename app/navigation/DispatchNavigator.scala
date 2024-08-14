@@ -30,7 +30,7 @@ class DispatchNavigator @Inject() extends BaseNavigator {
   private val normalRoutes: Page => UserAnswers => Call = {
 
     case DispatchWarehouseExcisePage => (userAnswers: UserAnswers) =>
-      if(userAnswers.get(ConsignorAddressPage()).nonEmpty) {
+      if(userAnswers.get(ConsignorAddressPage).nonEmpty) {
         routes.DispatchUseConsignorDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
       } else {
         routes.DispatchAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)

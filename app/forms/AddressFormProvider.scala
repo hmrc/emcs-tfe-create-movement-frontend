@@ -95,7 +95,7 @@ class AddressFormProvider @Inject() extends Mappings {
     }
 
     page match {
-      case ConsignorAddressPage() => validate(Some(request.ern))
+      case ConsignorAddressPage => validate(Some(request.ern))
       case ConsigneeAddressPage => validate(ConsigneeExcisePage.value)
       case DispatchAddressPage => validate(DispatchWarehouseExcisePage.value)
       case DestinationAddressPage => validate(DestinationWarehouseExcisePage.value)

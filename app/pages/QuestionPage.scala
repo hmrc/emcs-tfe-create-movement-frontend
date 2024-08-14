@@ -17,7 +17,6 @@
 package pages
 
 import models.requests.DataRequest
-import pages.sections.consignor.ConsignorAddressPage
 import play.api.libs.json.Reads
 import queries.{Gettable, Settable}
 import utils.SubmissionError

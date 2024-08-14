@@ -65,7 +65,7 @@ object GuarantorNameSummary {
   private def showChangeLink(arranger: GuarantorArranger): Boolean = arranger == GoodsOwner || arranger == Transporter
 
   private def businessName(arranger: GuarantorArranger)(implicit request: DataRequest[_], messages: Messages): String = arranger match {
-    case Consignor => ConsignorAddressPage().value match {
+    case Consignor => ConsignorAddressPage.value match {
       case Some(answer) => HtmlFormat.escape(answer.businessName.getOrElse("")).toString()
       case None => messages("guarantorName.checkYourAnswers.notProvided", messages(s"guarantorArranger.$arranger"))
     }

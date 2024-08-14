@@ -49,7 +49,7 @@ object GuarantorAddressSummary {
   def renderRow(guarantorArranger: GuarantorArranger)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
     val addressPage: QuestionPage[UserAddress] = guarantorArranger match {
-      case Consignor => ConsignorAddressPage()
+      case Consignor => ConsignorAddressPage
       case Consignee => ConsigneeAddressPage
       case _ => GuarantorAddressPage
     }

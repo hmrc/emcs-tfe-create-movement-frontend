@@ -59,7 +59,7 @@ object TransportArrangerNameSummary {
   private[transportArranger] def transportArrangerNameValue(transportArranger: Option[TransportArranger])
                                                            (implicit request: DataRequest[_], messages: Messages): String = {
     transportArranger match {
-      case Some(Consignor) => ConsignorAddressPage().value.map(address => HtmlFormat.escape(address.businessName.getOrElse("")).toString()).getOrElse(
+      case Some(Consignor) => ConsignorAddressPage.value.map(address => HtmlFormat.escape(address.businessName.getOrElse("")).toString()).getOrElse(
         messages("transportArrangerName.checkYourAnswers.notProvided", messages(s"transportArranger.$Consignor"))
       )
       case Some(Consignee) => ConsigneeAddressPage.value.map(address => HtmlFormat.escape(address.businessName.getOrElse("")).toString()).getOrElse(

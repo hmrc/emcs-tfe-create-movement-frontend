@@ -30,7 +30,7 @@ class ConsignorNavigator @Inject() extends BaseNavigator {
     case ConsignorPaidTemporaryAuthorisationCodePage =>
       (userAnswers: UserAnswers) =>
         controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
-    case ConsignorAddressPage() =>
+    case ConsignorAddressPage =>
       (userAnswers: UserAnswers) => controllers.sections.consignor.routes.CheckYourAnswersConsignorController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case CheckAnswersConsignorPage =>
       (userAnswers: UserAnswers) => routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)

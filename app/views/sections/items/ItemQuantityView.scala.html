@@ -16,10 +16,11 @@
 
 @import models.GoodsType
 @import models.requests.DataRequest
+@import models.response.referenceData.CnCodeInformation
 @import pages.sections.items.ItemQuantityPage
 @import viewmodels.InputWidth._
 @import viewmodels.LabelSize
-@import viewmodels.helpers.ErrorNotificationBannerHelper
+@import viewmodels.helpers.{ErrorNotificationBannerHelper, ItemQuantityHelper}
 
 @this(
         layout: templates.Layout,
@@ -32,10 +33,11 @@
         p: components.p,
         notificationBanner: GovukNotificationBanner,
         errorNotificationBannerHelper: ErrorNotificationBannerHelper,
-        continueOrExit: components.continueOrExit
+        continueOrExit: components.continueOrExit,
+        itemQuantityHelper: ItemQuantityHelper
 )
 
-@(form: Form[_], action: Call, goodsType: GoodsType, unitOfMeasure: UnitOfMeasure, idx: Index)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, goodsType: GoodsType, cnCodeInfo: CnCodeInformation, idx: Index)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("itemQuantity.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
@@ -50,14 +52,18 @@
 
     @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
+    @h1(itemQuantityHelper.heading(goodsType, cnCodeInfo))
+
+    @itemQuantityHelper.paragraph(cnCodeInfo).map{ paragraph => @p(){@paragraph} }
+
     @govukInput(
         InputViewModel(
             field = form("value"),
-            label = LabelViewModel(Text(messages("itemQuantity.heading", goodsType.toSingularOutput()))).asPageHeading(LabelSize.Large)
+            label = LabelViewModel(Text(itemQuantityHelper.label(cnCodeInfo))).asPageHeading(LabelSize.Medium)
         )
                 .withWidth(Fixed10)
-                .withSuffix(PrefixOrSuffix(content = Text(unitOfMeasure.toShortFormatMessage())))
-                .withHint(Hint(content = Text(messages("itemQuantity.hint", unitOfMeasure.toLongFormatMessage()))))
+                .withSuffix(PrefixOrSuffix(content = Text(cnCodeInfo.unitOfMeasure.toShortFormatMessage())))
+                .withHint(Hint(content = Text(itemQuantityHelper.hint(cnCodeInfo))))
     )
 
     @continueOrExit()

@@ -22,9 +22,21 @@ object ItemQuantityMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     def heading(goodsType: String) = s"How much $goodsType are you moving?"
+    val headingT200 = "Number of cigarettes you are moving?"
+    val headingT300 = "Number of cigars or cigarillos you are moving?"
+
     def title(goodsType: String): String = titleHelper(heading(goodsType))
 
-    def hint(unitOfMesaure: String) = s"Enter the total quantity in $unitOfMesaure."
+    def hint(unitOfMeasure: String) = s"Enter the total quantity of liquids in $unitOfMeasure."
+    val hintT200 = "For example, enter 5 for 5000 cigarettes, or enter 1234.567 for 1,234,567 cigarettes."
+    val hintT300 = "For example, enter 5 for 5000 cigars, or enter 1234.567 for 1,234,567 cigars."
+    def hintLiquid(unitOfMeasure: String) = s"Enter the total quantity of liquids in $unitOfMeasure."
+
+    val paragraphT200 = "The excise duty is worked out per 1000 cigarettes. You can work out what to enter by dividing the total quantity of cigarettes you are moving by 1000. This does not mean the number of packets."
+    val paragraphT300 = "The excise duty is worked out per 1000 cigars or cigarillos. You can work out what to enter by dividing the total quantity of cigars or cigarillos you are moving by 1000. This does not mean the number of packets."
+
+    val labelT200 = "How many thousands of cigarettes are you moving?"
+    val labelT300 = "How many thousands of cigars or cigarillos are you moving?"
 
     val cyaLabel = "Quantity"
     val cyaChangeHidden = "item quantity"

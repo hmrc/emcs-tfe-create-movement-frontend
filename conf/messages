@@ -1141,6 +1141,19 @@ itemCommodityCode.defaultItem = Choose commodity code
 
 itemQuantity.title = How much {0} are you moving?
 itemQuantity.heading = How much {0} are you moving?
+
+itemQuantity.heading.T200 = Number of cigarettes you are moving?
+itemQuantity.paragraph.T200 = The excise duty is worked out per 1000 cigarettes. You can work out what to enter by dividing the total quantity of cigarettes you are moving by 1000. This does not mean the number of packets.
+itemQuantity.label.T200 = How many thousands of cigarettes are you moving?
+itemQuantity.hint.T200 = For example, enter 5 for 5000 cigarettes, or enter 1234.567 for 1,234,567 cigarettes.
+
+itemQuantity.heading.T300 = Number of cigars or cigarillos you are moving?
+itemQuantity.paragraph.T300 = The excise duty is worked out per 1000 cigars or cigarillos. You can work out what to enter by dividing the total quantity of cigars or cigarillos you are moving by 1000. This does not mean the number of packets.
+itemQuantity.label.T300 = How many thousands of cigars or cigarillos are you moving?
+itemQuantity.hint.T300 = For example, enter 5 for 5000 cigars, or enter 1234.567 for 1,234,567 cigars.
+
+itemQuantity.hint.liquid = Enter the total quantity of liquids in {0}.
+
 itemQuantity.hint = Enter the total quantity in {0}.
 itemQuantity.error.required = Enter an amount
 itemQuantity.error.nonNumeric = Amount must be in numbers

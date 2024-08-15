@@ -33,6 +33,8 @@ object CheckYourAnswersConsigneeMessages {
     val vat: String = "Identification number"
     val identificationProvided: String = "Identification provided"
     val exempt: String = "Exempted organisation details"
+    val exportOffice: String = "Person representing consignor at export office"
+    val consigneeDetails: String = "Consignee details"
 
     val invalidOrMissingConsignee = "The consignee Excise Registration Number is not valid for the destination type of this movement"
     val linkIsPending = "The temporary authorisation reference entered cannot be verified because the linked Temporary Certificate of Authority is pending"

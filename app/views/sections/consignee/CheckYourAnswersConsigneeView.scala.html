@@ -23,12 +23,13 @@
     govukSummaryList: GovukSummaryList,
     formHelper: FormWithCSRF,
     h1: components.h1,
+    h2: components.h2,
     notificationBanner: GovukNotificationBanner,
     errorNotificationBannerHelper: ErrorNotificationBannerHelper,
     saveAndContinue: components.saveAndContinue
 )
 
-@(submitAction: Call, ern: String, lrn: String, summaryList: SummaryList)(implicit request: DataRequest[_], messages: Messages)
+@(submitAction: Call, ern: String, lrn: String, summaryList: Seq[SummaryList], isExport: Boolean = false)(implicit request: DataRequest[_], messages: Messages)
 
     @layout(pageTitle = titleNoForm(messages("checkYourAnswersConsignee.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
@@ -41,7 +42,17 @@
 
             @h1("checkYourAnswersConsignee.heading", Some(messages("consignee.subHeading")), "govuk-heading-l")
 
-            @govukSummaryList(summaryList)
+            @if(isExport == true){
+                @h2(messages("checkYourAnswersConsignee.h2.exportOffice"))
+
+                @govukSummaryList(summaryList(0))
+
+                @h2(messages("checkYourAnswersConsignee.h2.consigneeDetails"))
+
+                @govukSummaryList(summaryList(1))
+            }else{
+                @govukSummaryList(summaryList(0))
+            }
 
             @saveAndContinue("site.confirmAnswers")
 

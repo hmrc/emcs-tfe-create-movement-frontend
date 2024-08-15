@@ -42,7 +42,7 @@ object TraderModel extends ModelConstructorHelpers {
 
   def applyConsignee(implicit request: DataRequest[_]): Option[TraderModel] = {
     if (ConsigneeSection.canBeCompletedForTraderAndDestinationType) {
-      val consigneeAddress: UserAddress = mandatoryPage(ConsigneeAddressPage)
+      val address: UserAddress = mandatoryPage(ConsigneeAddressPage)
 
       Some(TraderModel(
         // Consignee section has multiple entry points.
@@ -52,8 +52,8 @@ object TraderModel extends ModelConstructorHelpers {
           case (_, Some(vatNumber)) => Some(vatNumber)
           case _ => None
         },
-        traderName = consigneeAddress.businessName,
-        address = Some(AddressModel.fromUserAddress(consigneeAddress)),
+        traderName = address.businessName,
+        address = Some(AddressModel.fromUserAddress(address)),
         vatNumber = None,
         eoriNumber = ConsigneeExportEoriPage.value
       ))
@@ -63,7 +63,7 @@ object TraderModel extends ModelConstructorHelpers {
   }
 
   def applyConsignor(implicit request: DataRequest[_]): TraderModel = {
-    val consignorAddress: UserAddress = mandatoryPage(ConsignorAddressPage)
+    val address: UserAddress = mandatoryPage(ConsignorAddressPage)
 
     val ern = if (request.userTypeFromErn == NorthernIrelandTemporaryCertifiedConsignor) {
       mandatoryPage(ConsignorPaidTemporaryAuthorisationCodePage)
@@ -73,8 +73,8 @@ object TraderModel extends ModelConstructorHelpers {
 
     TraderModel(
       traderExciseNumber = Some(ern),
-      traderName = consignorAddress.businessName,
-      address = Some(AddressModel.fromUserAddress(consignorAddress)),
+      traderName = address.businessName,
+      address = Some(AddressModel.fromUserAddress(address)),
       vatNumber = None,
       eoriNumber = None
     )
@@ -139,6 +139,7 @@ object TraderModel extends ModelConstructorHelpers {
       case TransportArranger.Consignee => None
       case _ =>
         val address = mandatoryPage(TransportArrangerAddressPage)
+
         Some(TraderModel(
           traderExciseNumber = None,
           traderName = address.businessName,
@@ -155,6 +156,7 @@ object TraderModel extends ModelConstructorHelpers {
 
   def applyFirstTransporter(implicit request: DataRequest[_]): Option[TraderModel] = {
     val address = mandatoryPage(FirstTransporterAddressPage)
+
     Some(TraderModel(
       traderExciseNumber = None,
       traderName = address.businessName,
@@ -172,6 +174,7 @@ object TraderModel extends ModelConstructorHelpers {
       case GuarantorArranger.NoGuarantorRequiredUkToEu => None
       case _ =>
         val address = mandatoryPage(GuarantorAddressPage)
+
         Some(TraderModel(
           traderExciseNumber = None,
           traderName = address.businessName,

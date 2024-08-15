@@ -38,7 +38,6 @@ class MovementGuaranteeModelSpec extends SpecBase with ItemFixtures {
           emptyUserAnswers
             .set(GuarantorRequiredPage, false)
             .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
-            .set(GuarantorNamePage, "name")
             .set(GuarantorAddressPage, testUserAddress)
             .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat")))
             .set(DestinationTypePage, MovementScenario.EuTaxWarehouse),
@@ -54,7 +53,6 @@ class MovementGuaranteeModelSpec extends SpecBase with ItemFixtures {
           emptyUserAnswers
             .set(GuarantorRequiredPage, false)
             .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
-            .set(GuarantorNamePage, "name")
             .set(GuarantorAddressPage, testUserAddress)
             .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat")))
             .set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB),
@@ -68,7 +66,6 @@ class MovementGuaranteeModelSpec extends SpecBase with ItemFixtures {
           emptyUserAnswers
             .set(GuarantorRequiredPage, false)
             .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
-            .set(GuarantorNamePage, "name")
             .set(GuarantorAddressPage, testUserAddress)
             .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat")))
             .set(DestinationTypePage, MovementScenario.UkTaxWarehouse.NI),
@@ -85,14 +82,13 @@ class MovementGuaranteeModelSpec extends SpecBase with ItemFixtures {
             emptyUserAnswers
               .set(GuarantorRequiredPage, true)
               .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
-              .set(GuarantorNamePage, "name")
               .set(GuarantorAddressPage, testUserAddress)
               .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat")))
           )
 
           MovementGuaranteeModel.apply mustBe MovementGuaranteeModel(GuarantorArranger.GoodsOwner, Some(Seq(TraderModel(
             None,
-            Some("name"),
+            Some(testUserAddress.businessName.value),
             Some(AddressModel.fromUserAddress(testUserAddress)),
             Some("vat"),
             None
@@ -106,14 +102,13 @@ class MovementGuaranteeModelSpec extends SpecBase with ItemFixtures {
               .set(DestinationTypePage, UkTaxWarehouse.GB)
               .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
               .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
-              .set(GuarantorNamePage, "name")
               .set(GuarantorAddressPage, testUserAddress)
               .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat")))
           )
 
           MovementGuaranteeModel.apply mustBe MovementGuaranteeModel(GuarantorArranger.GoodsOwner, Some(Seq(TraderModel(
             None,
-            Some("name"),
+            Some(testUserAddress.businessName.value),
             Some(AddressModel.fromUserAddress(testUserAddress)),
             Some("vat"),
             None
@@ -127,14 +122,13 @@ class MovementGuaranteeModelSpec extends SpecBase with ItemFixtures {
               .set(DestinationTypePage, EuTaxWarehouse)
               .set(ItemExciseProductCodePage(testIndex1), testEpcSpirit)
               .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
-              .set(GuarantorNamePage, "name")
               .set(GuarantorAddressPage, testUserAddress)
               .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat")))
           )
 
           MovementGuaranteeModel.apply mustBe MovementGuaranteeModel(GuarantorArranger.GoodsOwner, Some(Seq(TraderModel(
             None,
-            Some("name"),
+            Some(testUserAddress.businessName.value),
             Some(AddressModel.fromUserAddress(testUserAddress)),
             Some("vat"),
             None
@@ -150,7 +144,6 @@ class MovementGuaranteeModelSpec extends SpecBase with ItemFixtures {
           emptyUserAnswers
             .set(GuarantorRequiredPage, false)
             .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
-            .set(GuarantorNamePage, "name")
             .set(GuarantorAddressPage, testUserAddress)
             .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("vat"))),
           testNorthernIrelandErn

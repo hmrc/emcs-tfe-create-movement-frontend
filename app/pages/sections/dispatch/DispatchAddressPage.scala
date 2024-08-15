@@ -31,9 +31,9 @@ case object DispatchAddressPage extends QuestionPage[UserAddress] {
       address =>
         val businessName = if (DispatchUseConsignorDetailsPage.value.contains(true)) {
           Seq(
-            address.businessName,
+            request.traderKnownFacts.map(_.traderName),
             request.userAnswers.get(ConsignorAddressPage).flatMap(_.businessName),
-            request.traderKnownFacts.map(_.traderName)
+            address.businessName
           ).collectFirst {
             case Some(value) => value
           }

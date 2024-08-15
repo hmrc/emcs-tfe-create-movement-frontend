@@ -65,9 +65,8 @@ class CheckYourAnswersConsignorViewSpec extends SpecBase with ViewBehaviours {
             Selectors.title -> messagesForLanguage.title,
             Selectors.h1 -> messagesForLanguage.heading,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.consignorInformationSection,
-            Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
-            Selectors.govukSummaryListKey(2) -> messagesForLanguage.ern,
-            Selectors.govukSummaryListKey(3) -> messagesForLanguage.address,
+            Selectors.govukSummaryListKey(1) -> messagesForLanguage.ern,
+            Selectors.govukSummaryListKey(2) -> messagesForLanguage.address,
             Selectors.button -> messagesForLanguage.confirmAnswers
           ))
 
@@ -94,9 +93,8 @@ class CheckYourAnswersConsignorViewSpec extends SpecBase with ViewBehaviours {
             Selectors.title -> messagesForLanguage.title,
             Selectors.h1 -> messagesForLanguage.heading,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.consignorInformationSection,
-            Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
-            Selectors.govukSummaryListKey(2) -> messagesForLanguage.paidTemporaryAuthorisationCode,
-            Selectors.govukSummaryListKey(3) -> messagesForLanguage.address,
+            Selectors.govukSummaryListKey(1) -> messagesForLanguage.paidTemporaryAuthorisationCode,
+            Selectors.govukSummaryListKey(2) -> messagesForLanguage.address,
             Selectors.button -> messagesForLanguage.confirmAnswers
           ))
 

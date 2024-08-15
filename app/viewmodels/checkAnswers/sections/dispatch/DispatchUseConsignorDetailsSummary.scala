@@ -18,6 +18,7 @@ package viewmodels.checkAnswers.sections.dispatch
 
 import models.CheckMode
 import models.requests.DataRequest
+import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.dispatch.DispatchUseConsignorDetailsPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,13 +27,14 @@ import viewmodels.implicits._
 
 object DispatchUseConsignorDetailsSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    DispatchUseConsignorDetailsPage.value.map {
-      answer =>
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+    ConsignorAddressPage.value match {
+      case Some(_) =>
+        val answer = DispatchUseConsignorDetailsPage.value.getOrElse(false)
 
         val value = if (answer) "site.yes" else "site.no"
 
-        SummaryListRowViewModel(
+        Some(SummaryListRowViewModel(
           key = "dispatchUseConsignorDetails.checkYourAnswersLabel",
           value = ValueViewModel(value),
           actions = Seq(
@@ -43,6 +45,8 @@ object DispatchUseConsignorDetailsSummary {
             )
               .withVisuallyHiddenText(messages("dispatchUseConsignorDetails.change.hidden"))
           )
-        )
+        ))
+      case None => None
     }
+  }
 }

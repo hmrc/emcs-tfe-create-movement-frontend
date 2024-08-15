@@ -37,7 +37,7 @@ import scala.concurrent.Future
 class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
   lazy val formProvider: AddressFormProvider = new AddressFormProvider()
-  lazy val form: Form[UserAddress] = formProvider(GuarantorAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers))
+  lazy val form: Form[UserAddress] = formProvider(GuarantorAddressPage, false)(dataRequest(FakeRequest(), emptyUserAnswers))
   lazy val view: AddressView = app.injector.instanceOf[AddressView]
 
   lazy val addressRoute: String = controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
@@ -77,7 +77,8 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
             form = form,
             addressPage = GuarantorAddressPage,
             onSubmit = addressOnSubmit,
-            headingKey = Some(s"guarantorAddress.$guarantorArranger")
+            headingKey = Some(s"guarantorAddress.$guarantorArranger"),
+            isConsignorPageOrUsingConsignorDetails = false
           )(dataRequest(request), messages(request)).toString
         }
 
@@ -85,10 +86,11 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
           MockUserAnswersService.set().returns(Future.successful(answersSoFar))
 
           val req = FakeRequest(POST, addressRoute).withFormUrlEncodedBody(
+            ("businessName", userAddressModelMax.businessName.value),
             ("property", userAddressModelMax.property.value),
-            ("street", userAddressModelMax.street),
-            ("town", userAddressModelMax.town),
-            ("postcode", userAddressModelMax.postcode)
+            ("street", userAddressModelMax.street.value),
+            ("town", userAddressModelMax.town.value),
+            ("postcode", userAddressModelMax.postcode.value)
           )
 
           val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
@@ -108,7 +110,8 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
             form = boundForm,
             addressPage = GuarantorAddressPage,
             onSubmit = addressOnSubmit,
-            headingKey = Some(s"guarantorAddress.$guarantorArranger")
+            headingKey = Some(s"guarantorAddress.$guarantorArranger"),
+            isConsignorPageOrUsingConsignorDetails = false
           )(dataRequest(request), messages(request)).toString
         }
       }

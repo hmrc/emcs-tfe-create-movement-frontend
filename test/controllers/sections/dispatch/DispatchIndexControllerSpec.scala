@@ -104,7 +104,7 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService w
 
         "when ConsignorAddress DOES NOT exist" - {
 
-          s"when $destinationType must redirect to the DispatchBusinessNameController" in new Fixture(Some(emptyUserAnswers
+          s"when $destinationType must redirect to the DispatchAddressController" in new Fixture(Some(emptyUserAnswers
             .set(DestinationTypePage, destinationType)
           )) {
 
@@ -112,7 +112,7 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService w
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result) mustBe
-              Some(controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode).url)
+              Some(controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(testErn, testDraftId, NormalMode).url)
           }
         }
       }

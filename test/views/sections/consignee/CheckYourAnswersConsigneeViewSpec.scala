@@ -20,10 +20,10 @@ import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.TaskListStatusMessages
 import fixtures.messages.sections.consignee.CheckYourAnswersConsigneeMessages.English
-import models.{CheckMode, NormalMode}
 import models.requests.DataRequest
 import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, VatNumber}
 import models.sections.info.movementScenario.MovementScenario._
+import models.{CheckMode, NormalMode}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.consignee._
@@ -46,6 +46,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
 
   object Selectors extends BaseSelectors {
     def govukSummaryListKey(id: Int) = s".govuk-summary-list__row:nth-of-type($id) .govuk-summary-list__key"
+
     val govukSummaryListChangeLink = ".govuk-summary-list__actions .govuk-link"
     val tag = ".govuk-tag--orange"
   }
@@ -59,7 +60,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
       implicit val request: DataRequest[AnyContentAsEmpty.type] =
         dataRequest(FakeRequest(), emptyUserAnswers
           .set(ConsigneeAddressPage, testUserAddress)
-          .set(ConsigneeBusinessNamePage, testBusinessName)
           .set(ConsigneeExcisePage, testErn)
           .set(DestinationTypePage, UkTaxWarehouse.GB)
         )
@@ -69,7 +69,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         testErn,
         testDraftId,
         Seq(SummaryList(Seq(
-          ConsigneeBusinessNameSummary.row(true),
           consigneeExciseSummary.row(true),
           ConsigneeAddressSummary.row(true)
         ).flatten))
@@ -79,16 +78,10 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         Selectors.title -> English.title,
         Selectors.h1 -> English.heading,
         Selectors.h2(1) -> English.caption,
-        Selectors.govukSummaryListKey(1) -> English.traderName,
-        Selectors.govukSummaryListKey(2) -> English.ern,
-        Selectors.govukSummaryListKey(3) -> English.address,
+        Selectors.govukSummaryListKey(1) -> English.ern,
+        Selectors.govukSummaryListKey(2) -> English.address,
         Selectors.button -> English.confirmAnswers,
       ))
-
-      "have a link to change business name" in {
-        doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url
-      }
 
       "have a link to change ERN" in {
         doc.getElementById("changeConsigneeExcise").attr("href") mustBe
@@ -106,10 +99,10 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
         emptyUserAnswers.copy(submissionFailures =
-          ConsigneeExcisePage.possibleErrors.map(error => consigneeExciseFailure.copy(error.code))
-        )
-        .set(ConsigneeExcisePage, testErn)
-        .set(DestinationTypePage, UkTaxWarehouse.GB)
+            ConsigneeExcisePage.possibleErrors.map(error => consigneeExciseFailure.copy(error.code))
+          )
+          .set(ConsigneeExcisePage, testErn)
+          .set(DestinationTypePage, UkTaxWarehouse.GB)
       )
 
       implicit val doc: Document = Jsoup.parse(view(
@@ -157,7 +150,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
       implicit val request: DataRequest[AnyContentAsEmpty.type] =
         dataRequest(FakeRequest(), emptyUserAnswers
           .set(ConsigneeAddressPage, testUserAddress)
-          .set(ConsigneeBusinessNamePage, testBusinessName)
           .set(ConsigneeExcisePage, testErn)
           .set(DestinationTypePage, TemporaryRegisteredConsignee)
         )
@@ -167,7 +159,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         testErn,
         testDraftId,
         Seq(SummaryList(Seq(
-          ConsigneeBusinessNameSummary.row(true),
           consigneeExciseSummary.row(true),
           ConsigneeAddressSummary.row(true)
         ).flatten))
@@ -177,16 +168,10 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         Selectors.title -> English.title,
         Selectors.h1 -> English.heading,
         Selectors.h2(1) -> English.caption,
-        Selectors.govukSummaryListKey(1) -> English.traderName,
-        Selectors.govukSummaryListKey(2) -> English.ernNumberForTemporaryRegisteredConsignee,
-        Selectors.govukSummaryListKey(3) -> English.address,
+        Selectors.govukSummaryListKey(1) -> English.ernNumberForTemporaryRegisteredConsignee,
+        Selectors.govukSummaryListKey(2) -> English.address,
         Selectors.button -> English.confirmAnswers,
       ))
-
-      "have a link to change business name" in {
-        doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url
-      }
 
       "have a link to change ERN" in {
         doc.getElementById("changeConsigneeExcise").attr("href") mustBe
@@ -206,7 +191,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
       implicit val request: DataRequest[AnyContentAsEmpty.type] =
         dataRequest(FakeRequest(), emptyUserAnswers
           .set(ConsigneeAddressPage, testUserAddress)
-          .set(ConsigneeBusinessNamePage, testBusinessName)
           .set(ConsigneeExcisePage, testErn)
           .set(DestinationTypePage, TemporaryCertifiedConsignee)
         )
@@ -216,7 +200,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         testErn,
         testDraftId,
         Seq(SummaryList(Seq(
-          ConsigneeBusinessNameSummary.row(true),
           consigneeExciseSummary.row(true),
           ConsigneeAddressSummary.row(true)
         ).flatten))
@@ -226,16 +209,10 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         Selectors.title -> English.title,
         Selectors.h1 -> English.heading,
         Selectors.h2(1) -> English.caption,
-        Selectors.govukSummaryListKey(1) -> English.traderName,
-        Selectors.govukSummaryListKey(2) -> English.ernNumberForTemporaryCertifiedConsignee,
-        Selectors.govukSummaryListKey(3) -> English.address,
+        Selectors.govukSummaryListKey(1) -> English.ernNumberForTemporaryCertifiedConsignee,
+        Selectors.govukSummaryListKey(2) -> English.address,
         Selectors.button -> English.confirmAnswers,
       ))
-
-      "have a link to change business name" in {
-        doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url
-      }
 
       "have a link to change ERN" in {
         doc.getElementById("changeConsigneeExcise").attr("href") mustBe
@@ -254,7 +231,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
       implicit val request: DataRequest[AnyContentAsEmpty.type] =
         dataRequest(FakeRequest(), emptyUserAnswers
           .set(ConsigneeAddressPage, testUserAddress)
-          .set(ConsigneeBusinessNamePage, testBusinessName)
           .set(ConsigneeExcisePage, testErn)
           .set(ConsigneeExemptOrganisationPage, testExemptedOrganisation)
           .set(DestinationTypePage, ExemptedOrganisation)
@@ -265,7 +241,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         testErn,
         testDraftId,
         Seq(SummaryList(Seq(
-          ConsigneeBusinessNameSummary.row(true),
           ConsigneeExemptOrganisationSummary.row(true),
           ConsigneeAddressSummary.row(true)
         ).flatten))
@@ -275,16 +250,10 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         Selectors.title -> English.title,
         Selectors.h1 -> English.heading,
         Selectors.h2(1) -> English.caption,
-        Selectors.govukSummaryListKey(1) -> English.traderName,
-        Selectors.govukSummaryListKey(2) -> English.exempt,
-        Selectors.govukSummaryListKey(3) -> English.address,
+        Selectors.govukSummaryListKey(1) -> English.exempt,
+        Selectors.govukSummaryListKey(2) -> English.address,
         Selectors.button -> English.confirmAnswers,
       ))
-
-      "have a link to change business name" in {
-        doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url
-      }
 
       "have a link to change Exempted Organisation" in {
         doc.getElementById("changeConsigneeExemptOrganisation").attr("href") mustBe
@@ -303,7 +272,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
       implicit val request: DataRequest[AnyContentAsEmpty.type] =
         dataRequest(FakeRequest(), emptyUserAnswers
           .set(ConsigneeAddressPage, testUserAddress)
-          .set(ConsigneeBusinessNamePage, testBusinessName)
           .set(ConsigneeExcisePage, testErn)
           .set(ConsigneeExportInformationPage, Set(VatNumber))
           .set(ConsigneeExportVatPage, testVat)
@@ -317,7 +285,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         testErn,
         testDraftId,
         Seq(SummaryList(Seq(
-          ConsigneeBusinessNameSummary.row(true),
           ConsigneeExportInformationSummary(list).row(),
           ConsigneeExportVatSummary.row(true),
           ConsigneeAddressSummary.row(true)
@@ -328,17 +295,11 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         Selectors.title -> English.title,
         Selectors.h1 -> English.heading,
         Selectors.h2(1) -> English.caption,
-        Selectors.govukSummaryListKey(1) -> English.traderName,
-        Selectors.govukSummaryListKey(2) -> English.identificationProvided,
-        Selectors.govukSummaryListKey(3) -> English.vat,
-        Selectors.govukSummaryListKey(4) -> English.address,
+        Selectors.govukSummaryListKey(1) -> English.identificationProvided,
+        Selectors.govukSummaryListKey(2) -> English.vat,
+        Selectors.govukSummaryListKey(3) -> English.address,
         Selectors.button -> English.confirmAnswers,
       ))
-
-      "have a link to change business name" in {
-        doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url
-      }
 
       "have a link to change identifications" in {
         doc.getElementById("changeConsigneeExportInformation").attr("href") mustBe
@@ -362,7 +323,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
       implicit val request: DataRequest[AnyContentAsEmpty.type] =
         dataRequest(FakeRequest(), emptyUserAnswers
           .set(ConsigneeAddressPage, testUserAddress)
-          .set(ConsigneeBusinessNamePage, testBusinessName)
           .set(ConsigneeExcisePage, testErn)
           .set(ConsigneeExportInformationPage, Set(EoriNumber))
           .set(ConsigneeExportEoriPage, testEori)
@@ -376,7 +336,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         testErn,
         testDraftId,
         Seq(SummaryList(Seq(
-          ConsigneeBusinessNameSummary.row(true),
           ConsigneeExportInformationSummary(list).row(),
           ConsigneeExportEoriSummary.row(true),
           ConsigneeAddressSummary.row(true)
@@ -387,17 +346,11 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         Selectors.title -> English.title,
         Selectors.h1 -> English.heading,
         Selectors.h2(1) -> English.caption,
-        Selectors.govukSummaryListKey(1) -> English.traderName,
-        Selectors.govukSummaryListKey(2) -> English.identificationProvided,
-        Selectors.govukSummaryListKey(3) -> English.eori,
-        Selectors.govukSummaryListKey(4) -> English.address,
+        Selectors.govukSummaryListKey(1) -> English.identificationProvided,
+        Selectors.govukSummaryListKey(2) -> English.eori,
+        Selectors.govukSummaryListKey(3) -> English.address,
         Selectors.button -> English.confirmAnswers,
       ))
-
-      "have a link to change business name" in {
-        doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url
-      }
 
       "have a link to change identifications" in {
         doc.getElementById("changeConsigneeExportInformation").attr("href") mustBe
@@ -421,7 +374,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
       implicit val request: DataRequest[AnyContentAsEmpty.type] =
         dataRequest(FakeRequest(), emptyUserAnswers
           .set(ConsigneeAddressPage, testUserAddress)
-          .set(ConsigneeBusinessNamePage, testBusinessName)
           .set(ConsigneeExportInformationPage, Set(EoriNumber, VatNumber))
           .set(ConsigneeExportEoriPage, testEori)
           .set(ConsigneeExportVatPage, testVat)
@@ -440,7 +392,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
           ConsigneeExportVatSummary.row(true),
         ).flatten),
           SummaryList(Seq(
-            ConsigneeBusinessNameSummary.row(true),
             ConsigneeAddressSummary.row(true),
           ).flatten)
         ),
@@ -461,12 +412,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
 
       "have the correct summary list for Consignee details" in {
         val summaryList = doc.getElementsByClass("govuk-summary-list").get(1)
-        summaryList.getElementsByClass("govuk-summary-list__key").get(0).text mustBe English.traderName
-      }
-
-      "have a link to change business name" in {
-        doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url
+        summaryList.getElementsByClass("govuk-summary-list__key").get(0).text mustBe English.address
       }
 
       "have a link to change identifications" in {

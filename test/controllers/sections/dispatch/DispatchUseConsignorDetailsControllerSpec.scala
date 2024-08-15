@@ -22,7 +22,7 @@ import forms.sections.dispatch.DispatchUseConsignorDetailsFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
-import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchUseConsignorDetailsPage}
+import pages.sections.dispatch.{DispatchAddressPage, DispatchUseConsignorDetailsPage}
 import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -97,7 +97,6 @@ class DispatchUseConsignorDetailsControllerSpec extends SpecBase with MockUserAn
         Some(emptyUserAnswers
           .set(DispatchUseConsignorDetailsPage, true)
           .set(DispatchAddressPage, testUserAddress)
-          .set(DispatchBusinessNamePage, testBusinessName)
         )
       ) {
 

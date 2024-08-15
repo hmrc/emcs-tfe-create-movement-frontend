@@ -324,9 +324,5 @@ object MovementScenario extends Enumerable.Implicits with Logging {
 
   val values: Seq[MovementScenario] = (valuesExportUkAndUkTaxWarehouse ++ valuesEu ++ valuesForDutyPaidTraders).distinct
 
-  def valuesUkTaxWarehouse: Seq[MovementScenario] = UkTaxWarehouse.values
-  def valuesExport: Seq[MovementScenario] = values.filter(_.destinationType == DestinationType.Export)
-
-
   implicit val enumerable: Enumerable[MovementScenario] = Enumerable(values.map(v => v.toString -> v): _*)
 }

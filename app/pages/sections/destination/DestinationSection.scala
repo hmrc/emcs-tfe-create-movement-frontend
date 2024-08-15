@@ -65,7 +65,7 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
           } else if (shouldStartFlowAtDestinationWarehouseVat) {
             startFlowAtDestinationWarehouseVatStatus
           } else if (shouldStartFlowAtDestinationAddress) {
-            startFlowAtDestinationBusinessNameStatus
+            startFlowAtDestinationAddressStatus
           } else {
             NotStarted
           }
@@ -91,24 +91,25 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
     }
 
     (
+      DestinationWarehouseVatPage.value,
       destinationDetailsChoice,
+      DestinationConsigneeDetailsPage.value,
       DestinationAddressPage.value
     ) match {
-      case (Some(false), _) => Completed
-      case (Some(_), Some(_)) => Completed
-      case _ if DestinationWarehouseVatPage.value.nonEmpty => InProgress
-      case (_, None) => NotStarted
+      case (Some(_), Some(false), _, _) => Completed
+      case (Some(_), Some(true), _, Some(_)) => Completed
+      case (Some(_), Some(true), Some(_), None) => InProgress
+      case (None, _, _, _) => NotStarted
       case _ => InProgress
     }
   }
 
-  private def startFlowAtDestinationBusinessNameStatus(implicit request: DataRequest[_]): TaskListStatus = {
+  private def startFlowAtDestinationAddressStatus(implicit request: DataRequest[_]): TaskListStatus = {
     (
       DestinationAddressPage.value
     ) match {
       case Some(_) => Completed
       case None => NotStarted
-      case _ => InProgress
     }
   }
 

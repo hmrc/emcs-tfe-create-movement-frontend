@@ -16,9 +16,9 @@
 
 package pages.sections.dispatch
 
-import models.requests.DataRequest
 import models._
-import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, TemporaryCertifiedConsignee}
+import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario
 import pages.sections.Section
 import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath}
@@ -29,35 +29,32 @@ case object DispatchSection extends Section[JsObject] {
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
 
-    val isCertifiedConsigneeType = DestinationTypePage.value.fold(false)(Seq(
-      TemporaryCertifiedConsignee,
-      CertifiedConsignee
-    ).contains(_))
-
-    val hasDispatchWarehouseExciseOrCertifiedConsignee =
-      DispatchWarehouseExcisePage.value.isDefined || isCertifiedConsigneeType
-
-    def checkRemainingPages: TaskListStatus = {
-
-      val address = DispatchAddressPage.value.isDefined || !request.isCertifiedConsignor
-
-      (address, isCertifiedConsigneeType) match {
-        case (false, true) => NotStarted
-        case (true, _) => Completed
-        case _ => InProgress
-      }
-    }
+    val isDutyPaidMovement = DestinationTypePage.value.fold(false)(MovementScenario.valuesForDutyPaidTraders.contains(_))
 
     if (DispatchWarehouseExcisePage.isMovementSubmissionError) UpdateNeeded else {
-      if(hasDispatchWarehouseExciseOrCertifiedConsignee) {
-        DispatchUseConsignorDetailsPage.value match {
-          case Some(true) if DispatchAddressPage.value.nonEmpty => Completed
-          case Some(true) => InProgress
-          case _ => checkRemainingPages
-        }
+      if (isDutyPaidMovement) {
+        dutyPaidStatus
       } else {
-        NotStarted
+        dutySuspendedStatus
       }
+    }
+  }
+
+  private def dutySuspendedStatus(implicit request: DataRequest[_]): TaskListStatus = {
+    (DispatchWarehouseExcisePage.value, DispatchUseConsignorDetailsPage.value, DispatchAddressPage.value) match {
+      case (Some(_: String), Some(_: Boolean), Some(_: UserAddress)) => Completed
+      case (Some(_: String), Some(_: Boolean), _) => InProgress
+      case (Some(_: String), None, _) => Completed
+      case _ => NotStarted
+    }
+  }
+
+  private def dutyPaidStatus(implicit request: DataRequest[_]): TaskListStatus = {
+    (DispatchUseConsignorDetailsPage.value, DispatchAddressPage.value) match {
+      case (Some(_: Boolean), Some(_: UserAddress)) => Completed
+      case (None, Some(_: UserAddress)) => InProgress
+      case (Some(_: Boolean), None) => InProgress
+      case _ => NotStarted
     }
   }
 

@@ -44,7 +44,7 @@ class DeleteDraftMovementConnectorISpec extends AnyFreeSpec
   lazy val connector: DeleteDraftMovementConnector = app.injector.instanceOf[DeleteDraftMovementConnector]
 
   implicit lazy val dr: DataRequest[_] =
-    DataRequest(UserRequest(FakeRequest(), testErn, "", "", "", hasMultipleErns = false), testDraftId, emptyUserAnswers, testMinTraderKnownFacts)
+    DataRequest(UserRequest(FakeRequest(), testErn, "", "", "", hasMultipleErns = false), testDraftId, emptyUserAnswers, Some(testMinTraderKnownFacts))
 
   ".deleteDraft" - {
 

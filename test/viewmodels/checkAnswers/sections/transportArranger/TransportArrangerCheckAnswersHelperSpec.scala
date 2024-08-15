@@ -48,7 +48,7 @@ class TransportArrangerCheckAnswersHelperSpec extends SpecBase with MockFactory 
                 .set(TransportArrangerPage, value)
                 .set(TransportArrangerVatPage, vatNumberInputModel)
             )
-            helper.summaryList()(request, msgs).rows.length mustBe 5
+            helper.summaryList()(request, msgs).rows.length mustBe 4
           }
         }
       case value =>
@@ -60,7 +60,7 @@ class TransportArrangerCheckAnswersHelperSpec extends SpecBase with MockFactory 
                 .set(TransportArrangerPage, value)
                 .set(TransportArrangerVatPage, vatNumberInputModel)
             )
-            helper.summaryList()(request, msgs).rows.length mustBe 3
+            helper.summaryList()(request, msgs).rows.length mustBe 2
           }
         }
     }

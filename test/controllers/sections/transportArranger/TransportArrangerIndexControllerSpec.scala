@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import mocks.services.MockUserAnswersService
 import models.sections.transportArranger.TransportArranger.Consignor
-import models.{NormalMode, UserAddress, UserAnswers}
+import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportArrangerNavigator
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.transportArranger._
@@ -51,7 +51,7 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
       "must redirect to the CYA controller" in new Test(Some(
         emptyUserAnswers
           .set(TransportArrangerPage, Consignor)
-          .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
+          .set(ConsignorAddressPage, testUserAddress)
       )) {
         val result = controller.onPageLoad(testErn, testDraftId)(request)
 

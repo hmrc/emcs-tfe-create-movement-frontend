@@ -34,6 +34,7 @@ import javax.inject.Inject
 
 class DestinationAddressFormProvider @Inject() extends Mappings {
 
+  val businessNameMax = 182
   val propertyMax = 11
   val streetMax = 65
   val townMax = 50
@@ -56,8 +57,8 @@ class DestinationAddressFormProvider @Inject() extends Mappings {
 
   private def businessNameValidation(implicit request: DataRequest[_]): Mapping[Option[String]] = {
     val validation = text(s"address.businessName.error.$page.required")
-      .verifying(maxLength(182, s"address.businessName.error.$page.length"))
-      .verifying(regexpUnlessEmpty(XSS_REGEX, s"address.businessName.error.$page.invalidCharacter"))
+      .verifying(maxLength(businessNameMax, s"address.businessName.error.$page.length"))
+      .verifying(regexpUnlessEmpty(XSS_REGEX, s"address.businessName.error.$page.invalid"))
 
     if (isDirectDelivery) {
       optional(validation)

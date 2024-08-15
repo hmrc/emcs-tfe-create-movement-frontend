@@ -18,9 +18,9 @@ package pages.sections.consignee
 
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
+import models.ExemptOrganisationDetailsModel
 import models.requests.DataRequest
 import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, NoInformation, VatNumber}
-import models.{ExemptOrganisationDetailsModel, UserAddress}
 import play.api.test.FakeRequest
 import viewmodels.taskList.UpdateNeeded
 
@@ -32,8 +32,7 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(VatNumber))
             .set(ConsigneeExportVatPage, testEori)
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, testUserAddress)
         )
         ConsigneeSection.isCompleted mustBe true
       }
@@ -42,8 +41,7 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(EoriNumber))
             .set(ConsigneeExportEoriPage, testEori)
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, testUserAddress)
         )
         ConsigneeSection.isCompleted mustBe true
       }
@@ -53,8 +51,7 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
             .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
             .set(ConsigneeExportVatPage, testVat)
             .set(ConsigneeExportEoriPage, testEori)
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, testUserAddress)
         )
         ConsigneeSection.isCompleted mustBe true
       }
@@ -62,8 +59,7 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(NoInformation))
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, testUserAddress)
         )
         ConsigneeSection.isCompleted mustBe true
       }
@@ -71,8 +67,7 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExcisePage, "")
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, testUserAddress)
         )
         ConsigneeSection.isCompleted mustBe true
       }
@@ -80,8 +75,7 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", ""))
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, testUserAddress)
         )
         ConsigneeSection.isCompleted mustBe true
       }
@@ -96,8 +90,7 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(VatNumber))
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, testUserAddress)
         )
         ConsigneeSection.isCompleted mustBe false
       }
@@ -105,8 +98,7 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(EoriNumber))
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, testUserAddress)
         )
         ConsigneeSection.isCompleted mustBe false
       }
@@ -115,8 +107,7 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
             .set(ConsigneeExportEoriPage, testEori)
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, testUserAddress)
         )
         ConsigneeSection.isCompleted mustBe false
       }
@@ -125,8 +116,7 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
             .set(ConsigneeExportVatPage, testVat)
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, testUserAddress)
         )
         ConsigneeSection.isCompleted mustBe false
       }
@@ -134,8 +124,7 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, testUserAddress)
         )
         ConsigneeSection.isCompleted mustBe false
       }
@@ -155,8 +144,7 @@ class ConsigneeSectionSpec extends SpecBase with MovementSubmissionFailureFixtur
       implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
         emptyUserAnswers
           .set(ConsigneeExcisePage, "")
-          .set(ConsigneeBusinessNamePage, "")
-          .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+          .set(ConsigneeAddressPage, testUserAddress)
           .copy(submissionFailures = Seq(consigneeExciseFailure))
       )
       ConsigneeSection.status mustBe UpdateNeeded

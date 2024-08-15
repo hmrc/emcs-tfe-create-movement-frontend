@@ -25,7 +25,7 @@ import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, U
 import models.sections.journeyType.HowMovementTransported.AirTransport
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
-import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage, GuarantorRequiredPage}
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.data.Form
@@ -43,7 +43,9 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
   lazy val view: GuarantorRequiredView = app.injector.instanceOf[GuarantorRequiredView]
 
   def guarantorRequiredRoute(ern: String): Call = routes.GuarantorRequiredController.onPageLoad(ern, testDraftId, NormalMode)
+
   def onSubmitRoute(ern: String): Call = routes.GuarantorRequiredController.onSubmit(ern, testDraftId, NormalMode)
+
   lazy val enterGuarantorDetailsRoute = (ern: String) => routes.GuarantorRequiredController.enterGuarantorDetails(ern, testDraftId)
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers), ern: String = testGreatBritainWarehouseKeeperErn) {
@@ -155,13 +157,11 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
       .set(DestinationTypePage, UkTaxWarehouse.GB)
       .set(GuarantorRequiredPage, true)
       .set(GuarantorArrangerPage, Transporter)
-      .set(GuarantorNamePage, "a name")
     )) {
 
       val expectedAnswers = emptyUserAnswers
         .set(DestinationTypePage, UkTaxWarehouse.GB)
         .set(GuarantorArrangerPage, Transporter)
-        .set(GuarantorNamePage, "a name")
 
       MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
 
@@ -201,8 +201,8 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
       Some(emptyUserAnswers
         .set(DestinationTypePage, UkTaxWarehouse.GB)
         .set(GuarantorRequiredPage, true)
-        .set(GuarantorArrangerPage, Transporter)
-        .set(GuarantorNamePage, "a name"))) {
+        .set(GuarantorArrangerPage, Transporter))
+    ) {
 
       val expectedAnswers = emptyUserAnswers
         .set(DestinationTypePage, UkTaxWarehouse.GB)
@@ -221,8 +221,8 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
       Some(emptyUserAnswers
         .set(DestinationTypePage, UkTaxWarehouse.GB)
         .set(GuarantorRequiredPage, false)
-        .set(GuarantorArrangerPage, Transporter)
-        .set(GuarantorNamePage, "a name"))) {
+        .set(GuarantorArrangerPage, Transporter))
+    ) {
 
       val expectedAnswers = emptyUserAnswers
         .set(DestinationTypePage, UkTaxWarehouse.GB)

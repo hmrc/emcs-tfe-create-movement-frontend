@@ -36,7 +36,7 @@ import scala.concurrent.Future
 class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
   lazy val formProvider: AddressFormProvider = new AddressFormProvider()
-  lazy val form: Form[UserAddress] = formProvider(FirstTransporterAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers))
+  lazy val form: Form[UserAddress] = formProvider(FirstTransporterAddressPage, false)(dataRequest(FakeRequest(), emptyUserAnswers))
   lazy val view: AddressView = app.injector.instanceOf[AddressView]
 
   lazy val firstTransporterAddressRoute: String =
@@ -70,7 +70,8 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
         form = form,
         addressPage = FirstTransporterAddressPage,
         onSubmit = firstTransporterAddressOnSubmit,
-        headingKey = Some("firstTransporterAddress")
+        headingKey = Some("firstTransporterAddress"),
+        isConsignorPageOrUsingConsignorDetails = false
       )(dataRequest(request), messages(request)).toString
     }
 
@@ -78,10 +79,11 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
       val req = FakeRequest(POST, firstTransporterAddressRoute).withFormUrlEncodedBody(
+        ("businessName", userAddressModelMax.businessName.value),
         ("property", userAddressModelMax.property.value),
-        ("street", userAddressModelMax.street),
-        ("town", userAddressModelMax.town),
-        ("postcode", userAddressModelMax.postcode)
+        ("street", userAddressModelMax.street.value),
+        ("town", userAddressModelMax.town.value),
+        ("postcode", userAddressModelMax.postcode.value)
       )
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
@@ -101,7 +103,8 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
         form = boundForm,
         addressPage = FirstTransporterAddressPage,
         onSubmit = firstTransporterAddressOnSubmit,
-        headingKey = Some("firstTransporterAddress")
+        headingKey = Some("firstTransporterAddress"),
+        isConsignorPageOrUsingConsignorDetails = false
       )(dataRequest(request), messages(request)).toString
     }
 

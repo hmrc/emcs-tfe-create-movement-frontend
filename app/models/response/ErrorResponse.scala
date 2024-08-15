@@ -40,10 +40,6 @@ case object JsonValidationError extends ErrorResponse {
   val message = "JSON validation error"
 }
 
-case object NotFoundError extends ErrorResponse {
-  val message = "The requested content could not be retrieved"
-}
-
 case class BadRequestError(msg: String) extends ErrorResponse {
   val message = s"Bad Request returned from downstream service. With message: $msg"
 }

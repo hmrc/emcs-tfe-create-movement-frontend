@@ -25,7 +25,7 @@ import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, UkTaxWarehouse}
 import models.sections.journeyType.HowMovementTransported.{FixedTransportInstallations, RoadTransport}
 import org.scalamock.scalatest.MockFactory
-import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage}
+import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.guarantor._
 import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.HowMovementTransportedPage
@@ -54,12 +54,11 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                   .set(DestinationTypePage, DirectDelivery)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, value)
-                  .set(GuarantorNamePage, "guarantor name")
                   .set(GuarantorVatPage, VatNumberModel(true, Some("gurantor123")))
                   .set(GuarantorAddressPage, testUserAddress),
                 testNorthernIrelandErn
               )
-              helper.summaryList()(request, msgs).rows.length mustBe 6
+              helper.summaryList()(request, msgs).rows.length mustBe 5
             }
           }
         case value =>
@@ -71,11 +70,10 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                   .set(DestinationTypePage, DirectDelivery)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, value)
-                  .set(ConsigneeBusinessNamePage, s"$value name")
                   .set(ConsigneeAddressPage, testUserAddress),
                 testNorthernIrelandErn
               )
-              helper.summaryList()(request, msgs).rows.length mustBe 5
+              helper.summaryList()(request, msgs).rows.length mustBe 4
             }
           }
       }
@@ -95,12 +93,11 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                   .set(DestinationTypePage, DirectDelivery)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, value)
-                  .set(GuarantorNamePage, "guarantor name")
                   .set(GuarantorVatPage, VatNumberModel(true, Some("gurantor123")))
                   .set(GuarantorAddressPage, testUserAddress),
                 testNorthernIrelandErn
               )
-              helper.summaryList()(request, msgs).rows.length mustBe 5
+              helper.summaryList()(request, msgs).rows.length mustBe 4
             }
           }
         case value =>
@@ -113,11 +110,10 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                   .set(DestinationTypePage, DirectDelivery)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, value)
-                  .set(ConsigneeBusinessNamePage, s"$value name")
                   .set(ConsigneeAddressPage, testUserAddress),
                 testNorthernIrelandErn
               )
-              helper.summaryList()(request, msgs).rows.length mustBe 4
+              helper.summaryList()(request, msgs).rows.length mustBe 3
             }
           }
       }
@@ -136,12 +132,11 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                   .set(DestinationTypePage, UkTaxWarehouse.GB)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, value)
-                  .set(GuarantorNamePage, "guarantor name")
                   .set(GuarantorVatPage, VatNumberModel(true, Some("gurantor123")))
                   .set(GuarantorAddressPage, testUserAddress),
                 testGreatBritainWarehouseKeeperErn
               )
-              helper.summaryList()(request, msgs).rows.length mustBe 6
+              helper.summaryList()(request, msgs).rows.length mustBe 5
             }
           }
         case value =>
@@ -153,11 +148,10 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                   .set(DestinationTypePage, UkTaxWarehouse.GB)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, value)
-                  .set(ConsigneeBusinessNamePage, s"$value name")
                   .set(ConsigneeAddressPage, testUserAddress),
                 testGreatBritainWarehouseKeeperErn
               )
-              helper.summaryList()(request, msgs).rows.length mustBe 5
+              helper.summaryList()(request, msgs).rows.length mustBe 4
             }
           }
       }

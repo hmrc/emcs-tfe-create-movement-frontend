@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import fixtures.UserAddressFixtures
-import forms.AddressFormProvider
+import forms.sections.destination.DestinationAddressFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
@@ -30,15 +30,15 @@ import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.AddressView
+import views.html.sections.destination.DestinationAddressView
 
 import scala.concurrent.Future
 
 class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
-  lazy val formProvider: AddressFormProvider = new AddressFormProvider()
-  lazy val form: Form[UserAddress] = formProvider(DestinationAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers))
-  lazy val view: AddressView = app.injector.instanceOf[AddressView]
+  lazy val formProvider: DestinationAddressFormProvider = new DestinationAddressFormProvider()
+  lazy val form: Form[UserAddress] = formProvider()(dataRequest(FakeRequest(), emptyUserAnswers))
+  lazy val view: DestinationAddressView = app.injector.instanceOf[DestinationAddressView]
 
   lazy val destinationAddressRoute: String =
     controllers.sections.destination.routes.DestinationAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
@@ -71,42 +71,36 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
         form = form,
-        addressPage = DestinationAddressPage,
         onSubmit = destinationAddressOnSubmit,
-        headingKey = Some("destinationAddress")
       )(dataRequest(request), messages(request)).toString
     }
 
     "must fill the form with data from ConsignorAddress when UseConsignee is true and no Destination address exists" in new Fixture(Some(
       emptyUserAnswers
         .set(DestinationConsigneeDetailsPage, true)
-        .set(ConsigneeAddressPage, testUserAddress.copy(street = "Consignee"))
+        .set(ConsigneeAddressPage, testUserAddress.copy(street = Some("Consignee")))
     )) {
       val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
-        form = form.fill(testUserAddress.copy(street = "Consignee")),
-        addressPage = DestinationAddressPage,
+        form = form.fill(testUserAddress.copy(street = Some("Consignee"))),
         onSubmit = destinationAddressOnSubmit,
-        headingKey = Some("destinationAddress")
       )(dataRequest(request), messages(request)).toString
     }
 
     "must fill the form with data from DestinationAddress when UseConsignee is true and Destination address exists" in new Fixture(Some(
       emptyUserAnswers
         .set(DestinationConsigneeDetailsPage, true)
-        .set(ConsigneeAddressPage, testUserAddress.copy(street = "Consignee"))
-        .set(DestinationAddressPage, testUserAddress.copy(street = "Destination"))
+        .set(ConsigneeAddressPage, testUserAddress.copy(street = Some("Consignee")))
+        .set(DestinationAddressPage, testUserAddress.copy(street = Some("Destination")))
     )) {
       val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
-        form = form.fill(testUserAddress.copy(street = "Destination")),
-        addressPage = DestinationAddressPage,
+        form = form.fill(testUserAddress.copy(street = Some("Destination"))),
         onSubmit = destinationAddressOnSubmit,
-        headingKey = Some("destinationAddress")
       )(dataRequest(request), messages(request)).toString
     }
 
@@ -117,10 +111,11 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
       val req =
         FakeRequest(POST, destinationAddressRoute)
           .withFormUrlEncodedBody(
+            ("businessName", userAddressModelMax.businessName.value),
             ("property", userAddressModelMax.property.value),
-            ("street", userAddressModelMax.street),
-            ("town", userAddressModelMax.town),
-            ("postcode", userAddressModelMax.postcode)
+            ("street", userAddressModelMax.street.value),
+            ("town", userAddressModelMax.town.value),
+            ("postcode", userAddressModelMax.postcode.value)
           )
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
@@ -138,9 +133,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(
         form = boundForm,
-        addressPage = DestinationAddressPage,
         onSubmit = destinationAddressOnSubmit,
-        headingKey = Some("destinationAddress")
       )(dataRequest(request), messages(request)).toString
     }
 

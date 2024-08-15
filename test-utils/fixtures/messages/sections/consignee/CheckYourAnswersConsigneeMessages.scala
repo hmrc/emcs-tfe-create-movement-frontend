@@ -27,7 +27,6 @@ object CheckYourAnswersConsigneeMessages {
     val ern: String = "Excise registration number (ERN)"
     val ernNumberForTemporaryRegisteredConsignee: String = "Identification number for Temporary Registered Consignee"
     val ernNumberForTemporaryCertifiedConsignee: String = "Identification number for Temporary Certified Consignee"
-    val traderName: String = "Business name"
     val address: String = "Address"
     val eori: String = "EORI number"
     val vat: String = "Identification number"

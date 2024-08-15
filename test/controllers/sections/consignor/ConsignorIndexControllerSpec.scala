@@ -19,7 +19,7 @@ package controllers.sections.consignor
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAddress, UserAnswers}
+import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsignorNavigator
 import pages.sections.consignor.ConsignorAddressPage
 import play.api.http.Status.SEE_OTHER
@@ -44,7 +44,7 @@ class ConsignorIndexControllerSpec extends SpecBase with MockUserAnswersService 
 
   "ConsignorIndexController" - {
     "when ConsignorSection.isCompleted is true" - {
-      "must redirect to the consignor CYA controller" in new Fixture(Some(emptyUserAnswers.set(ConsignorAddressPage, UserAddress(None, "", "", "")))) {
+      "must redirect to the consignor CYA controller" in new Fixture(Some(emptyUserAnswers.set(ConsignorAddressPage, testUserAddress))) {
 
         val result = testController.onPageLoad(testErn, testDraftId)(request)
 

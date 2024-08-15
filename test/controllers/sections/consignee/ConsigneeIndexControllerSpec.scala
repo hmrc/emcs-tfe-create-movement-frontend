@@ -21,7 +21,7 @@ import controllers.actions.FakeDataRetrievalAction
 import fixtures.MovementSubmissionFailureFixtures
 import mocks.services.MockUserAnswersService
 import models.sections.info.movementScenario.MovementScenario._
-import models.{ExemptOrganisationDetailsModel, NormalMode, UserAddress, UserAnswers}
+import models.{ExemptOrganisationDetailsModel, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee._
 import pages.sections.info.DestinationTypePage
@@ -55,8 +55,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         Some(emptyUserAnswers
           .set(DestinationTypePage, ExemptedOrganisation)
           .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", ""))
-          .set(ConsigneeBusinessNamePage, "")
-          .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+          .set(ConsigneeAddressPage, testUserAddress)
         )) {
 
         val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
@@ -72,8 +71,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
           .set(DestinationTypePage, ExemptedOrganisation)
           .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", ""))
           .set(ConsigneeExcisePage, "AA12345678901")
-          .set(ConsigneeBusinessNamePage, "")
-          .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+          .set(ConsigneeAddressPage, testUserAddress)
           .copy(submissionFailures = Seq(consigneeExciseFailure))
         )) {
 
@@ -120,20 +118,20 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
     }
 
     "must redirect to ConsigneeExportInformationController" - {
-        Seq(
-          ExportWithCustomsDeclarationLodgedInTheUk,
-          ExportWithCustomsDeclarationLodgedInTheEu
-        ).foreach(
-          movementScenario =>
-            s"when destination is $movementScenario" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+      Seq(
+        ExportWithCustomsDeclarationLodgedInTheUk,
+        ExportWithCustomsDeclarationLodgedInTheEu
+      ).foreach(
+        movementScenario =>
+          s"when destination is $movementScenario" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-              val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
+            val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
 
-              status(result) mustBe SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, NormalMode).url)
-            }
-        )
+            status(result) mustBe SEE_OTHER
+            redirectLocation(result) mustBe
+              Some(controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testDraftId, NormalMode).url)
+          }
+      )
     }
 
     "must redirect to the tasklist" - {

@@ -21,6 +21,7 @@ import fixtures.UserAddressFixtures
 import fixtures.messages.sections.dispatch.DispatchUseConsignorDetailsMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
+import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.dispatch.DispatchUseConsignorDetailsPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -37,27 +38,62 @@ class DispatchUseConsignorDetailsSummarySpec extends SpecBase with Matchers with
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
+        "when there's no answer to ConsignorAddressPage" - {
 
           "must output no row" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DispatchUseConsignorDetailsPage, true))
 
             DispatchUseConsignorDetailsSummary.row() mustBe None
           }
         }
 
-        "when there's an answer" - {
+        "when there's an answer to ConsignorAddressPage" - {
 
-          s"must output the expected row for DispatchUseConsignorDetailsSummary" in {
+          s"must output the expected row for DispatchUseConsignorDetailsSummary when present" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DispatchUseConsignorDetailsPage, true))
+            Map(
+              true -> messagesForLanguage.yes,
+              false -> messagesForLanguage.no
+            ).foreach {
+              case (answer, expectedValue) =>
+                withClue(s"For answer: $answer\n") {
+
+                  implicit lazy val request = dataRequest(
+                    FakeRequest(),
+                    emptyUserAnswers.set(ConsignorAddressPage, testUserAddress).set(DispatchUseConsignorDetailsPage, answer)
+                  )
+
+                  DispatchUseConsignorDetailsSummary.row() mustBe
+                    Some(
+                      SummaryListRowViewModel(
+                        key = messagesForLanguage.checkAnswersLabel,
+                        value = ValueViewModel(expectedValue),
+                        actions = Seq(
+                          ActionItemViewModel(
+                            content = messagesForLanguage.change,
+                            href = controllers.sections.dispatch.routes.DispatchUseConsignorDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                            id = "changeDispatchUseConsignorDetails"
+                          ).withVisuallyHiddenText(messagesForLanguage.checkAnswersHiddenChangeLink)
+                        )
+                      )
+                    )
+                }
+            }
+
+          }
+
+          "must output the default row for DispatchUseConsignorDetailsSummary when answer is missing" in {
+            implicit lazy val request = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers.set(ConsignorAddressPage, testUserAddress)
+            )
 
             DispatchUseConsignorDetailsSummary.row() mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.checkAnswersLabel,
-                  value = ValueViewModel(messagesForLanguage.yes),
+                  value = ValueViewModel(messagesForLanguage.no),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,

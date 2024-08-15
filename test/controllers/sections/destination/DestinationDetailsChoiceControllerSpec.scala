@@ -113,7 +113,6 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
         .set(DestinationWarehouseVatPage, "vat")
         .set(DestinationDetailsChoicePage, true)
         .set(DestinationConsigneeDetailsPage, false)
-        .set(DestinationBusinessNamePage, "business name")
         .set(DestinationAddressPage, userAddressModelMax)
       )) {
 
@@ -133,7 +132,6 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
         .set(DestinationWarehouseVatPage, "vat")
         .set(DestinationDetailsChoicePage, true)
         .set(DestinationConsigneeDetailsPage, false)
-        .set(DestinationBusinessNamePage, "business name")
         .set(DestinationAddressPage, userAddressModelMax)
       )) {
 

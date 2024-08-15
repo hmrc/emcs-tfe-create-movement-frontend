@@ -401,16 +401,14 @@ trait ItemFixtures {
     .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
     .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59")))
     // consignee
-    .set(ConsigneeBusinessNamePage, "consignee name")
     .set(ConsigneeExcisePage, "consignee ern")
     .set(ConsigneeExportInformationPage, Set(NoInformation))
-    .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+    .set(ConsigneeAddressPage, testUserAddress.copy(street = Some("consignee street")))
     // consignor
-    .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
+    .set(ConsignorAddressPage, testUserAddress.copy(street = Some("consignor street")))
     // placeOfDispatch
     .set(DispatchUseConsignorDetailsPage, false)
-    .set(DispatchBusinessNamePage, "dispatch name")
-    .set(DispatchAddressPage, testUserAddress.copy(street = "dispatch street"))
+    .set(DispatchAddressPage, testUserAddress.copy(street = Some("dispatch street")))
     .set(DispatchWarehouseExcisePage, "XI00123456789")
     // dispatchImportOffice
     .set(ImportCustomsOfficeCodePage, "dispatch import office")
@@ -418,18 +416,15 @@ trait ItemFixtures {
     .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("state", "number"))
     // deliveryPlaceTrader
     .set(DestinationWarehouseVatPage, "destination ern")
-    .set(DestinationBusinessNamePage, "destination name")
-    .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+    .set(DestinationAddressPage, testUserAddress.copy(street = Some("destination street")))
     // deliveryPlaceCustomsOffice
     .set(ExportCustomsOfficePage, "delivery place customs office")
     // transportArrangerTrader
     .set(TransportArrangerPage, TransportArranger.GoodsOwner)
-    .set(TransportArrangerNamePage, "arranger name")
-    .set(TransportArrangerAddressPage, testUserAddress.copy(street = "arranger street"))
+    .set(TransportArrangerAddressPage, testUserAddress.copy(street = Some("arranger street")))
     .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some("arranger vat")))
     // firstTransporterTrader
-    .set(FirstTransporterNamePage, "first name")
-    .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street"))
+    .set(FirstTransporterAddressPage, testUserAddress.copy(street = Some("first street")))
     .set(FirstTransporterVatPage, VatNumberModel(true, Some("first vat")))
     // documentCertificate
     .set(DocumentsCertificatesPage, true)
@@ -443,8 +438,7 @@ trait ItemFixtures {
     .set(GiveInformationOtherTransportPage, "info")
     // movementGuarantee
     .set(GuarantorRequiredPage, true)
-    .set(GuarantorNamePage, "guarantor name")
-    .set(GuarantorAddressPage, testUserAddress.copy(street = "guarantor street"))
+    .set(GuarantorAddressPage, testUserAddress.copy(street = Some("guarantor street")))
     .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("guarantor vat")))
     .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
     // bodyEadEsad (items)
@@ -495,7 +489,7 @@ trait ItemFixtures {
       |  },
       |  "consigneeTrader": {
       |    "traderExciseNumber": "consignee ern",
-      |    "traderName": "consignee name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "consignee street",
@@ -521,7 +515,7 @@ trait ItemFixtures {
       |    "serialNumberOfCertificateOfExemption": "number"
       |  },
       |  "deliveryPlaceTrader": {
-      |    "traderName": "destination name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "destination street",
@@ -536,7 +530,7 @@ trait ItemFixtures {
       |    "referenceNumber": "XI004098"
       |  },
       |  "transportArrangerTrader": {
-      |    "traderName": "arranger name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "arranger street",
@@ -546,7 +540,7 @@ trait ItemFixtures {
       |    "vatNumber": "arranger vat"
       |  },
       |  "firstTransporterTrader": {
-      |    "traderName": "first name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "first street",
@@ -574,7 +568,7 @@ trait ItemFixtures {
       |    "guarantorTypeCode": "3",
       |    "guarantorTrader": [
       |      {
-      |        "traderName": "guarantor name",
+      |        "traderName": "testName",
       |        "address": {
       |          "streetNumber": "10",
       |          "street": "guarantor street",
@@ -657,15 +651,15 @@ trait ItemFixtures {
     attributes = AttributesModel(SubmissionMessageType.Standard, Some(false)),
     consigneeTrader = Some(TraderModel(
       traderExciseNumber = Some("consignee ern"),
-      traderName = Some("consignee name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("consignee street")))),
       vatNumber = None,
       eoriNumber = None
     )),
     consignorTrader = TraderModel(
       traderExciseNumber = Some("XIRC123"),
       traderName = Some(testMinTraderKnownFacts.traderName),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignor street"))),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("consignor street")))),
       vatNumber = None,
       eoriNumber = None
     ),
@@ -674,8 +668,8 @@ trait ItemFixtures {
     complementConsigneeTrader = Some(ComplementConsigneeTraderModel("state", Some("number"))),
     deliveryPlaceTrader = Some(TraderModel(
       traderExciseNumber = None,
-      traderName = Some("destination name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "destination street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("destination street")))),
       vatNumber = None,
       eoriNumber = None
     )),
@@ -683,15 +677,15 @@ trait ItemFixtures {
     competentAuthorityDispatchOffice = OfficeModel(s"XI$dispatchOfficeSuffix"),
     transportArrangerTrader = Some(TraderModel(
       traderExciseNumber = None,
-      traderName = Some("arranger name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "arranger street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("arranger street")))),
       vatNumber = Some("arranger vat"),
       eoriNumber = None
     )),
     firstTransporterTrader = Some(TraderModel(
       traderExciseNumber = None,
-      traderName = Some("first name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "first street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("first street")))),
       vatNumber = Some("first vat"),
       eoriNumber = None
     )),
@@ -716,8 +710,8 @@ trait ItemFixtures {
       guarantorTypeCode = GuarantorArranger.GoodsOwner,
       guarantorTrader = Some(Seq(TraderModel(
         traderExciseNumber = None,
-        traderName = Some("guarantor name"),
-        address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "guarantor street"))),
+        traderName = Some(testBusinessName),
+        address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("guarantor street")))),
         vatNumber = Some("guarantor vat"),
         eoriNumber = None
       )))
@@ -789,7 +783,7 @@ trait ItemFixtures {
       |  },
       |  "consigneeTrader": {
       |    "traderExciseNumber": "consignee ern",
-      |    "traderName": "consignee name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "consignee street",
@@ -809,7 +803,7 @@ trait ItemFixtures {
       |  },
       |  "placeOfDispatchTrader": {
       |    "traderExciseNumber": "XI00123456789",
-      |    "traderName": "dispatch name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "dispatch street",
@@ -825,7 +819,7 @@ trait ItemFixtures {
       |    "serialNumberOfCertificateOfExemption": "number"
       |  },
       |  "deliveryPlaceTrader": {
-      |    "traderName": "destination name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "destination street",
@@ -840,7 +834,7 @@ trait ItemFixtures {
       |    "referenceNumber": "XI004098"
       |  },
       |  "transportArrangerTrader": {
-      |    "traderName": "arranger name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "arranger street",
@@ -850,7 +844,7 @@ trait ItemFixtures {
       |    "vatNumber": "arranger vat"
       |  },
       |  "firstTransporterTrader": {
-      |    "traderName": "first name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "first street",
@@ -878,7 +872,7 @@ trait ItemFixtures {
       |    "guarantorTypeCode": "3",
       |    "guarantorTrader": [
       |      {
-      |        "traderName": "guarantor name",
+      |        "traderName": "testName",
       |        "address": {
       |          "streetNumber": "10",
       |          "street": "guarantor street",
@@ -950,22 +944,22 @@ trait ItemFixtures {
     attributes = AttributesModel(SubmissionMessageType.Standard, Some(false)),
     consigneeTrader = Some(TraderModel(
       traderExciseNumber = Some("consignee ern"),
-      traderName = Some("consignee name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("consignee street")))),
       vatNumber = None,
       eoriNumber = None
     )),
     consignorTrader = TraderModel(
       traderExciseNumber = Some("XIWK123"),
       traderName = Some(testMinTraderKnownFacts.traderName),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignor street"))),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("consignor street")))),
       vatNumber = None,
       eoriNumber = None
     ),
     placeOfDispatchTrader = Some(TraderModel(
       traderExciseNumber = Some("XI00123456789"),
-      traderName = Some("dispatch name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "dispatch street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("dispatch street")))),
       vatNumber = None,
       eoriNumber = None
     )),
@@ -973,8 +967,8 @@ trait ItemFixtures {
     complementConsigneeTrader = Some(ComplementConsigneeTraderModel("state", Some("number"))),
     deliveryPlaceTrader = Some(TraderModel(
       traderExciseNumber = None,
-      traderName = Some("destination name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "destination street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("destination street")))),
       vatNumber = None,
       eoriNumber = None
     )),
@@ -982,15 +976,15 @@ trait ItemFixtures {
     competentAuthorityDispatchOffice = OfficeModel(s"XI$dispatchOfficeSuffix"),
     transportArrangerTrader = Some(TraderModel(
       traderExciseNumber = None,
-      traderName = Some("arranger name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "arranger street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("arranger street")))),
       vatNumber = Some("arranger vat"),
       eoriNumber = None
     )),
     firstTransporterTrader = Some(TraderModel(
       traderExciseNumber = None,
-      traderName = Some("first name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "first street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("first street")))),
       vatNumber = Some("first vat"),
       eoriNumber = None
     )),
@@ -1015,8 +1009,8 @@ trait ItemFixtures {
       guarantorTypeCode = GuarantorArranger.GoodsOwner,
       guarantorTrader = Some(Seq(TraderModel(
         traderExciseNumber = None,
-        traderName = Some("guarantor name"),
-        address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "guarantor street"))),
+        traderName = Some(testBusinessName),
+        address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("guarantor street")))),
         vatNumber = Some("guarantor vat"),
         eoriNumber = None
       )))
@@ -1089,7 +1083,7 @@ trait ItemFixtures {
       |  },
       |  "consigneeTrader": {
       |    "traderExciseNumber": "consignee ern",
-      |    "traderName": "consignee name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "consignee street",
@@ -1116,7 +1110,7 @@ trait ItemFixtures {
       |  },
       |  "deliveryPlaceTrader": {
       |    "traderExciseNumber": "XIRC123456789",
-      |    "traderName": "destination name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "destination street",
@@ -1131,7 +1125,7 @@ trait ItemFixtures {
       |    "referenceNumber": "GB004098"
       |  },
       |  "transportArrangerTrader": {
-      |    "traderName": "arranger name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "arranger street",
@@ -1141,7 +1135,7 @@ trait ItemFixtures {
       |    "vatNumber": "arranger vat"
       |  },
       |  "firstTransporterTrader": {
-      |    "traderName": "first name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "first street",
@@ -1169,7 +1163,7 @@ trait ItemFixtures {
       |    "guarantorTypeCode": "3",
       |    "guarantorTrader": [
       |      {
-      |        "traderName": "guarantor name",
+      |        "traderName": "testName",
       |        "address": {
       |          "streetNumber": "10",
       |          "street": "guarantor street",
@@ -1252,15 +1246,15 @@ trait ItemFixtures {
     attributes = AttributesModel(SubmissionMessageType.Standard, Some(false)),
     consigneeTrader = Some(TraderModel(
       traderExciseNumber = Some("consignee ern"),
-      traderName = Some("consignee name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("consignee street")))),
       vatNumber = None,
       eoriNumber = None
     )),
     consignorTrader = TraderModel(
       traderExciseNumber = Some("GBRC123"),
       traderName = Some(testMinTraderKnownFacts.traderName),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignor street"))),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("consignor street")))),
       vatNumber = None,
       eoriNumber = None
     ),
@@ -1269,8 +1263,8 @@ trait ItemFixtures {
     complementConsigneeTrader = Some(ComplementConsigneeTraderModel("state", Some("number"))),
     deliveryPlaceTrader = Some(TraderModel(
       traderExciseNumber = Some(testErn),
-      traderName = Some("destination name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "destination street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("destination street")))),
       vatNumber = None,
       eoriNumber = None
     )),
@@ -1278,15 +1272,15 @@ trait ItemFixtures {
     competentAuthorityDispatchOffice = OfficeModel(s"GB$dispatchOfficeSuffix"),
     transportArrangerTrader = Some(TraderModel(
       traderExciseNumber = None,
-      traderName = Some("arranger name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "arranger street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("arranger street")))),
       vatNumber = Some("arranger vat"),
       eoriNumber = None
     )),
     firstTransporterTrader = Some(TraderModel(
       traderExciseNumber = None,
-      traderName = Some("first name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "first street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("first street")))),
       vatNumber = Some("first vat"),
       eoriNumber = None
     )),
@@ -1311,8 +1305,8 @@ trait ItemFixtures {
       guarantorTypeCode = GuarantorArranger.GoodsOwner,
       guarantorTrader = Some(Seq(TraderModel(
         traderExciseNumber = None,
-        traderName = Some("guarantor name"),
-        address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "guarantor street"))),
+        traderName = Some(testBusinessName),
+        address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("guarantor street")))),
         vatNumber = Some("guarantor vat"),
         eoriNumber = None
       )))
@@ -1383,7 +1377,7 @@ trait ItemFixtures {
       |  },
       |  "consigneeTrader": {
       |    "traderExciseNumber": "consignee ern",
-      |    "traderName": "consignee name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "consignee street",
@@ -1403,7 +1397,7 @@ trait ItemFixtures {
       |  },
       |  "placeOfDispatchTrader": {
       |    "traderExciseNumber": "XI00123456789",
-      |    "traderName": "dispatch name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "dispatch street",
@@ -1420,7 +1414,7 @@ trait ItemFixtures {
       |  },
       |  "deliveryPlaceTrader": {
       |    "traderExciseNumber": "XIRC123456789",
-      |    "traderName": "destination name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "destination street",
@@ -1435,7 +1429,7 @@ trait ItemFixtures {
       |    "referenceNumber": "GB004098"
       |  },
       |  "transportArrangerTrader": {
-      |    "traderName": "arranger name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "arranger street",
@@ -1445,7 +1439,7 @@ trait ItemFixtures {
       |    "vatNumber": "arranger vat"
       |  },
       |  "firstTransporterTrader": {
-      |    "traderName": "first name",
+      |    "traderName": "testName",
       |    "address": {
       |      "streetNumber": "10",
       |      "street": "first street",
@@ -1473,7 +1467,7 @@ trait ItemFixtures {
       |    "guarantorTypeCode": "3",
       |    "guarantorTrader": [
       |      {
-      |        "traderName": "guarantor name",
+      |        "traderName": "testName",
       |        "address": {
       |          "streetNumber": "10",
       |          "street": "guarantor street",
@@ -1545,22 +1539,22 @@ trait ItemFixtures {
     attributes = AttributesModel(SubmissionMessageType.Standard, Some(false)),
     consigneeTrader = Some(TraderModel(
       traderExciseNumber = Some("consignee ern"),
-      traderName = Some("consignee name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("consignee street")))),
       vatNumber = None,
       eoriNumber = None
     )),
     consignorTrader = TraderModel(
       traderExciseNumber = Some("GBWK123"),
       traderName = Some(testMinTraderKnownFacts.traderName),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignor street"))),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("consignor street")))),
       vatNumber = None,
       eoriNumber = None
     ),
     placeOfDispatchTrader = Some(TraderModel(
       traderExciseNumber = Some("XI00123456789"),
-      traderName = Some("dispatch name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "dispatch street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("dispatch street")))),
       vatNumber = None,
       eoriNumber = None
     )),
@@ -1568,8 +1562,8 @@ trait ItemFixtures {
     complementConsigneeTrader = Some(ComplementConsigneeTraderModel("state", Some("number"))),
     deliveryPlaceTrader = Some(TraderModel(
       traderExciseNumber = Some(testErn),
-      traderName = Some("destination name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "destination street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("destination street")))),
       vatNumber = None,
       eoriNumber = None
     )),
@@ -1577,15 +1571,15 @@ trait ItemFixtures {
     competentAuthorityDispatchOffice = OfficeModel(s"GB$dispatchOfficeSuffix"),
     transportArrangerTrader = Some(TraderModel(
       traderExciseNumber = None,
-      traderName = Some("arranger name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "arranger street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("arranger street")))),
       vatNumber = Some("arranger vat"),
       eoriNumber = None
     )),
     firstTransporterTrader = Some(TraderModel(
       traderExciseNumber = None,
-      traderName = Some("first name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "first street"))),
+      traderName = Some(testBusinessName),
+      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("first street")))),
       vatNumber = Some("first vat"),
       eoriNumber = None
     )),
@@ -1610,8 +1604,8 @@ trait ItemFixtures {
       guarantorTypeCode = GuarantorArranger.GoodsOwner,
       guarantorTrader = Some(Seq(TraderModel(
         traderExciseNumber = None,
-        traderName = Some("guarantor name"),
-        address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "guarantor street"))),
+        traderName = Some(testBusinessName),
+        address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("guarantor street")))),
         vatNumber = Some("guarantor vat"),
         eoriNumber = None
       )))

@@ -16,10 +16,9 @@
 
 package viewmodels.checkAnswers.sections.dispatch
 
-import models.{CheckMode, UserAddress}
+import models.CheckMode
 import models.requests.DataRequest
-import pages.sections.consignor.ConsignorAddressPage
-import pages.sections.dispatch.{DispatchAddressPage, DispatchUseConsignorDetailsPage}
+import pages.sections.dispatch.DispatchAddressPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow

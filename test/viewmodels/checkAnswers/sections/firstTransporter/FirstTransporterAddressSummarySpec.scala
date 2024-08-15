@@ -63,9 +63,10 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
               key = messagesForLanguage.cyaLabel,
               value = Value(HtmlContent(
                 HtmlFormat.fill(Seq(
-                  Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street + "<br>"),
-                  Html(testUserAddress.town + "<br>"),
-                  Html(testUserAddress.postcode),
+                  Html(testUserAddress.businessName.value + "<br>"),
+                  Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street.value + "<br>"),
+                  Html(testUserAddress.town.value + "<br>"),
+                  Html(testUserAddress.postcode.value),
                 ))
               )),
               actions = Seq(

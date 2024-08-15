@@ -29,8 +29,8 @@ case object ConsignorAddressPage extends QuestionPage[UserAddress] {
     request.userAnswers.get(this).map {
       address =>
         val businessName = Seq(
-          address.businessName,
-          request.traderKnownFacts.map(_.traderName)
+          request.traderKnownFacts.map(_.traderName),
+          address.businessName
         ).collectFirst {
           case Some(value) => value
         }

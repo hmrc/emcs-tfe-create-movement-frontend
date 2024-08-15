@@ -37,7 +37,7 @@ import scala.concurrent.Future
 class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
   lazy val formProvider: AddressFormProvider = new AddressFormProvider()
-  lazy val form: Form[UserAddress] = formProvider(TransportArrangerAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers))
+  lazy val form: Form[UserAddress] = formProvider(TransportArrangerAddressPage, false)(dataRequest(FakeRequest(), emptyUserAnswers))
   lazy val view: AddressView = app.injector.instanceOf[AddressView]
 
   lazy val transportArrangerAddressOnSubmit: Call =
@@ -74,7 +74,8 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
           form = form,
           addressPage = TransportArrangerAddressPage,
           onSubmit = transportArrangerAddressOnSubmit,
-          headingKey = Some(s"$TransportArrangerAddressPage.$GoodsOwner")
+          headingKey = Some(s"$TransportArrangerAddressPage.$GoodsOwner"),
+          isConsignorPageOrUsingConsignorDetails = false
         )(dataRequest(request, userAnswers.get), messages(request)).toString
       }
     }
@@ -93,7 +94,8 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
           form = form.fill(userAddressModelMax),
           addressPage = TransportArrangerAddressPage,
           onSubmit = transportArrangerAddressOnSubmit,
-          headingKey = Some(s"$TransportArrangerAddressPage.$Other")
+          headingKey = Some(s"$TransportArrangerAddressPage.$Other"),
+          isConsignorPageOrUsingConsignorDetails = false
         )(dataRequest(request, userAnswers.get), messages(request)).toString
       }
 
@@ -102,10 +104,11 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
         MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
         val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(
+          ("businessName", userAddressModelMax.businessName.value),
           ("property", userAddressModelMax.property.value),
-          ("street", userAddressModelMax.street),
-          ("town", userAddressModelMax.town),
-          ("postcode", userAddressModelMax.postcode)
+          ("street", userAddressModelMax.street.value),
+          ("town", userAddressModelMax.town.value),
+          ("postcode", userAddressModelMax.postcode.value)
         ))
 
         status(result) mustEqual SEE_OTHER
@@ -124,7 +127,8 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
           form = boundForm,
           addressPage = TransportArrangerAddressPage,
           onSubmit = transportArrangerAddressOnSubmit,
-          headingKey = Some(s"$TransportArrangerAddressPage.$GoodsOwner")
+          headingKey = Some(s"$TransportArrangerAddressPage.$GoodsOwner"),
+          isConsignorPageOrUsingConsignorDetails = false
         )(dataRequest(request, userAnswers.get), messages(request)).toString
       }
 

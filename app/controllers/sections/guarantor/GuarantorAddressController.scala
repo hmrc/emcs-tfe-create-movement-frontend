@@ -20,11 +20,10 @@ import controllers.AddressControllerBase
 import controllers.actions._
 import forms.AddressFormProvider
 import models.requests.DataRequest
-import models.sections.guarantor.GuarantorArranger
 import models.{Mode, UserAddress}
 import navigation.GuarantorNavigator
 import pages.QuestionPage
-import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage}
+import pages.sections.guarantor.GuarantorAddressPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Call, MessagesControllerComponents, Result}
@@ -47,12 +46,8 @@ class GuarantorAddressController @Inject()(override val messagesApi: MessagesApi
 
   override val addressPage: QuestionPage[UserAddress] = GuarantorAddressPage
 
-  override def isConsignorPageOrUsingConsignorDetails(implicit request: DataRequest[_]): Boolean = {
-    GuarantorArrangerPage.value match {
-      case Some(GuarantorArranger.Consignor) => true
-      case _ => false
-    }
-  }
+  // when user selects Consignor for Guarantor section, they should not ever hit this page
+  override def isConsignorPageOrUsingConsignorDetails(implicit request: DataRequest[_]): Boolean = false
 
   override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
     controllers.sections.guarantor.routes.GuarantorAddressController.onSubmit(request.ern, request.draftId, mode)

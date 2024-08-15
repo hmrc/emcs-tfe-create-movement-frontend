@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import mocks.services.MockUserAnswersService
 import models.sections.guarantor.GuarantorArranger.Consignor
-import models.{NormalMode, UserAddress, UserAnswers}
+import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
@@ -53,7 +53,7 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
         Some(emptyUserAnswers
           .set(GuarantorRequiredPage, true)
           .set(GuarantorArrangerPage, Consignor)
-          .set(ConsignorAddressPage, UserAddress(None, "", "", "")))) {
+          .set(ConsignorAddressPage, testUserAddress))) {
 
         val result = testController.onPageLoad(testErn, testDraftId)(request)
 
@@ -64,13 +64,13 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
 
     "when GuarantorSection is not complete" - {
 
-        "must redirect to the guarantor required controller" in new Fixture() {
+      "must redirect to the guarantor required controller" in new Fixture() {
 
-          val result = testController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testDraftId)(request)
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(routes.GuarantorRequiredController.onPageLoad(testErn, testDraftId, NormalMode).url)
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.GuarantorRequiredController.onPageLoad(testErn, testDraftId, NormalMode).url)
       }
+    }
   }
 }

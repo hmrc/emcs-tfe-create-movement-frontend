@@ -19,6 +19,7 @@ package pages.sections.dispatch
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario.CertifiedConsignee
 import pages.sections.info.DestinationTypePage
 import play.api.test.FakeRequest
@@ -46,11 +47,23 @@ class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixture
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(DispatchWarehouseExcisePage, "beans")
           .set(DispatchUseConsignorDetailsPage, false)
-          .set(DispatchBusinessNamePage, "beans")
           .set(DispatchAddressPage, testUserAddress)
         )
 
         DispatchSection.isCompleted mustBe true
+      }
+
+
+
+      "when only DispatchWarehouseExcisePage is completed and duty suspended" in {
+        MovementScenario.values.filterNot(MovementScenario.valuesForDutyPaidTraders.contains(_)).foreach { movementScenario =>
+          implicit val dr: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers.set(DispatchWarehouseExcisePage, "beans").set(DestinationTypePage, movementScenario)
+          )
+
+          DispatchSection.isCompleted mustBe true
+        }
       }
 
       "when the DispatchWarehouseExcisePage is None, the destination type is CertifiedConsignee and the other pages are answered" in {
@@ -58,7 +71,6 @@ class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixture
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(DestinationTypePage, CertifiedConsignee)
           .set(DispatchUseConsignorDetailsPage, false)
-          .set(DispatchBusinessNamePage, "beans")
           .set(DispatchAddressPage, testUserAddress)
         )
 
@@ -74,13 +86,15 @@ class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixture
         DispatchSection.isCompleted mustBe false
       }
 
-      "when only DispatchWarehouseExcisePage is completed" in {
+      "when only DispatchWarehouseExcisePage is completed and duty paid" in {
+        MovementScenario.valuesForDutyPaidTraders.foreach { movementScenario =>
+          implicit val dr: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers.set(DispatchWarehouseExcisePage, "beans").set(DestinationTypePage, movementScenario)
+          )
 
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(DispatchWarehouseExcisePage, "beans")
-        )
-
-        DispatchSection.isCompleted mustBe false
+          DispatchSection.isCompleted mustBe false
+        }
       }
 
       "when Consignor details question is 'no' and the rest of the flow is not completed" in {
@@ -98,7 +112,6 @@ class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixture
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(DispatchWarehouseExcisePage, "beans")
           .set(DispatchUseConsignorDetailsPage, true)
-          .set(DispatchBusinessNamePage, "beans")
         )
 
         DispatchSection.isCompleted mustBe false
@@ -109,7 +122,6 @@ class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixture
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
           .set(DestinationTypePage, CertifiedConsignee)
           .set(DispatchUseConsignorDetailsPage, false)
-          .set(DispatchAddressPage, testUserAddress)
         )
 
         DispatchSection.isCompleted mustBe false
@@ -124,7 +136,6 @@ class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixture
           emptyUserAnswers
             .set(DispatchWarehouseExcisePage, "beans")
             .set(DispatchUseConsignorDetailsPage, false)
-            .set(DispatchBusinessNamePage, "beans")
             .set(DispatchAddressPage, testUserAddress)
             .copy(submissionFailures = Seq(dispatchWarehouseInvalidOrMissingOnSeedError))
         )

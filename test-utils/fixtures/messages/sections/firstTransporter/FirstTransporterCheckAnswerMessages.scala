@@ -23,7 +23,6 @@ object FirstTransporterCheckAnswerMessages {
     val heading = "Check your answers"
     val title = titleHelper(heading)
 
-    val firstTransporterName: String = "Business name"
     val firstTransporterHasVat: String = "VAT registered in the UK"
     val firstTransporterVatNumber: String = "VAT registration number"
     val firstTransporterAddress: String = "Address"

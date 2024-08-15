@@ -23,7 +23,6 @@ import models.UserAddress
 import models.requests.DataRequest
 import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExcisePage}
 import pages.sections.consignor.ConsignorAddressPage
-import pages.sections.destination.{DestinationAddressPage, DestinationWarehouseExcisePage}
 import pages.sections.dispatch.{DispatchAddressPage, DispatchWarehouseExcisePage}
 import pages.{Page, QuestionPage}
 import play.api.data.Forms.{mapping, optional}
@@ -35,6 +34,7 @@ import javax.inject.Inject
 
 class AddressFormProvider @Inject() extends Mappings {
 
+  val businessNameMax = 182
   val propertyMax = 11
   val streetMax = 65
   val townMax = 50
@@ -44,17 +44,11 @@ class AddressFormProvider @Inject() extends Mappings {
     Form(mapping(
       "businessName" -> {
         if (isConsignorPageOrUsingConsignorDetails && request.traderKnownFacts.isDefined) {
-          implicit val binder: Formatter[Option[String]] = new Formatter[Option[String]] {
-            override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[String]] =
-              Right(Some(data.getOrElse(key, request.traderKnownFacts.get.traderName)))
-
-            override def unbind(key: String, value: Option[String]): Map[String, String] = value.map(v => Map(key -> v)).getOrElse(Map.empty)
-          }
-          new FieldMapping[Option[String]]("businessName")
+          businessNameFromKnownFacts
         } else {
           text(s"address.businessName.error.$page.required")
-            .verifying(maxLength(182, s"address.businessName.error.$page.length"))
-            .verifying(regexpUnlessEmpty(XSS_REGEX, s"address.businessName.error.$page.invalidCharacter"))
+            .verifying(maxLength(businessNameMax, s"address.businessName.error.$page.length"))
+            .verifying(regexpUnlessEmpty(XSS_REGEX, s"address.businessName.error.$page.invalid"))
             .transform[Option[String]](Some(_), _.get)
         }
       },
@@ -85,6 +79,18 @@ class AddressFormProvider @Inject() extends Mappings {
     )(UserAddress.apply)(UserAddress.unapply)
     )
 
+  private def businessNameFromKnownFacts(implicit request: DataRequest[_]): FieldMapping[Option[String]] = {
+    assert(request.traderKnownFacts.isDefined, "Trader known facts must be defined to use this field mapping")
+
+    implicit val binder: Formatter[Option[String]] = new Formatter[Option[String]] {
+      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[String]] =
+        Right(Some(data.getOrElse(key, request.traderKnownFacts.get.traderName)))
+
+      override def unbind(key: String, value: Option[String]): Map[String, String] = Map(key -> value.get)
+    }
+    new FieldMapping[Option[String]]("businessName")
+  }
+
   private def getExtraPostcodeValidationForPage(page: Page)(implicit request: DataRequest[_]): Seq[Constraint[String]] = {
     def validate(ern: Option[String]): Seq[Constraint[String]] = {
       ern match {
@@ -98,7 +104,6 @@ class AddressFormProvider @Inject() extends Mappings {
       case ConsignorAddressPage => validate(Some(request.ern))
       case ConsigneeAddressPage => validate(ConsigneeExcisePage.value)
       case DispatchAddressPage => validate(DispatchWarehouseExcisePage.value)
-      case DestinationAddressPage => validate(DestinationWarehouseExcisePage.value)
       case _ => Seq.empty
     }
   }

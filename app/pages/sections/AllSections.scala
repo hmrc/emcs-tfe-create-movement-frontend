@@ -68,5 +68,7 @@ case object AllSections extends Section[JsObject] with Logging {
     case _ => InProgress
   }
 
+  // $COVERAGE-OFF$
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
+  // $COVERAGE-ON$
 }

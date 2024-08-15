@@ -17,7 +17,7 @@
 package pages.sections.transportArranger
 
 import base.SpecBase
-import models.{UserAddress, VatNumberModel}
+import models.VatNumberModel
 import models.requests.DataRequest
 import models.sections.transportArranger.TransportArranger._
 import play.api.test.FakeRequest
@@ -45,9 +45,8 @@ class TransportArrangerSectionSpec extends SpecBase {
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
               emptyUserAnswers
                 .set(TransportArrangerPage, arranger)
-                .set(TransportArrangerNamePage, "")
                 .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some("arranger vat")))
-                .set(TransportArrangerAddressPage, UserAddress(None, "", "", ""))
+                .set(TransportArrangerAddressPage, testUserAddress)
             )
             TransportArrangerSection.isCompleted mustBe true
           }

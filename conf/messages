@@ -981,8 +981,9 @@ documentsCertificates.hintText = For example, a delivery note, invoice or electr
 documentsCertificates.error.required = Select yes if there are documents associated with this movement
 documentsCertificates.change.hidden = Documents Certificates
 
-documentType.title = What type of document do you want to add?
-documentType.heading = What type of document do you want to add?
+documentType.title = Select a document associated with this movement
+documentType.heading = Select a document associated with this movement
+documentType.hint = Start typing to see suggestions. This is for reference only and you will not upload the document.
 documentType.checkYourAnswersLabel = Document type
 documentType.error.required = Select the document you want to add
 documentType.select.defaultValue = Choose document type
@@ -1283,9 +1284,11 @@ itemBulkPackagingSelect.checkYourAnswersLabel = Bulk package type
 itemBulkPackagingSelect.error.required = Select the bulk packaging type for the {0}
 itemBulkPackagingSelect.change.hidden = bulk package type
 
-itemSelectPackaging.title = Add countable packaging you are using for item {0}
-itemSelectPackaging.heading = Add countable packaging you are using for item {0}
-itemSelectPackaging.hint = Add at least one type of packaging for item {0} that can be checked or counted easily. You can add more packaging to this item later.
+itemSelectPackaging.title = Packaging for item {0}
+itemSelectPackaging.heading = Packaging for item {0}
+itemSelectPackaging.paragraph = Add at least one type of packaging for item {0} that can be checked or counted easily. You can add more packaging to this item later.
+itemSelectPackaging.label = Select the packaging for item {0}
+itemSelectPackaging.hint = Start typing to see suggestions.
 itemSelectPackaging.checkYourAnswersLabel = Packaging type
 itemSelectPackaging.error.required = Select packaging you are using for item {0}
 itemSelectPackaging.change.hidden = packaging type

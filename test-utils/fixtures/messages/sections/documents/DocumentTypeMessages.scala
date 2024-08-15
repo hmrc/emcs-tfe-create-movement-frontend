@@ -22,8 +22,9 @@ object DocumentTypeMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
-    val heading = "What type of document do you want to add?"
+    val heading = "Select a document associated with this movement"
     val title = titleHelper(heading)
+    val hint = "Start typing to see suggestions. This is for reference only and you will not upload the document."
     val errorRequired = "Select the document you want to add"
     val cyaLabel = "Document type"
     val cyaChangeHidden = "document type"

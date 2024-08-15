@@ -17,6 +17,7 @@
 @import models.requests.DataRequest
 @import uk.gov.hmrc.govukfrontend.views.Implicits.RichSelect
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
+@import viewmodels.LabelSize
 @import views.html.helper.CSPNonce
 
 @this(
@@ -28,6 +29,7 @@
         govukSelect: GovukSelect,
         h1: components.h1,
         h2: components.h2,
+        p: components.p,
         continueOrExit: components.continueOrExit,
         clearAccessibleAutocompleteButton: components.clearAccessibleAutocompleteButton,
         autocompleteCss: HmrcAccessibleAutocompleteCss,
@@ -58,18 +60,21 @@
 
         @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
+        @h1(headingMsg = messages("itemSelectPackaging.heading", itemsIndex.displayIndex))
+
+        @p() {
+            @messages("itemSelectPackaging.paragraph", itemsIndex.displayIndex)
+        }
+
         @govukSelect(
             Select(
                 id = "packaging",
                 name = "packaging",
-                label = Label(
-                    classes = "govuk-label--l",
-                    isPageHeading = true,
-                    content = Text(messages("itemSelectPackaging.heading", itemsIndex.displayIndex))
-                ),
+                label = LabelViewModel(Text(messages("itemSelectPackaging.label", itemsIndex.displayIndex))).withCssClass(LabelSize.Medium.toString),
                 hint = Some(HintViewModel(Text(messages("itemSelectPackaging.hint", itemsIndex.displayIndex)))),
                 items = selectOptions,
-                errorMessage = errorMessage
+                errorMessage = errorMessage,
+                attributes = Map("aria-label" -> "packaging")
             ).asAccessibleAutocomplete(
                 Some(
                     AccessibleAutocomplete(

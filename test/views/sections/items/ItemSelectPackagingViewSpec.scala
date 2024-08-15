@@ -56,9 +56,11 @@ class ItemSelectPackagingViewSpec extends SpecBase with ViewBehaviours with Item
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title(testIndex1.displayIndex),
-          Selectors.h1 -> messagesForLanguage.heading(testIndex1.displayIndex),
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
-          Selectors.hint -> messagesForLanguage.hint(testIndex1.displayIndex),
+          Selectors.h1 -> messagesForLanguage.heading(testIndex1.displayIndex),
+          Selectors.p(1) -> messagesForLanguage.paragraph(testIndex1.displayIndex),
+          Selectors.label("packaging") -> messagesForLanguage.label(testIndex1.displayIndex),
+          Selectors.hint -> messagesForLanguage.hint,
           Selectors.selectOption(1) -> messagesForLanguage.defaultSelectOption,
           Selectors.selectOption(2) -> messagesForLanguage.aerosolSelectOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,

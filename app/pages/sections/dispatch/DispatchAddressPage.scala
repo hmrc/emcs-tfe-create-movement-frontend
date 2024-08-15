@@ -20,25 +20,28 @@ import models.UserAddress
 import models.requests.DataRequest
 import pages.QuestionPage
 import pages.sections.consignor.ConsignorAddressPage
-import play.api.libs.json.JsPath
+import play.api.libs.json.{JsPath, Reads}
 
 case object DispatchAddressPage extends QuestionPage[UserAddress] {
   override val toString: String = "dispatchAddress"
   override val path: JsPath = DispatchSection.path \ toString
 
-  def businessName(implicit request: DataRequest[_]): Option[String] = {
-    val address = this.value
-    if(DispatchUseConsignorDetailsPage.value.contains(true)) {
-      Seq(
-        address.flatMap(_.businessName),
-        request.userAnswers.get(ConsignorAddressPage).flatMap(_.businessName),
-        request.traderKnownFacts.map(_.traderName)
-      ).collectFirst {
-        case Some(value) => value
-      }
-    } else {
-      address.flatMap(_.businessName)
+  override def value[T >: UserAddress](implicit request: DataRequest[_], reads: Reads[T]): Option[T] =
+    request.userAnswers.get(this).map {
+      address =>
+        val businessName = if (DispatchUseConsignorDetailsPage.value.contains(true)) {
+          Seq(
+            address.businessName,
+            request.userAnswers.get(ConsignorAddressPage).flatMap(_.businessName),
+            request.traderKnownFacts.map(_.traderName)
+          ).collectFirst {
+            case Some(value) => value
+          }
+        } else {
+          address.businessName
+        }
+
+        address.copy(businessName = businessName)
     }
-  }
 }
 

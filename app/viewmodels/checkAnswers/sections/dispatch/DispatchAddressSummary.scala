@@ -31,9 +31,7 @@ object DispatchAddressSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
     DispatchAddressPage.value match {
-      case Some(address) =>
-        val modifiedAddress: UserAddress = address.copy(businessName = DispatchAddressPage.businessName)
-        renderRow(ValueViewModel(modifiedAddress.toCheckYourAnswersFormat))
+      case Some(address) => renderRow(ValueViewModel(address.toCheckYourAnswersFormat))
       case _ => renderRow(ValueViewModel(Text(messages("site.notProvided"))))
     }
 

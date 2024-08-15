@@ -30,7 +30,6 @@ class DispatchCheckAnswersHelper @Inject()(dispatchWarehouseExciseSummary: Dispa
       rows = Seq(
         DispatchUseConsignorDetailsSummary.row(),
         dispatchWarehouseExciseSummary.row(),
-        Some(DispatchBusinessNameSummary.row()),
         Some(DispatchAddressSummary.row())
       ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")

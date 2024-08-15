@@ -31,7 +31,10 @@ object ConsignorAddressSummary {
       address =>
         SummaryListRowViewModel(
           key = "checkYourAnswersConsignor.address",
-          value = ValueViewModel(address.toCheckYourAnswersFormat),
+          value = ValueViewModel(
+
+            address.copy(businessName = ConsignorAddressPage.businessName).toCheckYourAnswersFormat
+          ),
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",

@@ -29,7 +29,6 @@ class TransportArrangerCheckAnswersHelper @Inject()() {
     SummaryListViewModel(
       rows = Seq(
         TransportArrangerSummary.row(),
-        Some(TransportArrangerNameSummary.row()),
         TransportArrangerVatChoiceSummary.row(),
         TransportArrangerVatSummary.row(),
         Some(TransportArrangerAddressSummary.row())

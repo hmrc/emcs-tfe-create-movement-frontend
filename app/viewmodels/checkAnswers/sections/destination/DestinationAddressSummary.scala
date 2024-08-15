@@ -32,7 +32,7 @@ object DestinationAddressSummary {
     val value = DestinationAddressPage.value.fold[HtmlContent] {
       HtmlContent(messages("destinationCheckAnswers.destination.notProvided"))
     } { address =>
-      if (Seq(address.property, address.street, address.town, address.postcode).forall(_.isEmpty)) {
+      if (Seq(address.businessName, address.property, address.street, address.town, address.postcode).forall(_.isEmpty)) {
         HtmlContent(messages("destinationCheckAnswers.destination.notProvided"))
       } else {
         address.toCheckYourAnswersFormat

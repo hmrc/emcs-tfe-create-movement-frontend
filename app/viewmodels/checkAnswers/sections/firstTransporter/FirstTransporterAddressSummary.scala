@@ -32,15 +32,7 @@ object FirstTransporterAddressSummary {
 
     val value: Content = FirstTransporterAddressPage.value.fold[Content] {
       Text(messages("site.notProvided"))
-    } { address =>
-      HtmlContent(
-        HtmlFormat.fill(Seq(
-          Html(address.property.fold("")(_ + " ") + address.street + "<br>"),
-          Html(address.town + "<br>"),
-          Html(address.postcode)
-        ))
-      )
-    }
+    } { _.toCheckYourAnswersFormat }
 
     SummaryListRowViewModel(
       key = "address.firstTransporterAddress.checkYourAnswers.label",

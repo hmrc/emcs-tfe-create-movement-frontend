@@ -16,9 +16,10 @@
 
 package viewmodels.checkAnswers.sections.dispatch
 
-import models.CheckMode
+import models.{CheckMode, UserAddress}
 import models.requests.DataRequest
-import pages.sections.dispatch.DispatchAddressPage
+import pages.sections.consignor.ConsignorAddressPage
+import pages.sections.dispatch.{DispatchAddressPage, DispatchUseConsignorDetailsPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -30,7 +31,9 @@ object DispatchAddressSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
     DispatchAddressPage.value match {
-      case Some(address) => renderRow(ValueViewModel(address.toCheckYourAnswersFormat))
+      case Some(address) =>
+        val modifiedAddress: UserAddress = address.copy(businessName = DispatchAddressPage.businessName)
+        renderRow(ValueViewModel(modifiedAddress.toCheckYourAnswersFormat))
       case _ => renderRow(ValueViewModel(Text(messages("site.notProvided"))))
     }
 

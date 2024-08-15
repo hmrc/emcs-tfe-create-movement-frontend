@@ -30,7 +30,6 @@ class DestinationCheckAnswersHelper @Inject()(destinationWarehouseExciseSummary:
       rows = Seq(
         DestinationDetailsChoiceSummary.row(),
         DestinationConsigneeDetailsSummary.row(),
-        Some(DestinationBusinessNameSummary.row()),
         exciseOrVatRow(),
         Some(DestinationAddressSummary.row())
       ).flatten

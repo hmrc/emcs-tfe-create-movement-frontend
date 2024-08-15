@@ -28,10 +28,11 @@ case class UserAddress(businessName: Option[String],
   def toCheckYourAnswersFormat: HtmlContent = HtmlContent(
     HtmlFormat.fill(
       Seq(
+        businessName.map(bn => Html(bn + ",<br>")),
         Some(Html(property.map(_ + " ").getOrElse("") + street.getOrElse(""))),
-        if(property.nonEmpty || street.nonEmpty) Some(Html("<br>")) else None,
-        town.map(t => Html(t + "<br>")),
-        postcode.map(p => Html(p + "<br>"))
+        if(property.nonEmpty || street.nonEmpty) Some(Html(",<br>")) else None,
+        town.map(t => Html(t + ",<br>")),
+        postcode.map(Html(_))
       ).flatten
     )
   )

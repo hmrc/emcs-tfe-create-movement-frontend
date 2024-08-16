@@ -28,7 +28,6 @@ import play.api.i18n.Messages
 class ItemQuantityHelperSpec extends SpecBase with ItemFixtures {
 
   "should return the correct heading when a specific excise product code message is defined" in {
-    val goodsType = GoodsType("someGoodsType")
     val cnCodeInfo = CnCodeInformation("specificCode", "specificDescription", "specificEpc", "specificEpcDescription", Litres20)
     implicit val messages: Messages = mock[Messages]
 
@@ -36,24 +35,21 @@ class ItemQuantityHelperSpec extends SpecBase with ItemFixtures {
     when(messages("itemQuantity.heading.specificEpc")).thenReturn("Specific Heading")
 
     val helper = new ItemQuantityHelper
-    val result = helper.heading(goodsType, cnCodeInfo)
+    val result = helper.heading(cnCodeInfo)
 
-    result mustBe "Specific Heading"
+    result mustBe Some("Specific Heading")
   }
 
-  "should return the default heading when a specific excise product code message is not defined" in {
-    val goodsType = GoodsType("someGoodsType")
+  "should return None when a specific excise product code heading is not defined" in {
     val cnCodeInfo = CnCodeInformation("unknownCode", "unknownCodeDescription", "undefinedEpc", "specificEpcDescription", Litres20)
     implicit val messages: Messages = mock[Messages]
 
     when(messages.isDefinedAt("itemQuantity.heading.undefinedEpc")).thenReturn(false)
-    when(messages("goodsType.S.singular")).thenReturn("spirit")
-    when(messages("itemQuantity.heading", "spirit")).thenReturn("Default Heading")
 
     val helper = new ItemQuantityHelper
-    val result = helper.heading(goodsType, cnCodeInfo)
+    val result = helper.heading(cnCodeInfo)
 
-    result mustBe "Default Heading"
+    result mustBe None
   }
 
   "should return the correct paragraph when a specific excise product code message is defined" in {
@@ -69,7 +65,7 @@ class ItemQuantityHelperSpec extends SpecBase with ItemFixtures {
     result mustBe Some("Specific Paragraph")
   }
 
-  "should return None when a specific excise product code message is not defined" in {
+  "should return None when a specific excise product code paragraph is not defined" in {
     val cnCodeInfo = CnCodeInformation("unknownCode", "unknownCodeDescription", "unknownEpc", "specificEpcDescription", Litres20)
     implicit val messages: Messages = mock[Messages]
 
@@ -82,6 +78,7 @@ class ItemQuantityHelperSpec extends SpecBase with ItemFixtures {
   }
 
   "should return the correct label when a specific excise product code message is defined" in {
+    val goodsType = GoodsType("someGoodsType")
     val cnCodeInfo = CnCodeInformation("specificCode", "specificDescription", "specificEpc", "specificEpcDescription", Litres20)
     implicit val messages: Messages = mock[Messages]
 
@@ -89,21 +86,23 @@ class ItemQuantityHelperSpec extends SpecBase with ItemFixtures {
     when(messages("itemQuantity.label.specificEpc")).thenReturn("Specific Label")
 
     val helper = new ItemQuantityHelper
-    val result = helper.label(cnCodeInfo)
+    val result = helper.label(goodsType, cnCodeInfo)
 
     result mustBe "Specific Label"
   }
 
-  "should return an empty string when a specific excise product code message is not defined" in {
+  "should return the default label when a specific excise product code label is not defined" in {
+    val goodsType = GoodsType("someGoodsType")
     val cnCodeInfo = CnCodeInformation("unknownCode", "unknownCodeDescription", "unknownEpc", "specificEpcDescription", Litres20)
     implicit val messages: Messages = mock[Messages]
 
     when(messages.isDefinedAt("itemQuantity.label.unknownEpc")).thenReturn(false)
+    when(messages("itemQuantity.label", goodsType.toSingularOutput())).thenReturn("Default Label")
 
     val helper = new ItemQuantityHelper
-    val result = helper.label(cnCodeInfo)
+    val result = helper.label(goodsType, cnCodeInfo)
 
-    result mustBe ""
+    result mustBe "Default Label"
   }
 
   "should return the correct hint for liquid products" in {
@@ -116,7 +115,7 @@ class ItemQuantityHelperSpec extends SpecBase with ItemFixtures {
     val helper = new ItemQuantityHelper
     val result = helper.hint(cnCodeInfo)
 
-    result mustBe "Liquid Hint"
+    result mustBe Some("Liquid Hint")
   }
 
   "should return the correct hint when a specific excise product code message is defined" in {
@@ -129,10 +128,10 @@ class ItemQuantityHelperSpec extends SpecBase with ItemFixtures {
     val helper = new ItemQuantityHelper
     val result = helper.hint(cnCodeInfo)
 
-    result mustBe "Specific Hint"
+    result mustBe Some("Specific Hint")
   }
 
-  "should return an empty string when a specific excise product code message is not defined and it is not a liquid" in {
+  "should return a None when a specific excise product code hint is not defined and it is not a liquid" in {
     val cnCodeInfo = CnCodeInformation("unknownCode", "unknownCodeDescription", "E600", "specificEpcDescription", Litres20)
     implicit val messages: Messages = mock[Messages]
 
@@ -141,6 +140,6 @@ class ItemQuantityHelperSpec extends SpecBase with ItemFixtures {
     val helper = new ItemQuantityHelper
     val result = helper.hint(cnCodeInfo)
 
-    result mustBe ""
+    result mustBe None
   }
 }

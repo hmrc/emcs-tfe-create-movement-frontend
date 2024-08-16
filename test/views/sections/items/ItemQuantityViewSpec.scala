@@ -63,7 +63,7 @@ class ItemQuantityViewSpec extends SpecBase with ViewBehaviours with MovementSub
           ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
-            Selectors.title -> messagesForLanguage.title(Tobacco.toSingularOutput()),
+            Selectors.title -> messagesForLanguage.title(Tobacco.toSingularOutput(), t200CommodityCode),
             Selectors.h1 -> messagesForLanguage.headingT200,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
             Selectors.p(1) -> messagesForLanguage.paragraphT200,
@@ -90,7 +90,7 @@ class ItemQuantityViewSpec extends SpecBase with ViewBehaviours with MovementSub
           ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
-            Selectors.title -> messagesForLanguage.title(Tobacco.toSingularOutput()),
+            Selectors.title -> messagesForLanguage.title(Tobacco.toSingularOutput(), t300CommodityCode),
             Selectors.h1 -> messagesForLanguage.headingT300,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
             Selectors.p(1) -> messagesForLanguage.paragraphT300,
@@ -117,7 +117,7 @@ class ItemQuantityViewSpec extends SpecBase with ViewBehaviours with MovementSub
           ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
-            Selectors.title -> messagesForLanguage.title(Wine.toSingularOutput()),
+            Selectors.title -> messagesForLanguage.title(Wine.toSingularOutput(), w200CommodityCode),
             Selectors.h1 -> messagesForLanguage.heading(Wine.toSingularOutput()),
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
             Selectors.hint -> messagesForLanguage.hintLiquid(unitOfMeasureMessages.litres20Long),
@@ -142,7 +142,7 @@ class ItemQuantityViewSpec extends SpecBase with ViewBehaviours with MovementSub
           ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
-            Selectors.title -> messagesForLanguage.title(Energy.toSingularOutput()),
+            Selectors.title -> messagesForLanguage.title(Energy.toSingularOutput(), e500CommodityCode),
             Selectors.h1 -> messagesForLanguage.heading(Energy.toSingularOutput()),
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
             Selectors.inputSuffix -> unitOfMeasureMessages.kilogramsShort,
@@ -170,7 +170,7 @@ class ItemQuantityViewSpec extends SpecBase with ViewBehaviours with MovementSub
           ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
-            Selectors.title -> messagesForLanguage.title(Wine.toSingularOutput()),
+            Selectors.title -> messagesForLanguage.title(Wine.toSingularOutput(), testCommodityCodeWine),
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
             Selectors.h1 -> messagesForLanguage.heading(Wine.toSingularOutput()),
             Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,

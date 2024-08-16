@@ -21,15 +21,22 @@ import models.response.referenceData.CnCodeInformation
 import play.api.i18n.Messages
 import utils.ExciseProductCodeHelper
 
-class ItemQuantityHelper {
+import javax.inject.Inject
 
-  def heading(goodsType: GoodsType, cnCodeInfo: CnCodeInformation)(implicit messages: Messages): String = {
-    val key: String = s"itemQuantity.heading.${cnCodeInfo.exciseProductCode}"
+class ItemQuantityHelper @Inject() {
+
+  def title(goodsType: GoodsType, cnCodeInfo: CnCodeInformation)(implicit messages: Messages): String = {
+    val key: String = s"itemQuantity.title.${cnCodeInfo.exciseProductCode}"
     if (messages.isDefinedAt(key)) {
       messages(key)
     } else {
-      messages("itemQuantity.heading", goodsType.toSingularOutput())
+      messages("itemQuantity.title", goodsType.toSingularOutput())
     }
+  }
+
+  def heading(cnCodeInfo: CnCodeInformation)(implicit messages: Messages): Option[String] = {
+    val key: String = s"itemQuantity.heading.${cnCodeInfo.exciseProductCode}"
+    Option.when(messages.isDefinedAt(key))(messages(key))
   }
 
   def paragraph(cnCodeInfo: CnCodeInformation)(implicit messages: Messages): Option[String] = {
@@ -37,26 +44,25 @@ class ItemQuantityHelper {
     Option.when(messages.isDefinedAt(key))(messages(key))
   }
 
-  def label(cnCodeInfo: CnCodeInformation)(implicit messages: Messages): String = {
+  def label(goodsType: GoodsType, cnCodeInfo: CnCodeInformation)(implicit messages: Messages): String = {
     val key: String = s"itemQuantity.label.${cnCodeInfo.exciseProductCode}"
     if (messages.isDefinedAt(key)) {
       messages(key)
     } else {
-      ""
+      messages("itemQuantity.label", goodsType.toSingularOutput())
     }
   }
 
-  def hint(cnCodeInfo: CnCodeInformation)(implicit messages: Messages): String = {
+  def hint(cnCodeInfo: CnCodeInformation)(implicit messages: Messages): Option[String] = {
     if (ExciseProductCodeHelper.isLiquid(cnCodeInfo.exciseProductCode)) {
-      messages("itemQuantity.hint.liquid", cnCodeInfo.unitOfMeasure.toLongFormatMessage())
+      Some(messages("itemQuantity.hint.liquid", cnCodeInfo.unitOfMeasure.toLongFormatMessage()))
     } else {
       val key = s"itemQuantity.hint.${cnCodeInfo.exciseProductCode}"
-      if (messages.isDefinedAt(key)) {
-        messages(key)
-      } else {
-        ""
-      }
+      Option.when(messages.isDefinedAt(key))(messages(key))
     }
   }
+
+  def requiresRicherContent(cnCodeInfo: CnCodeInformation)(implicit messages: Messages): Boolean =
+    heading(cnCodeInfo).isDefined || paragraph(cnCodeInfo).isDefined
 
 }

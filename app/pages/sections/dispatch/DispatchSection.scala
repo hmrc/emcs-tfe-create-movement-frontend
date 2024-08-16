@@ -41,10 +41,8 @@ case object DispatchSection extends Section[JsObject] {
   }
 
   private def dutySuspendedStatus(implicit request: DataRequest[_]): TaskListStatus = {
-    (DispatchWarehouseExcisePage.value, DispatchUseConsignorDetailsPage.value, DispatchAddressPage.value) match {
-      case (Some(_: String), Some(_: Boolean), Some(_: UserAddress)) => Completed
-      case (Some(_: String), Some(_: Boolean), _) => InProgress
-      case (Some(_: String), None, _) => Completed
+    (DispatchWarehouseExcisePage.value) match {
+      case Some(_: String) => Completed
       case _ => NotStarted
     }
   }

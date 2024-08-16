@@ -25,9 +25,9 @@ object DestinationConsigneeDetailsMessages {
     val title = titleHelper(heading)
     val errorRequired = "Select yes if the place of destination and consignee details are the same"
 
-    val cyaLabel: String = "Use consignee details"
+    val cyaLabel: String = "Destination details same as consignee"
 
-    val cyaChangeHidden: String = "use consignee details"
+    val cyaChangeHidden: String = "if destination details are same as consignee"
 
     val errorMessageHelper: String => String = s"Error: " + _
   }

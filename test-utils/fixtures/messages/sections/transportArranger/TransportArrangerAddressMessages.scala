@@ -21,8 +21,8 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 object TransportArrangerAddressMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val cyaLabel: String = "Address"
-    val cyaChangeHidden: String = "transport arranger address"
+    val cyaLabel: String = "Transport arranger’s details"
+    val cyaChangeHidden: String = "transport arranger’s details"
   }
 
   object English extends ViewMessages with BaseEnglish

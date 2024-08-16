@@ -25,8 +25,8 @@ object DestinationCheckAnswersMessages {
     val title = titleHelper(heading)
     val traderNameLabel = "Trader name"
     val traderNameChangeHidden = "Trader name"
-    val addressLabel: String = "Address"
-    val addressChangeHidden: String = "Address"
+    val sameAsConsignee: String = "Destination details same as consignee"
+    val details: String = "Place of destination details"
 
     val placeOfDestinationExciseIdInvalidError = "The excise ID for the tax warehouse of destination is not valid"
     val placeOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError = "The excise ID for the tax warehouse of destination must be linked to the consignee"

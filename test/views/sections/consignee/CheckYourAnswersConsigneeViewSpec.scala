@@ -47,7 +47,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
   object Selectors extends BaseSelectors {
     def govukSummaryListKey(id: Int) = s".govuk-summary-list__row:nth-of-type($id) .govuk-summary-list__key"
 
-    val govukSummaryListChangeLink = ".govuk-summary-list__actions .govuk-link"
     val tag = ".govuk-tag--orange"
   }
 
@@ -79,7 +78,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         Selectors.h1 -> English.heading,
         Selectors.h2(1) -> English.caption,
         Selectors.govukSummaryListKey(1) -> English.ern,
-        Selectors.govukSummaryListKey(2) -> English.address,
+        Selectors.govukSummaryListKey(2) -> English.details,
         Selectors.button -> English.confirmAnswers,
       ))
 
@@ -169,7 +168,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         Selectors.h1 -> English.heading,
         Selectors.h2(1) -> English.caption,
         Selectors.govukSummaryListKey(1) -> English.ernNumberForTemporaryRegisteredConsignee,
-        Selectors.govukSummaryListKey(2) -> English.address,
+        Selectors.govukSummaryListKey(2) -> English.details,
         Selectors.button -> English.confirmAnswers,
       ))
 
@@ -210,7 +209,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         Selectors.h1 -> English.heading,
         Selectors.h2(1) -> English.caption,
         Selectors.govukSummaryListKey(1) -> English.ernNumberForTemporaryCertifiedConsignee,
-        Selectors.govukSummaryListKey(2) -> English.address,
+        Selectors.govukSummaryListKey(2) -> English.details,
         Selectors.button -> English.confirmAnswers,
       ))
 
@@ -251,7 +250,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         Selectors.h1 -> English.heading,
         Selectors.h2(1) -> English.caption,
         Selectors.govukSummaryListKey(1) -> English.exempt,
-        Selectors.govukSummaryListKey(2) -> English.address,
+        Selectors.govukSummaryListKey(2) -> English.details,
         Selectors.button -> English.confirmAnswers,
       ))
 
@@ -297,7 +296,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         Selectors.h2(1) -> English.caption,
         Selectors.govukSummaryListKey(1) -> English.identificationProvided,
         Selectors.govukSummaryListKey(2) -> English.vat,
-        Selectors.govukSummaryListKey(3) -> English.address,
+        Selectors.govukSummaryListKey(3) -> English.details,
         Selectors.button -> English.confirmAnswers,
       ))
 
@@ -348,7 +347,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
         Selectors.h2(1) -> English.caption,
         Selectors.govukSummaryListKey(1) -> English.identificationProvided,
         Selectors.govukSummaryListKey(2) -> English.eori,
-        Selectors.govukSummaryListKey(3) -> English.address,
+        Selectors.govukSummaryListKey(3) -> English.details,
         Selectors.button -> English.confirmAnswers,
       ))
 
@@ -412,7 +411,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours wit
 
       "have the correct summary list for Consignee details" in {
         val summaryList = doc.getElementsByClass("govuk-summary-list").get(1)
-        summaryList.getElementsByClass("govuk-summary-list__key").get(0).text mustBe English.address
+        summaryList.getElementsByClass("govuk-summary-list__key").get(0).text mustBe English.details
       }
 
       "have a link to change identifications" in {

@@ -23,22 +23,25 @@ import fixtures.messages.sections.destination.DestinationCheckAnswersMessages.En
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.sections.destination.DestinationWarehouseExcisePage
+import pages.sections.destination.{DestinationConsigneeDetailsPage, DestinationWarehouseExcisePage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import utils.{PlaceOfDestinationExciseIdForTaxWarehouseInvalidError, PlaceOfDestinationExciseIdInvalidError, PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError}
-import viewmodels.checkAnswers.sections.destination.DestinationWarehouseExciseSummary
+import viewmodels.checkAnswers.sections.destination.{DestinationCheckAnswersHelper, DestinationWarehouseExciseSummary}
 import views.html.sections.destination.DestinationCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
 
 class DestinationCheckAnswersViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures {
   object Selectors extends BaseSelectors {
+    def govukSummaryListKey(id: Int) = s".govuk-summary-list__row:nth-of-type($id) .govuk-summary-list__key"
+
     val tag = ".govuk-tag--orange"
   }
 
   implicit val msgs: Messages = messages(Seq(English.lang))
+  lazy val destinationCheckAnswersHelper: DestinationCheckAnswersHelper = app.injector.instanceOf[DestinationCheckAnswersHelper]
   lazy val destinationWarehouseExciseSummary: DestinationWarehouseExciseSummary = app.injector.instanceOf[DestinationWarehouseExciseSummary]
   lazy val view = app.injector.instanceOf[DestinationCheckAnswersView]
 
@@ -46,14 +49,20 @@ class DestinationCheckAnswersViewSpec extends SpecBase with ViewBehaviours with 
 
     s"when being rendered in lang code of '${English.lang.code}'" - {
 
-      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
-      implicit val doc: Document = Jsoup.parse(view(SummaryList(Seq.empty), testOnwardRoute).toString())
+      implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(
+        FakeRequest(),
+        emptyUserAnswers
+          .set(DestinationConsigneeDetailsPage, true)
+      )
+      implicit val doc: Document = Jsoup.parse(view(destinationCheckAnswersHelper.summaryList(), testOnwardRoute).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
         Selectors.subHeadingCaptionSelector -> English.destinationSection,
         Selectors.title -> English.title,
         Selectors.h1 -> English.heading,
-        Selectors.button -> English.confirmAnswers
+        Selectors.button -> English.confirmAnswers,
+        Selectors.govukSummaryListKey(1) -> English.sameAsConsignee,
+        Selectors.govukSummaryListKey(2) -> English.details,
       ))
     }
 
@@ -61,8 +70,8 @@ class DestinationCheckAnswersViewSpec extends SpecBase with ViewBehaviours with 
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
         emptyUserAnswers.copy(submissionFailures =
-          DestinationWarehouseExcisePage.possibleErrors.map(error => destinationWarehouseExciseFailure.copy(error.code))
-        )
+            DestinationWarehouseExcisePage.possibleErrors.map(error => destinationWarehouseExciseFailure.copy(error.code))
+          )
           .set(DestinationWarehouseExcisePage, testErn)
       )
 

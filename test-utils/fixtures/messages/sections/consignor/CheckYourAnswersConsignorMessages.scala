@@ -25,9 +25,9 @@ object CheckYourAnswersConsignorMessages {
     val title: String = titleHelper(heading)
     val ern: String = "Excise registration number (ERN)"
     val paidTemporaryAuthorisationCode: String = "Paid Temporary Authorisation (PTA) code"
-    val address: String = "Address"
+    val address: String = "Consignor’s details"
 
-    val addressChangeHidden: String = "address"
+    val addressChangeHidden: String = "consignor’s details"
     val paidTemporaryAuthorisationCodeChangeHidden: String = "Paid Temporary Authorisation (PTA) code"
   }
 

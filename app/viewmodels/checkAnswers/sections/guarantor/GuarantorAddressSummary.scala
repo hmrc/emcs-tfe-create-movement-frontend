@@ -25,8 +25,7 @@ import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.i18n.Messages
-import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -62,18 +61,10 @@ object GuarantorAddressSummary {
         case Consignee => Text(messages("address.guarantorAddress.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignee")))
         case _ => Text(messages("site.notProvided"))
       }
-    } { address =>
-      HtmlContent(
-        HtmlFormat.fill(Seq(
-          Html(address.property.fold("")(_ + " ") + address.street + "<br>"),
-          Html(address.town + "<br>"),
-          Html(address.postcode)
-        ))
-      )
-    }
+    } { address => address.toCheckYourAnswersFormat }
 
     SummaryListRowViewModel(
-      key = "address.guarantorAddress.checkYourAnswers.label",
+      key = s"address.guarantorAddress.$guarantorArranger.checkYourAnswers.label",
       value = ValueViewModel(value),
       actions = if (!showChangeLink) Seq() else Seq(
         ActionItemViewModel(
@@ -85,7 +76,7 @@ object GuarantorAddressSummary {
           ).url,
           id = "changeGuarantorAddress"
         )
-          .withVisuallyHiddenText(messages("address.guarantorAddress.3.change.hidden"))
+          .withVisuallyHiddenText(messages(s"address.guarantorAddress.$guarantorArranger.change.hidden"))
       )
     )
   }

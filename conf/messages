@@ -246,50 +246,53 @@ localReferenceNumber.new.checkYourAnswersLabel = Unique reference (LRN)
 localReferenceNumber.new.change.hidden = Unique reference (LRN)
 
 
-address.consignorAddress.title = Enter the consignor’s address
-address.consignorAddress.heading = Enter the consignor’s address
+address.consignorAddress.title = Enter the consignor’s details
+address.consignorAddress.heading = Enter the consignor’s details
 address.consignorAddress.subheading = Consignor information
 
-address.consigneeAddress.title = Enter the consignee’s address
-address.consigneeAddress.heading = Enter the consignee’s address
+address.consigneeAddress.title = Enter the consignee’s details
+address.consigneeAddress.heading = Enter the consignee’s details
 address.consigneeAddress.subheading = Consignee information
-address.consigneeAddress.checkYourAnswers.label = Address
+address.consigneeAddress.checkYourAnswers.label = Consignee’s details
 
-address.destinationAddress.title = Enter the place of destination address
-address.destinationAddress.heading = Enter the place of destination address
+address.destinationAddress.title = Enter the place of destination details
+address.destinationAddress.heading = Enter the place of destination details
 address.destinationAddress.subheading = Place of destination information
-address.destinationAddress.checkYourAnswers.label = Address
-address.destinationAddress.change.hidden = Address
+address.destinationAddress.checkYourAnswers.label = Place of destination details
+address.destinationAddress.change.hidden = place of destination details
 
-address.dispatchAddress.title = Enter the place of dispatch address
-address.dispatchAddress.heading = Enter the place of dispatch address
-address.dispatchAddress.optional.title = Enter the place of dispatch address (optional)
-address.dispatchAddress.optional.heading = Enter the place of dispatch address (optional)
+address.dispatchAddress.title = Enter the place of dispatch details
+address.dispatchAddress.heading = Enter the place of dispatch details
+address.dispatchAddress.optional.title = Enter the place of dispatch details (optional)
+address.dispatchAddress.optional.heading = Enter the place of dispatch details (optional)
 address.dispatchAddress.subheading = Place of dispatch information
-address.dispatchAddress.checkYourAnswersLabel = Address
-address.dispatchAddress.change.hidden = Address
+address.dispatchAddress.checkYourAnswersLabel = Place of dispatch details
+address.dispatchAddress.change.hidden = place of dispatch details
 
-address.transportArrangerAddress.3.title = Enter the goods owner’s business address
-address.transportArrangerAddress.3.heading = Enter the goods owner’s business address
-address.transportArrangerAddress.4.title = Enter the transporter’s business address
-address.transportArrangerAddress.4.heading = Enter the transporter’s business address
+address.transportArrangerAddress.3.title = Enter the goods owner’s details
+address.transportArrangerAddress.3.heading = Enter the goods owner’s details
+address.transportArrangerAddress.4.title = Enter the transporter’s details
+address.transportArrangerAddress.4.heading = Enter the transporter’s details
 address.transportArrangerAddress.subheading = Transport arranger
 
-address.firstTransporterAddress.title = Enter the first transporter’s business address
-address.firstTransporterAddress.heading = Enter the first transporter’s business address
+address.firstTransporterAddress.title = Enter the first transporter’s details
+address.firstTransporterAddress.heading = Enter the first transporter’s details
 address.firstTransporterAddress.subheading = First transporter
-address.firstTransporterAddress.checkYourAnswers.label = Address
-address.firstTransporterAddress.change.hidden = first transporters address
+address.firstTransporterAddress.checkYourAnswers.label = First transporter’s details
+address.firstTransporterAddress.change.hidden = first transporter’s details
 
 address.guarantorAddress.subheading = Guarantor
-address.guarantorAddress.checkYourAnswers.label = Address
+address.guarantorAddress.1.checkYourAnswers.label = Consignor’s details
+address.guarantorAddress.2.checkYourAnswers.label = Transporter’s details
+address.guarantorAddress.3.checkYourAnswers.label = Goods owner’s details
+address.guarantorAddress.4.checkYourAnswers.label = Consignee’s details
 address.guarantorAddress.checkYourAnswers.notProvided = {0} section not complete
-address.guarantorAddress.3.title = Enter the good owner’s business address
-address.guarantorAddress.3.heading = Enter the good owner’s business address
-address.guarantorAddress.3.change.hidden = good owner’s address
-address.guarantorAddress.2.title = Enter the transporter’s business address
-address.guarantorAddress.2.heading = Enter the transporter’s business address
-address.guarantorAddress.2.change.hidden = transporter’s address
+address.guarantorAddress.3.title = Enter the goods owner’s details
+address.guarantorAddress.3.heading = Enter the goods owner’s details
+address.guarantorAddress.3.change.hidden = goods owner’s details
+address.guarantorAddress.2.title = Enter the transporter’s details
+address.guarantorAddress.2.heading = Enter the transporter’s details
+address.guarantorAddress.2.change.hidden = transporter’s details
 
 
 address.businessName = Business name
@@ -361,9 +364,9 @@ checkYourAnswersConsignor.subHeading = Consignor
 checkYourAnswersConsignor.traderName = Trader name
 checkYourAnswersConsignor.ern = Excise registration number (ERN)
 checkYourAnswersConsignor.paidTemporaryAuthorisationCode = Paid Temporary Authorisation (PTA) code
-checkYourAnswersConsignor.address = Address
+checkYourAnswersConsignor.address = Consignor’s details
 checkYourAnswersConsignor.businessName.change.hidden = trader name
-checkYourAnswersConsignor.address.change.hidden = address
+checkYourAnswersConsignor.address.change.hidden = consignor’s details
 checkYourAnswersConsignor.paidTemporaryAuthorisationCode.change.hidden = Paid Temporary Authorisation (PTA) code
 
 journeyType.subHeading = Journey type
@@ -555,9 +558,9 @@ transportArrangerVat.checkYourAnswers.input.label = VAT registration number
 transportArrangerVat.change.choice.hidden = VAT registered in the UK
 transportArrangerVat.change.input.hidden = VAT registration number
 
-transportArrangerAddress.checkYourAnswers.label = Address
+transportArrangerAddress.checkYourAnswers.label = Transport arranger’s details
 transportArrangerAddress.checkYourAnswers.notProvided = {0} section not complete
-transportArrangerAddress.change.hidden = transport arranger address
+transportArrangerAddress.change.hidden = transport arranger’s details
 
 transportArrangerCheckAnswers.title = Check your answers
 transportArrangerCheckAnswers.heading = Check your answers
@@ -811,7 +814,7 @@ checkYourAnswersConsignee.ern = Excise registration number (ERN)
 checkYourAnswersConsignee.yesEoriNumber = EORI Number
 checkYourAnswersConsignee.yesVatNumber = VAT Number
 checkYourAnswersConsignee.exemptOrganisation = Exempted organisation details
-checkYourAnswersConsignee.address = Address
+checkYourAnswersConsignee.address = Consignee’s details
 
 invoiceDetails.title = Invoice details
 invoiceDetails.heading = Invoice details
@@ -877,9 +880,9 @@ destinationWarehouseVat.change.hidden = identifier
 
 destinationConsigneeDetails.title = Is the place of destination the same as the consignee details?
 destinationConsigneeDetails.heading = Is the place of destination the same as the consignee details?
-destinationConsigneeDetails.checkYourAnswersLabel = Use consignee details
+destinationConsigneeDetails.checkYourAnswersLabel = Destination details same as consignee
 destinationConsigneeDetails.error.required = Select yes if the place of destination and consignee details are the same
-destinationConsigneeDetails.change.hidden = use consignee details
+destinationConsigneeDetails.change.hidden = if destination details are same as consignee
 
 transportSealChoice.heading.1 = Is there a commercial seal on this container?
 transportSealChoice.heading.2 = Is there a commercial seal on this vehicle?

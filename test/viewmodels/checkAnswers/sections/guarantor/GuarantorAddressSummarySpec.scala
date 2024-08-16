@@ -21,6 +21,7 @@ import fixtures.messages.sections.guarantor.GuarantorAddressMessages
 import fixtures.messages.sections.guarantor.GuarantorAddressMessages.ViewMessages
 import models.CheckMode
 import models.requests.DataRequest
+import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheUk, UkTaxWarehouse}
 import pages.sections.consignee.ConsigneeAddressPage
@@ -38,16 +39,16 @@ import viewmodels.implicits._
 
 class GuarantorAddressSummarySpec extends SpecBase {
 
-  def expectedRow(value: Content, showChangeLink: Boolean = true)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
+  def expectedRow(arranger: GuarantorArranger, value: Content, showChangeLink: Boolean = true)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
     Some(
       SummaryListRowViewModel(
-        key = Key(Text(messagesForLanguage.cyaLabel)),
+        key = Key(Text(messagesForLanguage.cyaLabel(arranger))),
         value = Value(value),
         actions = if (!showChangeLink) Seq() else Seq(ActionItemViewModel(
           content = Text(messagesForLanguage.change),
           href = controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(testGreatBritainWarehouseKeeperErn, testDraftId, CheckMode).url,
           id = "changeGuarantorAddress"
-        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
+        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden(arranger)))
       )
     )
   }
@@ -81,7 +82,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
                       testGreatBritainWarehouseKeeperErn
                     )
 
-                    GuarantorAddressSummary.row() mustBe expectedRow(messagesForLanguage.notProvided, true)
+                    GuarantorAddressSummary.row() mustBe expectedRow(arranger, messagesForLanguage.notProvided, true)
                   }
                 }
 
@@ -100,14 +101,15 @@ class GuarantorAddressSummarySpec extends SpecBase {
                     val expectedValue = HtmlContent(
                       HtmlFormat.fill(
                         Seq(
-                          Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street + "<br>"),
-                          Html(testUserAddress.town + "<br>"),
-                          Html(testUserAddress.postcode),
+                          Html(testUserAddress.businessName.value + "<br>"),
+                          Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street.value + "<br>"),
+                          Html(testUserAddress.town.value + "<br>"),
+                          Html(testUserAddress.postcode.value),
                         )
                       )
                     )
 
-                    GuarantorAddressSummary.row() mustBe expectedRow(expectedValue, true)
+                    GuarantorAddressSummary.row() mustBe expectedRow(arranger, expectedValue, true)
                   }
                 }
               }
@@ -128,7 +130,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
                     testGreatBritainWarehouseKeeperErn
                   )
 
-                  GuarantorAddressSummary.row() mustBe expectedRow(Text(messagesForLanguage.sectionNotComplete("Consignor")), false)
+                  GuarantorAddressSummary.row() mustBe expectedRow(GuarantorArranger.Consignor, Text(messagesForLanguage.sectionNotComplete("Consignor")), false)
                 }
               }
 
@@ -147,12 +149,15 @@ class GuarantorAddressSummarySpec extends SpecBase {
                   val expectedValue = HtmlContent(
                     HtmlFormat.fill(
                       Seq(
-                        Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street + "<br>"),
-                        Html(testUserAddress.town + "<br>"),
-                        Html(testUserAddress.postcode),
-                      )))
+                        Html(testMinTraderKnownFacts.traderName + "<br>"),
+                        Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street.value + "<br>"),
+                        Html(testUserAddress.town.value + "<br>"),
+                        Html(testUserAddress.postcode.value),
+                      )
+                    )
+                  )
 
-                  GuarantorAddressSummary.row() mustBe expectedRow(expectedValue, false)
+                  GuarantorAddressSummary.row() mustBe expectedRow(GuarantorArranger.Consignor, expectedValue, false)
                 }
               }
             }
@@ -172,7 +177,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
                     testGreatBritainWarehouseKeeperErn
                   )
 
-                  GuarantorAddressSummary.row() mustBe expectedRow(Text(messagesForLanguage.sectionNotComplete("Consignee")), false)
+                  GuarantorAddressSummary.row() mustBe expectedRow(GuarantorArranger.Consignee, Text(messagesForLanguage.sectionNotComplete("Consignee")), false)
                 }
               }
 
@@ -191,12 +196,15 @@ class GuarantorAddressSummarySpec extends SpecBase {
                   val expectedValue = HtmlContent(
                     HtmlFormat.fill(
                       Seq(
-                        Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street + "<br>"),
-                        Html(testUserAddress.town + "<br>"),
-                        Html(testUserAddress.postcode),
-                      )))
+                        Html(testUserAddress.businessName.value + "<br>"),
+                        Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street.value + "<br>"),
+                        Html(testUserAddress.town.value + "<br>"),
+                        Html(testUserAddress.postcode.value),
+                      )
+                    )
+                  )
 
-                  GuarantorAddressSummary.row() mustBe expectedRow(expectedValue, false)
+                  GuarantorAddressSummary.row() mustBe expectedRow(GuarantorArranger.Consignee, expectedValue, false)
                 }
               }
             }
@@ -234,7 +242,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
                 testGreatBritainWarehouseKeeperErn
               )
 
-              GuarantorAddressSummary.row() mustBe expectedRow(Text(messagesForLanguage.sectionNotComplete("Consignor")), false)
+              GuarantorAddressSummary.row() mustBe expectedRow(GuarantorArranger.Consignor, Text(messagesForLanguage.sectionNotComplete("Consignor")), false)
             }
           }
         }

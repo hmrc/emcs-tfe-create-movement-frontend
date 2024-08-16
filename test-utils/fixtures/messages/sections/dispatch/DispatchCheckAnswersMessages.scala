@@ -25,9 +25,9 @@ object DispatchCheckAnswersMessages {
     val title = titleHelper(heading)
     val traderNameLabel = "Trader name"
     val traderNameChangeHidden = "Trader name"
-    val addressLabel: String = "Address"
+    val addressLabel: String = "Place of dispatch details"
     val ern: String = "Excise ID (ERN)"
-    val addressChangeHidden: String = "Address"
+    val addressChangeHidden: String = "place of dispatch details"
     val dispatchWarehouseInvalidOrMissingOnSeedError = "The excise ID for the tax warehouse of dispatch is not valid"
     val dispatchWarehouseInvalidError = "The excise ID for the tax warehouse of dispatch is not valid"
     val dispatchWarehouseConsignorDoesNotManageWarehouseError = "Excise ID entered for the tax warehouse of dispatch is not linked with the consignor"

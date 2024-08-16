@@ -69,7 +69,7 @@
         @messages("draftMovement.lrn", LocalReferenceNumberPage().value.getOrElse(messages("draftMovement.notProvided")))
     }
     @p("govuk-body govuk-!-margin-bottom-7") {
-        @messages("draftMovement.consignee", ConsigneeAddressPage.value.map(_.businessName).getOrElse(messages("draftMovement.notProvided")))
+        @messages("draftMovement.consignee", ConsigneeAddressPage.value.flatMap(_.businessName).getOrElse(messages("draftMovement.notProvided")))
     }
 
     @p("govuk-body govuk-!-margin-bottom-9") {

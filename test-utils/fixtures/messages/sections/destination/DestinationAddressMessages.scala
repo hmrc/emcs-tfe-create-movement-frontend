@@ -22,8 +22,8 @@ object DestinationAddressMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
-    val cyaLabel: String = "Address"
-    val cyaChangeHidden: String = "Address"
+    val cyaLabel: String = "Place of destination details"
+    val cyaChangeHidden: String = "place of destination details"
     val cyaDestinationNotProvided: String = "Not provided"
   }
 

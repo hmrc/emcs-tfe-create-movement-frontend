@@ -27,7 +27,7 @@ case object FirstTransporterAddressPage extends QuestionPage[UserAddress] {
 
   // Old business name page for use in transitional period between separate and combined business name and address pages
   // TODO: remove eventually, this won't be set in new drafts
-  private case object FirstTransporterNamePage extends QuestionPage[String] {
+  private[firstTransporter] case object FirstTransporterNamePage extends QuestionPage[String] {
     override val toString: String = "firstTransporterName"
     override val path: JsPath = FirstTransporterSection.path \ toString
   }

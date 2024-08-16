@@ -20,6 +20,7 @@ import base.SpecBase
 import models.UserAddress
 import models.requests.DataRequest
 import pages.sections.consignor.ConsignorAddressPage
+import pages.sections.dispatch.DispatchAddressPage.DispatchBusinessNamePage
 import play.api.test.FakeRequest
 
 class DispatchAddressPageSpec extends SpecBase {
@@ -36,13 +37,30 @@ class DispatchAddressPageSpec extends SpecBase {
     }
 
     "must return Some(_) when there is an answer" - {
-      "when DispatchUseConsignorDetailsPage is false" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          FakeRequest(),
-          emptyUserAnswers.set(DispatchAddressPage, userAddress).set(DispatchUseConsignorDetailsPage, false)
-        )
-        DispatchAddressPage.value mustBe Some(testUserAddress.copy(businessName = Some("dispatch name")))
+      "when DispatchUseConsignorDetailsPage is false" - {
+        "when DispatchBusinessNamePage is missing" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers.set(DispatchAddressPage, userAddress).set(DispatchUseConsignorDetailsPage, false)
+          )
+          DispatchAddressPage.value mustBe Some(testUserAddress.copy(businessName = Some("dispatch name")))
+        }
+        "when DispatchBusinessNamePage exists and business name is already in the address model" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers.set(DispatchAddressPage, userAddress).set(DispatchUseConsignorDetailsPage, false).set(DispatchBusinessNamePage, "test name")
+          )
+          DispatchAddressPage.value mustBe Some(testUserAddress.copy(businessName = Some("dispatch name")))
+        }
+        "when DispatchBusinessNamePage exists and business name is missing from the address model" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers.set(DispatchAddressPage, userAddress.copy(businessName = None)).set(DispatchUseConsignorDetailsPage, false).set(DispatchBusinessNamePage, "test name")
+          )
+          DispatchAddressPage.value mustBe Some(testUserAddress.copy(businessName = Some("test name")))
+        }
       }
+
       "when DispatchUseConsignorDetailsPage is true" - {
         "and trader known facts exist" in {
           implicit val dr: DataRequest[_] = dataRequest(

@@ -53,20 +53,24 @@
         @if(itemQuantityHelper.requiresRicherContent(cnCodeInfo)) {
             @itemQuantityHelper.heading(cnCodeInfo).map { heading => @h1(heading) }
             @itemQuantityHelper.paragraph(cnCodeInfo).map{ paragraph => @p(){@paragraph} }
-            @inputField(LabelSize.Medium)
+            @inputField(isPageHeading = false)
         } else {
-            @inputField(LabelSize.Large)
+            @inputField(isPageHeading = true)
         }
 
         @continueOrExit()
     }
 }
 
-@inputField(labelSize: LabelSize) = {
+@inputField(isPageHeading: Boolean) = {
     @govukInput(
         InputViewModel(
             field = form("value"),
-            label = LabelViewModel(Text(itemQuantityHelper.label(goodsType, cnCodeInfo))).asPageHeading(labelSize)
+            label = LabelViewModel(
+                Text(itemQuantityHelper.label(goodsType, cnCodeInfo))
+            ).copy(
+                isPageHeading = isPageHeading,
+                classes = if(isPageHeading) LabelSize.Large.toString else LabelSize.Medium.toString)
         )
         .withWidth(Fixed10)
         .withSuffix(PrefixOrSuffix(content = Text(cnCodeInfo.unitOfMeasure.toShortFormatMessage())))

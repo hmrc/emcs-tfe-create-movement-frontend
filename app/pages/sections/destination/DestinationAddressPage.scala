@@ -17,10 +17,25 @@
 package pages.sections.destination
 
 import models.UserAddress
+import models.requests.DataRequest
 import pages.QuestionPage
-import play.api.libs.json.JsPath
+import play.api.libs.json.{JsPath, Reads}
 
 case object DestinationAddressPage extends QuestionPage[UserAddress] {
   override val toString: String = "destinationAddress"
   override val path: JsPath = DestinationSection.path \ toString
+
+  // Old business name page for use in transitional period between separate and combined business name and address pages
+  // TODO: remove eventually, this won't be set in new drafts
+  private case object DestinationBusinessNamePage extends QuestionPage[String] {
+    override val toString: String = "destinationBusinessName"
+    override val path: JsPath = DestinationSection.path \ toString
+  }
+
+  override def value[T >: UserAddress](implicit request: DataRequest[_], reads: Reads[T]): Option[T] = {
+    request.userAnswers.get(this).map {
+      case address@UserAddress(None, _, _, _, _) => address.copy(businessName = request.userAnswers.get(DestinationBusinessNamePage))
+      case address => address
+    }
+  }
 }

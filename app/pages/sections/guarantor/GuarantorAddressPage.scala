@@ -17,10 +17,25 @@
 package pages.sections.guarantor
 
 import models.UserAddress
+import models.requests.DataRequest
 import pages.QuestionPage
-import play.api.libs.json.JsPath
+import play.api.libs.json.{JsPath, Reads}
 
 case object GuarantorAddressPage extends QuestionPage[UserAddress] {
   override val toString: String = "guarantorAddress"
   override val path: JsPath = GuarantorSection.path \ toString
+
+  // Old business name page for use in transitional period between separate and combined business name and address pages
+  // TODO: remove eventually, this won't be set in new drafts
+  private case object GuarantorNamePage extends QuestionPage[String] {
+    override val toString: String = "guarantorName"
+    override val path: JsPath = GuarantorSection.path \ toString
+  }
+
+  override def value[T >: UserAddress](implicit request: DataRequest[_], reads: Reads[T]): Option[T] = {
+    request.userAnswers.get(this).map {
+      case address@UserAddress(None, _, _, _, _) => address.copy(businessName = request.userAnswers.get(GuarantorNamePage))
+      case address => address
+    }
+  }
 }

@@ -47,21 +47,18 @@ class CheckYourAnswersConsigneeController @Inject()(override val messagesApi: Me
         withAnswer(ConsigneeAddressPage, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, draftId)) {
           _ =>
             withAnswer(DestinationTypePage) {
-              _ =>
-                withAnswer(DestinationTypePage) {
-                  destinationType =>
-                    Ok(view(
-                      controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(ern, draftId),
-                      ern,
-                      draftId,
-                      if (destinationType.destinationType == DestinationType.Export) {
-                        Seq(checkYourAnswersConsigneeHelper.summaryList(true), checkYourAnswersConsigneeHelper.summaryList(consigneeReviewBusinessName = true))
-                      } else {
-                        Seq(checkYourAnswersConsigneeHelper.summaryList())
-                      },
-                      destinationType.destinationType == DestinationType.Export
-                    ))
-                }
+              destinationType =>
+                Ok(view(
+                  controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(ern, draftId),
+                  ern,
+                  draftId,
+                  if (destinationType.destinationType == DestinationType.Export) {
+                    Seq(checkYourAnswersConsigneeHelper.summaryList(true), checkYourAnswersConsigneeHelper.summaryList(consigneeReviewBusinessName = true))
+                  } else {
+                    Seq(checkYourAnswersConsigneeHelper.summaryList())
+                  },
+                  destinationType.destinationType == DestinationType.Export
+                ))
             }
         }
     }

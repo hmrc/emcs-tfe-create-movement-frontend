@@ -118,7 +118,7 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
 
                 status(result) mustEqual SEE_OTHER
                 redirectLocation(result) mustBe
-                  Some(routes.DestinationBusinessNameController.onPageLoad(ern, testDraftId, NormalMode).url)
+                  Some(routes.DestinationAddressController.onPageLoad(ern, testDraftId, NormalMode).url)
             }
           }
       )

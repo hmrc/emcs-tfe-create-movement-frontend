@@ -23,7 +23,7 @@ import mocks.services.MockUserAnswersService
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import models.sections.info.movementScenario.MovementScenario
-import models.{CheckMode, NormalMode, UserAddress, UserAnswers, VatNumberModel}
+import models.{CheckMode, NormalMode, UserAnswers, VatNumberModel}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import pages.sections.guarantor._
 import pages.sections.info.DestinationTypePage
@@ -133,9 +133,8 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
           Some(baseUserAnswers
             .set(GuarantorRequiredPage, true)
             .set(GuarantorArrangerPage, Transporter)
-            .set(GuarantorNamePage, "Some name")
             .set(GuarantorVatPage, VatNumberModel(hasVatNumber = true, Some("GB12345678")))
-            .set(GuarantorAddressPage, UserAddress(Some("1"), "Street", "town", "AA11AA")))) {
+            .set(GuarantorAddressPage, testUserAddress))) {
 
           val expectedAnswers = baseUserAnswers
             .set(GuarantorRequiredPage, true)

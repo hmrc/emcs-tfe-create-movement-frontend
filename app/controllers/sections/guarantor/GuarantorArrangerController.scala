@@ -22,7 +22,7 @@ import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import models.{Mode, NormalMode}
 import navigation.GuarantorNavigator
-import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorNamePage, GuarantorVatPage}
+import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorVatPage}
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -71,7 +71,6 @@ class GuarantorArrangerController @Inject()(
                 GuarantorArrangerPage,
                 value,
                 request.userAnswers
-                  .remove(GuarantorNamePage)
                   .remove(GuarantorVatPage)
                   .remove(GuarantorAddressPage),
                 mode

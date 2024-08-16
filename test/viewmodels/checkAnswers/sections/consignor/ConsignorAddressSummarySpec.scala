@@ -58,9 +58,10 @@ class ConsignorAddressSummarySpec extends SpecBase with Matchers {
             val expectedValue = HtmlContent(
               HtmlFormat.fill(
                 Seq(
-                  Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street + "<br>"),
-                  Html(testUserAddress.town + "<br>"),
-                  Html(testUserAddress.postcode),
+                  Html(testMinTraderKnownFacts.traderName + "<br>"),
+                  Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street.value + "<br>"),
+                  Html(testUserAddress.town.value + "<br>"),
+                  Html(testUserAddress.postcode.value),
                 )
               )
             )

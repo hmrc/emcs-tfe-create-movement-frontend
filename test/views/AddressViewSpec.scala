@@ -43,7 +43,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
     implicit val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
     lazy val view = app.injector.instanceOf[AddressView]
-    val form = app.injector.instanceOf[AddressFormProvider].apply(page)
+    val form = app.injector.instanceOf[AddressFormProvider].apply(page, false)
   }
 
   object Selectors extends BaseSelectors
@@ -60,6 +60,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
             implicit val doc: Document = Jsoup.parse(view(
               form = form,
               addressPage = addressPage,
+              isConsignorPageOrUsingConsignorDetails = false,
               onSubmit = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.draftId, NormalMode)).toString()
             )
 
@@ -85,6 +86,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
             addressPage = TransportArrangerAddressPage,
+            isConsignorPageOrUsingConsignorDetails = false,
             onSubmit = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.draftId, NormalMode),
             headingKey = Some(s"$TransportArrangerAddressPage.$GoodsOwner")
           ).toString())
@@ -107,6 +109,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
             addressPage = TransportArrangerAddressPage,
+            isConsignorPageOrUsingConsignorDetails = false,
             onSubmit = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.draftId, NormalMode),
             headingKey = Some(s"$TransportArrangerAddressPage.$Other")
           ).toString())
@@ -124,6 +127,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
           addressPage = FirstTransporterAddressPage,
+          isConsignorPageOrUsingConsignorDetails = false,
           onSubmit = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onSubmit(request.ern, request.draftId, NormalMode),
           headingKey = Some("firstTransporterAddress")
         ).toString())
@@ -148,6 +152,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
             addressPage = DispatchAddressPage,
+            isConsignorPageOrUsingConsignorDetails = false,
             onSubmit = controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(request.ern, request.draftId, NormalMode),
             onSkip = Some(controllers.sections.dispatch.routes.DispatchAddressController.onSkip(request.ern, request.draftId, NormalMode)),
             headingKey = Some("dispatchAddress.optional")
@@ -171,6 +176,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
             addressPage = DispatchAddressPage,
+            isConsignorPageOrUsingConsignorDetails = false,
             onSubmit = controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(request.ern, request.draftId, NormalMode),
             headingKey = Some("dispatchAddress")
           ).toString())
@@ -194,6 +200,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
           addressPage = DestinationAddressPage,
+          isConsignorPageOrUsingConsignorDetails = false,
           onSubmit = controllers.sections.destination.routes.DestinationAddressController.onSubmit(request.ern, request.draftId, NormalMode),
           headingKey = Some("destinationAddress")
         ).toString())
@@ -223,6 +230,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
               implicit val doc: Document = Jsoup.parse(view(
                 form = form,
                 addressPage = GuarantorAddressPage,
+                isConsignorPageOrUsingConsignorDetails = false,
                 onSubmit = controllers.sections.guarantor.routes.GuarantorAddressController.onSubmit(request.ern, request.draftId, NormalMode),
                 headingKey = Some(s"guarantorAddress.$guarantorArranger")
               ).toString())

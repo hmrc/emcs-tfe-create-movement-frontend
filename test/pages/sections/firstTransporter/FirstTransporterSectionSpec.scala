@@ -17,19 +17,21 @@
 package pages.sections.firstTransporter
 
 import base.SpecBase
+import models.VatNumberModel
 import models.requests.DataRequest
-import models.{UserAddress, VatNumberModel}
 import play.api.test.FakeRequest
 
 class FirstTransporterSectionSpec extends SpecBase {
+
+  val testVatNumberModel: VatNumberModel = VatNumberModel(hasVatNumber = false, None)
+
   "isCompleted" - {
     "must return true" - {
       "when finished" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
-            .set(FirstTransporterNamePage, "")
-            .set(FirstTransporterVatPage, VatNumberModel(false, None))
-            .set(FirstTransporterAddressPage, UserAddress(None, "", "", ""))
+            .set(FirstTransporterVatPage, testVatNumberModel)
+            .set(FirstTransporterAddressPage, testUserAddress)
         )
         FirstTransporterSection.isCompleted mustBe true
       }
@@ -37,13 +39,11 @@ class FirstTransporterSectionSpec extends SpecBase {
 
     "must return false" - {
       "when not finished" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(FirstTransporterNamePage, ""))
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(FirstTransporterVatPage, testVatNumberModel))
         FirstTransporterSection.isCompleted mustBe false
       }
-    }
 
-    "must return false" - {
-      "when not empty" in {
+      "when empty" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
         FirstTransporterSection.isCompleted mustBe false
       }

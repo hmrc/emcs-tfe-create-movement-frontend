@@ -25,9 +25,7 @@ case object FirstTransporterSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "firstTransporter"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    val pages = Seq(FirstTransporterNamePage.value,
-      FirstTransporterVatPage.value,
-      FirstTransporterAddressPage.value)
+    val pages = Seq(FirstTransporterVatPage.value, FirstTransporterAddressPage.value)
 
     if (pages.forall(_.nonEmpty)) {
       Completed

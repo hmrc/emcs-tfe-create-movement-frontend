@@ -22,7 +22,7 @@ import pages.QuestionPage
 import play.api.libs.json.Reads
 
 trait ModelConstructorHelpers extends Logging {
-  def mandatoryPage[A](page: QuestionPage[A])(implicit dataRequest: DataRequest[_], rds: Reads[A]): A = dataRequest.userAnswers.get(page) match {
+  def mandatoryPage[A](page: QuestionPage[A])(implicit dataRequest: DataRequest[_], rds: Reads[A]): A = page.value match {
     case Some(a) => a
     case None =>
       logger.error(s"Missing mandatory UserAnswer for page: '$page'")

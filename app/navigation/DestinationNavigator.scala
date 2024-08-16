@@ -20,7 +20,7 @@ import controllers.sections.destination.routes
 import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, TemporaryCertifiedConsignee}
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
-import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage}
+import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.destination._
 import pages.sections.info.DestinationTypePage
 import play.api.mvc.Call
@@ -37,8 +37,6 @@ class DestinationNavigator @Inject() extends BaseNavigator {
     case DestinationDetailsChoicePage =>
       destinationDetailsChoiceRouting()
     case DestinationConsigneeDetailsPage =>
-      (userAnswers: UserAnswers) => routes.DestinationBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
-    case DestinationBusinessNamePage =>
       (userAnswers: UserAnswers) => routes.DestinationAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
     case DestinationAddressPage =>
       (userAnswers: UserAnswers) => routes.DestinationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
@@ -51,7 +49,7 @@ class DestinationNavigator @Inject() extends BaseNavigator {
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
     case DestinationWarehouseExcisePage => (userAnswers: UserAnswers) =>
       if (userAnswers.get(DestinationAddressPage).isEmpty) {
-        routes.DestinationBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+        routes.DestinationAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
       } else {
         routes.DestinationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       }
@@ -74,10 +72,10 @@ class DestinationNavigator @Inject() extends BaseNavigator {
   }
 
   private def consigneeDetailsRoutingLogic(implicit userAnswers: UserAnswers): Call =
-    if(userAnswers.get(ConsigneeAddressPage).nonEmpty && userAnswers.get(ConsigneeBusinessNamePage).nonEmpty) {
+    if(userAnswers.get(ConsigneeAddressPage).nonEmpty) {
       routes.DestinationConsigneeDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
     } else {
-      routes.DestinationBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+      routes.DestinationAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
     }
 
   private def destinationWarehouseVatRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>

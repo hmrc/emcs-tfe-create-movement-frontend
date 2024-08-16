@@ -19,6 +19,8 @@ package models
 import base.SpecBase
 import fixtures.UserAddressFixtures
 import play.api.libs.json.{JsSuccess, Json}
+import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 
 class UserAddressSpec extends SpecBase with UserAddressFixtures {
 
@@ -39,6 +41,99 @@ class UserAddressSpec extends SpecBase with UserAddressFixtures {
     }
     "should write to json" in {
       Json.toJson(userAddressModelMin) mustBe userAddressJsonMin
+    }
+  }
+
+  ".toCheckYourAnswersFormat" - {
+    "must return the correct HTML content" - {
+      "when max model" in {
+        userAddressModelMax.toCheckYourAnswersFormat mustBe HtmlContent(HtmlFormat.fill(
+          Seq(
+            Html(userAddressModelMax.businessName.value),
+            Html("<br>"),
+            Html(userAddressModelMax.property.value + " " + userAddressModelMax.street.value),
+            Html("<br>"),
+            Html(userAddressModelMax.town.value),
+            Html("<br>"),
+            Html(userAddressModelMax.postcode.value)
+          )
+        ))
+      }
+
+      "when min model" in {
+        userAddressModelMin.toCheckYourAnswersFormat mustBe HtmlContent(HtmlFormat.fill(
+          Seq()
+        ))
+      }
+
+      "when businessName is None" in {
+        val userAddressModel = userAddressModelMax.copy(businessName = None)
+        userAddressModel.toCheckYourAnswersFormat mustBe HtmlContent(HtmlFormat.fill(
+          Seq(
+            Html(userAddressModel.property.value + " " + userAddressModel.street.value),
+            Html("<br>"),
+            Html(userAddressModel.town.value),
+            Html("<br>"),
+            Html(userAddressModel.postcode.value)
+          )
+        ))
+      }
+
+      "when property is None" in {
+        val userAddressModel = userAddressModelMax.copy(property = None)
+        userAddressModel.toCheckYourAnswersFormat mustBe HtmlContent(HtmlFormat.fill(
+          Seq(
+            Html(userAddressModelMax.businessName.value),
+            Html("<br>"),
+            Html(userAddressModel.street.value),
+            Html("<br>"),
+            Html(userAddressModel.town.value),
+            Html("<br>"),
+            Html(userAddressModel.postcode.value)
+          )
+        ))
+      }
+
+      "when street is None" in {
+        val userAddressModel = userAddressModelMax.copy(street = None)
+        userAddressModel.toCheckYourAnswersFormat mustBe HtmlContent(HtmlFormat.fill(
+          Seq(
+            Html(userAddressModelMax.businessName.value),
+            Html("<br>"),
+            Html(userAddressModel.property.value + " "),
+            Html("<br>"),
+            Html(userAddressModel.town.value),
+            Html("<br>"),
+            Html(userAddressModel.postcode.value)
+          )
+        ))
+      }
+
+      "when town is None" in {
+        val userAddressModel = userAddressModelMax.copy(town = None)
+        userAddressModel.toCheckYourAnswersFormat mustBe HtmlContent(HtmlFormat.fill(
+          Seq(
+            Html(userAddressModelMax.businessName.value),
+            Html("<br>"),
+            Html(userAddressModel.property.value + " " + userAddressModel.street.value),
+            Html("<br>"),
+            Html(userAddressModel.postcode.value)
+          )
+        ))
+      }
+
+      "when postcode is None" in {
+        val userAddressModel = userAddressModelMax.copy(postcode = None)
+        userAddressModel.toCheckYourAnswersFormat mustBe HtmlContent(HtmlFormat.fill(
+          Seq(
+            Html(userAddressModelMax.businessName.value),
+            Html("<br>"),
+            Html(userAddressModel.property.value + " " + userAddressModel.street.value),
+            Html("<br>"),
+            Html(userAddressModel.town.value)
+          )
+        ))
+      }
     }
   }
 }

@@ -50,9 +50,9 @@ class DispatchNavigatorSpec extends SpecBase {
 
         "when there is NO ConsignorAddress" - {
 
-          "must go to DispatchBusinessName page" in {
+          "must go to DispatchAddress page" in {
             navigator.nextPage(DispatchWarehouseExcisePage, NormalMode, emptyUserAnswers) mustBe
-              controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+              controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(testErn, testDraftId, NormalMode)
           }
         }
       }
@@ -72,24 +72,13 @@ class DispatchNavigatorSpec extends SpecBase {
 
         "when NOT using consignor details" - {
 
-          "must go to DispatchBusinessName page" in {
+          "must go to DispatchAddress page" in {
 
             val userAnswers = emptyUserAnswers.set(DispatchUseConsignorDetailsPage, false)
 
             navigator.nextPage(DispatchUseConsignorDetailsPage, NormalMode, userAnswers) mustBe
-              controllers.sections.dispatch.routes.DispatchBusinessNameController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId, NormalMode)
+              controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId, NormalMode)
           }
-        }
-      }
-
-      "for the DispatchBusinessNamePage" - {
-
-        "must go to DispatchAddress page" in {
-
-          val userAnswers = emptyUserAnswers.set(DispatchBusinessNamePage, "TestBusinessName")
-
-          navigator.nextPage(DispatchBusinessNamePage, NormalMode, userAnswers) mustBe
-            controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId, NormalMode)
         }
       }
 
@@ -134,17 +123,6 @@ class DispatchNavigatorSpec extends SpecBase {
             navigator.nextPage(DispatchWarehouseExcisePage, CheckMode, emptyUserAnswers) mustBe
               controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId, CheckMode)
           }
-        }
-      }
-
-      "for the DispatchBusinessNamePage" - {
-
-        "must go to CYA page" in {
-
-          val userAnswers = emptyUserAnswers.set(DispatchBusinessNamePage, "TestBusinessName")
-
-          navigator.nextPage(DispatchBusinessNamePage, CheckMode, userAnswers) mustBe
-            controllers.sections.dispatch.routes.DispatchCheckAnswersController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.draftId)
         }
       }
 

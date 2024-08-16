@@ -95,13 +95,11 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
       Some(emptyUserAnswers
         .set(DestinationConsigneeDetailsPage, false)
         .set(DestinationAddressPage, testUserAddress)
-        .set(DestinationBusinessNamePage, testBusinessName)
       )
     ) {
 
       val expectedAnswers = optUserAnswers.get
         .remove(DestinationAddressPage)
-        .remove(DestinationBusinessNamePage)
         .set(DestinationConsigneeDetailsPage, true)
 
       MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
@@ -145,7 +143,6 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
       "when for a user with WarehouseExcise answered" in new Test(Some(emptyUserAnswers
         .set(DestinationWarehouseExcisePage, "excise")
         .set(DestinationConsigneeDetailsPage, false)
-        .set(DestinationBusinessNamePage, "business name")
         .set(DestinationAddressPage, userAddressModelMax)
       )) {
 
@@ -160,7 +157,6 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
         .set(DestinationWarehouseVatPage, "vat")
         .set(DestinationDetailsChoicePage, true)
         .set(DestinationConsigneeDetailsPage, true)
-        .set(DestinationBusinessNamePage, "business name")
         .set(DestinationAddressPage, userAddressModelMax)
       )) {
         val req = FakeRequest(POST, destinationConsigneeDetailsRouteCheckMode).withFormUrlEncodedBody(("value", "true"))
@@ -176,7 +172,6 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
       "when for a user with WarehouseExcise answered" in new Test(Some(emptyUserAnswers
         .set(DestinationWarehouseExcisePage, "excise")
         .set(DestinationConsigneeDetailsPage, false)
-        .set(DestinationBusinessNamePage, "business name")
         .set(DestinationAddressPage, userAddressModelMax)
       )) {
 
@@ -197,7 +192,6 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
         .set(DestinationWarehouseVatPage, "vat")
         .set(DestinationDetailsChoicePage, true)
         .set(DestinationConsigneeDetailsPage, false)
-        .set(DestinationBusinessNamePage, "business name")
         .set(DestinationAddressPage, userAddressModelMax)
       )) {
 

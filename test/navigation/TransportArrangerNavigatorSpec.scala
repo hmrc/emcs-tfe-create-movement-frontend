@@ -40,20 +40,20 @@ class TransportArrangerNavigatorSpec extends SpecBase {
 
       "for the TransportArrangerPage" - {
 
-        "must go to TransportArrangerName page" - {
+        "must go to TransportVat page" - {
 
           "when the answer is `Goods Owner`" in {
             val userAnswers = emptyUserAnswers.set(TransportArrangerPage, GoodsOwner)
 
             navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
-              controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testDraftId, NormalMode)
+              controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testDraftId, NormalMode)
           }
 
           "when the answer is `Other`" in {
             val userAnswers = emptyUserAnswers.set(TransportArrangerPage, Other)
 
             navigator.nextPage(TransportArrangerPage, NormalMode, userAnswers) mustBe
-              controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testDraftId, NormalMode)
+              controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testDraftId, NormalMode)
           }
         }
 
@@ -74,16 +74,6 @@ class TransportArrangerNavigatorSpec extends SpecBase {
           }
         }
 
-      }
-
-      "for the TransportArrangerNamePage" - {
-
-        "must go to TransportArrangerVatPage" in {
-          val userAnswers = emptyUserAnswers.set(TransportArrangerNamePage, "some name here")
-
-          navigator.nextPage(TransportArrangerNamePage, NormalMode, userAnswers) mustBe
-            controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testDraftId, NormalMode)
-        }
       }
 
       "for the TransportArrangerVatPage" - {
@@ -118,18 +108,18 @@ class TransportArrangerNavigatorSpec extends SpecBase {
 
       "for the TransportArrangerPage" - {
 
-        "if the TransportArrange is GoodsOwner or Other" - {
+        "if the TransportArranger is GoodsOwner or Other" - {
 
           "if any of the manual entry fields are empty" - {
 
-            "must go to the TransportArrangerName page" in {
+            "must go to the TransportArrangerVat page" in {
 
               val userAnswers = emptyUserAnswers
                 .set(TransportArrangerPage, GoodsOwner)
                 .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
 
               navigator.nextPage(TransportArrangerPage, CheckMode, userAnswers) mustBe
-                controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testDraftId, NormalMode)
+                controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testDraftId, NormalMode)
             }
           }
 
@@ -139,7 +129,6 @@ class TransportArrangerNavigatorSpec extends SpecBase {
 
               val userAnswers = emptyUserAnswers
                 .set(TransportArrangerPage, Other)
-                .set(TransportArrangerNamePage, "Jeff")
                 .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
                 .set(TransportArrangerAddressPage, testUserAddress)
 
@@ -168,16 +157,6 @@ class TransportArrangerNavigatorSpec extends SpecBase {
             navigator.nextPage(TransportArrangerPage, CheckMode, userAnswers) mustBe
               controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId)
           }
-        }
-      }
-
-      "for the TransportArrangerNamePage" - {
-
-        "must go to TransportArrangerCheckAnswersPage" in {
-          val userAnswers = emptyUserAnswers.set(TransportArrangerNamePage, "some name here")
-
-          navigator.nextPage(TransportArrangerNamePage, CheckMode, userAnswers) mustBe
-            controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId)
         }
       }
 

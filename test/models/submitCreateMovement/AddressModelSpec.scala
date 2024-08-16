@@ -23,15 +23,15 @@ class AddressModelSpec extends SpecBase {
     "must turn a UserAddress into an AddressModel" in {
       AddressModel.fromUserAddress(testUserAddress) mustBe AddressModel(
         streetNumber = testUserAddress.property,
-        street = Some(testUserAddress.street),
-        postcode = Some(testUserAddress.postcode),
-        city = Some(testUserAddress.town)
+        street = testUserAddress.street,
+        postcode = testUserAddress.postcode,
+        city = testUserAddress.town
       )
       AddressModel.fromUserAddress(testUserAddress.copy(property = None)) mustBe AddressModel(
         streetNumber = None,
-        street = Some(testUserAddress.street),
-        postcode = Some(testUserAddress.postcode),
-        city = Some(testUserAddress.town)
+        street = testUserAddress.street,
+        postcode = testUserAddress.postcode,
+        city = testUserAddress.town
       )
     }
   }

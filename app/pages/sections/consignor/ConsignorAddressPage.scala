@@ -17,10 +17,24 @@
 package pages.sections.consignor
 
 import models.UserAddress
+import models.requests.DataRequest
 import pages.QuestionPage
-import play.api.libs.json.JsPath
+import play.api.libs.json.{JsPath, Reads}
 
 case object ConsignorAddressPage extends QuestionPage[UserAddress] {
   override val toString: String = "consignorAddress"
   override val path: JsPath = ConsignorSection.path \ toString
+
+  override def value[T >: UserAddress](implicit request: DataRequest[_], reads: Reads[T]): Option[T] =
+    request.userAnswers.get(this).map {
+      address =>
+        val businessName = Seq(
+          request.traderKnownFacts.map(_.traderName),
+          address.businessName
+        ).collectFirst {
+          case Some(value) => value
+        }
+
+        address.copy(businessName = businessName)
+    }
 }

@@ -55,26 +55,22 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
     lazy val list: list = app.injector.instanceOf[list]
 
     val ernList: Seq[SummaryListRow] = Seq(
-      ConsigneeBusinessNameSummary.row(showActionLinks = true),
       consigneeExciseSummary.row(showActionLinks = true),
       ConsigneeAddressSummary.row(showActionLinks = true)
     ).flatten
 
     val exemptedList: Seq[SummaryListRow] = Seq(
-      ConsigneeBusinessNameSummary.row(showActionLinks = true),
       ConsigneeExemptOrganisationSummary.row(showActionLinks = true),
       ConsigneeAddressSummary.row(showActionLinks = true)
     ).flatten
 
     val vatList: Seq[SummaryListRow] = Seq(
-      ConsigneeBusinessNameSummary.row(showActionLinks = true),
       ConsigneeExportInformationSummary(list).row(),
       ConsigneeExportVatSummary.row(showActionLinks = true),
       ConsigneeAddressSummary.row(showActionLinks = true)
     ).flatten
 
     val eoriList: Seq[SummaryListRow] = Seq(
-      ConsigneeBusinessNameSummary.row(showActionLinks = true),
       ConsigneeExportInformationSummary(list).row(),
       ConsigneeExportEoriSummary.row(showActionLinks = true),
       ConsigneeAddressSummary.row(showActionLinks = true)
@@ -117,7 +113,6 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         Some(
           emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
-            .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, testErn)
             .set(DestinationTypePage, UkTaxWarehouse.GB)
         )) {
@@ -142,7 +137,6 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         Some(
           emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
-            .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExemptOrganisationPage, testExemptedOrganisation)
             .set(DestinationTypePage, ExemptedOrganisation)
         )) {
@@ -167,7 +161,6 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         Some(
           emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
-            .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExportInformationPage, Set(EoriNumber))
             .set(ConsigneeExportEoriPage, testEori)
             .set(DestinationTypePage, EuTaxWarehouse)
@@ -193,7 +186,6 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         Some(
           emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
-            .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExportInformationPage, Set(VatNumber))
             .set(ConsigneeExportVatPage, testVatNumber)
             .set(DestinationTypePage, UkTaxWarehouse.GB)

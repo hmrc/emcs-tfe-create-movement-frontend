@@ -19,9 +19,9 @@ package controllers.sections.firstTransporter
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAddress, UserAnswers, VatNumberModel}
+import models.{NormalMode, UserAnswers, VatNumberModel}
 import navigation.FakeNavigators.FakeFirstTransporterNavigator
-import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterNamePage, FirstTransporterVatPage}
+import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterVatPage}
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -48,9 +48,8 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
     "when FirstTransporterSection.isCompleted" - {
       "must redirect to the CYA controller" in new Fixture(Some(
         emptyUserAnswers
-          .set(FirstTransporterNamePage, "")
           .set(FirstTransporterVatPage, VatNumberModel(false, None))
-          .set(FirstTransporterAddressPage, UserAddress(None, "", "", "")))) {
+          .set(FirstTransporterAddressPage, testUserAddress))) {
 
         val result = testController.onPageLoad(testErn, testDraftId)(request)
 
@@ -64,7 +63,7 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testDraftId, NormalMode).url)
+          Some(controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testDraftId, NormalMode).url)
       }
     }
   }

@@ -17,7 +17,7 @@
 package pages.sections.guarantor
 
 import base.SpecBase
-import models.{UserAddress, VatNumberModel}
+import models.VatNumberModel
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheUk}
@@ -50,15 +50,28 @@ class GuarantorSectionSpec extends SpecBase {
         GuarantorSection.isCompleted mustBe true
       }
 
-      "when guarantor is not required" in {
+      "when guarantor is not required" - {
+        "when GuarantorRequiredPage = false" in {
 
-        implicit val dr: DataRequest[_] = dataRequest(
-          FakeRequest(),
-          emptyUserAnswers
-            .set(DestinationTypePage, EuTaxWarehouse)
-            .set(GuarantorRequiredPage, false)
-        )
-        GuarantorSection.isCompleted mustBe true
+          implicit val dr: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers
+              .set(DestinationTypePage, EuTaxWarehouse)
+              .set(GuarantorRequiredPage, false)
+          )
+          GuarantorSection.isCompleted mustBe true
+        }
+        "when GuarantorRequiredPage = true" in {
+
+          implicit val dr: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers
+              .set(DestinationTypePage, EuTaxWarehouse)
+              .set(GuarantorRequiredPage, true)
+              .set(GuarantorArrangerPage, Consignee)
+          )
+          GuarantorSection.isCompleted mustBe true
+        }
       }
 
       Seq(GoodsOwner, Transporter) foreach { arranger =>
@@ -69,9 +82,8 @@ class GuarantorSectionSpec extends SpecBase {
             emptyUserAnswers
               .set(GuarantorRequiredPage, true)
               .set(GuarantorArrangerPage, arranger)
-              .set(GuarantorNamePage, "")
               .set(GuarantorVatPage, VatNumberModel(hasVatNumber = false, None))
-              .set(GuarantorAddressPage, UserAddress(None, "", "", ""))
+              .set(GuarantorAddressPage, testUserAddress)
           )
           GuarantorSection.isCompleted mustBe true
         }
@@ -83,9 +95,8 @@ class GuarantorSectionSpec extends SpecBase {
           emptyUserAnswers
             .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
             .set(GuarantorArrangerPage, GoodsOwner)
-            .set(GuarantorNamePage, "")
             .set(GuarantorVatPage, VatNumberModel(hasVatNumber = false, None))
-            .set(GuarantorAddressPage, UserAddress(None, "", "", ""))
+            .set(GuarantorAddressPage, testUserAddress)
         )
         GuarantorSection.isCompleted mustBe true
       }
@@ -100,6 +111,28 @@ class GuarantorSectionSpec extends SpecBase {
             .set(GuarantorRequiredPage, true)
         )
         GuarantorSection.isCompleted mustBe false
+      }
+
+      "when guarantor is not required" - {
+        "when GuarantorRequiredPage = true but the rest of the section is incomplete" in {
+
+          implicit val dr: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers
+              .set(DestinationTypePage, EuTaxWarehouse)
+              .set(GuarantorRequiredPage, true)
+          )
+          GuarantorSection.isCompleted mustBe false
+        }
+        "when GuarantorRequiredPage is missing" in {
+
+          implicit val dr: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers
+              .set(DestinationTypePage, EuTaxWarehouse)
+          )
+          GuarantorSection.isCompleted mustBe false
+        }
       }
 
       "when nothing is completed" in {
@@ -118,7 +151,6 @@ class GuarantorSectionSpec extends SpecBase {
             emptyUserAnswers
               .set(GuarantorRequiredPage, true)
               .set(GuarantorArrangerPage, arranger)
-              .set(GuarantorNamePage, "")
               .set(GuarantorVatPage, VatNumberModel(hasVatNumber = false, None))
           )
           GuarantorSection.isCompleted mustBe false

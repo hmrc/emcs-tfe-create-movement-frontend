@@ -22,7 +22,7 @@ import forms.sections.dispatch.DispatchUseConsignorDetailsFormProvider
 import models.requests.DataRequest
 import models.{Mode, NormalMode}
 import navigation.DispatchNavigator
-import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchUseConsignorDetailsPage}
+import pages.sections.dispatch.{DispatchAddressPage, DispatchUseConsignorDetailsPage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -62,9 +62,7 @@ class DispatchUseConsignorDetailsController @Inject()(override val messagesApi: 
 
   private def cleanseSaveAndRedirect(value: Boolean)(implicit request: DataRequest[_]): Future[Result] = {
     val cleansedAnswers = cleanseUserAnswersIfValueHasChanged(DispatchUseConsignorDetailsPage, value, {
-      request.userAnswers
-        .remove(DispatchBusinessNamePage)
-        .remove(DispatchAddressPage)
+      request.userAnswers.remove(DispatchAddressPage)
     })
     saveAndRedirect(DispatchUseConsignorDetailsPage, value, cleansedAnswers, NormalMode)
   }

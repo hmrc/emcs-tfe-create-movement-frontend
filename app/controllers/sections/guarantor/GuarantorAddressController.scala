@@ -46,6 +46,9 @@ class GuarantorAddressController @Inject()(override val messagesApi: MessagesApi
 
   override val addressPage: QuestionPage[UserAddress] = GuarantorAddressPage
 
+  // when user selects Consignor for Guarantor section, they should not ever hit this page
+  override def isConsignorPageOrUsingConsignorDetails(implicit request: DataRequest[_]): Boolean = false
+
   override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
     controllers.sections.guarantor.routes.GuarantorAddressController.onSubmit(request.ern, request.draftId, mode)
 
@@ -55,6 +58,7 @@ class GuarantorAddressController @Inject()(override val messagesApi: MessagesApi
         form = form,
         addressPage = addressPage,
         onSubmit = onwardCall(mode),
+        isConsignorPageOrUsingConsignorDetails = isConsignorPageOrUsingConsignorDetails,
         headingKey = Some(s"guarantorAddress.$guarantorArranger")
       ))
     }

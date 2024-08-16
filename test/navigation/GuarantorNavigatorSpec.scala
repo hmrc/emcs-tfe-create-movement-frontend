@@ -75,14 +75,14 @@ class GuarantorNavigatorSpec extends SpecBase {
 
         GuarantorArranger.displayValues.foreach {
           case value@(GoodsOwner | Transporter) =>
-            "must goto CAM-G03" - {
+            "must goto VAT page" - {
               s"when the arranger value is $value aka ${value.getClass.getSimpleName}" in {
                 val userAnswers = emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, value)
 
                 navigator.nextPage(GuarantorArrangerPage, NormalMode, userAnswers) mustBe
-                  controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testDraftId, NormalMode)
+                  controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testDraftId, NormalMode)
               }
             }
           case value =>
@@ -96,13 +96,6 @@ class GuarantorNavigatorSpec extends SpecBase {
                   controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId)
               }
             }
-        }
-      }
-
-      "for GuarantorNamePage" - {
-        "must goto CAM-G04" in {
-          navigator.nextPage(GuarantorNamePage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testDraftId, NormalMode)
         }
       }
 

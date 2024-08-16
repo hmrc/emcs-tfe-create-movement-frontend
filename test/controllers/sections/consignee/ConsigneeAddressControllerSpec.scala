@@ -35,7 +35,8 @@ import scala.concurrent.Future
 
 class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
   lazy val formProvider: AddressFormProvider = new AddressFormProvider()
-  lazy val form: Form[UserAddress] = formProvider(ConsigneeAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testGreatBritainErn))
+  lazy val form: Form[UserAddress] =
+    formProvider(ConsigneeAddressPage, false)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testGreatBritainErn))
   lazy val view: AddressView = app.injector.instanceOf[AddressView]
 
   lazy val consigneeAddressRoute: String =
@@ -69,7 +70,10 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
       contentAsString(result) mustEqual view(
         form = form,
         addressPage = ConsigneeAddressPage,
-        onSubmit = consigneeAddressOnSubmit()
+        onSubmit = consigneeAddressOnSubmit(),
+        isConsignorPageOrUsingConsignorDetails = false,
+        onSkip = None,
+        headingKey = None
       )(dataRequest(request, ern = testGreatBritainErn), messages(request)).toString
     }
 
@@ -82,7 +86,10 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
       contentAsString(result) mustEqual view(
         form = form.fill(userAddressModelMax),
         addressPage = ConsigneeAddressPage,
-        onSubmit = consigneeAddressOnSubmit()
+        onSubmit = consigneeAddressOnSubmit(),
+        isConsignorPageOrUsingConsignorDetails = false,
+        onSkip = None,
+        headingKey = None
       )(dataRequest(request, ern = testGreatBritainErn), messages(request)).toString
     }
 
@@ -92,10 +99,11 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
       val req =
         FakeRequest(POST, consigneeAddressRoute)
           .withFormUrlEncodedBody(
+            ("businessName", userAddressModelMax.businessName.value),
             ("property", userAddressModelMax.property.value),
-            ("street", userAddressModelMax.street),
-            ("town", userAddressModelMax.town),
-            ("postcode", userAddressModelMax.postcode)
+            ("street", userAddressModelMax.street.value),
+            ("town", userAddressModelMax.town.value),
+            ("postcode", userAddressModelMax.postcode.value)
           )
 
       val result = testController.onSubmit(testGreatBritainErn, testDraftId, NormalMode)(req)
@@ -115,7 +123,10 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
       contentAsString(result) mustEqual view(
         form = boundForm,
         addressPage = ConsigneeAddressPage,
-        onSubmit = consigneeAddressOnSubmit()
+        onSubmit = consigneeAddressOnSubmit(),
+        isConsignorPageOrUsingConsignorDetails = false,
+        onSkip = None,
+        headingKey = None
       )(dataRequest(req, ern = testGreatBritainErn), messages(req)).toString
     }
 
@@ -130,7 +141,10 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
       contentAsString(result) mustEqual view(
         form = boundForm,
         addressPage = ConsigneeAddressPage,
-        onSubmit = consigneeAddressOnSubmit()
+        onSubmit = consigneeAddressOnSubmit(),
+        isConsignorPageOrUsingConsignorDetails = false,
+        onSkip = None,
+        headingKey = None
       )(dataRequest(req, ern = testGreatBritainErn), messages(req)).toString
     }
 
@@ -145,7 +159,10 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
       contentAsString(result) mustEqual view(
         form = boundForm,
         addressPage = ConsigneeAddressPage,
-        onSubmit = consigneeAddressOnSubmit(testErn)
+        onSubmit = consigneeAddressOnSubmit(testErn),
+        isConsignorPageOrUsingConsignorDetails = false,
+        onSkip = None,
+        headingKey = None
       )(dataRequest(req, ern = testErn), messages(req)).toString
     }
 

@@ -28,7 +28,6 @@ class FirstTransporterCheckAnswersHelper @Inject()() {
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
     SummaryListViewModel(
       rows = Seq(
-        Some(FirstTransporterNameSummary.row()),
         FirstTransporterVatChoiceSummary.row(),
         FirstTransporterVatSummary.row(),
         Some(FirstTransporterAddressSummary.row())

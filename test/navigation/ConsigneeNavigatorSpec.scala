@@ -48,23 +48,11 @@ class ConsigneeNavigatorSpec extends SpecBase {
 
       "for the ConsigneeExcise page" - {
 
-        "must go to the ConsigneeBusinessName page" in {
+        "must go to the ConsigneeAddress page" in {
 
           navigator.nextPage(ConsigneeExcisePage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
-        }
-      }
-
-      "for the ConsigneeBusinessNamePage" - {
-
-        "must go to CAM-NEE07" in {
-          val userAnswers = emptyUserAnswers
-            .set(ConsigneeBusinessNamePage, "a business name")
-
-          navigator.nextPage(ConsigneeBusinessNamePage, NormalMode, userAnswers) mustBe
             controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testDraftId, NormalMode)
         }
-
       }
 
       "for the ConsigneeExportInformationPage" - {
@@ -89,13 +77,13 @@ class ConsigneeNavigatorSpec extends SpecBase {
           }
         }
 
-        "must go to CAM-NEE03 business name page" - {
+        "must go to address page" - {
           "when neither VAT or EORI are selected" in {
             val userAnswers = emptyUserAnswers
               .set(ConsigneeExportInformationPage, Set(NoInformation))
 
             navigator.nextPage(ConsigneeExportInformationPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+              controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testDraftId, NormalMode)
           }
         }
 
@@ -114,27 +102,27 @@ class ConsigneeNavigatorSpec extends SpecBase {
           }
         }
 
-        "must go to CAM-NEE03: consignee-business-name" - {
+        "must go to address page" - {
           "when the user has selected only VAT on CAM-NEE11: consignee-export-information" in {
 
             navigator.nextPage(ConsigneeExportVatPage, NormalMode,
               emptyUserAnswers
                 .set(ConsigneeExportInformationPage, Set(VatNumber))
                 .set(ConsigneeExportVatPage, "GB123456789")
-            ) mustBe controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+            ) mustBe controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testDraftId, NormalMode)
           }
         }
 
       }
 
       "for the ConsigneeExportEoriPage" - {
-        "must go to CAM-NEE03 consignee-business-name page" in {
+        "must go to address page" in {
           val userAnswers = emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(EoriNumber))
             .set(ConsigneeExportEoriPage, testEori)
 
           navigator.nextPage(ConsigneeExportEoriPage, NormalMode, userAnswers) mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testDraftId, NormalMode)
         }
       }
 
@@ -151,9 +139,9 @@ class ConsigneeNavigatorSpec extends SpecBase {
       "for the ConsigneeExcise page" - {
 
         "when there is no consignee address" - {
-          "must go to the ConsigneeBusinessName page" in {
+          "must go to the ConsigneeAddress page" in {
             navigator.nextPage(ConsigneeExcisePage, CheckMode, emptyUserAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+              controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testDraftId, NormalMode)
           }
         }
 

@@ -66,7 +66,6 @@ case object ConsigneeSection extends Section[JsObject] {
   private def checkBusinessNameAndAddressBothExistWithPage[A](pageGetResults: Seq[Option[A]])
                                                              (implicit request: DataRequest[_], @unused rds: Reads[A]): TaskListStatus = {
     val pages: Seq[Option[_]] = Seq(
-      ConsigneeBusinessNamePage.value,
       ConsigneeAddressPage.value
     ) ++ pageGetResults
 

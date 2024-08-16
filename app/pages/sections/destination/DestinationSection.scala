@@ -42,7 +42,7 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
       ExemptedOrganisation
     ).contains(destinationTypePageAnswer)
 
-  def shouldStartFlowAtDestinationBusinessName(implicit destinationTypePageAnswer: MovementScenario): Boolean =
+  def shouldStartFlowAtDestinationAddress(implicit destinationTypePageAnswer: MovementScenario): Boolean =
     Seq(
       DirectDelivery
     ).contains(destinationTypePageAnswer)
@@ -64,8 +64,8 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
             startFlowAtDestinationWarehouseExciseStatus
           } else if (shouldStartFlowAtDestinationWarehouseVat) {
             startFlowAtDestinationWarehouseVatStatus
-          } else if (shouldStartFlowAtDestinationBusinessName) {
-            startFlowAtDestinationBusinessNameStatus
+          } else if (shouldStartFlowAtDestinationAddress) {
+            startFlowAtDestinationAddressStatus
           } else {
             NotStarted
           }
@@ -77,12 +77,10 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
   private def startFlowAtDestinationWarehouseExciseStatus(implicit request: DataRequest[_]): TaskListStatus =
     (
       DestinationWarehouseExcisePage.value,
-      DestinationBusinessNamePage.value,
       DestinationAddressPage.value
     ) match {
-      case (Some(_), Some(_), Some(_)) => Completed
-      case (None, None, None) => NotStarted
-      case (Some(_), None, Some(_)) if isDirectDelivery => Completed
+      case (Some(_), Some(_)) => Completed
+      case (None, None) => NotStarted
       case _ => InProgress
     }
 
@@ -93,39 +91,27 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
     }
 
     (
+      DestinationWarehouseVatPage.value,
       destinationDetailsChoice,
-      DestinationBusinessNamePage.value,
+      DestinationConsigneeDetailsPage.value,
       DestinationAddressPage.value
     ) match {
-      case (Some(false), _, _) => Completed
-      case (Some(_), Some(_), Some(_)) => Completed
-      case (Some(_), None, Some(_)) if isDirectDelivery => Completed
-      case _ if DestinationWarehouseVatPage.value.nonEmpty => InProgress
-      case (_, None, None) => NotStarted
+      case (Some(_), Some(false), _, _) => Completed
+      case (Some(_), Some(true), _, Some(_)) => Completed
+      case (Some(_), Some(true), Some(_), None) => InProgress
+      case (None, _, _, _) => NotStarted
       case _ => InProgress
     }
   }
 
-  private def startFlowAtDestinationBusinessNameStatus(implicit request: DataRequest[_]): TaskListStatus = {
+  private def startFlowAtDestinationAddressStatus(implicit request: DataRequest[_]): TaskListStatus = {
     (
-      DestinationBusinessNamePage.value,
       DestinationAddressPage.value
     ) match {
-      case (Some(_), Some(_)) => Completed
-      case (None, Some(_)) if isDirectDelivery => Completed
-      case (None, None) => NotStarted
-      case _ => InProgress
+      case Some(_) => Completed
+      case None => NotStarted
     }
   }
-
-  private def isDirectDelivery(implicit request: DataRequest[_]): Boolean =
-  DestinationTypePage.value.exists {
-    movementScenario =>
-      Seq(
-        DirectDelivery
-      ).contains(movementScenario)
-  }
-
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
     DestinationTypePage.value.exists {

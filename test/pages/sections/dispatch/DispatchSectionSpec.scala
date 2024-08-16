@@ -19,117 +19,96 @@ package pages.sections.dispatch
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario.CertifiedConsignee
 import pages.sections.info.DestinationTypePage
 import play.api.test.FakeRequest
-import viewmodels.taskList.UpdateNeeded
+import viewmodels.taskList.{Completed, InProgress, NotStarted, UpdateNeeded}
 
 class DispatchSectionSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
-  "isCompleted" - {
-
-    "must return true" - {
-
-      "when Consignor details question is 'yes' and Address is provided" in {
-
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(DispatchWarehouseExcisePage, "beans")
-          .set(DispatchAddressPage, testUserAddress)
-          .set(DispatchUseConsignorDetailsPage, true)
-        )
-
-        DispatchSection.isCompleted mustBe true
-      }
-
-      "when Consignor details question is 'no' and the rest of the flow is completed" in {
-
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(DispatchWarehouseExcisePage, "beans")
-          .set(DispatchUseConsignorDetailsPage, false)
-          .set(DispatchBusinessNamePage, "beans")
-          .set(DispatchAddressPage, testUserAddress)
-        )
-
-        DispatchSection.isCompleted mustBe true
-      }
-
-      "when the DispatchWarehouseExcisePage is None, the destination type is CertifiedConsignee and the other pages are answered" in {
-
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(DestinationTypePage, CertifiedConsignee)
-          .set(DispatchUseConsignorDetailsPage, false)
-          .set(DispatchBusinessNamePage, "beans")
-          .set(DispatchAddressPage, testUserAddress)
-        )
-
-        DispatchSection.isCompleted mustBe true
-      }
-    }
-
-    "must return false" - {
-
-      "when not started" in {
-
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-        DispatchSection.isCompleted mustBe false
-      }
-
-      "when only DispatchWarehouseExcisePage is completed" in {
-
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(DispatchWarehouseExcisePage, "beans")
-        )
-
-        DispatchSection.isCompleted mustBe false
-      }
-
-      "when Consignor details question is 'no' and the rest of the flow is not completed" in {
-
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(DispatchWarehouseExcisePage, "beans")
-          .set(DispatchUseConsignorDetailsPage, false)
-        )
-
-        DispatchSection.isCompleted mustBe false
-      }
-
-      "when Consignor details question is 'Yes' and DispatchAddress is missing" in {
-
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(DispatchWarehouseExcisePage, "beans")
-          .set(DispatchUseConsignorDetailsPage, true)
-          .set(DispatchBusinessNamePage, "beans")
-        )
-
-        DispatchSection.isCompleted mustBe false
-      }
-
-      "when the DispatchWarehouseExcisePage is None, the destination type is CertifiedConsignee and the other pages are NOT answered" in {
-
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(DestinationTypePage, CertifiedConsignee)
-          .set(DispatchUseConsignorDetailsPage, false)
-          .set(DispatchAddressPage, testUserAddress)
-        )
-
-        DispatchSection.isCompleted mustBe false
-      }
-    }
+  "status" - {
 
     "must return UpdateNeeded" - {
 
       "when there is a Dispatch Submission Error" in {
-
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(DispatchWarehouseExcisePage, "beans")
             .set(DispatchUseConsignorDetailsPage, false)
-            .set(DispatchBusinessNamePage, "beans")
             .set(DispatchAddressPage, testUserAddress)
             .copy(submissionFailures = Seq(dispatchWarehouseInvalidOrMissingOnSeedError))
         )
 
         DispatchSection.status mustBe UpdateNeeded
+      }
+    }
+
+    "must return Completed" - {
+
+      "when duty paid and all required fields are completed" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(DestinationTypePage, CertifiedConsignee)
+            .set(DispatchUseConsignorDetailsPage, true)
+            .set(DispatchAddressPage, testUserAddress)
+        )
+
+        DispatchSection.status mustBe Completed
+      }
+
+      "when duty suspended and DispatchWarehouseExcisePage is completed" in {
+        MovementScenario.values.filterNot(MovementScenario.valuesForDutyPaidTraders.contains(_)).foreach { movementScenario =>
+          implicit val dr: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers.set(DispatchWarehouseExcisePage, "beans").set(DestinationTypePage, movementScenario)
+          )
+
+          DispatchSection.status mustBe Completed
+        }
+      }
+    }
+
+    "must return InProgress" - {
+
+      "when duty paid and only DispatchUseConsignorDetailsPage is completed" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(DestinationTypePage, CertifiedConsignee)
+            .set(DispatchUseConsignorDetailsPage, true)
+        )
+
+        DispatchSection.status mustBe InProgress
+      }
+
+      "when duty paid and only DispatchAddressPage is completed" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(DestinationTypePage, CertifiedConsignee)
+            .set(DispatchAddressPage, testUserAddress)
+        )
+
+        DispatchSection.status mustBe InProgress
+      }
+    }
+
+    "must return NotStarted" - {
+
+      "when duty paid and no fields are completed" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationTypePage, CertifiedConsignee))
+
+        DispatchSection.status mustBe NotStarted
+      }
+
+      "when duty suspended and DispatchWarehouseExcisePage is not completed" in {
+        MovementScenario.values.filterNot(MovementScenario.valuesForDutyPaidTraders.contains(_)).foreach { movementScenario =>
+          implicit val dr: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers.set(DestinationTypePage, movementScenario)
+          )
+
+          DispatchSection.status mustBe NotStarted
+        }
       }
     }
   }

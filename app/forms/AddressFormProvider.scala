@@ -23,24 +23,36 @@ import models.UserAddress
 import models.requests.DataRequest
 import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExcisePage}
 import pages.sections.consignor.ConsignorAddressPage
-import pages.sections.destination.{DestinationAddressPage, DestinationWarehouseExcisePage}
 import pages.sections.dispatch.{DispatchAddressPage, DispatchWarehouseExcisePage}
 import pages.{Page, QuestionPage}
-import play.api.data.Form
 import play.api.data.Forms.{mapping, optional}
+import play.api.data.format.Formatter
 import play.api.data.validation.Constraint
+import play.api.data.{FieldMapping, Form, FormError}
 
 import javax.inject.Inject
 
 class AddressFormProvider @Inject() extends Mappings {
 
+  val businessNameMax = 182
   val propertyMax = 11
   val streetMax = 65
   val townMax = 50
   val postcodeMax = 10
 
-  def apply(page: QuestionPage[UserAddress])(implicit request: DataRequest[_]): Form[UserAddress] =
+  def apply(page: QuestionPage[UserAddress], isConsignorPageOrUsingConsignorDetails: Boolean)(implicit request: DataRequest[_]): Form[UserAddress] =
     Form(mapping(
+      "businessName" -> {
+        if (isConsignorPageOrUsingConsignorDetails && request.traderKnownFacts.isDefined) {
+          businessNameFromKnownFacts
+        } else {
+          text(s"address.businessName.error.$page.required")
+            .verifying(maxLength(businessNameMax, s"address.businessName.error.$page.length"))
+            .verifying(regexpUnlessEmpty(XSS_REGEX, s"address.businessName.error.$page.invalid"))
+            .transform[Option[String]](Some(_), _.get)
+        }
+      },
+
       "property" -> optional(text()
         .verifying(maxLength(propertyMax, "address.property.error.length"))
         .verifying(regexp(ALPHANUMERIC_REGEX, "address.property.error.character"))
@@ -49,20 +61,35 @@ class AddressFormProvider @Inject() extends Mappings {
       "street" -> text("address.street.error.required")
         .verifying(maxLength(streetMax, "address.street.error.length"))
         .verifying(regexp(ALPHANUMERIC_REGEX, "address.street.error.character"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "address.street.error.invalid")),
+        .verifying(regexpUnlessEmpty(XSS_REGEX, "address.street.error.invalid"))
+        .transform[Option[String]](Some(_), _.get),
 
       "town" -> text("address.town.error.required")
         .verifying(maxLength(townMax, "address.town.error.length"))
         .verifying(regexp(ALPHANUMERIC_REGEX, "address.town.error.character"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "address.town.error.invalid")),
+        .verifying(regexpUnlessEmpty(XSS_REGEX, "address.town.error.invalid"))
+        .transform[Option[String]](Some(_), _.get),
 
       "postcode" -> text("address.postcode.error.required")
         .verifying(maxLength(postcodeMax, "address.postcode.error.length"))
         .verifying(regexp(ALPHANUMERIC_REGEX, "address.postcode.error.character"))
         .verifying(regexpUnlessEmpty(XSS_REGEX, "address.postcode.error.invalid"))
         .verifying(getExtraPostcodeValidationForPage(page): _*)
+        .transform[Option[String]](Some(_), _.get)
     )(UserAddress.apply)(UserAddress.unapply)
     )
+
+  private def businessNameFromKnownFacts(implicit request: DataRequest[_]): FieldMapping[Option[String]] = {
+    assert(request.traderKnownFacts.isDefined, "Trader known facts must be defined to use this field mapping")
+
+    implicit val binder: Formatter[Option[String]] = new Formatter[Option[String]] {
+      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[String]] =
+        Right(Some(data.getOrElse(key, request.traderKnownFacts.get.traderName)))
+
+      override def unbind(key: String, value: Option[String]): Map[String, String] = Map(key -> value.get)
+    }
+    new FieldMapping[Option[String]]("businessName")
+  }
 
   private def getExtraPostcodeValidationForPage(page: Page)(implicit request: DataRequest[_]): Seq[Constraint[String]] = {
     def validate(ern: Option[String]): Seq[Constraint[String]] = {
@@ -77,7 +104,6 @@ class AddressFormProvider @Inject() extends Mappings {
       case ConsignorAddressPage => validate(Some(request.ern))
       case ConsigneeAddressPage => validate(ConsigneeExcisePage.value)
       case DispatchAddressPage => validate(DispatchWarehouseExcisePage.value)
-      case DestinationAddressPage => validate(DestinationWarehouseExcisePage.value)
       case _ => Seq.empty
     }
   }

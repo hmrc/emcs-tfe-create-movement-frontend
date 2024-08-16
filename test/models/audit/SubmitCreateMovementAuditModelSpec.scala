@@ -71,7 +71,7 @@ class SubmitCreateMovementAuditModelSpec extends SpecBase with ItemFixtures {
              |  },
              |  "consigneeTrader": {
              |    "traderExciseNumber": "consignee ern",
-             |    "traderName": "consignee name",
+             |    "traderName": "testName",
              |    "address": {
              |      "streetNumber": "10",
              |      "street": "consignee street",
@@ -97,7 +97,7 @@ class SubmitCreateMovementAuditModelSpec extends SpecBase with ItemFixtures {
              |    "serialNumberOfCertificateOfExemption": "number"
              |  },
              |  "deliveryPlaceTrader": {
-             |    "traderName": "destination name",
+             |    "traderName": "testName",
              |    "address": {
              |      "streetNumber": "10",
              |      "street": "destination street",
@@ -112,7 +112,7 @@ class SubmitCreateMovementAuditModelSpec extends SpecBase with ItemFixtures {
              |    "referenceNumber": "XI004098"
              |  },
              |  "transportArrangerTrader": {
-             |    "traderName": "arranger name",
+             |    "traderName": "testName",
              |    "address": {
              |      "streetNumber": "10",
              |      "street": "arranger street",
@@ -122,7 +122,7 @@ class SubmitCreateMovementAuditModelSpec extends SpecBase with ItemFixtures {
              |    "vatNumber": "arranger vat"
              |  },
              |  "firstTransporterTrader": {
-             |    "traderName": "first name",
+             |    "traderName": "testName",
              |    "address": {
              |      "streetNumber": "10",
              |      "street": "first street",
@@ -165,7 +165,7 @@ class SubmitCreateMovementAuditModelSpec extends SpecBase with ItemFixtures {
              |    },
              |    "guarantorTrader": [
              |      {
-             |        "traderName": "guarantor name",
+             |        "traderName": "testName",
              |        "address": {
              |          "streetNumber": "10",
              |          "street": "guarantor street",

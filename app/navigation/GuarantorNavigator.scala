@@ -40,13 +40,10 @@ class GuarantorNavigator @Inject() extends BaseNavigator {
     case GuarantorArrangerPage => (userAnswers: UserAnswers) =>
       userAnswers.get(GuarantorArrangerPage) match {
         case Some(GoodsOwner) | Some(Transporter) =>
-          controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+          controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
         case _ =>
           controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       }
-
-    case GuarantorNamePage => (userAnswers: UserAnswers) =>
-      controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case GuarantorVatPage => (userAnswers: UserAnswers) =>
       controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)

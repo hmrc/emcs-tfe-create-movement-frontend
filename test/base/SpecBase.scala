@@ -21,7 +21,7 @@ import controllers.actions._
 import controllers.actions.predraft.PreDraftDataRequiredAction
 import fixtures.BaseFixtures
 import handlers.ErrorHandler
-import models.UserAnswers
+import models.{TraderKnownFacts, UserAnswers}
 import models.requests.{DataRequest, UserRequest}
 import org.scalatest.OptionValues
 import org.scalatest.concurrent.ScalaFutures
@@ -55,6 +55,6 @@ trait SpecBase extends AnyFreeSpec with Matchers with OptionValues with ScalaFut
   def userRequest[A](request: Request[A], ern: String = testErn, navBar: Option[Html] = None): UserRequest[A] =
     UserRequest(request, ern, testInternalId, testCredId, testSessionId, hasMultipleErns = false, navBar)
 
-  def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers, ern: String = testErn, navBar: Option[Html] = None): DataRequest[A] =
-    DataRequest(userRequest(request, ern, navBar), testDraftId, answers, testMinTraderKnownFacts)
+  def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers, ern: String = testErn, navBar: Option[Html] = None, traderKnownFacts: Option[TraderKnownFacts] = Some(testMinTraderKnownFacts)): DataRequest[A] =
+    DataRequest(userRequest(request, ern, navBar), testDraftId, answers, traderKnownFacts)
 }

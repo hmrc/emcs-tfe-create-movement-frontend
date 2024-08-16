@@ -46,6 +46,8 @@ class FirstTransporterAddressController @Inject()(override val messagesApi: Mess
 
   override val addressPage: QuestionPage[UserAddress] = FirstTransporterAddressPage
 
+  override def isConsignorPageOrUsingConsignorDetails(implicit request: DataRequest[_]): Boolean = false
+
   override def onwardCall(mode: Mode)(implicit request: DataRequest[_]): Call =
     controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onSubmit(request.ern, request.draftId, mode)
 
@@ -53,6 +55,7 @@ class FirstTransporterAddressController @Inject()(override val messagesApi: Mess
     status(view(
       form = form,
       addressPage = addressPage,
+      isConsignorPageOrUsingConsignorDetails = isConsignorPageOrUsingConsignorDetails,
       onSubmit = onwardCall(mode),
       headingKey = Some("firstTransporterAddress")
     ))

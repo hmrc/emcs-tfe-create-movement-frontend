@@ -17,10 +17,25 @@
 package pages.sections.consignee
 
 import models.UserAddress
+import models.requests.DataRequest
 import pages.QuestionPage
-import play.api.libs.json.JsPath
+import play.api.libs.json.{JsPath, Reads}
 
 case object ConsigneeAddressPage extends QuestionPage[UserAddress] {
   override val toString: String = "consigneeAddress"
   override val path: JsPath = ConsigneeSection.path \ toString
+
+  // Old business name page for use in transitional period between separate and combined business name and address pages
+  // TODO: remove eventually, this won't be set in new drafts
+  private[consignee] case object ConsigneeBusinessNamePage extends QuestionPage[String] {
+    override val toString: String = "businessName"
+    override val path: JsPath = ConsigneeSection.path \ toString
+  }
+
+  override def value[T >: UserAddress](implicit request: DataRequest[_], reads: Reads[T]): Option[T] = {
+    request.userAnswers.get(this).map {
+      case address@UserAddress(None, _, _, _, _) => address.copy(businessName = request.userAnswers.get(ConsigneeBusinessNamePage))
+      case address => address
+    }
+  }
 }

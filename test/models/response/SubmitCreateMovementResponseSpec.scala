@@ -17,6 +17,7 @@
 package models.response
 
 import base.SpecBase
+import play.api.libs.json.Json
 
 class SubmitCreateMovementResponseSpec extends SpecBase {
   "reads" - {
@@ -25,6 +26,13 @@ class SubmitCreateMovementResponseSpec extends SpecBase {
     }
     "should read from ChRIS" in {
       successResponseChRISJson.as[SubmitCreateMovementResponse] mustBe submitCreateMovementResponseChRIS
+    }
+  }
+
+  "writes" - {
+    "should write to JSON" in {
+      Json.toJson(submitCreateMovementResponseEIS) mustBe Json.obj("receipt" -> testConfirmationReference)
+      Json.toJson(submitCreateMovementResponseChRIS) mustBe Json.obj("receipt" -> testConfirmationReference)
     }
   }
 }

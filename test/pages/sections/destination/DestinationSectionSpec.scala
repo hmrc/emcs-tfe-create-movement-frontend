@@ -66,7 +66,6 @@ class DestinationSectionSpec extends SpecBase
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
                 .set(DestinationTypePage, destinationTypePageAnswer)
                 .set(DestinationWarehouseExcisePage, testErn)
-                .set(DestinationBusinessNamePage, testBusinessName)
                 .set(DestinationAddressPage, testUserAddress)
               )
 
@@ -91,11 +90,10 @@ class DestinationSectionSpec extends SpecBase
               val baseUserAnswers = emptyUserAnswers
                 .set(DestinationTypePage, destinationTypePageAnswer)
                 .set(DestinationWarehouseExcisePage, testErn)
-                .set(DestinationBusinessNamePage, testBusinessName)
                 .set(DestinationAddressPage, testUserAddress)
 
               Seq(
-                DestinationAddressPage, DestinationBusinessNamePage, DestinationWarehouseExcisePage
+                DestinationAddressPage, DestinationWarehouseExcisePage
               ).foreach {
                 page =>
                   implicit val dr: DataRequest[_] = dataRequest(request, baseUserAnswers
@@ -149,10 +147,10 @@ class DestinationSectionSpec extends SpecBase
                 )
 
                 implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
+                  .set(DestinationWarehouseVatPage, testVatNumber)
                   .set(DestinationTypePage, destinationTypePageAnswer)
                   .set(DestinationDetailsChoicePage, true)
                   .set(DestinationAddressPage, testUserAddress)
-                  .set(DestinationBusinessNamePage, testBusinessName)
                 )
 
                 DestinationSection.status mustBe Completed
@@ -171,6 +169,7 @@ class DestinationSectionSpec extends SpecBase
                 )
 
                 implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
+                  .set(DestinationWarehouseVatPage, testVatNumber)
                   .set(DestinationTypePage, destinationTypePageAnswer)
                   .set(DestinationDetailsChoicePage, false)
                 )
@@ -193,20 +192,13 @@ class DestinationSectionSpec extends SpecBase
                 )
 
                 val baseUserAnswers = emptyUserAnswers
+                  .set(DestinationWarehouseVatPage, testVatNumber)
                   .set(DestinationTypePage, destinationTypePageAnswer)
                   .set(DestinationDetailsChoicePage, true)
-                  .set(DestinationBusinessNamePage, testBusinessName)
-                  .set(DestinationAddressPage, testUserAddress)
 
-                Seq(DestinationBusinessNamePage, DestinationAddressPage).foreach {
-                  page =>
-                    implicit val dr: DataRequest[_] = dataRequest(request, baseUserAnswers
-                      .remove(page)
-                    )
+                implicit val dr: DataRequest[_] = dataRequest(request, baseUserAnswers)
 
-                    DestinationSection.status mustBe InProgress
-                }
-
+                DestinationSection.status mustBe InProgress
             }
           }
         }
@@ -249,8 +241,8 @@ class DestinationSectionSpec extends SpecBase
                 )
 
                 implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
+                  .set(DestinationWarehouseVatPage, testVatNumber)
                   .set(DestinationTypePage, destinationTypePageAnswer)
-                  .set(DestinationBusinessNamePage, testErn)
                   .set(DestinationAddressPage, testUserAddress)
                 )
 
@@ -273,19 +265,13 @@ class DestinationSectionSpec extends SpecBase
                 )
 
                 val baseUserAnswers = emptyUserAnswers
+                  .set(DestinationWarehouseVatPage, testVatNumber)
                   .set(DestinationTypePage, destinationTypePageAnswer)
                   .set(DestinationConsigneeDetailsPage, false)
-                  .set(DestinationBusinessNamePage, "")
-                  .set(DestinationAddressPage, testUserAddress)
 
-                Seq(DestinationBusinessNamePage, DestinationAddressPage).foreach {
-                  page =>
-                    implicit val dr: DataRequest[_] = dataRequest(request, baseUserAnswers
-                      .remove(page)
-                    )
+                implicit val dr: DataRequest[_] = dataRequest(request, baseUserAnswers)
 
-                    DestinationSection.status mustBe InProgress
-                }
+                DestinationSection.status mustBe InProgress
 
             }
           }
@@ -342,7 +328,7 @@ class DestinationSectionSpec extends SpecBase
           ).foreach {
             implicit destinationTypePageAnswer =>
               assert(
-                DestinationSection.shouldStartFlowAtDestinationBusinessName === true,
+                DestinationSection.shouldStartFlowAtDestinationAddress === true,
                 s"shouldStartFlowAtDestinationBusinessName returned false for MovementScenario $destinationTypePageAnswer"
               )
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
@@ -362,7 +348,7 @@ class DestinationSectionSpec extends SpecBase
           ).foreach {
             implicit destinationTypePageAnswer =>
               assert(
-                DestinationSection.shouldStartFlowAtDestinationBusinessName === true,
+                DestinationSection.shouldStartFlowAtDestinationAddress === true,
                 s"shouldStartFlowAtDestinationBusinessName returned false for MovementScenario $destinationTypePageAnswer"
               )
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
@@ -395,7 +381,6 @@ class DestinationSectionSpec extends SpecBase
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
                 .set(DestinationTypePage, movementScenario)
                 .set(DestinationAddressPage, testUserAddress)
-                .set(DestinationBusinessNamePage, "")
                 .set(DestinationConsigneeDetailsPage, false)
                 .set(DestinationDetailsChoicePage, true)
                 .set(DestinationWarehouseExcisePage, "")

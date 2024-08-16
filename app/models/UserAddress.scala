@@ -20,21 +20,27 @@ import play.api.libs.json.{Json, OFormat}
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 
-case class UserAddress(property: Option[String],
-                       street: String,
-                       town: String,
-                       postcode: String) {
+case class UserAddress(businessName: Option[String],
+                       property: Option[String],
+                       street: Option[String],
+                       town: Option[String],
+                       postcode: Option[String]) {
   def toCheckYourAnswersFormat: HtmlContent = HtmlContent(
     HtmlFormat.fill(
       Seq(
-        Html(property.fold("")(_ + " ") + street + "<br>"),
-        Html(town + "<br>"),
-        Html(postcode)
-      )
+        businessName.map(Html(_)),
+        if(businessName.nonEmpty) Some(Html("<br>")) else None,
+        Some(Html(property.map(_ + " ").getOrElse("") + street.getOrElse(""))),
+        if(property.nonEmpty || street.nonEmpty) Some(Html("<br>")) else None,
+        town.map(Html(_)),
+        if(town.nonEmpty && postcode.nonEmpty) Some(Html("<br>")) else None,
+        postcode.map(Html(_))
+      ).flatten
     )
   )
 
 }
+
 
 object UserAddress {
 

@@ -5,11 +5,6 @@ POST        /trader/:ern/draft/:draftId/transport-arranger/arranger             
 GET         /trader/:ern/draft/:draftId/transport-arranger/arranger/change        controllers.sections.transportArranger.TransportArrangerController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
 POST        /trader/:ern/draft/:draftId/transport-arranger/arranger/change        controllers.sections.transportArranger.TransportArrangerController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
 
-GET         /trader/:ern/draft/:draftId/transport-arranger/name                   controllers.sections.transportArranger.TransportArrangerNameController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
-POST        /trader/:ern/draft/:draftId/transport-arranger/name                   controllers.sections.transportArranger.TransportArrangerNameController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
-GET         /trader/:ern/draft/:draftId/transport-arranger/name/change            controllers.sections.transportArranger.TransportArrangerNameController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
-POST        /trader/:ern/draft/:draftId/transport-arranger/name/change            controllers.sections.transportArranger.TransportArrangerNameController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
-
 GET         /trader/:ern/draft/:draftId/transport-arranger/vat                    controllers.sections.transportArranger.TransportArrangerVatController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
 POST        /trader/:ern/draft/:draftId/transport-arranger/vat                    controllers.sections.transportArranger.TransportArrangerVatController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
 GET         /trader/:ern/draft/:draftId/transport-arranger/vat/change             controllers.sections.transportArranger.TransportArrangerVatController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)

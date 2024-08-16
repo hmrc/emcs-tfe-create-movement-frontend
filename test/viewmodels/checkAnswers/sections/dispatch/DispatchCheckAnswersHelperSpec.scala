@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.UserAddressFixtures
 import models.UserAnswers
 import models.requests.DataRequest
-import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchUseConsignorDetailsPage, DispatchWarehouseExcisePage}
+import pages.sections.dispatch.{DispatchAddressPage, DispatchUseConsignorDetailsPage, DispatchWarehouseExcisePage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -42,7 +42,6 @@ class DispatchCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures {
 
       "should return the correct rows" in new Setup(emptyUserAnswers
         .set(DispatchWarehouseExcisePage, testErn)
-        .set(DispatchBusinessNamePage, "Some Business Name")
         .set(DispatchUseConsignorDetailsPage, false)
         .set(DispatchAddressPage, userAddressModelMax)
       ) {
@@ -50,7 +49,6 @@ class DispatchCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures {
         val expectedResult: SummaryList = SummaryList(Seq(
           DispatchUseConsignorDetailsSummary.row()(fakeDataRequest, msgs),
           dispatchWarehouseExciseSummary.row()(fakeDataRequest, msgs),
-          Some(DispatchBusinessNameSummary.row()(fakeDataRequest, msgs)),
           Some(DispatchAddressSummary.row()(fakeDataRequest, msgs))
         ).flatten).withCssClass("govuk-!-margin-bottom-9")
 

@@ -19,7 +19,7 @@ package navigation
 import controllers.routes
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages._
-import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterCheckAnswersPage, FirstTransporterNamePage, FirstTransporterVatPage}
+import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterCheckAnswersPage, FirstTransporterVatPage}
 import play.api.mvc.Call
 
 import javax.inject.Inject
@@ -27,9 +27,6 @@ import javax.inject.Inject
 class FirstTransporterNavigator @Inject() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-
-    case FirstTransporterNamePage => (userAnswers: UserAnswers) =>
-      controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case FirstTransporterVatPage => (userAnswers: UserAnswers) =>
       controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
@@ -45,13 +42,12 @@ class FirstTransporterNavigator @Inject() extends BaseNavigator {
   }
 
   private val checkRoutes: Page => UserAnswers => Call = {
-    case FirstTransporterNamePage => (userAnswers: UserAnswers) =>
+    case FirstTransporterVatPage => (userAnswers: UserAnswers) =>
       if (
-        userAnswers.get(FirstTransporterNamePage).isEmpty ||
           userAnswers.get(FirstTransporterVatPage).isEmpty ||
           userAnswers.get(FirstTransporterAddressPage).isEmpty
       ) {
-        normalRoutes(FirstTransporterNamePage)(userAnswers)
+        normalRoutes(FirstTransporterVatPage)(userAnswers)
       } else {
         controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       }

@@ -28,7 +28,6 @@ class ConsignorCheckAnswersHelper @Inject()() {
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
       rows = Seq(
-        Some(ConsignorTraderNameSummary.row),
         ConsignorERNSummary.row,
         ConsignorPaidTemporaryAuthorisationCodeSummary.row,
         ConsignorAddressSummary.row

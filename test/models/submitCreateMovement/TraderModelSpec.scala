@@ -41,71 +41,77 @@ class TraderModelSpec extends SpecBase {
   val consigneeTraderWithErn: TraderModel = TraderModel(
     traderExciseNumber = Some("consignee ern"),
     traderName = Some("consignee name"),
-    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
+    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("consignee street")))),
     vatNumber = None,
     eoriNumber = Some("consignee eori")
   )
   val consigneeTraderWithVatNo: TraderModel = TraderModel(
     traderExciseNumber = Some("vat no"),
     traderName = Some("consignee name"),
-    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
+    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("consignee street")))),
     vatNumber = None,
     eoriNumber = None
   )
   val consigneeTraderWithNeitherErnNorVatNo: TraderModel = TraderModel(
     traderExciseNumber = None,
     traderName = Some("consignee name"),
-    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
+    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("consignee street")))),
     vatNumber = None,
     eoriNumber = None
   )
+
   val consignorTrader: TraderModel = TraderModel(
     traderExciseNumber = Some(testErn),
     traderName = Some(testMinTraderKnownFacts.traderName),
-    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignor street"))),
+    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("consignor street")))),
     vatNumber = None,
     eoriNumber = None
   )
-  val consignorTraderWithPtaCode = consignorTrader.copy(traderExciseNumber = Some(testPaidTemporaryAuthorisationCode))
+  val consignorTraderWithPtaCode: TraderModel = consignorTrader.copy(traderExciseNumber = Some(testPaidTemporaryAuthorisationCode))
+
   val placeOfDispatchTrader: TraderModel = TraderModel(
     traderExciseNumber = Some("dispatch ern"),
     traderName = Some("dispatch name"),
-    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "dispatch street"))),
+    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("dispatch street")))),
     vatNumber = None,
     eoriNumber = None
   )
+
   val deliveryPlaceTrader: TraderModel = TraderModel(
     traderExciseNumber = Some("destination ern"),
     traderName = Some("destination name"),
-    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "destination street"))),
+    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("destination street")))),
     vatNumber = None,
     eoriNumber = None
   )
+
   val transportArrangerTrader: TraderModel = TraderModel(
     traderExciseNumber = None,
     traderName = Some("arranger name"),
-    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "arranger street"))),
+    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("arranger street")))),
     vatNumber = Some("arranger vat"),
     eoriNumber = None
   )
+
   val firstTransporterTrader: TraderModel = TraderModel(
     traderExciseNumber = None,
     traderName = Some("first name"),
-    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "first street"))),
+    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("first street")))),
     vatNumber = Some("first vat"),
     eoriNumber = None
   )
+
   val guarantorTrader: TraderModel = TraderModel(
     traderExciseNumber = None,
     traderName = Some("guarantor name"),
-    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "guarantor street"))),
+    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("guarantor street")))),
     vatNumber = Some("guarantor vat"),
     eoriNumber = None
   )
   val guarantorTraderWithConsigneeInfo: TraderModel = TraderModel(
     traderExciseNumber = None,
     traderName = Some("consignee name"),
-    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
+    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = Some("consignee street")))),
     vatNumber = Some("vat no"),
     eoriNumber = None
   )
@@ -118,10 +124,9 @@ class TraderModelSpec extends SpecBase {
             implicit val dr: DataRequest[_] = dataRequest(fakeRequest,
               emptyUserAnswers
                 .set(DestinationTypePage, movementScenario)
-                .set(ConsigneeBusinessNamePage, "consignee name")
                 .set(ConsigneeExcisePage, "consignee ern")
                 .set(ConsigneeExportEoriPage, "consignee eori")
-                .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+                .set(ConsigneeAddressPage, testUserAddress.copy(businessName = Some("consignee name"), street = Some("consignee street")))
             )
 
             TraderModel.applyConsignee mustBe Some(consigneeTraderWithErn)
@@ -133,9 +138,8 @@ class TraderModelSpec extends SpecBase {
             implicit val dr: DataRequest[_] = dataRequest(fakeRequest,
               emptyUserAnswers
                 .set(DestinationTypePage, movementScenario)
-                .set(ConsigneeBusinessNamePage, "consignee name")
                 .set(ConsigneeExportVatPage, "vat no")
-                .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+                .set(ConsigneeAddressPage, testUserAddress.copy(businessName = Some("consignee name"), street = Some("consignee street")))
             )
 
             TraderModel.applyConsignee mustBe Some(consigneeTraderWithVatNo)
@@ -147,8 +151,7 @@ class TraderModelSpec extends SpecBase {
             implicit val dr: DataRequest[_] = dataRequest(fakeRequest,
               emptyUserAnswers
                 .set(DestinationTypePage, movementScenario)
-                .set(ConsigneeBusinessNamePage, "consignee name")
-                .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+                .set(ConsigneeAddressPage, testUserAddress.copy(businessName = Some("consignee name"), street = Some("consignee street")))
             )
 
             TraderModel.applyConsignee mustBe Some(consigneeTraderWithNeitherErnNorVatNo)
@@ -162,7 +165,7 @@ class TraderModelSpec extends SpecBase {
             .set(DestinationTypePage, UnknownDestination)
             .set(ConsigneeExcisePage, "consignee ern")
             .set(ConsigneeExportEoriPage, "consignee eori")
-            .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+            .set(ConsigneeAddressPage, testUserAddress.copy(businessName = Some("consignee name"), street = Some("consignee street")))
         )
 
         TraderModel.applyConsignee mustBe None
@@ -174,7 +177,7 @@ class TraderModelSpec extends SpecBase {
         emptyUserAnswers
           .set(ConsigneeExcisePage, "consignee ern")
           .set(ConsigneeExportEoriPage, "consignee eori")
-          .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+          .set(ConsigneeAddressPage, testUserAddress.copy(businessName = Some("consignee name"), street = Some("consignee street")))
       )
 
       TraderModel.applyConsignee mustBe None
@@ -188,7 +191,7 @@ class TraderModelSpec extends SpecBase {
       "must return a TraderModel using the PTA code as the ERN" in {
         val userAnswers = emptyUserAnswers.copy(ern = testNITemporaryCertifiedConsignorErn)
           .set(ConsignorPaidTemporaryAuthorisationCodePage, testPaidTemporaryAuthorisationCode)
-          .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
+          .set(ConsignorAddressPage, testUserAddress.copy(businessName = Some("consignor name"), street = Some("consignor street")))
 
         implicit val dr: DataRequest[_] = dataRequest(fakeRequest, userAnswers, testNITemporaryCertifiedConsignorErn)
 
@@ -200,7 +203,7 @@ class TraderModelSpec extends SpecBase {
 
       "must return a TraderModel using the logged in user's ERN" in {
         val userAnswers = emptyUserAnswers.copy(ern = testErn)
-          .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
+          .set(ConsignorAddressPage, testUserAddress.copy(businessName = Some("consignor name"), street = Some("consignor street")))
 
         implicit val dr: DataRequest[_] = dataRequest(fakeRequest, userAnswers, testErn)
 
@@ -220,7 +223,7 @@ class TraderModelSpec extends SpecBase {
             fakeRequest,
             emptyUserAnswers
               .set(DispatchUseConsignorDetailsPage, true)
-              .set(DispatchAddressPage, testUserAddress.copy(street = "dispatch street"))
+              .set(DispatchAddressPage, testUserAddress.copy(businessName = Some("dispatch name"), street = Some("dispatch street")))
               .set(DispatchWarehouseExcisePage, "dispatch ern"),
             ern
           )
@@ -238,8 +241,7 @@ class TraderModelSpec extends SpecBase {
             fakeRequest,
             emptyUserAnswers
               .set(DispatchUseConsignorDetailsPage, false)
-              .set(DispatchBusinessNamePage, "dispatch name")
-              .set(DispatchAddressPage, testUserAddress.copy(street = "dispatch street"))
+              .set(DispatchAddressPage, testUserAddress.copy(businessName = Some("dispatch name"), street = Some("dispatch street")))
               .set(DispatchWarehouseExcisePage, "dispatch ern"),
             ern
           )
@@ -256,12 +258,11 @@ class TraderModelSpec extends SpecBase {
             fakeRequest,
             emptyUserAnswers
               .set(DispatchUseConsignorDetailsPage, false)
-              .set(DispatchBusinessNamePage, "dispatch name")
               .set(DispatchWarehouseExcisePage, "dispatch ern"),
             ern
           )
 
-          TraderModel.applyPlaceOfDispatch mustBe Some(placeOfDispatchTrader.copy(address = None))
+          TraderModel.applyPlaceOfDispatch mustBe Some(placeOfDispatchTrader.copy(address = None, traderName = None))
         }
       }
 
@@ -271,8 +272,7 @@ class TraderModelSpec extends SpecBase {
             fakeRequest,
             emptyUserAnswers
               .set(DispatchUseConsignorDetailsPage, false)
-              .set(DispatchBusinessNamePage, "dispatch name")
-              .set(DispatchAddressPage, testUserAddress.copy(street = "dispatch street"))
+              .set(DispatchAddressPage, testUserAddress.copy(businessName = Some("dispatch name"), street = Some("dispatch street")))
               .set(DispatchWarehouseExcisePage, "dispatch ern"),
             ern
           )
@@ -290,7 +290,7 @@ class TraderModelSpec extends SpecBase {
               fakeRequest,
               emptyUserAnswers
                 .set(DispatchUseConsignorDetailsPage, true)
-                .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
+                .set(ConsignorAddressPage, testUserAddress.copy(businessName = Some("consignor name"), street = Some("consignor street")))
                 .set(DispatchWarehouseExcisePage, "dispatch ern"),
               ern
             )
@@ -312,8 +312,7 @@ class TraderModelSpec extends SpecBase {
                   .set(DestinationTypePage, movementScenario)
                   .set(DestinationWarehouseExcisePage, "destination ern")
                   .set(DestinationConsigneeDetailsPage, false)
-                  .set(DestinationBusinessNamePage, "destination name")
-                  .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+                  .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("destination name"), street = Some("destination street")))
               )
 
               TraderModel.applyDeliveryPlace(movementScenario) mustBe Some(deliveryPlaceTrader)
@@ -330,8 +329,7 @@ class TraderModelSpec extends SpecBase {
                   .set(DestinationWarehouseVatPage, "destination ern")
                   .set(DestinationDetailsChoicePage, true)
                   .set(DestinationConsigneeDetailsPage, false)
-                  .set(DestinationBusinessNamePage, "destination name")
-                  .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+                  .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("destination name"), street = Some("destination street")))
               )
 
               TraderModel.applyDeliveryPlace(movementScenario) mustBe Some(deliveryPlaceTrader)
@@ -347,8 +345,7 @@ class TraderModelSpec extends SpecBase {
                   .set(DestinationWarehouseVatPage, "destination ern")
                   .set(DestinationDetailsChoicePage, false)
                   .set(DestinationConsigneeDetailsPage, false)
-                  .set(DestinationBusinessNamePage, "destination name")
-                  .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+                  .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("destination name"), street = Some("destination street")))
               )
 
               TraderModel.applyDeliveryPlace(movementScenario) mustBe Some(deliveryPlaceTrader.copy(traderName = None, address = None))
@@ -362,8 +359,7 @@ class TraderModelSpec extends SpecBase {
                 emptyUserAnswers
                   .set(DestinationTypePage, movementScenario)
                   .set(DestinationWarehouseVatPage, "destination ern")
-                  .set(DestinationBusinessNamePage, "destination name")
-                  .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+                  .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("destination name"), street = Some("destination street")))
               )
 
               TraderModel.applyDeliveryPlace(movementScenario) mustBe Some(deliveryPlaceTrader)
@@ -378,8 +374,7 @@ class TraderModelSpec extends SpecBase {
               emptyUserAnswers
                 .set(DestinationTypePage, movementScenario)
                 .set(DestinationWarehouseVatPage, "destination ern")
-                .set(DestinationBusinessNamePage, "destination name")
-                .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+                .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("destination name"), street = Some("destination street")))
             )
 
             TraderModel.applyDeliveryPlace(movementScenario) mustBe Some(deliveryPlaceTrader.copy(traderExciseNumber = None))
@@ -399,8 +394,7 @@ class TraderModelSpec extends SpecBase {
                   .set(DestinationTypePage, movementScenario)
                   .set(DestinationWarehouseVatPage, "destination ern")
                   .set(DestinationDetailsChoicePage, true)
-                  .set(DestinationBusinessNamePage, "destination name")
-                  .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+                  .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("destination name"), street = Some("destination street")))
               )
 
               TraderModel.applyDeliveryPlace(movementScenario) mustBe None
@@ -416,7 +410,7 @@ class TraderModelSpec extends SpecBase {
           fakeRequest,
           emptyUserAnswers
             .set(TransportArrangerPage, TransportArranger.Consignor)
-            .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
+            .set(ConsignorAddressPage, testUserAddress.copy(businessName = Some("consignor name"), street = Some("consignor street")))
         )
 
         TraderModel.applyTransportArranger mustBe None
@@ -427,10 +421,9 @@ class TraderModelSpec extends SpecBase {
           emptyUserAnswers
             .set(TransportArrangerPage, TransportArranger.Consignee)
             .set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB)
-            .set(ConsigneeBusinessNamePage, "consignee name")
             .set(ConsigneeExcisePage, "consignee ern")
             .set(ConsigneeExportEoriPage, "consignee eori")
-            .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+            .set(ConsigneeAddressPage, testUserAddress.copy(businessName = Some("consignee name"), street = Some("consignee street")))
         )
 
         TraderModel.applyTransportArranger mustBe None
@@ -442,8 +435,7 @@ class TraderModelSpec extends SpecBase {
               fakeRequest,
               emptyUserAnswers
                 .set(TransportArrangerPage, transportArranger)
-                .set(TransportArrangerNamePage, "arranger name")
-                .set(TransportArrangerAddressPage, testUserAddress.copy(street = "arranger street"))
+                .set(TransportArrangerAddressPage, testUserAddress.copy(businessName = Some("arranger name"), street = Some("arranger street")))
                 .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some("arranger vat")))
             )
 
@@ -458,8 +450,7 @@ class TraderModelSpec extends SpecBase {
       implicit val dr: DataRequest[_] = dataRequest(
         fakeRequest,
         emptyUserAnswers
-          .set(FirstTransporterNamePage, "first name")
-          .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street"))
+          .set(FirstTransporterAddressPage, testUserAddress.copy(businessName = Some("first name"), street = Some("first street")))
           .set(FirstTransporterVatPage, VatNumberModel(true, Some("first vat")))
       )
 
@@ -494,8 +485,7 @@ class TraderModelSpec extends SpecBase {
             implicit val dr: DataRequest[_] = dataRequest(
               fakeRequest,
               emptyUserAnswers
-                .set(GuarantorNamePage, "guarantor name")
-                .set(GuarantorAddressPage, testUserAddress.copy(street = "guarantor street"))
+                .set(GuarantorAddressPage, testUserAddress.copy(businessName = Some("guarantor name"), street = Some("guarantor street")))
                 .set(GuarantorVatPage, VatNumberModel(true, Some("guarantor vat")))
             )
 

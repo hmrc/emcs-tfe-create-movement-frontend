@@ -46,7 +46,6 @@ class ConsignorCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures 
       ) {
 
         val expectedResult: SummaryList = SummaryList(Seq(
-          Some(ConsignorTraderNameSummary.row),
           ConsignorPaidTemporaryAuthorisationCodeSummary.row,
           ConsignorAddressSummary.row,
         ).flatten).withCssClass("govuk-!-margin-bottom-9")
@@ -57,7 +56,6 @@ class ConsignorCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures 
       "should return the correct rows for a non-XIPC user" in new Setup(baseUserAnswers) {
 
         val expectedResult: SummaryList = SummaryList(Seq(
-          Some(ConsignorTraderNameSummary.row),
           ConsignorERNSummary.row,
           ConsignorAddressSummary.row,
         ).flatten).withCssClass("govuk-!-margin-bottom-9")

@@ -27,7 +27,7 @@ import utils.Logging
 case class DataRequest[A](request: UserRequest[A],
                           draftId: String,
                           userAnswers: UserAnswers,
-                          traderKnownFacts: TraderKnownFacts) extends WrappedRequest[A](request) with Logging with NavBarRequest {
+                          traderKnownFacts: Option[TraderKnownFacts]) extends WrappedRequest[A](request) with Logging with NavBarRequest {
 
   lazy val internalId: String = request.internalId
   lazy val ern: String = request.ern

@@ -31,7 +31,6 @@ class GuarantorCheckAnswersHelper @Inject()() {
       rows = Seq(
         GuarantorRequiredSummary.row,
         GuarantorArrangerSummary.row,
-        GuarantorNameSummary.row,
         GuarantorErnVatSummary.rows,
         GuarantorAddressSummary.row
       ).flatten

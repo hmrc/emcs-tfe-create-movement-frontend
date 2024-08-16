@@ -40,18 +40,16 @@ class ConsigneeCheckAnswersHelper @Inject()(list: list, consigneeExciseSummary: 
     else if (consigneeReviewBusinessName == true) {
       SummaryListViewModel(
         rows = Seq(
-          ConsigneeBusinessNameSummary.row(showActionLinks = true),
           ConsigneeAddressSummary.row(showActionLinks = true),
           consigneeExciseSummary.row(showActionLinks = true),
           ConsigneeExemptOrganisationSummary.row(showActionLinks = true)
         ).flatten
       )
 
-    }else{
+    } else {
       SummaryListViewModel(
         rows = Seq(
           ConsigneeExportInformationSummary(list).row(),
-          ConsigneeBusinessNameSummary.row(showActionLinks = true),
           consigneeExciseSummary.row(showActionLinks = true),
           ConsigneeExportVatSummary.row(showActionLinks = true),
           ConsigneeExportEoriSummary.row(showActionLinks = true),

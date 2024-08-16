@@ -17,11 +17,44 @@
 package pages.sections.dispatch
 
 import models.UserAddress
+import models.requests.DataRequest
 import pages.QuestionPage
-import play.api.libs.json.JsPath
+import pages.sections.consignor.ConsignorAddressPage
+import play.api.libs.json.{JsPath, Reads}
 
 case object DispatchAddressPage extends QuestionPage[UserAddress] {
   override val toString: String = "dispatchAddress"
   override val path: JsPath = DispatchSection.path \ toString
+
+  // Old business name page for use in transitional period between separate and combined business name and address pages
+  // TODO: remove eventually, this won't be set in new drafts
+  private[dispatch] case object DispatchBusinessNamePage extends QuestionPage[String] {
+    override val toString: String = "businessName"
+    override val path: JsPath = DispatchSection.path \ toString
+  }
+
+  override def value[T >: UserAddress](implicit request: DataRequest[_], reads: Reads[T]): Option[T] =
+    request.userAnswers.get(this).map {
+      address =>
+
+        val businessNameFromDispatchSection: Option[String] = address.businessName match {
+          case Some(value) => Some(value)
+          case None => request.userAnswers.get(DispatchBusinessNamePage)
+        }
+
+        val businessName: Option[String] = if (DispatchUseConsignorDetailsPage.value.contains(true)) {
+          Seq(
+            request.traderKnownFacts.map(_.traderName),
+            request.userAnswers.get(ConsignorAddressPage).flatMap(_.businessName),
+            businessNameFromDispatchSection
+          ).collectFirst {
+            case Some(value) => value
+          }
+        } else {
+          businessNameFromDispatchSection
+        }
+
+        address.copy(businessName = businessName)
+    }
 }
 

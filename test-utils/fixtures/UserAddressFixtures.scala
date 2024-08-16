@@ -22,13 +22,15 @@ import play.api.libs.json.{JsObject, Json}
 trait UserAddressFixtures {
 
   val userAddressModelMax: UserAddress = UserAddress(
+    businessName = Some("Name"),
     property = Some("1"),
-    street = "Street",
-    town = "Town",
-    postcode = "aa11aa"
+    street = Some("Street"),
+    town = Some("Town"),
+    postcode = Some("aa11aa")
   )
 
   val userAddressJsonMax: JsObject = Json.obj(
+    "businessName" -> "Name",
     "property" -> "1",
     "street" -> "Street",
     "town" -> "Town",
@@ -36,15 +38,12 @@ trait UserAddressFixtures {
   )
 
   val userAddressModelMin: UserAddress = UserAddress(
+    businessName = None,
     property = None,
-    street = "Other Street",
-    town = "Other Town",
-    postcode = "bb22bb"
+    street = None,
+    town = None,
+    postcode = None
   )
 
-  val userAddressJsonMin: JsObject = Json.obj(
-    "street" -> "Other Street",
-    "town" -> "Other Town",
-    "postcode" -> "bb22bb"
-  )
+  val userAddressJsonMin: JsObject = Json.obj()
 }

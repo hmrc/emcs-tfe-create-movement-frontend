@@ -16,7 +16,7 @@
 
 @import models.requests.DataRequest
 @import pages.sections.info.LocalReferenceNumberPage
-@import pages.sections.consignee.ConsigneeBusinessNamePage
+@import pages.sections.consignee.ConsigneeAddressPage
 @import viewmodels.helpers.draftMovement.DraftMovementHelper
 @import viewmodels.taskList.TaskList
 
@@ -69,7 +69,7 @@
         @messages("draftMovement.lrn", LocalReferenceNumberPage().value.getOrElse(messages("draftMovement.notProvided")))
     }
     @p("govuk-body govuk-!-margin-bottom-7") {
-        @messages("draftMovement.consignee", ConsigneeBusinessNamePage.value.getOrElse(messages("draftMovement.notProvided")))
+        @messages("draftMovement.consignee", ConsigneeAddressPage.value.flatMap(_.businessName).getOrElse(messages("draftMovement.notProvided")))
     }
 
     @p("govuk-body govuk-!-margin-bottom-9") {

@@ -25,7 +25,7 @@ import models.sections.transportArranger.TransportArranger
 import models.sections.transportArranger.TransportArranger.{Consignee, Consignor, GoodsOwner, Other}
 import models.{NormalMode, UserAnswers, VatNumberModel}
 import navigation.FakeNavigators.FakeTransportArrangerNavigator
-import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerNamePage, TransportArrangerPage, TransportArrangerVatPage}
+import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerPage, TransportArrangerVatPage}
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.Helpers._
@@ -117,7 +117,6 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
         Some(
           emptyUserAnswers
             .set(TransportArrangerPage, Other)
-            .set(TransportArrangerNamePage, "Mr Other Transporter")
             .set(TransportArrangerAddressPage, testUserAddress)
             .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
         )
@@ -140,7 +139,6 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
         Some(
           emptyUserAnswers
             .set(TransportArrangerPage, arrangerFrom)
-            .set(TransportArrangerNamePage, "Mr Other Transporter")
             .set(TransportArrangerAddressPage, testUserAddress)
             .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
         )
@@ -148,7 +146,6 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
 
         val expectedUserAnswers: UserAnswers = emptyUserAnswers
           .set(TransportArrangerPage, arrangerTo)
-          .set(TransportArrangerNamePage, "Mr Other Transporter")
           .set(TransportArrangerAddressPage, testUserAddress)
           .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
 

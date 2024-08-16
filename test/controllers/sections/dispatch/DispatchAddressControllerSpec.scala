@@ -26,8 +26,8 @@ import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeDispatchNavigator
 import pages.sections.consignor.ConsignorAddressPage
-import pages.sections.destination.DestinationAddressPage
-import pages.sections.dispatch.{DispatchAddressPage, DispatchBusinessNamePage, DispatchUseConsignorDetailsPage}
+//import pages.sections.destination.DestinationAddressPage
+import pages.sections.dispatch.{DispatchAddressPage, DispatchUseConsignorDetailsPage}
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.mvc.Call
@@ -40,13 +40,18 @@ import scala.concurrent.Future
 class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService with UserAddressFixtures {
 
   lazy val formProvider: AddressFormProvider = new AddressFormProvider()
-  lazy val form: Form[UserAddress] = formProvider(DestinationAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers))
+
+  def form(isConsignorPageOrUsingConsignorDetails: Boolean): Form[UserAddress] =
+    formProvider(DispatchAddressPage, isConsignorPageOrUsingConsignorDetails)(dataRequest(FakeRequest(), emptyUserAnswers))
+
   lazy val view: AddressView = app.injector.instanceOf[AddressView]
 
   def dispatchAddressRoute(ern: String = testErn): String =
     controllers.sections.dispatch.routes.DispatchAddressController.onPageLoad(ern, testDraftId, NormalMode).url
+
   def dispatchAddressOnSubmit(ern: String = testErn): Call =
     controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(ern, testDraftId, NormalMode)
+
   def dispatchAddressOnSkip(ern: String = testErn): Call =
     controllers.sections.dispatch.routes.DispatchAddressController.onSkip(ern, testDraftId, NormalMode)
 
@@ -75,10 +80,11 @@ class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
-        form = form,
+        form = form(isConsignorPageOrUsingConsignorDetails = false),
         addressPage = DispatchAddressPage,
         onSubmit = dispatchAddressOnSubmit(ern = testNICertifiedConsignorErn),
-        headingKey = Some("dispatchAddress")
+        headingKey = Some("dispatchAddress"),
+        isConsignorPageOrUsingConsignorDetails = false
       )(dataRequest(request, ern = testNICertifiedConsignorErn), messages(request)).toString
     }
 
@@ -92,18 +98,19 @@ class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
-        form = form,
+        form = form(isConsignorPageOrUsingConsignorDetails = false),
         addressPage = DispatchAddressPage,
         onSubmit = dispatchAddressOnSubmit(ern = testGreatBritainWarehouseKeeperErn),
         onSkip = Some(dispatchAddressOnSkip(ern = testGreatBritainWarehouseKeeperErn)),
-        headingKey = Some("dispatchAddress.optional")
+        headingKey = Some("dispatchAddress.optional"),
+        isConsignorPageOrUsingConsignorDetails = false
       )(dataRequest(request, ern = testGreatBritainWarehouseKeeperErn), messages(request)).toString
     }
 
-    "must fill the form with data from ConisgnorAddress when UseConsignor is true and no Dispatch address exists" in new Fixture(Some(
+    "must fill the form with data from ConsignorAddress when UseConsignor is true and no Dispatch address exists" in new Fixture(Some(
       emptyUserAnswers
         .set(DispatchUseConsignorDetailsPage, true)
-        .set(ConsignorAddressPage, testUserAddress.copy(street = "Consignor"))
+        .set(ConsignorAddressPage, testUserAddress.copy(street = Some("Consignor")))
     )) {
 
       val request = FakeRequest(GET, dispatchAddressRoute())
@@ -112,19 +119,20 @@ class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
-        form = form.fill(testUserAddress.copy(street = "Consignor")),
+        form = form(isConsignorPageOrUsingConsignorDetails = true).fill(testUserAddress.copy(street = Some("Consignor"))),
         addressPage = DispatchAddressPage,
         onSubmit = dispatchAddressOnSubmit(),
-        onSkip = Some(dispatchAddressOnSkip()),
-        headingKey = Some("dispatchAddress.optional")
+        onSkip = None,
+        headingKey = None,
+        isConsignorPageOrUsingConsignorDetails = true
       )(dataRequest(request), messages(request)).toString
     }
 
     "must fill the form with data from DispatchAddress when UseConsignor is true and Dispatch address exists" in new Fixture(Some(
       emptyUserAnswers
         .set(DispatchUseConsignorDetailsPage, true)
-        .set(ConsignorAddressPage, testUserAddress.copy(street = "Consignor"))
-        .set(DispatchAddressPage, testUserAddress.copy(street = "Dispatch"))
+        .set(ConsignorAddressPage, testUserAddress.copy(street = Some("Consignor")))
+        .set(DispatchAddressPage, testUserAddress.copy(street = Some("Dispatch")))
     )) {
 
       val request = FakeRequest(GET, dispatchAddressRoute())
@@ -133,11 +141,12 @@ class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
-        form = form.fill(testUserAddress.copy(street = "Dispatch")),
+        form = form(isConsignorPageOrUsingConsignorDetails = true).fill(testUserAddress.copy(street = Some("Dispatch"))),
         addressPage = DispatchAddressPage,
         onSubmit = dispatchAddressOnSubmit(),
-        onSkip = Some(dispatchAddressOnSkip()),
-        headingKey = Some("dispatchAddress.optional")
+        onSkip = None,
+        headingKey = None,
+        isConsignorPageOrUsingConsignorDetails = true
       )(dataRequest(request), messages(request)).toString
     }
 
@@ -148,10 +157,11 @@ class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService
       val req =
         FakeRequest(POST, dispatchAddressRoute())
           .withFormUrlEncodedBody(
+            ("businessName", userAddressModelMax.businessName.value),
             ("property", userAddressModelMax.property.value),
-            ("street", userAddressModelMax.street),
-            ("town", userAddressModelMax.town),
-            ("postcode", userAddressModelMax.postcode)
+            ("street", userAddressModelMax.street.value),
+            ("town", userAddressModelMax.town.value),
+            ("postcode", userAddressModelMax.postcode.value)
           )
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
@@ -163,7 +173,7 @@ class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
 
       val request = FakeRequest(POST, dispatchAddressRoute()).withFormUrlEncodedBody(("value", ""))
-      val boundForm = form.bind(Map("value" -> ""))
+      val boundForm = form(isConsignorPageOrUsingConsignorDetails = false).bind(Map("value" -> ""))
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(request)
 
@@ -173,17 +183,17 @@ class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService
         addressPage = DispatchAddressPage,
         onSubmit = dispatchAddressOnSubmit(),
         onSkip = Some(dispatchAddressOnSkip()),
-        headingKey = Some("dispatchAddress.optional")
+        headingKey = Some("dispatchAddress.optional"),
+        isConsignorPageOrUsingConsignorDetails = false
       )(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to the next page and wipe the answer for the current page when the question is skipped" in new Fixture(Some(emptyUserAnswers
-      .set(DispatchBusinessNamePage, "name")
       .set(DispatchAddressPage, userAddressModelMax)
     )) {
 
       MockUserAnswersService
-        .set(emptyUserAnswers.set(DispatchBusinessNamePage, "name"))
+        .set(emptyUserAnswers.set(DispatchAddressPage, userAddressModelMax).remove(DispatchAddressPage))
         .returns(Future.successful(emptyUserAnswers))
 
       val request = FakeRequest(GET, dispatchAddressOnSkip(testGreatBritainWarehouseKeeperErn).url)

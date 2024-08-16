@@ -24,7 +24,7 @@ import models.sections.transportArranger.TransportArranger
 import models.sections.transportArranger.TransportArranger.{Consignee, Consignor}
 import models.{Mode, UserAnswers}
 import navigation.TransportArrangerNavigator
-import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerNamePage, TransportArrangerPage, TransportArrangerVatPage}
+import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerPage, TransportArrangerVatPage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
@@ -67,7 +67,6 @@ class TransportArrangerController @Inject()(
     answer match {
       case Consignor | Consignee =>
         request.userAnswers
-          .remove(TransportArrangerNamePage)
           .remove(TransportArrangerVatPage)
           .remove(TransportArrangerAddressPage)
       case _ =>

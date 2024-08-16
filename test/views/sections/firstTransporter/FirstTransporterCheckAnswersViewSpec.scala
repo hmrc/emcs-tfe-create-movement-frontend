@@ -22,7 +22,7 @@ import models.requests.DataRequest
 import models.{CheckMode, VatNumberModel}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterNamePage, FirstTransporterVatPage}
+import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterVatPage}
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -38,16 +38,14 @@ class FirstTransporterCheckAnswersViewSpec extends SpecBase with ViewBehaviours 
     implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
       emptyUserAnswers
-        .set(FirstTransporterNamePage, "Transporter name")
         .set(FirstTransporterVatPage, VatNumberModel(true, Some("GB123456789")))
-        .set(FirstTransporterAddressPage, testUserAddress)
+        .set(FirstTransporterAddressPage, testUserAddress.copy(businessName = Some("Transporter name")))
     )
 
     lazy val view = app.injector.instanceOf[FirstTransporterCheckAnswersView]
 
     implicit val doc: Document = Jsoup.parse(view(
       SummaryList(Seq(
-        Some(FirstTransporterNameSummary.row()),
         FirstTransporterVatChoiceSummary.row(),
         FirstTransporterVatSummary.row(),
         Some(FirstTransporterAddressSummary.row())
@@ -70,17 +68,11 @@ class FirstTransporterCheckAnswersViewSpec extends SpecBase with ViewBehaviours 
           Selectors.title -> messagesForLanguage.title,
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.firstTransporterSection,
           Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.govukSummaryListKey(1) -> messagesForLanguage.firstTransporterName,
-          Selectors.govukSummaryListKey(2) -> messagesForLanguage.firstTransporterHasVat,
-          Selectors.govukSummaryListKey(3) -> messagesForLanguage.firstTransporterVatNumber,
-          Selectors.govukSummaryListKey(4) -> messagesForLanguage.firstTransporterAddress,
+          Selectors.govukSummaryListKey(1) -> messagesForLanguage.firstTransporterHasVat,
+          Selectors.govukSummaryListKey(2) -> messagesForLanguage.firstTransporterVatNumber,
+          Selectors.govukSummaryListKey(3) -> messagesForLanguage.firstTransporterAddress,
           Selectors.button -> messagesForLanguage.confirmAnswers
         ))
-
-        "have a link to change first transporter name" in {
-          doc.getElementById("changeFirstTransporterName").attr("href") mustBe
-            controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testDraftId, CheckMode).url
-        }
 
         "have a link to change first transporter VAT Choice" in {
           doc.getElementById("changeFirstTransporterVatChoice").attr("href") mustBe

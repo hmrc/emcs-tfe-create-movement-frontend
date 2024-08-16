@@ -24,7 +24,6 @@ import models.requests.DataRequest
 import pages.Page
 import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExcisePage}
 import pages.sections.consignor.ConsignorAddressPage
-import pages.sections.destination.{DestinationAddressPage, DestinationWarehouseExcisePage}
 import pages.sections.dispatch.{DispatchAddressPage, DispatchWarehouseExcisePage}
 import play.api.data.FormError
 import play.api.mvc.AnyContentAsEmpty
@@ -36,8 +35,9 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
 
   implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers, ern = testGreatBritainErn)
 
-  val form = new AddressFormProvider()(ConsignorAddressPage)
+  val form = new AddressFormProvider()(ConsignorAddressPage, false)
 
+  val testBusinessNameParameters = TestParameters(fieldName = "businessName", fieldLength = 182, isMandatory = true)
   val testPropertyParameters = TestParameters(fieldName = "property", fieldLength = 11, isMandatory = false)
   val testStreetParameters = TestParameters(fieldName = "street", fieldLength = 65, isMandatory = true)
   val testTownParameters = TestParameters(fieldName = "town", fieldLength = 50, isMandatory = true)
@@ -46,19 +46,21 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
   val postcodeField = testPostcodeParameters.fieldName
 
   def notBTPostcodeKey(page: Page): String = s"address.postcode.error.$page.mustNotStartWithBT"
+
   def mustBeBTPostcodeKey(page: Page): String = s"address.postcode.error.$page.mustStartWithBT"
 
   def formAnswersMap(updateField: Option[String] = None,
                      updateAnswer: Option[String] = None): Map[String, String] = {
 
-    val validAnswers = Map(
+    val validAnswers: Map[String, String] = Map(
+      testBusinessNameParameters.fieldName -> userAddressModelMax.businessName.value,
       testPropertyParameters.fieldName -> userAddressModelMax.property.value,
-      testStreetParameters.fieldName -> userAddressModelMax.street,
-      testTownParameters.fieldName -> userAddressModelMax.town,
-      testPostcodeParameters.fieldName -> userAddressModelMax.postcode
+      testStreetParameters.fieldName -> userAddressModelMax.street.value,
+      testTownParameters.fieldName -> userAddressModelMax.town.value,
+      testPostcodeParameters.fieldName -> userAddressModelMax.postcode.value
     )
 
-    def update(fieldName: String, newAnswer: String) = validAnswers.map {
+    def update(fieldName: String, newAnswer: String): Map[String, String] = validAnswers.map {
       case (`fieldName`, _) => (fieldName, newAnswer)
       case fieldNameAndAnswer => fieldNameAndAnswer
     }
@@ -72,10 +74,11 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
   def userAddressModel(updateField: Option[String] = None,
                        updateAnswer: Option[String] = None): UserAddress =
     (updateField, updateAnswer) match {
+      case (Some(testBusinessNameParameters.fieldName), answer) => userAddressModelMax.copy(businessName = answer)
       case (Some(testPropertyParameters.fieldName), answer) => userAddressModelMax.copy(property = answer)
-      case (Some(testStreetParameters.fieldName), Some(answer)) => userAddressModelMax.copy(street = answer)
-      case (Some(testTownParameters.fieldName), Some(answer)) => userAddressModelMax.copy(town = answer)
-      case (Some(testPostcodeParameters.fieldName), Some(answer)) => userAddressModelMax.copy(postcode = answer)
+      case (Some(testStreetParameters.fieldName), answer) => userAddressModelMax.copy(street = answer)
+      case (Some(testTownParameters.fieldName), answer) => userAddressModelMax.copy(town = answer)
+      case (Some(testPostcodeParameters.fieldName), answer) => userAddressModelMax.copy(postcode = answer)
       case _ => userAddressModelMax
     }
 
@@ -86,6 +89,13 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
     actual.value.value mustBe userAddressModelMax
   }
 
+  "all fields must bind when maximum valid data is entered and isConsignorPageOrUsingConsignorDetails && request.traderKnownFacts.isDefined" in {
+
+    val actual = new AddressFormProvider()(ConsignorAddressPage, true).bind(formAnswersMap())
+    actual.errors mustBe Seq()
+    actual.value.value mustBe userAddressModelMax.copy(businessName = Some(testMinTraderKnownFacts.traderName))
+  }
+
   "all fields must bind when minimum valid data is entered" in {
 
     val actual = form.bind(formAnswersMap(Some(testPropertyParameters.fieldName), Some("")))
@@ -94,17 +104,17 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
   }
 
   Seq(
-    testPropertyParameters, testStreetParameters, testTownParameters, testPostcodeParameters
+    testBusinessNameParameters, testPropertyParameters, testStreetParameters, testTownParameters, testPostcodeParameters
   ) foreach { testParameters =>
 
     val TestParameters(fieldName, fieldLength, isMandatory) = testParameters
 
     s".$fieldName" - {
 
-      val requiredKey = s"address.$fieldName.error.required"
-      val lengthKey = s"address.$fieldName.error.length"
-      val invalidKey = s"address.$fieldName.error.invalid"
-      val charactersKey = s"address.$fieldName.error.character"
+      val requiredKey = s"address.$fieldName.error${if (testParameters == testBusinessNameParameters) ".consignorAddress" else ""}.required"
+      val lengthKey = s"address.$fieldName.error${if (testParameters == testBusinessNameParameters) ".consignorAddress" else ""}.length"
+      val invalidKey = s"address.$fieldName.error${if (testParameters == testBusinessNameParameters) ".consignorAddress" else ""}.invalid"
+      val charactersKey = s"address.$fieldName.error${if (testParameters == testBusinessNameParameters) ".consignorAddress" else ""}.character"
 
       if (isMandatory) {
 
@@ -119,7 +129,7 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
           actualResult.errors mustBe expectedResult
         }
 
-        "must error if no value is all emptry chars supplied" in {
+        "must error if no value is all empty chars supplied" in {
 
           val answer = "     "
 
@@ -202,23 +212,25 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
         actualResult.errors mustBe expectedResult
       }
 
-      "must error when value contains only non-alphanumerics" in {
+      if (testParameters != testBusinessNameParameters) {
+        "must error when value contains only non-alphanumerics" in {
 
-        val nonAlphanumericAnswer = "."
+          val nonAlphanumericAnswer = "."
 
-        val expectedResult = Seq(FormError(fieldName, charactersKey, Seq(ALPHANUMERIC_REGEX)))
+          val expectedResult = Seq(FormError(fieldName, charactersKey, Seq(ALPHANUMERIC_REGEX)))
 
-        val actualResult = form.bind(formAnswersMap(Some(fieldName), Some(nonAlphanumericAnswer)))
+          val actualResult = form.bind(formAnswersMap(Some(fieldName), Some(nonAlphanumericAnswer)))
 
-        actualResult.errors mustBe expectedResult
+          actualResult.errors mustBe expectedResult
+        }
       }
     }
   }
 
   "for the ConsignorAddress Page" - {
 
-    lazy val gbForm = new AddressFormProvider()(ConsignorAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testGreatBritainErn))
-    lazy val xiForm = new AddressFormProvider()(ConsignorAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testNorthernIrelandErn))
+    lazy val gbForm = new AddressFormProvider()(ConsignorAddressPage, false)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testGreatBritainErn))
+    lazy val xiForm = new AddressFormProvider()(ConsignorAddressPage, false)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testNorthernIrelandErn))
 
     "must not bind for 'BT' postcodes when the user is a GB trader" in {
 
@@ -247,8 +259,8 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
 
   "for the ConsigneeAddress Page" - {
 
-    lazy val gbForm = new AddressFormProvider()(ConsigneeAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExcisePage, testGreatBritainErn)))
-    lazy val xiForm = new AddressFormProvider()(ConsigneeAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExcisePage,testNorthernIrelandErn)))
+    lazy val gbForm = new AddressFormProvider()(ConsigneeAddressPage, false)(dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExcisePage, testGreatBritainErn)))
+    lazy val xiForm = new AddressFormProvider()(ConsigneeAddressPage, false)(dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExcisePage, testNorthernIrelandErn)))
 
     "must not bind for 'BT' postcodes when the user is a GB trader" in {
 
@@ -278,12 +290,12 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
       val testErn = "FRWK123456789"
 
       "must allow a postcode starting with GB" in {
-        val form = new AddressFormProvider()(ConsigneeAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
+        val form = new AddressFormProvider()(ConsigneeAddressPage, false)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
         form.bind(formAnswersMap(Some(postcodeField), Some("GB1 1AA"))).errors mustBe empty
       }
 
       "must allow a postcode starting with XI" in {
-        val form = new AddressFormProvider()(ConsigneeAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
+        val form = new AddressFormProvider()(ConsigneeAddressPage, false)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
         form.bind(formAnswersMap(Some(postcodeField), Some("XI1 1AA"))).errors mustBe empty
       }
     }
@@ -293,7 +305,7 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
 
     "for a GB ERN" - {
 
-      lazy val gbForm = new AddressFormProvider()(DispatchAddressPage)(dataRequest(FakeRequest(),
+      lazy val gbForm = new AddressFormProvider()(DispatchAddressPage, false)(dataRequest(FakeRequest(),
         emptyUserAnswers.set(DispatchWarehouseExcisePage, testGreatBritainErn)
       ))
 
@@ -309,7 +321,7 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
 
     "for an XI ERN" - {
 
-      lazy val xiForm = new AddressFormProvider()(DispatchAddressPage)(dataRequest(FakeRequest(),
+      lazy val xiForm = new AddressFormProvider()(DispatchAddressPage, false)(dataRequest(FakeRequest(),
         emptyUserAnswers.set(DispatchWarehouseExcisePage, testNorthernIrelandErn)
       ))
 
@@ -325,7 +337,7 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
 
     "where the DispatchWarehouseERN is not known" - {
 
-      lazy val unknownErnForm = new AddressFormProvider()(DispatchAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers))
+      lazy val unknownErnForm = new AddressFormProvider()(DispatchAddressPage, false)(dataRequest(FakeRequest(), emptyUserAnswers))
 
       "must bind Non-BT postcode" in {
         unknownErnForm.bind(formAnswersMap(Some(postcodeField), Some("B1 1AA"))).errors mustBe empty
@@ -340,74 +352,12 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
       val testErn = "FRWK123456789"
 
       "must allow a postcode starting with GB" in {
-        val form = new AddressFormProvider()(DispatchAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
+        val form = new AddressFormProvider()(DispatchAddressPage, false)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
         form.bind(formAnswersMap(Some(postcodeField), Some("GB1 1AA"))).errors mustBe empty
       }
 
       "must allow a postcode starting with XI" in {
-        val form = new AddressFormProvider()(DispatchAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
-        form.bind(formAnswersMap(Some(postcodeField), Some("XI1 1AA"))).errors mustBe empty
-      }
-    }
-  }
-
-  "for the DestinationAddress Page" - {
-
-    "for a GB ERN" - {
-
-      lazy val gbForm = new AddressFormProvider()(DestinationAddressPage)(dataRequest(FakeRequest(),
-        emptyUserAnswers.set(DestinationWarehouseExcisePage, testGreatBritainErn)
-      ))
-
-      "must not bind for 'BT' postcode" in {
-        val expectedResult = Seq(FormError(postcodeField, notBTPostcodeKey(DestinationAddressPage), Seq()))
-        gbForm.bind(formAnswersMap(Some(postcodeField), Some("BT1 1AA"))).errors mustBe expectedResult
-      }
-
-      "must bind for postcode not beginning with 'BT'" in {
-        gbForm.bind(formAnswersMap(Some(postcodeField), Some("B1 1AA"))).errors mustBe empty
-      }
-    }
-
-    "for an XI ERN" - {
-
-      lazy val xiForm = new AddressFormProvider()(DestinationAddressPage)(dataRequest(FakeRequest(),
-        emptyUserAnswers.set(DestinationWarehouseExcisePage, testNorthernIrelandErn)
-      ))
-
-      "must not bind for non-BT postcode" in {
-        val expectedResult = Seq(FormError(postcodeField, mustBeBTPostcodeKey(DestinationAddressPage), Seq()))
-        xiForm.bind(formAnswersMap(Some(postcodeField), Some("B1 1AA"))).errors mustBe expectedResult
-      }
-
-      "must bind for postcode beginning with 'BT'" in {
-        xiForm.bind(formAnswersMap(Some(postcodeField), Some("BT1 1AA"))).errors mustBe empty
-      }
-    }
-
-    "where the DispatchWarehouseERN is not known" - {
-
-      lazy val unknownErnForm = new AddressFormProvider()(DestinationAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers))
-
-      "must bind Non-BT postcode" in {
-        unknownErnForm.bind(formAnswersMap(Some(postcodeField), Some("B1 1AA"))).errors mustBe empty
-      }
-
-      "must bind BT postcode" in {
-        unknownErnForm.bind(formAnswersMap(Some(postcodeField), Some("BT1 1AA"))).errors mustBe empty
-      }
-    }
-
-    "when the ERN is neither starting with GB nor XI" - {
-      val testErn = "FRWK123456789"
-
-      "must allow a postcode starting with GB" in {
-        val form = new AddressFormProvider()(DestinationAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
-        form.bind(formAnswersMap(Some(postcodeField), Some("GB1 1AA"))).errors mustBe empty
-      }
-
-      "must allow a postcode starting with XI" in {
-        val form = new AddressFormProvider()(DestinationAddressPage)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
+        val form = new AddressFormProvider()(DispatchAddressPage, false)(dataRequest(FakeRequest(), emptyUserAnswers, ern = testErn))
         form.bind(formAnswersMap(Some(postcodeField), Some("XI1 1AA"))).errors mustBe empty
       }
     }

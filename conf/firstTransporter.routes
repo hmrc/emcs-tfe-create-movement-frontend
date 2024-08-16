@@ -1,10 +1,5 @@
 GET         /trader/:ern/draft/:draftId/first-transporter                       controllers.sections.firstTransporter.FirstTransporterIndexController.onPageLoad(ern: String, draftId: String)
 
-GET         /trader/:ern/draft/:draftId/first-transporter/name                  controllers.sections.firstTransporter.FirstTransporterNameController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
-POST        /trader/:ern/draft/:draftId/first-transporter/name                  controllers.sections.firstTransporter.FirstTransporterNameController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
-GET         /trader/:ern/draft/:draftId/first-transporter/name/change           controllers.sections.firstTransporter.FirstTransporterNameController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)
-POST        /trader/:ern/draft/:draftId/first-transporter/name/change           controllers.sections.firstTransporter.FirstTransporterNameController.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)
-
 GET         /trader/:ern/draft/:draftId/first-transporter/vat                   controllers.sections.firstTransporter.FirstTransporterVatController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
 POST        /trader/:ern/draft/:draftId/first-transporter/vat                   controllers.sections.firstTransporter.FirstTransporterVatController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
 GET         /trader/:ern/draft/:draftId/first-transporter/vat/change            controllers.sections.firstTransporter.FirstTransporterVatController.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)

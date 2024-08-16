@@ -46,7 +46,6 @@ class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with U
         "the Excise Number has been provided" in new Setup(emptyUserAnswers
           .set(DestinationDetailsChoicePage, true)
           .set(DestinationConsigneeDetailsPage, false)
-          .set(DestinationBusinessNamePage, "name")
           .set(DestinationWarehouseExcisePage, "excise")
           .set(DestinationAddressPage, userAddressModelMax)
         ) {
@@ -54,7 +53,6 @@ class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with U
           val expectedResult = SummaryList(Seq(
             DestinationDetailsChoiceSummary.row(),
             DestinationConsigneeDetailsSummary.row(),
-            Some(DestinationBusinessNameSummary.row()),
             destinationWarehouseExciseSummary.row(),
             Some(DestinationAddressSummary.row())
           ).flatten).withCssClass("govuk-!-margin-bottom-9")
@@ -66,7 +64,6 @@ class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with U
         "the VAT Number has been provided" in new Setup(emptyUserAnswers
           .set(DestinationDetailsChoicePage, true)
           .set(DestinationConsigneeDetailsPage, false)
-          .set(DestinationBusinessNamePage, "name")
           .set(DestinationWarehouseVatPage, "vat")
           .set(DestinationAddressPage, userAddressModelMax)
         ) {
@@ -74,7 +71,6 @@ class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with U
           val expectedResult = SummaryList(Seq(
             DestinationDetailsChoiceSummary.row(),
             DestinationConsigneeDetailsSummary.row(),
-            Some(DestinationBusinessNameSummary.row()),
             DestinationWarehouseVatSummary.row(),
             Some(DestinationAddressSummary.row())
           ).flatten).withCssClass("govuk-!-margin-bottom-9")
@@ -87,13 +83,11 @@ class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with U
       "not all questions have been answered" - {
 
         "the Excise Number has been provided" in new Setup(emptyUserAnswers
-          .set(DestinationBusinessNamePage, "name")
           .set(DestinationWarehouseExcisePage, "excise")
           .set(DestinationAddressPage, userAddressModelMax)
         ) {
 
           val expectedResult = SummaryList(Seq(
-            Some(DestinationBusinessNameSummary.row()),
             destinationWarehouseExciseSummary.row(),
             Some(DestinationAddressSummary.row())
           ).flatten).withCssClass("govuk-!-margin-bottom-9")
@@ -107,7 +101,6 @@ class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with U
         ) {
 
           val expectedResult = SummaryList(Seq(
-            Some(DestinationBusinessNameSummary.row()),
             DestinationWarehouseVatSummary.row(),
             Some(DestinationAddressSummary.row())
           ).flatten).withCssClass("govuk-!-margin-bottom-9")
@@ -122,7 +115,6 @@ class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with U
         "the Excise Number has been provided" in new Setup(emptyUserAnswers) {
 
           val expectedResult = SummaryList(Seq(
-            Some(DestinationBusinessNameSummary.row()),
             Some(DestinationAddressSummary.row())
           ).flatten).withCssClass("govuk-!-margin-bottom-9")
 

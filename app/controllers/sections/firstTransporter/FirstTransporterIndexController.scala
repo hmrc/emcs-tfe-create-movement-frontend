@@ -41,7 +41,7 @@ class FirstTransporterIndexController @Inject()(
       if (FirstTransporterSection.isCompleted) {
         Redirect(controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(ern, draftId))
       } else {
-        Redirect(controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(ern, draftId, NormalMode))
+        Redirect(controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(ern, draftId, NormalMode))
       }
     }
 }

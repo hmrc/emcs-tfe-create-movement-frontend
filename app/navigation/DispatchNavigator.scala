@@ -33,16 +33,10 @@ class DispatchNavigator @Inject() extends BaseNavigator {
       if(userAnswers.get(ConsignorAddressPage).nonEmpty) {
         routes.DispatchUseConsignorDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
       } else {
-        routes.DispatchBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+        routes.DispatchAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
       }
 
     case DispatchUseConsignorDetailsPage => (userAnswers: UserAnswers) =>
-      userAnswers.get(DispatchUseConsignorDetailsPage) match {
-        case Some(true) => routes.DispatchAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
-        case _ => routes.DispatchBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
-      }
-
-    case DispatchBusinessNamePage => (userAnswers: UserAnswers) =>
       routes.DispatchAddressController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
 
     case DispatchAddressPage => (userAnswers: UserAnswers) =>

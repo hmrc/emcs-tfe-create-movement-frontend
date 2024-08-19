@@ -76,6 +76,14 @@ class ActiveTraderSpec extends SpecBase {
           (link.attr("href"), link.text) mustEqual ("http://localhost:8310/emcs/account", messagesForLanguage.changeTraderType)
         }
 
+        "if trader name is '' (blank) then only output the ERN" in {
+          val traderInfo = TraderInfo("", testErn)
+          val html = activeTrader(Some(traderInfo), appConfig)
+          val doc = Jsoup.parse(html.toString())
+
+          doc.select(titleSelector).text mustEqual testErn
+        }
+
       }
 
     }

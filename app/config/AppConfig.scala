@@ -44,15 +44,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   def loginContinueUrl(ern: String): String = configuration.get[String]("urls.loginContinue") + s"/trader/$ern"
 
-  def signOutUrl()(request: RequestHeader): String = {
-    val savablePage = request.uri.matches(".*/trader/.*/draft/.*")
-
-    (redirectToFeedbackSurvey, savablePage) match {
-      case (true, _) => controllers.auth.routes.SignedOutController.signOutWithSurvey().url
-      case (false, true) => controllers.auth.routes.SignedOutController.signOutSaved().url
-      case (false, false) => controllers.auth.routes.SignedOutController.signOutNotSaved().url
-    }
-  }
+  lazy val signOutUrl: String = configuration.get[String]("urls.signOut")
 
   lazy val loginGuidance: String = configuration.get[String]("urls.loginGuidance")
   lazy val registerGuidance: String = configuration.get[String]("urls.registerGuidance")
@@ -80,7 +72,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   def returnToDraft(implicit request: DataRequest[_]): String = controllers.routes.DraftMovementController.onPageLoad(request.ern, request.draftId).url
 
-  private def redirectToFeedbackSurvey: Boolean = isEnabled(RedirectToFeedbackSurvey)
+  def redirectToFeedbackSurvey: Boolean = isEnabled(RedirectToFeedbackSurvey)
 
   lazy val timeout: Int = configuration.get[Int]("timeout-dialog.timeout")
   lazy val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")

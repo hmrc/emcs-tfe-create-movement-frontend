@@ -23,8 +23,9 @@ import models.GoodsType._
 import models.requests.DataRequest
 import models.response.InvalidRegexException
 import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
+import models.sections.items.ItemSmallIndependentProducerType.{CertifiedIndependentSmallProducer, NotAIndependentSmallProducer, NotProvided}
 import models.sections.items.ItemWineProductCategory.Other
-import models.sections.items.{ItemBrandNameModel, ItemDesignationOfOriginModel, ItemNetGrossMassModel}
+import models.sections.items.{ItemBrandNameModel, ItemDesignationOfOriginModel, ItemNetGrossMassModel, ItemSmallIndependentProducerModel}
 import play.api.test.FakeRequest
 import utils.{ItemDegreesPlatoError, ItemQuantityError}
 import viewmodels.taskList.{NotStarted, UpdateNeeded}
@@ -471,6 +472,36 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
           }
         }
       }
+    }
+  }
+
+  "containsItemFromCertifiedIndependentSmallProducer" - {
+
+    "must return true when there exists an item that's an independent small producer" in {
+
+      implicit val request = dataRequest(FakeRequest(), emptyUserAnswers
+        .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(NotAIndependentSmallProducer, None))
+        .set(ItemSmallIndependentProducerPage(testIndex2), ItemSmallIndependentProducerModel(CertifiedIndependentSmallProducer, None))
+        .set(ItemSmallIndependentProducerPage(testIndex3), ItemSmallIndependentProducerModel(NotProvided, None))
+      )
+
+      ItemsSectionItems.containsItemFromCertifiedIndependentSmallProducer mustBe true
+    }
+
+    "must return false when there DOES NOT exist an item that's an independent small producer" in {
+
+      implicit val request = dataRequest(FakeRequest(), emptyUserAnswers
+        .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(NotAIndependentSmallProducer, None))
+        .set(ItemSmallIndependentProducerPage(testIndex2), ItemSmallIndependentProducerModel(NotAIndependentSmallProducer, None))
+        .set(ItemSmallIndependentProducerPage(testIndex3), ItemSmallIndependentProducerModel(NotProvided, None))
+      )
+
+      ItemsSectionItems.containsItemFromCertifiedIndependentSmallProducer mustBe false
+    }
+
+    "must return false when no info exists" in {
+      implicit val request = dataRequest(FakeRequest(), emptyUserAnswers)
+      ItemsSectionItems.containsItemFromCertifiedIndependentSmallProducer mustBe false
     }
   }
 }

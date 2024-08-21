@@ -19,6 +19,7 @@ package pages.sections.items
 import config.Constants.BODYEADESAD
 import models.requests.DataRequest
 import models.response.InvalidRegexException
+import models.sections.items.ItemSmallIndependentProducerType.CertifiedIndependentSmallProducer
 import models.{GoodsType, UserAnswers}
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
@@ -83,6 +84,14 @@ case object ItemsSectionItems extends Section[JsObject] {
       request.userAnswers
         .get(ItemExciseProductCodePage(idx))
         .exists(code => goodsTypes.contains(GoodsType.apply(code)))
+    }
+
+  def containsItemFromCertifiedIndependentSmallProducer(implicit request: DataRequest[_]): Boolean =
+    (0 until request.userAnswers.getCount(ItemsCount).getOrElse(0)).exists { idx =>
+      request.userAnswers
+        .get(ItemSmallIndependentProducerPage(idx))
+        .map(_.producerType)
+        .contains(CertifiedIndependentSmallProducer)
     }
 
   def isEmpty(implicit request: DataRequest[_]): Boolean = request.userAnswers.getCount(ItemsCount).getOrElse(0) == 0

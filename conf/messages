@@ -21,7 +21,7 @@ site.saveAndReturnToMovement = Save and return to movement
 site.start = Start now
 site.skipQuestion = Skip this question for now
 site.skipThisQuestion = Skip this question
-site.startAgain = Start again
+site.startAgain = Return to account home
 site.signIn = Sign back in to EMCS
 site.govuk = GOV.UK
 site.opensInNewTab = (opens in new tab)
@@ -164,7 +164,7 @@ journeyRecovery.continue.heading = Sorry, there is a problem with the service
 journeyRecovery.continue.guidance = [Add content to explain how to proceed.]
 journeyRecovery.startAgain.title = Sorry, there is a problem with the service
 journeyRecovery.startAgain.heading = Sorry, there is a problem with the service
-journeyRecovery.startAgain.guidance = [Add content to explain why the user needs to start again.]
+journeyRecovery.startAgain.guidance = It is currently not possible to create a movement. Try again later.
 
 signedOut.title = For your security, we signed you out
 signedOut.heading = For your security, we signed you out

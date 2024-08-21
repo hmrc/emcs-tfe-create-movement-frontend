@@ -24,6 +24,10 @@ object DocumentsCertificatesMessages {
 
     val heading = "Are there any document certificates associated with this movement?"
     val title = titleHelper(heading)
+    val smallProducerHeading = "Document certificates"
+    val smallProducerTitle = titleHelper(smallProducerHeading)
+    val smallProducerInset = "You have told us that this movement contains an item produced by a certified independent small producer. You should record the certificate document and a reference if claiming Small Producer Relief on alcohol duty."
+    val smallProducerQuestion = heading
     val errorRequired = "Select yes if there are documents associated with this movement"
     val hint = "For example, a delivery note, invoice or electronic administrative document (eAD). You will have the chance to add more later."
     val cyaLabel: String = "Documents Certificates"

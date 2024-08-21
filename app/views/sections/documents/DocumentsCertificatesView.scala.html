@@ -16,6 +16,7 @@
 
 @import models.requests.DataRequest
 @import viewmodels.LegendSize
+@import pages.sections.items.ItemsSectionItems
 
 @this(
     layout: templates.Layout,
@@ -25,12 +26,14 @@
     govukButton: GovukButton,
     h1: components.h1,
     h2: components.h2,
+    inset: components.inset,
+    p: components.p,
     continueOrExit: components.continueOrExit
 )
 
 @(form: Form[_], onSubmitCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("documentsCertificates.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages({if(ItemsSectionItems.containsItemFromCertifiedIndependentSmallProducer) "documentsCertificates.smallProducer.title" else "documentsCertificates.title"})), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
 
@@ -39,13 +42,31 @@
         }
 
         @h2(messages("documents.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
-        @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
-                legend = LegendViewModel(Text(messages("documentsCertificates.heading"))).asPageHeading(LegendSize.Large)
+
+        @if(ItemsSectionItems.containsItemFromCertifiedIndependentSmallProducer) {
+
+            @h1("documentsCertificates.smallProducer.heading")
+
+            @inset(Html(messages("documentsCertificates.smallProducer.inset")))
+
+            @govukRadios(
+                RadiosViewModel.yesNo(
+                    field = form("value"),
+                    legend = LegendViewModel(Text(messages("documentsCertificates.smallProducer.question"))).withCssClass("govuk-fieldset__legend govuk-fieldset__legend--m")
+                )
+                .withHint(HintViewModel(content = Text(messages("documentsCertificates.hintText"))))
             )
-            .withHint(HintViewModel(content = Text(messages("documentsCertificates.hintText"))))
-        )
+
+        } else {
+
+            @govukRadios(
+                RadiosViewModel.yesNo(
+                    field = form("value"),
+                    legend = LegendViewModel(Text(messages("documentsCertificates.heading"))).asPageHeading(LegendSize.Large)
+                )
+                .withHint(HintViewModel(content = Text(messages("documentsCertificates.hintText"))))
+            )
+        }
 
         @continueOrExit()
     }

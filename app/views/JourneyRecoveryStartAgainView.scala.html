@@ -15,11 +15,14 @@
  *@
 
 @import config.AppConfig
+@import views.html.components.link
 
 @this(
     layout: templates.Layout,
     govukButton: GovukButton,
-    appConfig: AppConfig
+    appConfig: AppConfig,
+    p: components.p,
+    link: link
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -30,12 +33,14 @@
 
     <p class="govuk-body">@messages("journeyRecovery.startAgain.guidance")</p>
 
-    <p class="govuk-body">
-        @govukButton(
-            ButtonViewModel(messages("site.startAgain"))
-                .asLink(appConfig.emcsTfeHomeUrl)
+    @p(classes = "govuk-body no-print") {
+        @link(
+            appConfig.emcsTfeHomeUrl,
+            "site.startAgain",
+            opensInNewTab = false,
+            id = Some("account-home-link")
         )
-    </p>
+    }
 }
 
 @{

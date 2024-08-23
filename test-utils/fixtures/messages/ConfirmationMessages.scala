@@ -42,7 +42,7 @@ object ConfirmationMessages {
     val p9 = "If the error cannot be corrected, you must create a new movement."
     val p10 = "Contact the HMRC excise helpline if you need more help or information about excise duties."
 
-    val returnToAccountLink = "Return to account"
+    val returnToAccountLink = "Return to account home"
     val feedbackLink = "What did you think of this service? (opens in new tab) (takes 30 seconds)"
 
   }

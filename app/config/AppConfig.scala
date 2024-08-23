@@ -61,14 +61,8 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   def emcsTfeHomeUrl: String =
     configuration.get[String]("urls.emcsTfeHome")
 
-  def emcsTfeMessagesUrl(ern: String): String =
-    configuration.get[String]("urls.emcsTfeMessages").replace("{ern}", ern)
-
   def emcsTfeDraftsUrl(ern: String): String =
     configuration.get[String]("urls.emcsTfeDrafts").replace("{ern}", ern)
-
-  def emcsTfeMovementsUrl(ern: String): String =
-    configuration.get[String]("urls.emcsTfeMovements").replace("{ern}", ern)
 
   def returnToDraft(implicit request: DataRequest[_]): String = controllers.routes.DraftMovementController.onPageLoad(request.ern, request.draftId).url
 

@@ -20,8 +20,11 @@ import base.SpecBase
 import fixtures.messages.sections.documents.DocumentsCertificatesMessages
 import forms.sections.documents.DocumentsCertificatesFormProvider
 import models.requests.DataRequest
+import models.sections.items.ItemSmallIndependentProducerModel
+import models.sections.items.ItemSmallIndependentProducerType.CertifiedIndependentSmallProducer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pages.sections.items.ItemSmallIndependentProducerPage
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -32,6 +35,9 @@ class DocumentsCertificatesViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
+  lazy val view = app.injector.instanceOf[DocumentsCertificatesView]
+  lazy val form = app.injector.instanceOf[DocumentsCertificatesFormProvider].apply()
+
   "Documents Certificates view" - {
 
     Seq(DocumentsCertificatesMessages.English).foreach { messagesForLanguage =>
@@ -39,28 +45,51 @@ class DocumentsCertificatesViewSpec extends SpecBase with ViewBehaviours {
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-       lazy val view = app.injector.instanceOf[DocumentsCertificatesView]
-        val form = app.injector.instanceOf[DocumentsCertificatesFormProvider].apply()
+        "when rendering the variation for certified independent small producer item" - {
 
-        implicit val doc: Document =
-          Jsoup.parse(view(
-            form = form,
-            testOnwardRoute
-          ).toString())
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(
+                CertifiedIndependentSmallProducer,
+                None
+              ))
+          )
 
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.h2(1) -> messagesForLanguage.documentsSection,
-          Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
-          Selectors.hint -> messagesForLanguage.hint,
-          Selectors.radioButton(1) -> messagesForLanguage.yes,
-          Selectors.radioButton(2) -> messagesForLanguage.no,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
-        ))
+          implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
+            Selectors.h2(1) -> messagesForLanguage.documentsSection,
+            Selectors.title -> messagesForLanguage.smallProducerTitle,
+            Selectors.h1 -> messagesForLanguage.smallProducerHeading,
+            Selectors.inset -> messagesForLanguage.smallProducerInset,
+            Selectors.hint -> messagesForLanguage.hint,
+            Selectors.radioButton(1) -> messagesForLanguage.yes,
+            Selectors.radioButton(2) -> messagesForLanguage.no,
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.link(1) -> messagesForLanguage.returnToDraft
+          ))
+        }
+
+        "when rendering the variation that's NOT certified independent small producer item" - {
+
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
+
+          implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title,
+            Selectors.h1 -> messagesForLanguage.heading,
+            Selectors.h2(1) -> messagesForLanguage.documentsSection,
+            Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
+            Selectors.hint -> messagesForLanguage.hint,
+            Selectors.radioButton(1) -> messagesForLanguage.yes,
+            Selectors.radioButton(2) -> messagesForLanguage.no,
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.link(1) -> messagesForLanguage.returnToDraft
+          ))
+        }
       }
     }
   }

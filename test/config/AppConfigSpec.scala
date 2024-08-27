@@ -17,11 +17,9 @@
 package config
 
 import base.SpecBase
-import featureswitch.core.config.{FeatureSwitching, RedirectToFeedbackSurvey}
+import featureswitch.core.config.FeatureSwitching
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.BeforeAndAfterEach
-import play.api.test.FakeRequest
-import play.api.test.Helpers.GET
 
 class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitching with MockFactory {
 
@@ -49,21 +47,9 @@ class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitchi
       }
     }
 
-    ".emcsTfeMessagesUrl" - {
-      "should generate the correct url" in {
-        appConfig.emcsTfeMessagesUrl(testErn) mustBe s"http://localhost:8310/emcs/account/trader/$testErn/messages"
-      }
-    }
-
     ".emcsTfeDraftsUrl" - {
       "should generate the correct url" in {
         appConfig.emcsTfeDraftsUrl(testErn) mustBe s"http://localhost:8310/emcs/account/trader/$testErn/draft-movements"
-      }
-    }
-
-    ".emcsTfeMovementsUrl" - {
-      "should generate the correct url" in {
-        appConfig.emcsTfeMovementsUrl(testErn) mustBe s"http://localhost:8310/emcs/account/trader/$testErn/movements"
       }
     }
 

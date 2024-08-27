@@ -1418,7 +1418,7 @@ confirmation.p8 = The message will tell you what needs to be corrected. You must
 confirmation.p9 = If the error cannot be corrected, you must create a new movement.
 confirmation.p10 = Contact the HMRC excise helpline if you need more help or information about excise duties.
 
-confirmation.returnToAccountLink = Return to account
+confirmation.returnToAccountLink = Return to account home
 confirmation.feedbackLink = What did you think of this service?
 confirmation.feedbackText = (takes 30 seconds)
 

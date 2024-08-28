@@ -31,8 +31,8 @@ object ItemQuantityMessages {
     }
 
     def heading(goodsType: String) = s"How much $goodsType are you moving?"
-    val headingT200 = "Number of cigarettes you are moving?"
-    val headingT300 = "Number of cigars or cigarillos you are moving?"
+    val headingT200 = "Number of cigarettes you are moving"
+    val headingT300 = "Number of cigars or cigarillos you are moving"
 
     val paragraphT200 = "The excise duty is worked out per 1000 cigarettes. You can work out what to enter by dividing the total quantity of cigarettes you are moving by 1000. This does not mean the number of packets."
     val paragraphT300 = "The excise duty is worked out per 1000 cigars or cigarillos. You can work out what to enter by dividing the total quantity of cigars or cigarillos you are moving by 1000. This does not mean the number of packets."

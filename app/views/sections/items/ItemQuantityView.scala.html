@@ -70,7 +70,7 @@
                 Text(itemQuantityHelper.label(goodsType, cnCodeInfo))
             ).copy(
                 isPageHeading = isPageHeading,
-                classes = if(isPageHeading) LabelSize.Large.toString else LabelSize.Medium.toString)
+                classes = if(isPageHeading) LabelSize.Large.toString else LabelSize.Small.toString)
         )
         .withWidth(Fixed10)
         .withSuffix(PrefixOrSuffix(content = Text(cnCodeInfo.unitOfMeasure.toShortFormatMessage())))

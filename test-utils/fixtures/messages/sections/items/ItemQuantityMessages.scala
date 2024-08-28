@@ -24,8 +24,8 @@ object ItemQuantityMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     def title(goodsType: String, cnCode: CnCodeInformation): String = {
       cnCode.exciseProductCode match {
-        case "T200" => titleHelper(labelT200)
-        case "T300" => titleHelper(labelT300)
+        case "T200" => titleHelper(headingT200)
+        case "T300" => titleHelper(headingT300)
         case _ => titleHelper(heading(goodsType))
       }
     }

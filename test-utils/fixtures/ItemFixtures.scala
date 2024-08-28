@@ -174,6 +174,15 @@ trait ItemFixtures {
   val testEpcEnergy: String = "E500"
   val testCnCodeEnergy: String = "29011000"
 
+  val testCommodityCodeEnergy: CnCodeInformation = CnCodeInformation(
+    cnCode = testCnCodeEnergy,
+    cnCodeDescription = "Acyclic hydrocarbons saturated",
+    exciseProductCode = testEpcEnergy,
+    exciseProductCodeDescription = "E600: Saturated acyclic hydrocarbons",
+    unitOfMeasure = Kilograms
+  )
+
+
   val testEpcEnergyWithDensity: String = "E200"
   val testCnCodeEnergyWithDensity: String = "29011000"
 

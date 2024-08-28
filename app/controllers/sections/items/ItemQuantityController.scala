@@ -71,7 +71,7 @@ class ItemQuantityController @Inject()(
             form = form,
             action = routes.ItemQuantityController.onSubmit(request.ern, request.draftId, idx, mode),
             goodsType = goodsType,
-            unitOfMeasure = cnCodeInfo.unitOfMeasure,
+            cnCodeInfo = cnCodeInfo,
             idx = idx
           ))
       }

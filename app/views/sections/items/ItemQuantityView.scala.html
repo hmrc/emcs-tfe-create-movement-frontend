@@ -16,10 +16,11 @@
 
 @import models.GoodsType
 @import models.requests.DataRequest
+@import models.response.referenceData.CnCodeInformation
 @import pages.sections.items.ItemQuantityPage
 @import viewmodels.InputWidth._
 @import viewmodels.LabelSize
-@import viewmodels.helpers.ErrorNotificationBannerHelper
+@import viewmodels.helpers.{ErrorNotificationBannerHelper, ItemQuantityHelper}
 
 @this(
         layout: templates.Layout,
@@ -32,37 +33,51 @@
         p: components.p,
         notificationBanner: GovukNotificationBanner,
         errorNotificationBannerHelper: ErrorNotificationBannerHelper,
-        continueOrExit: components.continueOrExit
+        continueOrExit: components.continueOrExit,
+        itemQuantityHelper: ItemQuantityHelper
 )
 
-@(form: Form[_], action: Call, goodsType: GoodsType, unitOfMeasure: UnitOfMeasure, idx: Index)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, goodsType: GoodsType, cnCodeInfo: CnCodeInformation, idx: Index)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemQuantity.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages(itemQuantityHelper.title(goodsType, cnCodeInfo))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+    @formHelper(action) {
 
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        } else {
+            @errorNotificationBannerHelper.content(Seq(ItemQuantityPage(idx).getSubmissionErrorCode(isOnAddToList = false)).flatten, hasContentHeading = false).map(notificationBanner(_))
+        }
 
-  @formHelper(action) {
+        @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
-    @if(form.errors.nonEmpty) {
-      @govukErrorSummary(ErrorSummaryViewModel(form))
-    } else {
-      @errorNotificationBannerHelper.content(Seq(ItemQuantityPage(idx).getSubmissionErrorCode(isOnAddToList = false)).flatten, hasContentHeading = false).map(notificationBanner(_))
+        @if(itemQuantityHelper.requiresRicherContent(cnCodeInfo)) {
+            @itemQuantityHelper.heading(cnCodeInfo).map { heading => @h1(heading) }
+            @itemQuantityHelper.paragraph(cnCodeInfo).map{ paragraph => @p(){@paragraph} }
+            @inputField(isPageHeading = false)
+        } else {
+            @inputField(isPageHeading = true)
+        }
+
+        @continueOrExit()
     }
+}
 
-    @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
-
+@inputField(isPageHeading: Boolean) = {
     @govukInput(
         InputViewModel(
             field = form("value"),
-            label = LabelViewModel(Text(messages("itemQuantity.heading", goodsType.toSingularOutput()))).asPageHeading(LabelSize.Large)
+            label = LabelViewModel(
+                Text(itemQuantityHelper.label(goodsType, cnCodeInfo))
+            ).copy(
+                isPageHeading = isPageHeading,
+                classes = if(isPageHeading) LabelSize.Large.toString else LabelSize.Small.toString)
         )
-                .withWidth(Fixed10)
-                .withSuffix(PrefixOrSuffix(content = Text(unitOfMeasure.toShortFormatMessage())))
-                .withHint(Hint(content = Text(messages("itemQuantity.hint", unitOfMeasure.toLongFormatMessage()))))
+        .withWidth(Fixed10)
+        .withSuffix(PrefixOrSuffix(content = Text(cnCodeInfo.unitOfMeasure.toShortFormatMessage())))
+        .copy(hint = itemQuantityHelper.hint(cnCodeInfo).map(hint => Hint(content = Text(hint))))
     )
-
-    @continueOrExit()
-  }
 }
+
 
 @{
     //$COVERAGE-OFF$

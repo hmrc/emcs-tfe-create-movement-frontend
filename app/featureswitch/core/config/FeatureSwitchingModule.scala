@@ -27,8 +27,6 @@ class FeatureSwitchingModule extends Module with FeatureSwitchRegistry {
 
   val switches: Seq[FeatureSwitch] = Seq(
     StubGetTraderKnownFacts,
-    EnableXIPCInCaM,
-    MessageStatisticsNotification,
     EnableNRS
   )
 
@@ -42,16 +40,6 @@ class FeatureSwitchingModule extends Module with FeatureSwitchRegistry {
 case object StubGetTraderKnownFacts extends FeatureSwitch {
   override val configName: String = "features.stub-get-trader-known-facts"
   override val displayName: String = "Use stub to get trader known facts"
-}
-
-case object EnableXIPCInCaM extends FeatureSwitch {
-  override val configName: String = "features.enableXIPCInCaM"
-  override val displayName: String = "Enables XIPC users in CaM"
-}
-
-case object MessageStatisticsNotification extends FeatureSwitch {
-  override val configName: String = "features.messageStatisticsNotification"
-  override val displayName: String = "Show the message statistics red notification badge (new messages count)"
 }
 
 case object EnableNRS extends FeatureSwitch {

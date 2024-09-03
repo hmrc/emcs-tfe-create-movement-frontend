@@ -126,19 +126,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
       logger.warn(s"[checkIfUserErnCanAccessCaM] User attempted to access CaM with invalid ern: '$ernFromUrl'")
       Future.successful(Redirect(controllers.error.routes.ErrorController.unauthorised()))
     } else {
-      if (userType != NorthernIrelandTemporaryCertifiedConsignor) {
-        // all ERNs except XIPC are allowed through
-        success
-      } else {
-        if (config.enableXIPCInCaM) {
-          // if XIPC is allowed through
-          success
-        } else {
-          // if XIPC is not allowed through
-          logger.warn(s"[checkIfUserErnCanAccessCaM] User attempted to access CaM with Northern Ireland Temporary Certified Consignor ern: '$ernFromUrl' when enableXIPCInCaM is set to false")
-          Future.successful(Redirect(controllers.error.routes.ErrorController.unauthorised()))
-        }
-      }
+      success
     }
   }
 }

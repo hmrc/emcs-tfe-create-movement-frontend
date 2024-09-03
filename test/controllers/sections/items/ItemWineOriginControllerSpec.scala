@@ -57,7 +57,6 @@ class ItemWineOriginControllerSpec
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       formProvider,
       mockGetCountriesAndMemberStatesService,
       Helpers.stubMessagesControllerComponents(),

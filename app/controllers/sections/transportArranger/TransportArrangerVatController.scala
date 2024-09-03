@@ -40,8 +40,7 @@ class TransportArrangerVatController @Inject()(
                                                 override val auth: AuthAction,
                                                 override val getData: DataRetrievalAction,
                                                 override val requireData: DataRequiredAction,
-                                                override val betaAllowList: BetaAllowListAction,
-                                                formProvider: TransportArrangerVatFormProvider,
+                                                         formProvider: TransportArrangerVatFormProvider,
                                                 val controllerComponents: MessagesControllerComponents,
                                                 view: TransportArrangerVatView
                                               ) extends BaseNavigationController with AuthActionHelper {

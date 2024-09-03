@@ -52,7 +52,6 @@ class ConsignorPaidTemporaryAuthorisationCodeControllerSpec extends SpecBase wit
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view

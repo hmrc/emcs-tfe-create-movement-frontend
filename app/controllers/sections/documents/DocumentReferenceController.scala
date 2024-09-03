@@ -38,8 +38,7 @@ class DocumentReferenceController @Inject()(
                                              override val auth: AuthAction,
                                              override val getData: DataRetrievalAction,
                                              override val requireData: DataRequiredAction,
-                                             override val betaAllowList: BetaAllowListAction,
-                                             formProvider: DocumentReferenceFormProvider,
+                                                   formProvider: DocumentReferenceFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: DocumentReferenceView
                                            ) extends BaseDocumentsNavigationController with AuthActionHelper {

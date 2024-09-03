@@ -68,7 +68,6 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       mockGetExciseProductCodesService,

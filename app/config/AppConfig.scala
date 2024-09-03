@@ -116,8 +116,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   lazy val earliestInvoiceDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestInvoiceDate"))
   def maxDispatchDateFutureDays: Int = configuration.get[Int]("constants.maxDispatchDateFutureDays")
 
-  def betaAllowListCheckingEnabled: Boolean = isEnabled(CheckBetaAllowList)
-
   def enableXIPCInCaM: Boolean = isEnabled(EnableXIPCInCaM)
 
   def betaCheckServiceName: String = configuration.get[String]("beta.serviceName")

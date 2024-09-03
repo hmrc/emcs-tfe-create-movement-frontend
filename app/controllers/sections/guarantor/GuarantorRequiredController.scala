@@ -34,8 +34,7 @@ import scala.concurrent.Future
 class GuarantorRequiredController @Inject()(
                                              override val messagesApi: MessagesApi,
                                              override val userAnswersService: UserAnswersService,
-                                             override val betaAllowList: BetaAllowListAction,
-                                             override val navigator: GuarantorNavigator,
+                                                   override val navigator: GuarantorNavigator,
                                              override val auth: AuthAction,
                                              override val getData: DataRetrievalAction,
                                              override val requireData: DataRequiredAction,

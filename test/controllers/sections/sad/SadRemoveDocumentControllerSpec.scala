@@ -43,7 +43,6 @@ class SadRemoveDocumentControllerSpec extends SpecBase with MockUserAnswersServi
     lazy val controller = new SadRemoveDocumentController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       app.injector.instanceOf[SadNavigator],
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

@@ -29,8 +29,7 @@ class ImportInformationIndexController @Inject()(
                                                   override val auth: AuthAction,
                                                   override val getData: DataRetrievalAction,
                                                   override val requireData: DataRequiredAction,
-                                                  override val betaAllowList: BetaAllowListAction,
-                                                  val controllerComponents: MessagesControllerComponents
+                                                             val controllerComponents: MessagesControllerComponents
                                                 ) extends BaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =

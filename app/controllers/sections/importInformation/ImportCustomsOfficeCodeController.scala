@@ -34,8 +34,7 @@ import scala.concurrent.Future
 
 class ImportCustomsOfficeCodeController @Inject()(override val messagesApi: MessagesApi,
                                                   override val auth: AuthAction,
-                                                  override val betaAllowList: BetaAllowListAction,
-                                                  override val getData: DataRetrievalAction,
+                                                             override val getData: DataRetrievalAction,
                                                   override val requireData: DataRequiredAction,
                                                   override val navigator: ImportInformationNavigator,
                                                   override val userAnswersService: UserAnswersService,

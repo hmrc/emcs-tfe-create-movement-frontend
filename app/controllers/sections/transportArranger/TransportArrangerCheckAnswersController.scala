@@ -36,8 +36,7 @@ class TransportArrangerCheckAnswersController @Inject()(
                                                          override val auth: AuthAction,
                                                          override val getData: DataRetrievalAction,
                                                          override val requireData: DataRequiredAction,
-                                                         override val betaAllowList: BetaAllowListAction,
-                                                         val cyaHelper: TransportArrangerCheckAnswersHelper,
+                                                                           val cyaHelper: TransportArrangerCheckAnswersHelper,
                                                          val controllerComponents: MessagesControllerComponents,
                                                          view: TransportArrangerCheckAnswersView
                                                        ) extends BaseNavigationController with AuthActionHelper {

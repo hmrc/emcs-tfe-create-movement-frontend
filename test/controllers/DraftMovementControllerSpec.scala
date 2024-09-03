@@ -39,7 +39,6 @@ class DraftMovementControllerSpec extends SpecBase with MockValidationService wi
     lazy val testController = new DraftMovementController(
       messagesApi,
       fakeAuthAction,
-      fakeBetaAllowListAction,
       new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       messagesControllerComponents,

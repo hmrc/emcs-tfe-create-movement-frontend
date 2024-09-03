@@ -43,7 +43,6 @@ class ItemsIndexControllerSpec extends SpecBase
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       Helpers.stubMessagesControllerComponents()
     )
   }

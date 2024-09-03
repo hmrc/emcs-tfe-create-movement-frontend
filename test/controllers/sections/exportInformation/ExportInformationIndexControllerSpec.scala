@@ -39,7 +39,6 @@ class ExportInformationIndexControllerSpec extends SpecBase with MockUserAnswers
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       messagesControllerComponents
     )
 

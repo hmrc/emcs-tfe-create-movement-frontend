@@ -36,7 +36,6 @@ import scala.concurrent.Future
 class DeleteDraftMovementController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        override val userAnswersService: UserAnswersService,
-                                       override val betaAllowList: BetaAllowListAction,
                                        override val navigator: Navigator,
                                        override val auth: AuthAction,
                                        override val getData: DataRetrievalAction,

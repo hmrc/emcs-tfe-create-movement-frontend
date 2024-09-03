@@ -31,7 +31,6 @@ trait MockAppConfig extends MockFactory {
     def loginContinueUrl: CallHandler1[String, String] = (mockAppConfig.loginContinueUrl(_: String)).expects(*)
     def enableXIPCInCaM: CallHandler0[Boolean] = (mockAppConfig.enableXIPCInCaM _).expects()
     def destinationOfficeSuffix: CallHandler0[String] = (mockAppConfig.destinationOfficeSuffix _).expects()
-    def betaAllowListCheckingEnabled: CallHandler0[Boolean] = (mockAppConfig.betaAllowListCheckingEnabled _).expects()
     def maxDispatchDateFutureDays: CallHandler0[Int] = (mockAppConfig.maxDispatchDateFutureDays _).expects()
     def earliestDispatchDate: CallHandler0[LocalDate] = (mockAppConfig.earliestDispatchDate _).expects()
     def nrsBrokerBaseUrl: CallHandler0[String] = (mockAppConfig.nrsBrokerBaseUrl _).expects()

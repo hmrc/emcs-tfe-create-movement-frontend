@@ -53,7 +53,6 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view

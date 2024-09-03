@@ -38,8 +38,7 @@ class FirstTransporterAddressController @Inject()(override val messagesApi: Mess
                                                   override val auth: AuthAction,
                                                   override val getData: DataRetrievalAction,
                                                   override val requireData: DataRequiredAction,
-                                                  override val betaAllowList: BetaAllowListAction,
-                                                  override val formProvider: AddressFormProvider,
+                                                             override val formProvider: AddressFormProvider,
                                                   override val controllerComponents: MessagesControllerComponents,
                                                   override val view: AddressView
                                                  ) extends AddressControllerBase {

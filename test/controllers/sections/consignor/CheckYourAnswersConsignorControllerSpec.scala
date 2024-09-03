@@ -46,7 +46,6 @@ class CheckYourAnswersConsignorControllerSpec extends SpecBase with MockConsigno
     lazy val testController = new CheckYourAnswersConsignorController(
       messagesApi,
       fakeAuthAction,
-      fakeBetaAllowListAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       messagesControllerComponents,

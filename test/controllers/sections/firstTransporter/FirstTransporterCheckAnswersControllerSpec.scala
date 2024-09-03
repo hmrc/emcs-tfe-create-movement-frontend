@@ -52,7 +52,6 @@ class FirstTransporterCheckAnswersControllerSpec extends SpecBase with SummaryLi
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       mockFirstTransporterCheckAnswersHelper,
       messagesControllerComponents,
       view

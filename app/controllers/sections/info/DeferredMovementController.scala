@@ -46,9 +46,7 @@ class DeferredMovementController @Inject()(
                                             formProvider: DeferredMovementFormProvider,
                                             val userAnswersService: UserAnswersService,
                                             val controllerComponents: MessagesControllerComponents,
-                                            view: DeferredMovementView,
-                                            val betaAllowList: BetaAllowListAction
-                                          ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
+                                            view: DeferredMovementView) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
 
   def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
     authorisedPreDraftDataRequestAsync(ern) { implicit request =>

@@ -40,7 +40,6 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
     lazy val testController = new ConsigneeIndexController(
       messagesApi,
       fakeAuthAction,
-      fakeBetaAllowListAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeConsigneeNavigator(testOnwardRoute),

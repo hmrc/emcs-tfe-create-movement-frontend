@@ -40,8 +40,7 @@ class ItemWineProductCategoryController @Inject()(
                                                   override val auth: AuthAction,
                                                   override val getData: DataRetrievalAction,
                                                   override val requireData: DataRequiredAction,
-                                                  override val betaAllowList: BetaAllowListAction,
-                                                  formProvider: ItemWineProductCategoryFormProvider,
+                                                             formProvider: ItemWineProductCategoryFormProvider,
                                                   val controllerComponents: MessagesControllerComponents,
                                                   view: ItemWineProductCategoryView
                                                 ) extends BaseItemsNavigationController with AuthActionHelper {

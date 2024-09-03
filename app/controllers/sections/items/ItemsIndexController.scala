@@ -34,8 +34,7 @@ class ItemsIndexController @Inject()(
                                       override val auth: AuthAction,
                                       override val getData: DataRetrievalAction,
                                       override val requireData: DataRequiredAction,
-                                      override val betaAllowList: BetaAllowListAction,
-                                      val controllerComponents: MessagesControllerComponents
+                                      override   val controllerComponents: MessagesControllerComponents
                                     ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =

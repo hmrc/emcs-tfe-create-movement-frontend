@@ -55,7 +55,6 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
     lazy val testController = new GuarantorRequiredController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       new FakeGuarantorNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),

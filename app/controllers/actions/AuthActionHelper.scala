@@ -16,7 +16,7 @@
 
 package controllers.actions
 
-import models.requests.{DataRequest, UserRequest}
+import models.requests.DataRequest
 import play.api.mvc.{Action, ActionBuilder, AnyContent, Result}
 
 import scala.concurrent.Future
@@ -26,13 +26,9 @@ trait AuthActionHelper {
   val auth: AuthAction
   val getData: DataRetrievalAction
   val requireData: DataRequiredAction
-  val betaAllowList: BetaAllowListAction
-
-  private def authorised(ern: String): ActionBuilder[UserRequest, AnyContent] =
-    auth(ern) andThen betaAllowList
 
   private def authorisedWithData(ern: String, draftId: String): ActionBuilder[DataRequest, AnyContent] =
-    authorised(ern) andThen getData(draftId) andThen requireData
+    auth(ern) andThen getData(draftId) andThen requireData
 
   def authorisedDataRequest(ern: String, draftId: String)(block: DataRequest[_] => Result): Action[AnyContent] =
     authorisedWithData(ern, draftId)(block)

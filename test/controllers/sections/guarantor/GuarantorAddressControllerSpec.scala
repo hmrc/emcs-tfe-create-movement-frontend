@@ -53,7 +53,6 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       new AddressFormProvider(),
       messagesControllerComponents,
       view

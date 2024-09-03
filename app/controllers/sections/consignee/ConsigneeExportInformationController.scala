@@ -40,8 +40,7 @@ class ConsigneeExportInformationController @Inject()(
                                                       override val auth: AuthAction,
                                                       override val getData: DataRetrievalAction,
                                                       override val requireData: DataRequiredAction,
-                                                      override val betaAllowList: BetaAllowListAction,
-                                                      formProvider: ConsigneeExportInformationFormProvider,
+                                                                     formProvider: ConsigneeExportInformationFormProvider,
                                                       val controllerComponents: MessagesControllerComponents,
                                                       view: ConsigneeExportInformationView
                                                     ) extends BaseNavigationController with AuthActionHelper {

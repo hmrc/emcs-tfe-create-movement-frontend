@@ -57,7 +57,6 @@ class ItemDesignationOfOriginControllerSpec extends SpecBase with MockUserAnswer
     lazy val controller = new ItemDesignationOfOriginController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

@@ -40,8 +40,7 @@ class SadAddToListController @Inject()(
                                         override val auth: AuthAction,
                                         override val getData: DataRetrievalAction,
                                         override val requireData: DataRequiredAction,
-                                        override val betaAllowList: BetaAllowListAction,
-                                        formProvider: SadAddToListFormProvider,
+                                         formProvider: SadAddToListFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: SadAddToListView,
                                         summaryHelper: SadAddToListHelper

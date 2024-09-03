@@ -29,7 +29,6 @@ class $className$ControllerSpec extends SpecBase with MockUserAnswersService {
     lazy val controller = new $className$Controller(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
       new FakeNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

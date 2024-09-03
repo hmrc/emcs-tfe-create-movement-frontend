@@ -17,7 +17,7 @@
 package controllers.sections.items
 
 import base.SpecBase
-import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeBetaAllowListAction, FakeDataRetrievalAction}
+import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeDataRetrievalAction}
 import fixtures.ItemFixtures
 import fixtures.messages.sections.items.ItemMaturationPeriodAgeMessages
 import forms.sections.items.ItemMaturationPeriodAgeFormProvider
@@ -55,7 +55,6 @@ class ItemMaturationPeriodAgeControllerSpec extends SpecBase with MockUserAnswer
     val controller = new ItemMaturationPeriodAgeController(
       messagesApi = app.injector.instanceOf[MessagesApi],
       userAnswersService = mockUserAnswersService,
-      betaAllowList = app.injector.instanceOf[FakeBetaAllowListAction],
       navigator = new FakeItemsNavigator(testOnwardRoute),
       auth = app.injector.instanceOf[FakeAuthAction],
       getData = new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

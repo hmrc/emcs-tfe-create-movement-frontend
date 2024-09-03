@@ -50,7 +50,6 @@ class ExportInformationCheckAnswersControllerSpec extends SpecBase with SummaryL
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       mockExportInformationCheckAnswersHelper,
       messagesControllerComponents,
       view

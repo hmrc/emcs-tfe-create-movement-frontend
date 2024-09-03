@@ -63,7 +63,6 @@ class DispatchAddressControllerSpec extends SpecBase with MockUserAnswersService
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
       view

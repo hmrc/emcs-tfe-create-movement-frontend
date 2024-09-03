@@ -54,7 +54,6 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       new AddressFormProvider(),
       messagesControllerComponents,
       view

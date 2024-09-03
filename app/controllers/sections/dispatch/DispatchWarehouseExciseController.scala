@@ -39,8 +39,7 @@ class DispatchWarehouseExciseController @Inject()(
                                                    override val auth: AuthAction,
                                                    override val getData: DataRetrievalAction,
                                                    override val requireData: DataRequiredAction,
-                                                   override val betaAllowList: BetaAllowListAction,
-                                                   formProvider: DispatchWarehouseExciseFormProvider,
+                                                               formProvider: DispatchWarehouseExciseFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
                                                    view: DispatchWarehouseExciseView
                                                  ) extends BaseNavigationController with AuthActionHelper {

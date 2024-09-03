@@ -16,8 +16,8 @@
 
 package controllers.actions.predraft
 
-import controllers.actions.{AuthAction, BetaAllowListAction}
-import models.requests.{DataRequest, UserRequest}
+import controllers.actions.AuthAction
+import models.requests.DataRequest
 import play.api.mvc.{Action, ActionBuilder, AnyContent, Result}
 
 import scala.concurrent.Future
@@ -27,13 +27,9 @@ trait PreDraftAuthActionHelper {
   val auth: AuthAction
   val getPreDraftData: PreDraftDataRetrievalAction
   val requirePreDraftData: PreDraftDataRequiredAction
-  val betaAllowList: BetaAllowListAction
-
-  private def authorised(ern: String): ActionBuilder[UserRequest, AnyContent] =
-    auth(ern) andThen betaAllowList
 
   private def authorisedWithPreDraftData(ern: String): ActionBuilder[DataRequest, AnyContent] =
-    authorised(ern) andThen getPreDraftData() andThen requirePreDraftData
+    auth(ern) andThen getPreDraftData() andThen requirePreDraftData
 
   def authorisedPreDraftDataRequestAsync(ern: String)(block: DataRequest[_] => Future[Result]): Action[AnyContent] =
     authorisedWithPreDraftData(ern).async(block)

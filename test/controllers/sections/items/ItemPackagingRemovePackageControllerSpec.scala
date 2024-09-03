@@ -52,7 +52,6 @@ class ItemPackagingRemovePackageControllerSpec extends SpecBase with MockUserAns
     lazy val controller = new ItemPackagingRemovePackageController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

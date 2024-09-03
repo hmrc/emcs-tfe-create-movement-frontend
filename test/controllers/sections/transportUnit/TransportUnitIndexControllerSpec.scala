@@ -42,7 +42,6 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       Helpers.stubMessagesControllerComponents()
     )
   }

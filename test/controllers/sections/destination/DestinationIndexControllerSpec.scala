@@ -41,7 +41,6 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       messagesControllerComponents
     )
 

@@ -59,7 +59,6 @@ class DeclarationControllerSpec extends SpecBase
     val controller: DeclarationController = new DeclarationController(
       messagesApi,
       fakeAuthAction,
-      fakeBetaAllowListAction,
       new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
       app.injector.instanceOf[DataRequiredAction],
       Helpers.stubMessagesControllerComponents(),

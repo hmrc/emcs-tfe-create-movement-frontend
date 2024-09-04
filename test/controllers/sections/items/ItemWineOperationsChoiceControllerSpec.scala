@@ -57,7 +57,6 @@ class ItemWineOperationsChoiceControllerSpec extends SpecBase
     lazy val controller = new ItemWineOperationsChoiceController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

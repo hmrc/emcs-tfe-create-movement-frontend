@@ -48,7 +48,6 @@ class DeleteDraftMovementControllerSpec extends SpecBase with MockUserAnswersSer
     lazy val controller = new DeleteDraftMovementController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       new FakeNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

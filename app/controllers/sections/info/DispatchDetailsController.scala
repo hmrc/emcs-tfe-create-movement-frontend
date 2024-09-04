@@ -45,9 +45,7 @@ class DispatchDetailsController @Inject()(
                                            formProvider: DispatchDetailsFormProvider,
                                            val userAnswersService: UserAnswersService,
                                            val controllerComponents: MessagesControllerComponents,
-                                           view: DispatchDetailsView,
-                                           val betaAllowList: BetaAllowListAction
-                                         ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
+                                           view: DispatchDetailsView) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
 
   def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
     authorisedPreDraftDataRequestAsync(ern) { implicit request =>
@@ -119,13 +117,13 @@ class DispatchDetailsController @Inject()(
 
   def renderView(status: Status, form: Form[_], onSubmitCall: Call, mode: Mode, isDeferred: Boolean, isOnPreDraftFlow: Boolean)
                 (implicit request: DataRequest[_]): Future[Result] = {
-      Future.successful(
-        status(view(
-          form = form,
-          deferredMovement = isDeferred,
-          onSubmitCall = onSubmitCall,
-          skipQuestionCall = navigator.nextPage(DispatchDetailsPage(isOnPreDraftFlow), mode, request.userAnswers)
-        ))
-      )
-    }
+    Future.successful(
+      status(view(
+        form = form,
+        deferredMovement = isDeferred,
+        onSubmitCall = onSubmitCall,
+        skipQuestionCall = navigator.nextPage(DispatchDetailsPage(isOnPreDraftFlow), mode, request.userAnswers)
+      ))
+    )
+  }
 }

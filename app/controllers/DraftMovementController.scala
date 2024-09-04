@@ -26,7 +26,6 @@ import javax.inject.Inject
 
 class DraftMovementController @Inject()(override val messagesApi: MessagesApi,
                                         override val auth: AuthAction,
-                                        override val betaAllowList: BetaAllowListAction,
                                         override val getData: DataRetrievalAction,
                                         override val requireData: DataRequiredAction,
                                         val controllerComponents: MessagesControllerComponents,

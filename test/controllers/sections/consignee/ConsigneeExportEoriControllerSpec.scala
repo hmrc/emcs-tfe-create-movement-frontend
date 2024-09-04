@@ -51,7 +51,6 @@ class ConsigneeExportEoriControllerSpec extends SpecBase with MockUserAnswersSer
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view

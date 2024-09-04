@@ -59,7 +59,6 @@ class ItemBulkPackagingSelectControllerSpec extends SpecBase
     lazy val controller = new ItemBulkPackagingSelectController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

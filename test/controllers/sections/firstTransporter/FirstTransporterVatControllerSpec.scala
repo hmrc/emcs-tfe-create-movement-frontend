@@ -53,7 +53,6 @@ class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersSer
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
       view

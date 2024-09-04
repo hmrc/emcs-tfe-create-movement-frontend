@@ -33,7 +33,6 @@ class ExportInformationIndexController @Inject()(
                                                   override val auth: AuthAction,
                                                   override val getData: DataRetrievalAction,
                                                   override val requireData: DataRequiredAction,
-                                                  override val betaAllowList: BetaAllowListAction,
                                                   val controllerComponents: MessagesControllerComponents
                                                 ) extends BaseNavigationController with AuthActionHelper {
 

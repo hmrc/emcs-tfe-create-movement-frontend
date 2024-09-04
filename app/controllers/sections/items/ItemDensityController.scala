@@ -36,7 +36,6 @@ class ItemDensityController @Inject()(
                                        override val auth: AuthAction,
                                        override val getData: DataRetrievalAction,
                                        override val requireData: DataRequiredAction,
-                                       override val betaAllowList: BetaAllowListAction,
                                        formProvider: ItemDensityFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: ItemDensityView

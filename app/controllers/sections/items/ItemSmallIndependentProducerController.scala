@@ -38,7 +38,6 @@ class ItemSmallIndependentProducerController @Inject()(
                                                         override val auth: AuthAction,
                                                         override val getData: DataRetrievalAction,
                                                         override val requireData: DataRequiredAction,
-                                                        override val betaAllowList: BetaAllowListAction,
                                                         formProvider: ItemSmallIndependentProducerFormProvider,
                                                         val controllerComponents: MessagesControllerComponents,
                                                         view: ItemSmallIndependentProducerView

@@ -66,8 +66,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   def returnToDraft(implicit request: DataRequest[_]): String = controllers.routes.DraftMovementController.onPageLoad(request.ern, request.draftId).url
 
-  def redirectToFeedbackSurvey: Boolean = isEnabled(RedirectToFeedbackSurvey)
-
   lazy val timeout: Int = configuration.get[Int]("timeout-dialog.timeout")
   lazy val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
@@ -95,12 +93,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   def selfUrl: String = servicesConfig.baseUrl("emcs-tfe-create-movement-frontend")
 
-  lazy val accessibilityStatementUrl: String = {
-    val baseUrl = servicesConfig.getString("accessibility-statement.host")
-    val servicePath = servicesConfig.getString("accessibility-statement.service-path")
-    baseUrl + servicePath
-  }
-
   def getFeatureSwitchValue(feature: String): Boolean = configuration.get[Boolean](feature)
 
   lazy val euCustomsOfficeCodesUrl = "https://ec.europa.eu/taxation_customs/dds2/rd/rd_home.jsp?Lang=en"
@@ -115,12 +107,4 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   def earliestDispatchDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestDispatchDate"))
   lazy val earliestInvoiceDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestInvoiceDate"))
   def maxDispatchDateFutureDays: Int = configuration.get[Int]("constants.maxDispatchDateFutureDays")
-
-  def betaAllowListCheckingEnabled: Boolean = isEnabled(CheckBetaAllowList)
-
-  def enableXIPCInCaM: Boolean = isEnabled(EnableXIPCInCaM)
-
-  def betaCheckServiceName: String = configuration.get[String]("beta.serviceName")
-
-  def messageStatisticsNotificationEnabled: Boolean = isEnabled(MessageStatisticsNotification)
 }

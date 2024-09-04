@@ -46,9 +46,7 @@ class DestinationTypeController @Inject()(
                                            val requireData: DataRequiredAction,
                                            formProvider: DestinationTypeFormProvider,
                                            val controllerComponents: MessagesControllerComponents,
-                                           view: DestinationTypeView,
-                                           val betaAllowList: BetaAllowListAction
-                                         ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
+                                           view: DestinationTypeView) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
 
   def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
     authorisedPreDraftDataRequestAsync(ern) { implicit request =>

@@ -45,9 +45,7 @@ class DispatchPlaceController @Inject()(
                                          val requireData: DataRequiredAction,
                                          formProvider: DispatchPlaceFormProvider,
                                          val controllerComponents: MessagesControllerComponents,
-                                         view: DispatchPlaceView,
-                                         val betaAllowList: BetaAllowListAction
-                                       ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
+                                         view: DispatchPlaceView) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
 
   def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
     authorisedPreDraftDataRequestAsync(ern) { implicit request =>

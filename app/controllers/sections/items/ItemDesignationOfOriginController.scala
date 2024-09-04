@@ -32,17 +32,16 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class ItemDesignationOfOriginController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val betaAllowList: BetaAllowListAction,
-                                       override val navigator: ItemsNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       formProvider: ItemDesignationOfOriginFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ItemDesignationOfOriginView
-                                     ) extends BaseItemsNavigationController with AuthActionHelper {
+                                                   override val messagesApi: MessagesApi,
+                                                   override val userAnswersService: UserAnswersService,
+                                                   override val navigator: ItemsNavigator,
+                                                   override val auth: AuthAction,
+                                                   override val getData: DataRetrievalAction,
+                                                   override val requireData: DataRequiredAction,
+                                                   formProvider: ItemDesignationOfOriginFormProvider,
+                                                   val controllerComponents: MessagesControllerComponents,
+                                                   view: ItemDesignationOfOriginView
+                                                 ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>

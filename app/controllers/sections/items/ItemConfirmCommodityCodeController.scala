@@ -33,7 +33,6 @@ import scala.concurrent.Future
 
 class ItemConfirmCommodityCodeController @Inject()(override val messagesApi: MessagesApi,
                                                    override val auth: AuthAction,
-                                                   override val betaAllowList: BetaAllowListAction,
                                                    override val getData: DataRetrievalAction,
                                                    override val userAnswersService: UserAnswersService,
                                                    override val requireData: DataRequiredAction,

@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeBetaAllowListAction, FakeDataRetrievalAction}
+import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeDataRetrievalAction}
 import models.UserAnswers
 import navigation.FakeNavigators.FakeNavigator
 import play.api.i18n.{Messages, MessagesApi}
@@ -41,7 +41,6 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
     val controller = new CheckYourAnswersController(
       messagesApi,
       app.injector.instanceOf[FakeAuthAction],
-      app.injector.instanceOf[FakeBetaAllowListAction],
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       app.injector.instanceOf[DataRequiredAction],
       Helpers.stubMessagesControllerComponents(),

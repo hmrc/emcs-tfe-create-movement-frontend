@@ -41,7 +41,6 @@ class DestinationAddressController @Inject()(override val messagesApi: MessagesA
                                              override val auth: AuthAction,
                                              override val getData: DataRetrievalAction,
                                              override val requireData: DataRequiredAction,
-                                             override val betaAllowList: BetaAllowListAction,
                                              val formProvider: DestinationAddressFormProvider,
                                              override val controllerComponents: MessagesControllerComponents,
                                              val view: DestinationAddressView

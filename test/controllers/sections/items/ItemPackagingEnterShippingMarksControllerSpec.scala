@@ -52,7 +52,6 @@ class ItemPackagingEnterShippingMarksControllerSpec extends SpecBase with MockUs
     lazy val controller = new ItemPackagingEnterShippingMarksController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

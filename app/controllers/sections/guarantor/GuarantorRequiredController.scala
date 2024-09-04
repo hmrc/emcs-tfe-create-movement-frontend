@@ -34,7 +34,6 @@ import scala.concurrent.Future
 class GuarantorRequiredController @Inject()(
                                              override val messagesApi: MessagesApi,
                                              override val userAnswersService: UserAnswersService,
-                                             override val betaAllowList: BetaAllowListAction,
                                              override val navigator: GuarantorNavigator,
                                              override val auth: AuthAction,
                                              override val getData: DataRetrievalAction,
@@ -72,7 +71,7 @@ class GuarantorRequiredController @Inject()(
 
   private def renderView(status: Status, form: Form[_], mode: Mode)
                         (implicit request: DataRequest[_]): Future[Result] =
-    if(GuarantorRequiredPage.guarantorIsOptionalUKtoUK || GuarantorRequiredPage.guarantorIsOptionalNIToEU) {
+    if (GuarantorRequiredPage.guarantorIsOptionalUKtoUK || GuarantorRequiredPage.guarantorIsOptionalNIToEU) {
       Future(status(view(
         form = form,
         onwardRoute = routes.GuarantorRequiredController.onSubmit(request.ern, request.draftId, mode)

@@ -26,14 +26,13 @@ import services.UserAnswersService
 import javax.inject.Inject
 
 class ItemsPackagingIndexController @Inject()(
-                                      override val userAnswersService: UserAnswersService,
-                                      override val navigator: ItemsNavigator,
-                                      override val auth: AuthAction,
-                                      override val getData: DataRetrievalAction,
-                                      override val requireData: DataRequiredAction,
-                                      override val betaAllowList: BetaAllowListAction,
-                                      val controllerComponents: MessagesControllerComponents
-                                    ) extends BaseItemsNavigationController with AuthActionHelper {
+                                               override val userAnswersService: UserAnswersService,
+                                               override val navigator: ItemsNavigator,
+                                               override val auth: AuthAction,
+                                               override val getData: DataRetrievalAction,
+                                               override val requireData: DataRequiredAction,
+                                               override val controllerComponents: MessagesControllerComponents
+                                             ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, itemsIndex: Index): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>

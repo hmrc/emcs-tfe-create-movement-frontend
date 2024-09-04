@@ -38,7 +38,6 @@ class TransportArrangerAddressController @Inject()(override val messagesApi: Mes
                                                    override val auth: AuthAction,
                                                    override val getData: DataRetrievalAction,
                                                    override val requireData: DataRequiredAction,
-                                                   override val betaAllowList: BetaAllowListAction,
                                                    override val formProvider: AddressFormProvider,
                                                    override val controllerComponents: MessagesControllerComponents,
                                                    override val view: AddressView

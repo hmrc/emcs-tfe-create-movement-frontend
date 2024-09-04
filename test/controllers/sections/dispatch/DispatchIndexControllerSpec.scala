@@ -44,7 +44,6 @@ class DispatchIndexControllerSpec extends SpecBase with MockUserAnswersService w
       auth = fakeAuthAction,
       getData = new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       requireData = dataRequiredAction,
-      betaAllowList = fakeBetaAllowListAction,
       controllerComponents = messagesControllerComponents
     )
   }

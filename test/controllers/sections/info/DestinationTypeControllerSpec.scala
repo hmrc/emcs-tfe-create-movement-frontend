@@ -89,8 +89,7 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      fakeBetaAllowListAction
+      view
     )
 
     lazy val getResult: Future[Result] = controller.onPreDraftPageLoad(ern, NormalMode)(getRequest)

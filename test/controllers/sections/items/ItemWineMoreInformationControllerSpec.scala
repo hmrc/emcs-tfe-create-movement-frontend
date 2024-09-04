@@ -48,7 +48,6 @@ class ItemWineMoreInformationControllerSpec extends SpecBase with MockUserAnswer
     lazy val controller = new ItemWineMoreInformationController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

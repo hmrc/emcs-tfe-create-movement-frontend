@@ -50,7 +50,6 @@ class ItemPackagingShippingMarksChoiceControllerSpec extends SpecBase with MockU
     lazy val controller = new ItemPackagingShippingMarksChoiceController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       new FakeItemsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

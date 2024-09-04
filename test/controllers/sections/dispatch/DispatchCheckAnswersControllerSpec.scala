@@ -46,7 +46,6 @@ class DispatchCheckAnswersControllerSpec extends SpecBase with MockUserAnswersSe
     lazy val testController = new DispatchCheckAnswersController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       new FakeDispatchNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),

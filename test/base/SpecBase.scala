@@ -50,7 +50,6 @@ trait SpecBase extends AnyFreeSpec with Matchers with OptionValues with ScalaFut
   def messages(candidates: Seq[Lang]): Messages = app.injector.instanceOf[MessagesApi].preferred(candidates)
 
   val fakeAuthAction = new FakeAuthAction(stubPlayBodyParsers)
-  val fakeBetaAllowListAction = new FakeBetaAllowListAction()
 
   def userRequest[A](request: Request[A], ern: String = testErn, navBar: Option[Html] = None): UserRequest[A] =
     UserRequest(request, ern, testInternalId, testCredId, testSessionId, hasMultipleErns = false, navBar)

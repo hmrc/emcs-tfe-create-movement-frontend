@@ -61,7 +61,6 @@ class ItemQuantityControllerSpec extends SpecBase with MockUserAnswersService wi
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view,

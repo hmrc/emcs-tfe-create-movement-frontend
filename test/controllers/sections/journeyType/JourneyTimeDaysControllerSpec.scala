@@ -45,7 +45,6 @@ class JourneyTimeDaysControllerSpec extends SpecBase with MockUserAnswersService
 
     lazy val controller = new JourneyTimeDaysController(
       messagesApi,
-      fakeBetaAllowListAction,
       mockUserAnswersService,
       new FakeJourneyTypeNavigator(testOnwardRoute),
       fakeAuthAction,

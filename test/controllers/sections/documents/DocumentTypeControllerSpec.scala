@@ -64,7 +64,6 @@ class DocumentTypeControllerSpec extends SpecBase with MockUserAnswersService wi
     lazy val testController = new DocumentTypeController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       new FakeDocumentsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),

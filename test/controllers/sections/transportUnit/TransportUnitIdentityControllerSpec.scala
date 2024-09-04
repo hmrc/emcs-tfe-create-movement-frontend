@@ -51,7 +51,6 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view

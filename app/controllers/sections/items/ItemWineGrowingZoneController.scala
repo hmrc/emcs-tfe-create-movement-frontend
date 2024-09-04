@@ -38,7 +38,6 @@ class ItemWineGrowingZoneController @Inject()(
                                                override val auth: AuthAction,
                                                override val getData: DataRetrievalAction,
                                                override val requireData: DataRequiredAction,
-                                               override val betaAllowList: BetaAllowListAction,
                                                formProvider: ItemWineGrowingZoneFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
                                                view: ItemWineGrowingZoneView

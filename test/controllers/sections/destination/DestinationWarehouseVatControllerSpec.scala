@@ -56,7 +56,6 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
       view

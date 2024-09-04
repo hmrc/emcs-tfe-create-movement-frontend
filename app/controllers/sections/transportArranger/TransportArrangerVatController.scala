@@ -40,7 +40,6 @@ class TransportArrangerVatController @Inject()(
                                                 override val auth: AuthAction,
                                                 override val getData: DataRetrievalAction,
                                                 override val requireData: DataRequiredAction,
-                                                override val betaAllowList: BetaAllowListAction,
                                                 formProvider: TransportArrangerVatFormProvider,
                                                 val controllerComponents: MessagesControllerComponents,
                                                 view: TransportArrangerVatView
@@ -70,9 +69,9 @@ class TransportArrangerVatController @Inject()(
     }
 
   private def renderView(status: Status, form: Form[_], arranger: TransportArranger, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
-      Future.successful(status(view(
-        form,
-        routes.TransportArrangerVatController.onSubmit(request.ern, request.draftId, mode),
-        arranger
-      )))
+    Future.successful(status(view(
+      form,
+      routes.TransportArrangerVatController.onSubmit(request.ern, request.draftId, mode),
+      arranger
+    )))
 }

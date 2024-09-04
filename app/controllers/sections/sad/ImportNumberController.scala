@@ -38,7 +38,6 @@ class ImportNumberController @Inject()(
                                         override val auth: AuthAction,
                                         override val getData: DataRetrievalAction,
                                         override val requireData: DataRequiredAction,
-                                        override val betaAllowList: BetaAllowListAction,
                                         formProvider: ImportNumberFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: ImportNumberView

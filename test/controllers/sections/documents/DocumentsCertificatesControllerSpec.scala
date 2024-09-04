@@ -50,7 +50,6 @@ class DocumentsCertificatesControllerSpec extends SpecBase with MockUserAnswersS
     lazy val testController = new DocumentsCertificatesController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       new FakeDocumentsNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(startingUserAnswers, Some(testMinTraderKnownFacts)),

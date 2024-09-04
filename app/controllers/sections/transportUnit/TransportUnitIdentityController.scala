@@ -38,7 +38,6 @@ class TransportUnitIdentityController @Inject()(
                                                  override val auth: AuthAction,
                                                  override val getData: DataRetrievalAction,
                                                  override val requireData: DataRequiredAction,
-                                                 override val betaAllowList: BetaAllowListAction,
                                                  formProvider: TransportUnitIdentityFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: TransportUnitIdentityView

@@ -46,8 +46,7 @@ class UserAnswersConnectorISpec extends AnyFreeSpec
   private lazy val app: Application =
     new GuiceApplicationBuilder()
       .configure(
-        "microservice.services.emcs-tfe.port" -> server.port,
-        "internal-auth.token" -> "token"
+        "microservice.services.emcs-tfe.port" -> server.port
       )
       .build()
 

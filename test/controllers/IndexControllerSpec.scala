@@ -33,8 +33,7 @@ class IndexControllerSpec extends SpecBase with MockPreDraftService with MockUse
         mockPreDraftService,
         mockUserAnswersService,
         fakeAuthAction,
-        fakeBetaAllowListAction,
-        messagesControllerComponents
+          messagesControllerComponents
       )
 
       MockPreDraftService.set(UserAnswers(

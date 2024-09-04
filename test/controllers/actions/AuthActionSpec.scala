@@ -235,103 +235,62 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll w
                     }
                   }
 
-                  "the user is XIPC" - {
-                    "enableXIPCInCaM is true" - {
-                      "allow the User through, returning a 200 (OK)" in new Harness {
-                        override val ern: String = testNITemporaryCertifiedConsignorErn
-                        private val singleEnrolment = Enrolments(Set(
-                          Enrolment(
-                            key = EnrolmentKeys.EMCS_ENROLMENT,
-                            identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, ern)),
-                            state = EnrolmentKeys.ACTIVATED
-                          )
-                        ))
-                        override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = singleEnrolment))
+                  val singleEnrolment = Enrolments(Set(
+                    Enrolment(
+                      key = EnrolmentKeys.EMCS_ENROLMENT,
+                      identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, testErn)),
+                      state = EnrolmentKeys.ACTIVATED
+                    )
+                  ))
 
-                        MockNavBarPartialConnector.getNavBar(ern).returns(Future.successful(Some(Html("<nav>NavBar</nav>"))))
-                        MockAppConfig.enableXIPCInCaM.returns(true)
+                  "allow the User through, returning a 200 (OK)" in new Harness {
+                    MockNavBarPartialConnector.getNavBar(ern).returns(Future.successful(Some(Html("<nav>NavBar</nav>"))))
+                    override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = singleEnrolment))
 
-                        status(result) mustBe OK
-                      }
-                    }
-                    "enableXIPCInCaM is false" - {
-                      "redirect to unauthorised" in new Harness {
-                        override val ern: String = testNITemporaryCertifiedConsignorErn
-                        private val singleEnrolment = Enrolments(Set(
-                          Enrolment(
-                            key = EnrolmentKeys.EMCS_ENROLMENT,
-                            identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, ern)),
-                            state = EnrolmentKeys.ACTIVATED
-                          )
-                        ))
-                        override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = singleEnrolment))
-
-                        MockAppConfig.enableXIPCInCaM.returns(false)
-
-                        status(result) mustBe SEE_OTHER
-                        redirectLocation(result) mustBe Some(controllers.error.routes.ErrorController.unauthorised().url)
-                      }
-                    }
+                    status(result) mustBe OK
                   }
 
-                  "the user is not XIPC or invalid" - {
-                    val singleEnrolment = Enrolments(Set(
-                      Enrolment(
-                        key = EnrolmentKeys.EMCS_ENROLMENT,
-                        identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, testErn)),
-                        state = EnrolmentKeys.ACTIVATED
-                      )
-                    ))
+                  "set UserRequest.hasMultipleErns to false" in new Harness {
+                    MockNavBarPartialConnector.getNavBar(ern).returns(Future.successful(None))
+                    override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = singleEnrolment))
+                    val hasMultipleErns = testRequest(req => req.hasMultipleErns)
 
-                    "allow the User through, returning a 200 (OK)" in new Harness {
-                      MockNavBarPartialConnector.getNavBar(ern).returns(Future.successful(Some(Html("<nav>NavBar</nav>"))))
-                      override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = singleEnrolment))
+                    hasMultipleErns mustBe false
+                  }
+                }
 
-                      status(result) mustBe OK
-                    }
+                s"there are multiple Enrolments with ${EnrolmentKeys.ERN}'s present and ERN matches one" - {
+                  val multipleEnrolements = Enrolments(Set(
+                    Enrolment(
+                      key = EnrolmentKeys.EMCS_ENROLMENT,
+                      identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, "OTHER_1")),
+                      state = EnrolmentKeys.INACTIVE
+                    ),
+                    Enrolment(
+                      key = EnrolmentKeys.EMCS_ENROLMENT,
+                      identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, testErn)),
+                      state = EnrolmentKeys.ACTIVATED
+                    ),
+                    Enrolment(
+                      key = EnrolmentKeys.EMCS_ENROLMENT,
+                      identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, "OTHER_2")),
+                      state = EnrolmentKeys.ACTIVATED
+                    )
+                  ))
 
-                    "set UserRequest.hasMultipleErns to false" in new Harness {
-                      MockNavBarPartialConnector.getNavBar(ern).returns(Future.successful(None))
-                      override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = singleEnrolment))
-                      val hasMultipleErns = testRequest(req => req.hasMultipleErns)
+                  "allow the User through, returning a 200 (OK)" in new Harness {
+                    MockNavBarPartialConnector.getNavBar(ern).returns(Future.successful(None))
+                    override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = multipleEnrolements))
 
-                      hasMultipleErns mustBe false
-                    }
+                    status(result) mustBe OK
                   }
 
-                  s"there are multiple Enrolments with ${EnrolmentKeys.ERN}'s present and ERN matches one" - {
-                    val multipleEnrolements = Enrolments(Set(
-                      Enrolment(
-                        key = EnrolmentKeys.EMCS_ENROLMENT,
-                        identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, "OTHER_1")),
-                        state = EnrolmentKeys.INACTIVE
-                      ),
-                      Enrolment(
-                        key = EnrolmentKeys.EMCS_ENROLMENT,
-                        identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, testErn)),
-                        state = EnrolmentKeys.ACTIVATED
-                      ),
-                      Enrolment(
-                        key = EnrolmentKeys.EMCS_ENROLMENT,
-                        identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, "OTHER_2")),
-                        state = EnrolmentKeys.ACTIVATED
-                      )
-                    ))
+                  "set UserRequest.hasMultipleErns to true" in new Harness {
+                    MockNavBarPartialConnector.getNavBar(ern).returns(Future.successful(None))
+                    override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = multipleEnrolements))
+                    val hasMultipleErns = testRequest(req => req.hasMultipleErns)
 
-                    "allow the User through, returning a 200 (OK)" in new Harness {
-                      MockNavBarPartialConnector.getNavBar(ern).returns(Future.successful(None))
-                      override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = multipleEnrolements))
-
-                      status(result) mustBe OK
-                    }
-
-                    "set UserRequest.hasMultipleErns to true" in new Harness {
-                      MockNavBarPartialConnector.getNavBar(ern).returns(Future.successful(None))
-                      override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = multipleEnrolements))
-                      val hasMultipleErns = testRequest(req => req.hasMultipleErns)
-
-                      hasMultipleErns mustBe true
-                    }
+                    hasMultipleErns mustBe true
                   }
                 }
               }

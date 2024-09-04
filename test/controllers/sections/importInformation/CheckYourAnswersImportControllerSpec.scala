@@ -52,7 +52,6 @@ class CheckYourAnswersImportControllerSpec extends SpecBase with SummaryListFlue
     lazy val controller = new CheckYourAnswersImportController(
       messagesApi,
       fakeAuthAction,
-      fakeBetaAllowListAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       Helpers.stubMessagesControllerComponents(),

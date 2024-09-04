@@ -72,7 +72,6 @@ class ItemSmallIndependentProducerControllerSpec extends SpecBase with MockUserA
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeBetaAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view

@@ -69,8 +69,7 @@ class DeferredMovementControllerSpec extends SpecBase with MockUserAnswersServic
       formProvider,
       mockUserAnswersService,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      fakeBetaAllowListAction
+      view
     )
   }
 

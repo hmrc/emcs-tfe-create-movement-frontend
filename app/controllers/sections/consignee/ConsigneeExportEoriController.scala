@@ -31,17 +31,16 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class ConsigneeExportEoriController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val navigator: ConsigneeNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       override val betaAllowList: BetaAllowListAction,
-                                       formProvider: ConsigneeExportEoriFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ConsigneeExportEoriView
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                               override val messagesApi: MessagesApi,
+                                               override val userAnswersService: UserAnswersService,
+                                               override val navigator: ConsigneeNavigator,
+                                               override val auth: AuthAction,
+                                               override val getData: DataRetrievalAction,
+                                               override val requireData: DataRequiredAction,
+                                               formProvider: ConsigneeExportEoriFormProvider,
+                                               val controllerComponents: MessagesControllerComponents,
+                                               view: ConsigneeExportEoriView
+                                             ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>

@@ -34,7 +34,7 @@ import scala.concurrent.Future
 class ItemPackagingShippingMarksChoiceController @Inject()(
                                                             override val messagesApi: MessagesApi,
                                                             override val userAnswersService: UserAnswersService,
-                                                                                 override val navigator: ItemsNavigator,
+                                                            override val navigator: ItemsNavigator,
                                                             override val auth: AuthAction,
                                                             override val getData: DataRetrievalAction,
                                                             override val requireData: DataRequiredAction,
@@ -80,7 +80,7 @@ class ItemPackagingShippingMarksChoiceController @Inject()(
 
     val existingShippingMark = ItemPackagingShippingMarksPage(itemIdx, packageIdx).value
     val updatedAnswers =
-      (if(hasShippingMark) request.userAnswers else request.userAnswers.remove(ItemPackagingShippingMarksPage(itemIdx, packageIdx)))
+      (if (hasShippingMark) request.userAnswers else request.userAnswers.remove(ItemPackagingShippingMarksPage(itemIdx, packageIdx)))
         .set(ItemPackagingShippingMarksChoicePage(itemIdx, packageIdx), hasShippingMark)
 
     val cleansedAnswers =

@@ -41,7 +41,7 @@ class DestinationAddressController @Inject()(override val messagesApi: MessagesA
                                              override val auth: AuthAction,
                                              override val getData: DataRetrievalAction,
                                              override val requireData: DataRequiredAction,
-                                                   val formProvider: DestinationAddressFormProvider,
+                                             val formProvider: DestinationAddressFormProvider,
                                              override val controllerComponents: MessagesControllerComponents,
                                              val view: DestinationAddressView
                                             ) extends BaseNavigationController with AuthActionHelper {

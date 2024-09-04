@@ -40,7 +40,7 @@ class GiveInformationOtherTransportController @Inject()(
                                                          formProvider: GiveInformationOtherTransportFormProvider,
                                                          val controllerComponents: MessagesControllerComponents,
                                                          view: GiveInformationOtherTransportView,
-                                                              ) extends BaseNavigationController with AuthActionHelper {
+                                                       ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>

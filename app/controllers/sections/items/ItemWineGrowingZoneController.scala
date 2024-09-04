@@ -38,7 +38,7 @@ class ItemWineGrowingZoneController @Inject()(
                                                override val auth: AuthAction,
                                                override val getData: DataRetrievalAction,
                                                override val requireData: DataRequiredAction,
-                                                       formProvider: ItemWineGrowingZoneFormProvider,
+                                               formProvider: ItemWineGrowingZoneFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
                                                view: ItemWineGrowingZoneView
                                              ) extends BaseItemsNavigationController with AuthActionHelper {

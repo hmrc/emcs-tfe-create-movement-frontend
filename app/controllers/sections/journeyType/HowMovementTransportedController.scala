@@ -59,6 +59,7 @@ class HowMovementTransportedController @Inject()(
       case _ => default
     }
   }
+
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
       guarantorNotRequiredEuGuard(
@@ -99,11 +100,11 @@ class HowMovementTransportedController @Inject()(
 
   private def cleanseAnswers(answer: HowMovementTransported)(implicit request: DataRequest[_]): UserAnswers = {
     //Cond156 - cleanup any existing TU entries when the user selects FixedTransportInstallations - set the Transport Unit type to be FixedTransportInstallations
-    if(answer == FixedTransportInstallations) {
+    if (answer == FixedTransportInstallations) {
       request.userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0)).set(
         TransportUnitTypePage(Index(0)), FixedTransport
       )
-    } else if(HowMovementTransportedPage.value.contains(FixedTransportInstallations)) {
+    } else if (HowMovementTransportedPage.value.contains(FixedTransportInstallations)) {
       //If the user previously selected Fixed Transport Installation then clear the TU section (because the user did not actively enter any TU info)
       request.userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0))
     } else {

@@ -40,7 +40,7 @@ class DestinationWarehouseExciseController @Inject()(
                                                       override val auth: AuthAction,
                                                       override val getData: DataRetrievalAction,
                                                       override val requireData: DataRequiredAction,
-                                                                     formProvider: DestinationWarehouseExciseFormProvider,
+                                                      formProvider: DestinationWarehouseExciseFormProvider,
                                                       val controllerComponents: MessagesControllerComponents,
                                                       view: DestinationWarehouseExciseView
                                                     ) extends BaseNavigationController with AuthActionHelper {

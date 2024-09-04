@@ -39,7 +39,7 @@ class DispatchWarehouseExciseController @Inject()(
                                                    override val auth: AuthAction,
                                                    override val getData: DataRetrievalAction,
                                                    override val requireData: DataRequiredAction,
-                                                               formProvider: DispatchWarehouseExciseFormProvider,
+                                                   formProvider: DispatchWarehouseExciseFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
                                                    view: DispatchWarehouseExciseView
                                                  ) extends BaseNavigationController with AuthActionHelper {
@@ -63,7 +63,7 @@ class DispatchWarehouseExciseController @Inject()(
   def cleanseSaveAndRedirect(value: String, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
     val cleansedAnswers = {
       //If the ERN has changed from GB -> XI or XI -> GB then Address MUST be re-captured. Hence, remove it.
-      if(DispatchWarehouseExcisePage.value.exists(_.startsWith(value.take(2)))) request.userAnswers else {
+      if (DispatchWarehouseExcisePage.value.exists(_.startsWith(value.take(2)))) request.userAnswers else {
         request.userAnswers.remove(DispatchAddressPage)
       }
     }

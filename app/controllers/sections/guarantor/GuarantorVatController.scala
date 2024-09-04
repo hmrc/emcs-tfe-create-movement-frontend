@@ -39,7 +39,7 @@ class GuarantorVatController @Inject()(
                                         override val auth: AuthAction,
                                         override val getData: DataRetrievalAction,
                                         override val requireData: DataRequiredAction,
-                                         formProvider: GuarantorVatFormProvider,
+                                        formProvider: GuarantorVatFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: GuarantorVatView
                                       ) extends GuarantorBaseController with AuthActionHelper {

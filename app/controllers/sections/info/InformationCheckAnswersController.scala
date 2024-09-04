@@ -44,7 +44,7 @@ class InformationCheckAnswersController @Inject()(
                                                    val requirePreDraftData: PreDraftDataRequiredAction,
                                                    val getData: DataRetrievalAction,
                                                    val requireData: DataRequiredAction,
-                                                                  val cyaHelper: InformationCheckAnswersHelper,
+                                                   val cyaHelper: InformationCheckAnswersHelper,
                                                    val controllerComponents: MessagesControllerComponents,
                                                    view: InformationCheckAnswersView
                                                  ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {

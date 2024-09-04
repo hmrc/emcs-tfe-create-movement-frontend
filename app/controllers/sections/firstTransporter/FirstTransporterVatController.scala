@@ -39,7 +39,7 @@ class FirstTransporterVatController @Inject()(
                                                override val auth: AuthAction,
                                                override val getData: DataRetrievalAction,
                                                override val requireData: DataRequiredAction,
-                                                       formProvider: FirstTransporterVatFormProvider,
+                                               formProvider: FirstTransporterVatFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
                                                view: FirstTransporterVatView
                                              ) extends BaseNavigationController with AuthActionHelper {

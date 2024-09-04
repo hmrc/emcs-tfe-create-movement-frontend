@@ -39,7 +39,7 @@ class ConsignorPaidTemporaryAuthorisationCodeController @Inject()(
                                                                    override val auth: AuthAction,
                                                                    override val getData: DataRetrievalAction,
                                                                    override val requireData: DataRequiredAction,
-                                                                                               formProvider: ConsignorPaidTemporaryAuthorisationCodeFormProvider,
+                                                                   formProvider: ConsignorPaidTemporaryAuthorisationCodeFormProvider,
                                                                    val controllerComponents: MessagesControllerComponents,
                                                                    view: ConsignorPaidTemporaryAuthorisationCodeView
                                                                  ) extends BaseNavigationController with AuthActionHelper {

@@ -81,14 +81,14 @@ class DeferredMovementController @Inject()(
         value => {
           val cleansedAnswers = cleanseUserAnswersIfValueHasChanged(page, value,
             request.userAnswers.copy(submissionFailures =
-              //Remove Validation Error that might exist for Dispatch Date as changing the deferred movement answer invalidates the validation
+            //Remove Validation Error that might exist for Dispatch Date as changing the deferred movement answer invalidates the validation
               request.userAnswers.submissionFailures.filterNot(failure =>
                 failure.errorType == DispatchDateInPastValidationError.code ||
-                failure.errorType == DispatchDateInFutureValidationError.code
+                  failure.errorType == DispatchDateInFutureValidationError.code
               )
             )
           )
-          val mode = if(page.value.contains(value)) CheckMode else ReviewMode
+          val mode = if (page.value.contains(value)) CheckMode else ReviewMode
           saveAndRedirect(DeferredMovementPage(isOnPreDraftFlow = false), value, cleansedAnswers, mode)
         }
       )

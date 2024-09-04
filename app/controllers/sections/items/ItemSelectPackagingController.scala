@@ -42,7 +42,7 @@ class ItemSelectPackagingController @Inject()(
                                                override val auth: AuthAction,
                                                override val getData: DataRetrievalAction,
                                                override val requireData: DataRequiredAction,
-                                                       formProvider: ItemSelectPackagingFormProvider,
+                                               formProvider: ItemSelectPackagingFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
                                                getPackagingTypesService: GetPackagingTypesService,
                                                view: ItemSelectPackagingView

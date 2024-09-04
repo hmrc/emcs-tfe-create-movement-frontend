@@ -43,7 +43,7 @@ class LocalReferenceNumberController @Inject()(
                                                 val requirePreDraftData: PreDraftDataRequiredAction,
                                                 val getData: DataRetrievalAction,
                                                 val requireData: DataRequiredAction,
-                                                            formProvider: LocalReferenceNumberFormProvider,
+                                                formProvider: LocalReferenceNumberFormProvider,
                                                 val userAnswersService: UserAnswersService,
                                                 val controllerComponents: MessagesControllerComponents,
                                                 view: LocalReferenceNumberView

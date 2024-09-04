@@ -38,7 +38,7 @@ class ImportNumberController @Inject()(
                                         override val auth: AuthAction,
                                         override val getData: DataRetrievalAction,
                                         override val requireData: DataRequiredAction,
-                                         formProvider: ImportNumberFormProvider,
+                                        formProvider: ImportNumberFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: ImportNumberView
                                       ) extends BaseSadNavigationController with AuthActionHelper {

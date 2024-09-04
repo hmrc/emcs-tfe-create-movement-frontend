@@ -30,7 +30,7 @@ import scala.concurrent.Future
 
 class CheckYourAnswersController @Inject()(override val messagesApi: MessagesApi,
                                            override val auth: AuthAction,
-                                               override val getData: DataRetrievalAction,
+                                           override val getData: DataRetrievalAction,
                                            override val requireData: DataRequiredAction,
                                            val controllerComponents: MessagesControllerComponents,
                                            val navigator: Navigator,

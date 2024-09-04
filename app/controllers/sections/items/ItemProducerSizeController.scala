@@ -36,21 +36,21 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class ItemProducerSizeController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val navigator: ItemsNavigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       formProvider: ItemProducerSizeFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ItemProducerSizeView,
-                                       timeMachine: TimeMachine
-                                     ) extends BaseItemsNavigationController with AuthActionHelper {
+                                            override val messagesApi: MessagesApi,
+                                            override val userAnswersService: UserAnswersService,
+                                            override val navigator: ItemsNavigator,
+                                            override val auth: AuthAction,
+                                            override val getData: DataRetrievalAction,
+                                            override val requireData: DataRequiredAction,
+                                            formProvider: ItemProducerSizeFormProvider,
+                                            val controllerComponents: MessagesControllerComponents,
+                                            view: ItemProducerSizeView,
+                                            timeMachine: TimeMachine
+                                          ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-        Future(renderView(Ok, fillForm(ItemProducerSizePage(idx), formProvider()), idx, mode))
+      Future(renderView(Ok, fillForm(ItemProducerSizePage(idx), formProvider()), idx, mode))
     }
 
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =

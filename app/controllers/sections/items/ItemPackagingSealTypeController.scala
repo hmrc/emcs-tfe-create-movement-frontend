@@ -33,7 +33,7 @@ import scala.concurrent.Future
 
 class ItemPackagingSealTypeController @Inject()(override val messagesApi: MessagesApi,
                                                 override val userAnswersService: UserAnswersService,
-                                                         override val navigator: ItemsNavigator,
+                                                override val navigator: ItemsNavigator,
                                                 override val auth: AuthAction,
                                                 override val getData: DataRetrievalAction,
                                                 override val requireData: DataRequiredAction,
@@ -69,18 +69,18 @@ class ItemPackagingSealTypeController @Inject()(override val messagesApi: Messag
                         )(implicit request: DataRequest[_]): Future[Result] =
     withAnswerAsync(ItemSelectPackagingPage(itemsIdx, packagingIdx)) { packagingType =>
       withItemPackagingQuantity(itemsIdx, packagingIdx) { packagingQuantity =>
-          Future.successful(
-            status(
-              view(
-                form,
-                routes.ItemPackagingSealTypeController.onSubmit(request.ern, request.draftId, itemsIdx, packagingIdx, mode),
-                itemIndex = Some(itemsIdx),
-                packagingIndex = Some(packagingIdx),
-                packagingTypeDescription = packagingType.description,
-                optPackagingQuantity = Some(packagingQuantity)
-              )
+        Future.successful(
+          status(
+            view(
+              form,
+              routes.ItemPackagingSealTypeController.onSubmit(request.ern, request.draftId, itemsIdx, packagingIdx, mode),
+              itemIndex = Some(itemsIdx),
+              packagingIndex = Some(packagingIdx),
+              packagingTypeDescription = packagingType.description,
+              optPackagingQuantity = Some(packagingQuantity)
             )
           )
+        )
       }
     }
 }

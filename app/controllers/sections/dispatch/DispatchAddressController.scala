@@ -40,7 +40,7 @@ class DispatchAddressController @Inject()(override val messagesApi: MessagesApi,
                                           override val auth: AuthAction,
                                           override val getData: DataRetrievalAction,
                                           override val requireData: DataRequiredAction,
-                                             override val formProvider: AddressFormProvider,
+                                          override val formProvider: AddressFormProvider,
                                           override val controllerComponents: MessagesControllerComponents,
                                           override val view: AddressView
                                          ) extends AddressControllerBase {
@@ -69,7 +69,7 @@ class DispatchAddressController @Inject()(override val messagesApi: MessagesApi,
       onSubmit = onwardCall(mode),
       isConsignorPageOrUsingConsignorDetails = isConsignorPageOrUsingConsignorDetails,
       onSkip = Option.when(!isMandatory)(routes.DispatchAddressController.onSkip(request.ern, request.draftId, mode)),
-      headingKey = Some(if(!isMandatory) "dispatchAddress.optional" else "dispatchAddress")
+      headingKey = Some(if (!isMandatory) "dispatchAddress.optional" else "dispatchAddress")
     ))
   }
 

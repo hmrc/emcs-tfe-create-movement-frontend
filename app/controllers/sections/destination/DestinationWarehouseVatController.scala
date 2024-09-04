@@ -39,7 +39,7 @@ class DestinationWarehouseVatController @Inject()(
                                                    override val auth: AuthAction,
                                                    override val getData: DataRetrievalAction,
                                                    override val requireData: DataRequiredAction,
-                                                               formProvider: DestinationWarehouseVatFormProvider,
+                                                   formProvider: DestinationWarehouseVatFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
                                                    view: DestinationWarehouseVatView
                                                  ) extends BaseNavigationController with AuthActionHelper with JsonOptionFormatter {

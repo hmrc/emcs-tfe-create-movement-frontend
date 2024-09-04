@@ -38,7 +38,7 @@ class ConsigneeExemptOrganisationController @Inject()(override val messagesApi: 
                                                       override val auth: AuthAction,
                                                       override val getData: DataRetrievalAction,
                                                       override val requireData: DataRequiredAction,
-                                                                     formProvider: ConsigneeExemptOrganisationFormProvider,
+                                                      formProvider: ConsigneeExemptOrganisationFormProvider,
                                                       val controllerComponents: MessagesControllerComponents,
                                                       view: ConsigneeExemptOrganisationView,
                                                       getMemberStatesService: GetMemberStatesService

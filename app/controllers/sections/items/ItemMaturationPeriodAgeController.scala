@@ -32,16 +32,16 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class ItemMaturationPeriodAgeController @Inject()(
-                                         override val messagesApi: MessagesApi,
-                                         override val userAnswersService: UserAnswersService,
-                                           override val navigator: ItemsNavigator,
-                                         override val auth: AuthAction,
-                                         override val getData: DataRetrievalAction,
-                                         override val requireData: DataRequiredAction,
-                                         formProvider: ItemMaturationPeriodAgeFormProvider,
-                                         val controllerComponents: MessagesControllerComponents,
-                                         view: ItemMaturationPeriodAgeView
-                                       ) extends BaseItemsNavigationController with AuthActionHelper {
+                                                   override val messagesApi: MessagesApi,
+                                                   override val userAnswersService: UserAnswersService,
+                                                   override val navigator: ItemsNavigator,
+                                                   override val auth: AuthAction,
+                                                   override val getData: DataRetrievalAction,
+                                                   override val requireData: DataRequiredAction,
+                                                   formProvider: ItemMaturationPeriodAgeFormProvider,
+                                                   val controllerComponents: MessagesControllerComponents,
+                                                   view: ItemMaturationPeriodAgeView
+                                                 ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
@@ -65,10 +65,10 @@ class ItemMaturationPeriodAgeController @Inject()(
     }
 
   private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode, goodsType: GoodsType)(implicit request: DataRequest[_]): Future[Result] =
-      Future.successful(status(view(
-        form = form,
-        action = routes.ItemMaturationPeriodAgeController.onSubmit(request.ern, request.draftId, idx, mode),
-        goodsType = goodsType
-      )))
+    Future.successful(status(view(
+      form = form,
+      action = routes.ItemMaturationPeriodAgeController.onSubmit(request.ern, request.draftId, idx, mode),
+      goodsType = goodsType
+    )))
 
 }

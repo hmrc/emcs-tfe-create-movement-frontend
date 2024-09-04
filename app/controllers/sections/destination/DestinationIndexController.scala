@@ -35,7 +35,7 @@ class DestinationIndexController @Inject()(
                                             override val auth: AuthAction,
                                             override val getData: DataRetrievalAction,
                                             override val requireData: DataRequiredAction,
-                                                 val controllerComponents: MessagesControllerComponents
+                                            val controllerComponents: MessagesControllerComponents
                                           ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =

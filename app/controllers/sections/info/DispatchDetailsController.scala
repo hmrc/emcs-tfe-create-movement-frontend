@@ -117,13 +117,13 @@ class DispatchDetailsController @Inject()(
 
   def renderView(status: Status, form: Form[_], onSubmitCall: Call, mode: Mode, isDeferred: Boolean, isOnPreDraftFlow: Boolean)
                 (implicit request: DataRequest[_]): Future[Result] = {
-      Future.successful(
-        status(view(
-          form = form,
-          deferredMovement = isDeferred,
-          onSubmitCall = onSubmitCall,
-          skipQuestionCall = navigator.nextPage(DispatchDetailsPage(isOnPreDraftFlow), mode, request.userAnswers)
-        ))
-      )
-    }
+    Future.successful(
+      status(view(
+        form = form,
+        deferredMovement = isDeferred,
+        onSubmitCall = onSubmitCall,
+        skipQuestionCall = navigator.nextPage(DispatchDetailsPage(isOnPreDraftFlow), mode, request.userAnswers)
+      ))
+    )
+  }
 }

@@ -32,16 +32,16 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class ItemPackagingEnterShippingMarksController @Inject()(
-                                                      override val messagesApi: MessagesApi,
-                                                      override val userAnswersService: UserAnswersService,
-                                                                     override val navigator: ItemsNavigator,
-                                                      override val auth: AuthAction,
-                                                      override val getData: DataRetrievalAction,
-                                                      override val requireData: DataRequiredAction,
-                                                      formProvider: ItemPackagingEnterShippingMarksFormProvider,
-                                                      val controllerComponents: MessagesControllerComponents,
-                                                      view: ItemPackagingEnterShippingMarksView
-                                                    ) extends BaseItemsNavigationController with AuthActionHelper {
+                                                           override val messagesApi: MessagesApi,
+                                                           override val userAnswersService: UserAnswersService,
+                                                           override val navigator: ItemsNavigator,
+                                                           override val auth: AuthAction,
+                                                           override val getData: DataRetrievalAction,
+                                                           override val requireData: DataRequiredAction,
+                                                           formProvider: ItemPackagingEnterShippingMarksFormProvider,
+                                                           val controllerComponents: MessagesControllerComponents,
+                                                           view: ItemPackagingEnterShippingMarksView
+                                                         ) extends BaseItemsNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, itemsIdx: Index, packagingIdx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
@@ -79,12 +79,12 @@ class ItemPackagingEnterShippingMarksController @Inject()(
     }
 
   private[items] def updateAllShippingMarksToNewValueAndReturnUpdatedUserAnswers(itemsIdx: Index, packagingIdx: Index, newValue: String)
-                                                                             (implicit request: DataRequest[_]): UserAnswers =
+                                                                                (implicit request: DataRequest[_]): UserAnswers =
     ItemPackagingShippingMarksPage(itemsIdx, packagingIdx).value match {
       case Some(currentAnswer) => {
         ItemsSection.retrieveShippingMarkLocationsMatching(currentAnswer).foldLeft(request.userAnswers) {
           case (currentUserAnswers, (ii, pi)) =>
-            if((ii == itemsIdx) && (pi == packagingIdx)) {
+            if ((ii == itemsIdx) && (pi == packagingIdx)) {
               // if indexes match the page we're on, don't update
               // otherwise saveAndRedirect won't call userAnswersService.set since currentAnswers.get[A](page).contains(answer) == true
               currentUserAnswers

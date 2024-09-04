@@ -39,7 +39,7 @@ class ItemQuantityController @Inject()(
                                         override val auth: AuthAction,
                                         override val getData: DataRetrievalAction,
                                         override val requireData: DataRequiredAction,
-                                         formProvider: ItemQuantityFormProvider,
+                                        formProvider: ItemQuantityFormProvider,
                                         override val controllerComponents: MessagesControllerComponents,
                                         view: ItemQuantityView,
                                         val cnCodeInformationService: GetCnCodeInformationService

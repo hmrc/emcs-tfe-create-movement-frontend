@@ -36,7 +36,7 @@ class ItemNetGrossMassController @Inject()(
                                             override val auth: AuthAction,
                                             override val getData: DataRetrievalAction,
                                             override val requireData: DataRequiredAction,
-                                                 formProvider: ItemNetGrossMassFormProvider,
+                                            formProvider: ItemNetGrossMassFormProvider,
                                             val controllerComponents: MessagesControllerComponents,
                                             view: ItemNetGrossMassView
                                           ) extends BaseItemsNavigationController with AuthActionHelper {

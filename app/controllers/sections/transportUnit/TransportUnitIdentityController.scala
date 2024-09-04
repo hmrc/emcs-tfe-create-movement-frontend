@@ -38,7 +38,7 @@ class TransportUnitIdentityController @Inject()(
                                                  override val auth: AuthAction,
                                                  override val getData: DataRetrievalAction,
                                                  override val requireData: DataRequiredAction,
-                                                           formProvider: TransportUnitIdentityFormProvider,
+                                                 formProvider: TransportUnitIdentityFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: TransportUnitIdentityView
                                                ) extends BaseTransportUnitNavigationController with AuthActionHelper {

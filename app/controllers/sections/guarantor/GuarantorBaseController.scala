@@ -28,10 +28,10 @@ import scala.concurrent.Future
 trait GuarantorBaseController extends BaseNavigationController {
 
   def withGuarantorRequiredAnswer(f: Result)(implicit request: DataRequest[_]): Result =
-    if(GuarantorRequiredPage.isRequired()) f else {
+    if (GuarantorRequiredPage.isRequired()) f else {
       withAnswer(
         page = GuarantorRequiredPage,
-          redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId)
+        redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.draftId)
       ) {
         case true => f
         case false =>

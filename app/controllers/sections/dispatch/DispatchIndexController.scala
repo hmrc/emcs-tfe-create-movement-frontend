@@ -36,17 +36,17 @@ class DispatchIndexController @Inject()(
                                          override val auth: AuthAction,
                                          override val getData: DataRetrievalAction,
                                          override val requireData: DataRequiredAction,
-                                           val controllerComponents: MessagesControllerComponents
+                                         val controllerComponents: MessagesControllerComponents
                                        ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      if (DispatchSection.isCompleted || DispatchSection.status  == UpdateNeeded) {
+      if (DispatchSection.isCompleted || DispatchSection.status == UpdateNeeded) {
         Redirect(routes.DispatchCheckAnswersController.onPageLoad(ern, draftId))
       } else {
         withAnswer(DestinationTypePage) {
           case CertifiedConsignee | TemporaryCertifiedConsignee =>
-            if(ConsignorAddressPage.value.nonEmpty) {
+            if (ConsignorAddressPage.value.nonEmpty) {
               Redirect(routes.DispatchUseConsignorDetailsController.onPageLoad(ern, draftId, NormalMode))
             } else {
               Redirect(routes.DispatchAddressController.onPageLoad(ern, draftId, NormalMode))

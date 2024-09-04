@@ -34,7 +34,7 @@ import scala.concurrent.Future
 
 class DispatchUseConsignorDetailsController @Inject()(override val messagesApi: MessagesApi,
                                                       override val userAnswersService: UserAnswersService,
-                                                                     override val navigator: DispatchNavigator,
+                                                      override val navigator: DispatchNavigator,
                                                       override val auth: AuthAction,
                                                       override val getData: DataRetrievalAction,
                                                       override val requireData: DataRequiredAction,

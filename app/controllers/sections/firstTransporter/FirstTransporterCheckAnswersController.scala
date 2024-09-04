@@ -36,7 +36,7 @@ class FirstTransporterCheckAnswersController @Inject()(
                                                         override val auth: AuthAction,
                                                         override val getData: DataRetrievalAction,
                                                         override val requireData: DataRequiredAction,
-                                                                         val cyaHelper: FirstTransporterCheckAnswersHelper,
+                                                        val cyaHelper: FirstTransporterCheckAnswersHelper,
                                                         val controllerComponents: MessagesControllerComponents,
                                                         view: FirstTransporterCheckAnswersView
                                                       ) extends BaseNavigationController with AuthActionHelper {

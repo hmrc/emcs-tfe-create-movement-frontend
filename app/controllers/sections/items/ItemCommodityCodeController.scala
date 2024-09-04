@@ -37,7 +37,7 @@ class ItemCommodityCodeController @Inject()(
                                              override val auth: AuthAction,
                                              override val getData: DataRetrievalAction,
                                              override val requireData: DataRequiredAction,
-                                                   getCommodityCodesService: GetCommodityCodesService,
+                                             getCommodityCodesService: GetCommodityCodesService,
                                              formProvider: ItemCommodityCodeFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: ItemCommodityCodeView

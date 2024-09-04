@@ -38,7 +38,7 @@ class ItemSmallIndependentProducerController @Inject()(
                                                         override val auth: AuthAction,
                                                         override val getData: DataRetrievalAction,
                                                         override val requireData: DataRequiredAction,
-                                                                         formProvider: ItemSmallIndependentProducerFormProvider,
+                                                        formProvider: ItemSmallIndependentProducerFormProvider,
                                                         val controllerComponents: MessagesControllerComponents,
                                                         view: ItemSmallIndependentProducerView
                                                       ) extends BaseItemsNavigationController with AuthActionHelper {

@@ -34,19 +34,19 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class DeleteDraftMovementController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val navigator: Navigator,
-                                       override val auth: AuthAction,
-                                       override val getData: DataRetrievalAction,
-                                       override val requireData: DataRequiredAction,
-                                       formProvider: DeleteDraftMovementFormProvider,
-                                       service: DeleteDraftMovementService,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: DeleteDraftMovementView,
-                                       appConfig: AppConfig,
-                                       errorHandler: ErrorHandler
-                                     ) extends BaseNavigationController with AuthActionHelper {
+                                               override val messagesApi: MessagesApi,
+                                               override val userAnswersService: UserAnswersService,
+                                               override val navigator: Navigator,
+                                               override val auth: AuthAction,
+                                               override val getData: DataRetrievalAction,
+                                               override val requireData: DataRequiredAction,
+                                               formProvider: DeleteDraftMovementFormProvider,
+                                               service: DeleteDraftMovementService,
+                                               val controllerComponents: MessagesControllerComponents,
+                                               view: DeleteDraftMovementView,
+                                               appConfig: AppConfig,
+                                               errorHandler: ErrorHandler
+                                             ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
@@ -57,7 +57,7 @@ class DeleteDraftMovementController @Inject()(
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _),
-        deleteDraft => if(deleteDraft) {
+        deleteDraft => if (deleteDraft) {
           LocalReferenceNumberPage(isOnPreDraftFlow = false).value.fold({
             logger.error("Error trying to delete draft, LRN is missing - rendering ISE")
             Future(InternalServerError(errorHandler.internalServerErrorTemplate))

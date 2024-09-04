@@ -39,7 +39,7 @@ import scala.concurrent.Future
 class DocumentsAddToListController @Inject()(
                                               override val messagesApi: MessagesApi,
                                               override val userAnswersService: UserAnswersService,
-                                                     override val navigator: DocumentsNavigator,
+                                              override val navigator: DocumentsNavigator,
                                               override val auth: AuthAction,
                                               override val getData: DataRetrievalAction,
                                               override val requireData: DataRequiredAction,

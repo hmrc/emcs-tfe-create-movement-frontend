@@ -38,7 +38,7 @@ class ItemAlcoholStrengthController @Inject()(
                                                override val auth: AuthAction,
                                                override val getData: DataRetrievalAction,
                                                override val requireData: DataRequiredAction,
-                                                       formProvider: ItemAlcoholStrengthFormProvider,
+                                               formProvider: ItemAlcoholStrengthFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
                                                view: ItemAlcoholStrengthView
                                              ) extends BaseItemsNavigationController with AuthActionHelper {

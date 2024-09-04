@@ -24,8 +24,8 @@ object DestinationWarehouseVatMessages {
     val heading: String => String = "Enter an identifier for the " + _
     val title: String => String = destinationType => titleHelper(heading(destinationType))
     val hint: String = "This can be a VAT registration number or any other identifier, such as an excise ID."
-    val cyaLabel: String = "Identifier"
-    val cyaChangeHidden: String = "identifier"
+    val cyaLabel: String = "Identification number"
+    val cyaChangeHidden: String = "identification number"
     val errorRequired: String = "Enter an identifier"
     val errorRequiredSkippable: String = "Enter an identifier or use link to skip this question"
     val errorInvalidCharacters: String = "Identifier must not include < and > and : and ;"

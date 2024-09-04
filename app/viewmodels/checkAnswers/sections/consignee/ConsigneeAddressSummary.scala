@@ -44,7 +44,7 @@ object ConsigneeAddressSummary {
               ).url,
               id = "changeConsigneeAddress"
             )
-              .withVisuallyHiddenText(messages("consigneeAddress.change.hidden"))
+              .withVisuallyHiddenText(messages("address.consigneeAddress.change.hidden"))
           )
         )
     }

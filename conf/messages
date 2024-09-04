@@ -254,6 +254,7 @@ address.consigneeAddress.title = Enter the consignee’s details
 address.consigneeAddress.heading = Enter the consignee’s details
 address.consigneeAddress.subheading = Consignee information
 address.consigneeAddress.checkYourAnswers.label = Consignee’s details
+address.consigneeAddress.change.hidden = consignee’s details
 
 address.destinationAddress.title = Enter the place of destination details
 address.destinationAddress.heading = Enter the place of destination details
@@ -875,8 +876,8 @@ destinationWarehouseVat.error.required = Enter an identifier
 destinationWarehouseVat.error.invalidCharacters = Identifier must not include < and > and : and ;
 destinationWarehouseVat.error.length = Identifier must be 16 characters or less
 destinationWarehouseVat.link.skip = Skip this question
-destinationWarehouseVat.checkYourAnswers.label = Identifier
-destinationWarehouseVat.change.hidden = identifier
+destinationWarehouseVat.checkYourAnswers.label = Identification number
+destinationWarehouseVat.change.hidden = identification number
 
 destinationConsigneeDetails.title = Is the place of destination the same as the consignee details?
 destinationConsigneeDetails.heading = Is the place of destination the same as the consignee details?

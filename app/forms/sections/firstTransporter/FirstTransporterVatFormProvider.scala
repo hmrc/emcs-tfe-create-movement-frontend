@@ -35,9 +35,14 @@ class FirstTransporterVatFormProvider @Inject() extends Mappings {
         hasVatField -> boolean(radioRequired),
         vatNumberField -> ConditionalMappings.mandatoryIfTrue(hasVatField,
           text(vatRequired)
-            .verifying(maxLength(14, vatNumberLength))
             .transform[String](_.replace("-", "").replace(" ", ""), identity)
-            .verifying(regexp(ONLY_ALPHANUMERIC_REGEX, vatNumberInvalid))
+            .verifying(
+              firstError(
+                maxLength(14, vatNumberLength),
+                regexp(ONLY_ALPHANUMERIC_REGEX, vatNumberInvalid)
+              )
+            )
+
         )
       )(VatNumberModel.apply)(VatNumberModel.unapply)
     )

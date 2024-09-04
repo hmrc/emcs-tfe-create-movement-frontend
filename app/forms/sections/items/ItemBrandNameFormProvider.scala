@@ -35,8 +35,12 @@ class ItemBrandNameFormProvider @Inject() extends Mappings {
         hasBrandNameField -> boolean(radioRequired),
         brandNameField -> mandatoryIfTrue(hasBrandNameField,
           text(brandNameRequired, Seq(brandNameMaxLength.toString))
-            .verifying(maxLength(brandNameMaxLength, brandNameLength))
-            .verifying(regexp(XSS_REGEX, brandNameInvalid))
+            .verifying(
+              firstError(
+                maxLength(brandNameMaxLength, brandNameLength),
+                regexp(XSS_REGEX, brandNameInvalid)
+              )
+            )
         )
       )(ItemBrandNameModel.apply)(ItemBrandNameModel.unapply)
     )

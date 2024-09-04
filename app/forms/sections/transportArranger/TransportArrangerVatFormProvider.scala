@@ -35,9 +35,13 @@ class TransportArrangerVatFormProvider @Inject() extends Mappings {
         hasVatNumberField -> boolean(s"transportArrangerVat.error.radio.$transportArranger.required"),
         vatNumberField -> mandatoryIfTrue(hasVatNumberField,
           text(vatNumberRequired)
-            .verifying(maxLength(14, "transportArrangerVat.error.length"))
             .transform[String](_.replace("-", "").replace(" ", ""), identity)
-            .verifying(regexp(ONLY_ALPHANUMERIC_REGEX, "transportArrangerVat.error.alphanumeric"))
+            .verifying(
+              firstError(
+                maxLength(14, "transportArrangerVat.error.length"),
+                regexp(ONLY_ALPHANUMERIC_REGEX, "transportArrangerVat.error.alphanumeric")
+              )
+            )
         )
       )(VatNumberModel.apply)(VatNumberModel.unapply)
     )

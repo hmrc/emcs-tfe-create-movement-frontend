@@ -33,10 +33,14 @@ class ItemPackagingEnterShippingMarksFormProvider @Inject() extends Mappings {
   def apply(currentItemsIdx: Index, currentPackagingIdx: Index)(implicit dataRequest: DataRequest[_], messages: Messages): Form[String] =
     Form(
       "value" -> normalisedSpaceText("itemPackagingEnterShippingMarks.error.required")
-        .verifying(maxLength(maxLengthOfField, "itemPackagingEnterShippingMarks.error.length"))
-        .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, "itemPackagingEnterShippingMarks.error.character"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "itemPackagingEnterShippingMarks.error.invalid"))
-        .verifying(shippingMarkUnique(currentItemsIdx, currentPackagingIdx))
+        .verifying(
+          firstError(
+            maxLength(maxLengthOfField, "itemPackagingEnterShippingMarks.error.length"),
+            regexpUnlessEmpty(ALPHANUMERIC_REGEX, "itemPackagingEnterShippingMarks.error.character"),
+            regexpUnlessEmpty(XSS_REGEX, "itemPackagingEnterShippingMarks.error.invalid"),
+            shippingMarkUnique(currentItemsIdx, currentPackagingIdx)
+          )
+        )
     )
 
 

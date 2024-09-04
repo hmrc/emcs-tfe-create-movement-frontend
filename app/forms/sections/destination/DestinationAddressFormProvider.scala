@@ -27,7 +27,7 @@ import pages.sections.destination.{DestinationAddressPage, DestinationWarehouseE
 import pages.sections.info.DestinationTypePage
 import pages.{Page, QuestionPage}
 import play.api.data.Forms.{mapping, optional}
-import play.api.data.validation.Constraint
+import play.api.data.validation.{Constraint, Valid}
 import play.api.data.{Form, Mapping}
 
 import javax.inject.Inject
@@ -57,8 +57,12 @@ class DestinationAddressFormProvider @Inject() extends Mappings {
 
   private def businessNameValidation(implicit request: DataRequest[_]): Mapping[Option[String]] = {
     val validation = text(s"address.businessName.error.$page.required")
-      .verifying(maxLength(businessNameMax, s"address.businessName.error.$page.length"))
-      .verifying(regexpUnlessEmpty(XSS_REGEX, s"address.businessName.error.$page.invalid"))
+      .verifying(
+        firstError(
+          maxLength(businessNameMax, s"address.businessName.error.$page.length"),
+          regexpUnlessEmpty(XSS_REGEX, s"address.businessName.error.$page.invalid")
+        )
+      )
 
     if (isDirectDelivery) {
       optional(validation)
@@ -69,18 +73,26 @@ class DestinationAddressFormProvider @Inject() extends Mappings {
 
   private def propertyValidation: Mapping[Option[String]] = {
     val validation = text()
-      .verifying(maxLength(propertyMax, "address.property.error.length"))
-      .verifying(regexp(ALPHANUMERIC_REGEX, "address.property.error.character"))
-      .verifying(regexpUnlessEmpty(XSS_REGEX, "address.property.error.invalid"))
+      .verifying(
+        firstError(
+          maxLength(propertyMax, "address.property.error.length"),
+          regexp(ALPHANUMERIC_REGEX, "address.property.error.character"),
+          regexpUnlessEmpty(XSS_REGEX, "address.property.error.invalid")
+        )
+      )
 
     optional(validation)
   }
 
   private def streetValidation(implicit request: DataRequest[_]): Mapping[Option[String]] = {
     val validation = text("address.street.error.required")
-      .verifying(maxLength(streetMax, "address.street.error.length"))
-      .verifying(regexp(ALPHANUMERIC_REGEX, "address.street.error.character"))
-      .verifying(regexpUnlessEmpty(XSS_REGEX, "address.street.error.invalid"))
+      .verifying(
+        firstError(
+          maxLength(streetMax, "address.street.error.length"),
+          regexp(ALPHANUMERIC_REGEX, "address.street.error.character"),
+          regexpUnlessEmpty(XSS_REGEX, "address.street.error.invalid")
+        )
+      )
 
     if (isDirectDelivery) {
       validation.transform[Option[String]](Some(_), _.get)
@@ -91,9 +103,13 @@ class DestinationAddressFormProvider @Inject() extends Mappings {
 
   private def townValidation(implicit request: DataRequest[_]): Mapping[Option[String]] = {
     val validation = text("address.town.error.required")
-      .verifying(maxLength(townMax, "address.town.error.length"))
-      .verifying(regexp(ALPHANUMERIC_REGEX, "address.town.error.character"))
-      .verifying(regexpUnlessEmpty(XSS_REGEX, "address.town.error.invalid"))
+      .verifying(
+        firstError(
+          maxLength(townMax, "address.town.error.length"),
+          regexp(ALPHANUMERIC_REGEX, "address.town.error.character"),
+          regexpUnlessEmpty(XSS_REGEX, "address.town.error.invalid")
+        )
+      )
 
     if (isDirectDelivery) {
       validation.transform[Option[String]](Some(_), _.get)
@@ -104,10 +120,14 @@ class DestinationAddressFormProvider @Inject() extends Mappings {
 
   private def postcodeValidation(implicit request: DataRequest[_]): Mapping[Option[String]] = {
     val validation = text("address.postcode.error.required")
-      .verifying(maxLength(postcodeMax, "address.postcode.error.length"))
-      .verifying(regexp(ALPHANUMERIC_REGEX, "address.postcode.error.character"))
-      .verifying(regexpUnlessEmpty(XSS_REGEX, "address.postcode.error.invalid"))
-      .verifying(getExtraPostcodeValidationForPage(page): _*)
+      .verifying(
+        firstError(
+          maxLength(postcodeMax, "address.postcode.error.length"),
+          regexp(ALPHANUMERIC_REGEX, "address.postcode.error.character"),
+          regexpUnlessEmpty(XSS_REGEX, "address.postcode.error.invalid"),
+          getExtraPostcodeValidationForPage(page)
+        )
+      )
 
     if (isDirectDelivery) {
       validation.transform[Option[String]](Some(_), _.get)
@@ -116,11 +136,11 @@ class DestinationAddressFormProvider @Inject() extends Mappings {
     }
   }
 
-  private def getExtraPostcodeValidationForPage(page: Page)(implicit request: DataRequest[_]): Seq[Constraint[String]] = {
+  private def getExtraPostcodeValidationForPage(page: Page)(implicit request: DataRequest[_]): Constraint[String] = {
     DestinationWarehouseExcisePage.value match {
-      case Some(ern) if ern.startsWith(Constants.NI_PREFIX) => Seq(startsWith(XI_POSTCODE, s"address.postcode.error.$page.mustStartWithBT"))
-      case Some(ern) if ern.startsWith(Constants.GB_PREFIX) => Seq(doesNotStartWith(XI_POSTCODE, s"address.postcode.error.$page.mustNotStartWithBT"))
-      case _ => Seq.empty
+      case Some(ern) if ern.startsWith(Constants.NI_PREFIX) => startsWith(XI_POSTCODE, s"address.postcode.error.$page.mustStartWithBT")
+      case Some(ern) if ern.startsWith(Constants.GB_PREFIX) => doesNotStartWith(XI_POSTCODE, s"address.postcode.error.$page.mustNotStartWithBT")
+      case _ => Constraint { case _ => Valid}
     }
   }
 }

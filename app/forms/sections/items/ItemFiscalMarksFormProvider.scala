@@ -27,8 +27,12 @@ class ItemFiscalMarksFormProvider @Inject() extends BaseTextareaFormProvider[Str
   def apply(): Form[String] =
     Form(
       "value" -> normalisedSpaceText("itemFiscalMarks.error.required")
-        .verifying(maxLength(TEXTAREA_MAX_LENGTH, "itemFiscalMarks.error.length"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "itemFiscalMarks.error.xss"))
-        .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, "itemFiscalMarks.error.character"))
+        .verifying(
+          firstError(
+            maxLength(TEXTAREA_MAX_LENGTH, "itemFiscalMarks.error.length"),
+            regexpUnlessEmpty(XSS_REGEX, "itemFiscalMarks.error.xss"),
+            regexpUnlessEmpty(ALPHANUMERIC_REGEX, "itemFiscalMarks.error.character")
+          )
+        )
     )
 }

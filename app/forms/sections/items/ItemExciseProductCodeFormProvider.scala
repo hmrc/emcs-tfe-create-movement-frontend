@@ -29,10 +29,14 @@ class ItemExciseProductCodeFormProvider @Inject() extends Mappings {
   def apply(exciseProductCodes: Seq[ExciseProductCode], idx: Index)(implicit request: DataRequest[_]): Form[String] =
     Form(
       "excise-product-code" -> text("itemExciseProductCode.error.required")
-        .verifying(valueInList(exciseProductCodes.map(_.code), "itemExciseProductCode.error.required"))
-        .verifying(isNotEqualToOptExistingAnswer(
-          existingAnswer = ItemExciseProductCodePage(idx).getOriginalAttributeValue,
-          errorKey = "itemExciseProductCode.error.submissionFailure"
-        ))
+        .verifying(
+          firstError(
+            valueInList(exciseProductCodes.map(_.code), "itemExciseProductCode.error.required"),
+            isNotEqualToOptExistingAnswer(
+              existingAnswer = ItemExciseProductCodePage(idx).getOriginalAttributeValue,
+              errorKey = "itemExciseProductCode.error.submissionFailure"
+            )
+          )
+        )
     )
 }

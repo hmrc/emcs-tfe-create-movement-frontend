@@ -29,9 +29,11 @@ class ItemWineMoreInformationFormProvider @Inject() extends BaseTextareaFormProv
     Form(
       "value" -> optional(playText
         .transform[String](normaliseSpacesAndControlCharacters, identity)
-        .verifying(maxLength(TEXTAREA_MAX_LENGTH, "itemWineMoreInformation.error.length"))
-        .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, "itemWineMoreInformation.error.alphanumeric"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "itemWineMoreInformation.error.invalidCharacter"))
+        .verifying(
+          firstError(
+            maxLength(TEXTAREA_MAX_LENGTH, "itemWineMoreInformation.error.length"), regexpUnlessEmpty(ALPHANUMERIC_REGEX, "itemWineMoreInformation.error.alphanumeric"), regexpUnlessEmpty(XSS_REGEX, "itemWineMoreInformation.error.invalidCharacter")
+          )
+        )
       )
     )
 }

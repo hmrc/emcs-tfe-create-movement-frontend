@@ -29,9 +29,13 @@ class LocalReferenceNumberFormProvider @Inject() extends Mappings {
   def apply(isDeferred: Boolean)(implicit dataRequest: DataRequest[_]): Form[String] = {
     Form(
       "value" -> text(errMsgForKey("required")(isDeferred))
-        .verifying(maxLength(22, errMsgForKey("length")(isDeferred)))
-        .verifying(isNotEqualToOptExistingAnswer(LocalReferenceNumberPage().getOriginalAttributeValue, "errors.704.lrn.input"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, errMsgForKey("invalid")(isDeferred)))
+        .verifying(
+          firstError(
+            maxLength(22, errMsgForKey("length")(isDeferred)),
+            isNotEqualToOptExistingAnswer(LocalReferenceNumberPage().getOriginalAttributeValue, "errors.704.lrn.input"),
+            regexpUnlessEmpty(XSS_REGEX, errMsgForKey("invalid")(isDeferred))
+          )
+        )
     )
   }
 

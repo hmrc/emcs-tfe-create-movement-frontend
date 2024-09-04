@@ -32,20 +32,20 @@ class ImportCustomsOfficeCodeFormProvider @Inject() extends Mappings {
   def apply()(implicit request: DataRequest[_]): Form[String] =
     Form(
       "value" -> text("importCustomsOfficeCode.error.required")
-        .verifying(
-          regexp(XSS_REGEX, "importCustomsOfficeCode.error.invalidCharacter")
-        )
         .transform[String](_.toUpperCase.replace(" ", ""), identity)
-        .verifying(firstError(
-          fixedLength(maxLength, "importCustomsOfficeCode.error.length"),
-          regexp(CUSTOMS_OFFICE_CODE_REGEX, "importCustomsOfficeCode.error.customsOfficeCodeRegex"),
-          validationForImportCustomsOfficeCodeBasedOnConsignor
-        ))
-        .verifying(isNotEqualToOptExistingAnswer(ImportCustomsOfficeCodePage.getOriginalAttributeValue, "errors.704.importCustomsOfficeCode.input"))
+        .verifying(
+          firstError(
+            regexp(XSS_REGEX, "importCustomsOfficeCode.error.invalidCharacter"),
+            fixedLength(maxLength, "importCustomsOfficeCode.error.length"),
+            regexp(CUSTOMS_OFFICE_CODE_REGEX, "importCustomsOfficeCode.error.customsOfficeCodeRegex"),
+            validationForImportCustomsOfficeCodeBasedOnConsignor,
+            isNotEqualToOptExistingAnswer(ImportCustomsOfficeCodePage.getOriginalAttributeValue, "errors.704.importCustomsOfficeCode.input")
+          )
+        )
     )
 
   private def validationForImportCustomsOfficeCodeBasedOnConsignor()(implicit request: DataRequest[_]): Constraint[String] =
-    if(request.isNorthernIrelandErn) {
+    if (request.isNorthernIrelandErn) {
       startsWith("XI", "importCustomsOfficeCode.error.mustBeginWithXI")
     } else {
       startsWith("GB", "importCustomsOfficeCode.error.mustBeginWithGB")

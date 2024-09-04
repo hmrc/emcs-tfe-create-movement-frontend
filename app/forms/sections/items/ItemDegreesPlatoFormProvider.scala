@@ -39,12 +39,16 @@ class ItemDegreesPlatoFormProvider @Inject() extends Mappings {
           text(requiredErrorKey)
             .verifying(isDecimal(nonNumericErrorKey))
             .transform[BigDecimal](BigDecimal(_), _.toString())
-            .verifying(decimalRange(minValue, maxValue, rangeErrorKey))
-            .verifying(maxDecimalPlaces(maxDecimalPlacesValue, maxDecimalPlacesErrorKey))
-            .verifying(isNotEqualToOptExistingAnswer(
-              existingAnswer = ItemDegreesPlatoPage(idx).getOriginalAttributeValue.map(BigDecimal(_)),
-              errorKey = sameInputAsOriginalSubmissionErrorKey
-            ))
+            .verifying(
+              firstError(
+                decimalRange(minValue, maxValue, rangeErrorKey),
+                maxDecimalPlaces(maxDecimalPlacesValue, maxDecimalPlacesErrorKey),
+                isNotEqualToOptExistingAnswer(
+                  existingAnswer = ItemDegreesPlatoPage(idx).getOriginalAttributeValue.map(BigDecimal(_)),
+                  errorKey = sameInputAsOriginalSubmissionErrorKey
+                )
+              )
+            )
         )
       )(ItemDegreesPlatoModel.apply)(ItemDegreesPlatoModel.unapply)
     )

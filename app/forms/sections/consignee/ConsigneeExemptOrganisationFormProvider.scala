@@ -32,9 +32,13 @@ class ConsigneeExemptOrganisationFormProvider @Inject() extends BaseTextareaForm
     Form(mapping(
       "memberState" -> text("consigneeExemptOrganisation.memberState.error.required"),
       "certificateSerialNumber" -> normalisedSpaceText("consigneeExemptOrganisation.certificateSerialNumber.error.required")
-        .verifying(maxLength(maxLength, s"consigneeExemptOrganisation.certificateSerialNumber.error.length"))
-        .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"consigneeExemptOrganisation.certificateSerialNumber.error.character"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, s"consigneeExemptOrganisation.certificateSerialNumber.error.xss"))
+        .verifying(
+          firstError(
+            maxLength(maxLength, s"consigneeExemptOrganisation.certificateSerialNumber.error.length"),
+            regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"consigneeExemptOrganisation.certificateSerialNumber.error.character"),
+            regexpUnlessEmpty(XSS_REGEX, s"consigneeExemptOrganisation.certificateSerialNumber.error.xss")
+          )
+        )
     )(ExemptOrganisationDetailsModel.apply)(ExemptOrganisationDetailsModel.unapply))
 
 }

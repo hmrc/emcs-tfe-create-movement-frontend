@@ -27,8 +27,9 @@ sealed trait SubmissionError {
   val code: String
   val messageKey: String
   val id: String
+  def nonFixable()(implicit request: DataRequest[_]): Boolean = route.isEmpty
 
-  def route()(implicit request: DataRequest[_]): Call
+  def route()(implicit request: DataRequest[_]): Option[Call] = None
 
   val index: Option[Index] = None
 }
@@ -42,8 +43,9 @@ case object LocalReferenceNumberError extends SubmissionError {
   override val messageKey = "errors.704.lrn"
   override val id = "local-reference-number-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object ImportCustomsOfficeCodeError extends SubmissionError {
@@ -51,8 +53,9 @@ case object ImportCustomsOfficeCodeError extends SubmissionError {
   override val messageKey = "errors.704.importCustomsOfficeCode"
   override val id = "import-customs-office-code-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.importInformation.routes.ImportCustomsOfficeCodeController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object ExportCustomsOfficeNumberError extends SubmissionError {
@@ -60,8 +63,9 @@ case object ExportCustomsOfficeNumberError extends SubmissionError {
   override val messageKey = "errors.704.exportOffice"
   override val id = "export-customs-office-number-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.exportInformation.routes.ExportCustomsOfficeController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object InvalidOrMissingConsigneeError extends SubmissionError {
@@ -69,8 +73,9 @@ case object InvalidOrMissingConsigneeError extends SubmissionError {
   override val messageKey = "errors.704.invalidOrMissingConsignee"
   override val id = "invalid-or-missing-consignee-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object LinkIsPendingError extends SubmissionError {
@@ -78,8 +83,9 @@ case object LinkIsPendingError extends SubmissionError {
   override val messageKey = "errors.704.linkIsPending"
   override val id = "link-is-pending-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object LinkIsAlreadyUsedError extends SubmissionError {
@@ -87,8 +93,9 @@ case object LinkIsAlreadyUsedError extends SubmissionError {
   override val messageKey = "errors.704.linkIsAlreadyUsed"
   override val id = "link-is-already-used-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object LinkIsWithdrawnError extends SubmissionError {
@@ -96,8 +103,9 @@ case object LinkIsWithdrawnError extends SubmissionError {
   override val messageKey = "errors.704.linkIsWithdrawn"
   override val id = "link-is-withdrawn-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object LinkIsCancelledError extends SubmissionError {
@@ -105,8 +113,9 @@ case object LinkIsCancelledError extends SubmissionError {
   override val messageKey = "errors.704.linkIsCancelled"
   override val id = "link-is-cancelled-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object LinkIsExpiredError extends SubmissionError {
@@ -114,8 +123,9 @@ case object LinkIsExpiredError extends SubmissionError {
   override val messageKey = "errors.704.linkIsExpired"
   override val id = "link-is-expired-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object LinkMissingOrInvalidError extends SubmissionError {
@@ -123,8 +133,9 @@ case object LinkMissingOrInvalidError extends SubmissionError {
   override val messageKey = "errors.704.linkMissingOrInvalid"
   override val id = "link-missing-or-invalid-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object DirectDeliveryNotAllowedError extends SubmissionError {
@@ -132,8 +143,9 @@ case object DirectDeliveryNotAllowedError extends SubmissionError {
   override val messageKey = "errors.704.directDeliveryNotAllowed"
   override val id = "direct-delivery-not-allowed-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object ConsignorNotAuthorisedError extends SubmissionError {
@@ -141,8 +153,9 @@ case object ConsignorNotAuthorisedError extends SubmissionError {
   override val messageKey = "errors.704.consignorNotAuthorised"
   override val id = "consignor-not-authorised-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object RegisteredConsignorToRegisteredConsigneeError extends SubmissionError {
@@ -150,8 +163,9 @@ case object RegisteredConsignorToRegisteredConsigneeError extends SubmissionErro
   override val messageKey = "errors.704.registeredConsignorToRegisteredConsignee"
   override val id = "registered-consignor-to-registered-consignee-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object ConsigneeRoleInvalidError extends SubmissionError {
@@ -159,8 +173,9 @@ case object ConsigneeRoleInvalidError extends SubmissionError {
   override val messageKey = "errors.704.consigneeRoleInvalid"
   override val id = "consignee-role-invalid-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object DispatchWarehouseInvalidOrMissingOnSeedError extends SubmissionError {
@@ -168,8 +183,9 @@ case object DispatchWarehouseInvalidOrMissingOnSeedError extends SubmissionError
   override val messageKey = "errors.704.dispatchWarehouseInvalidOrMissingOnSeedError"
   override val id = "dispatch-warehouse-invalid-or-missing-on-seed-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object DispatchWarehouseInvalidError extends SubmissionError {
@@ -177,8 +193,9 @@ case object DispatchWarehouseInvalidError extends SubmissionError {
   override val messageKey = "errors.704.dispatchWarehouseInvalidError"
   override val id = "dispatch-warehouse-invalid-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object DispatchWarehouseConsignorDoesNotManageWarehouseError extends SubmissionError {
@@ -186,8 +203,9 @@ case object DispatchWarehouseConsignorDoesNotManageWarehouseError extends Submis
   override val messageKey = "errors.704.dispatchWarehouseConsignorDoesNotManageWarehouseError"
   override val id = "dispatch-warehouse-consignor-does-not-manage-warehouse-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.dispatch.routes.DispatchWarehouseExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case class ItemQuantityError(idx: Index, isForAddToList: Boolean) extends SubmissionError {
@@ -195,8 +213,9 @@ case class ItemQuantityError(idx: Index, isForAddToList: Boolean) extends Submis
   override val messageKey = s"errors.704.items.quantity${if (isForAddToList) ".addToList" else ""}"
   override val id = s"fix-item-${idx.displayIndex}-quantity"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode)
+  )
 
   override val index = Some(idx)
 }
@@ -210,8 +229,9 @@ case class ItemDegreesPlatoError(idx: Index, isForAddToList: Boolean) extends Su
   override val messageKey = s"errors.704.items.degreesPlato${if (isForAddToList) ".addToList" else ""}"
   override val id = s"fix-item-${idx.displayIndex}-degrees-plato"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, idx, CheckMode)
+  )
 
   override val index = Some(idx)
 }
@@ -220,72 +240,28 @@ object ItemDegreesPlatoError {
   val code = "4445"
 }
 
-case class ItemExciseProductCodeConsignorNotApprovedToSendError(idx: Index, isForAddToList: Boolean) extends SubmissionError {
-  override val code = ItemExciseProductCodeConsignorNotApprovedToSendError.code
-  override val messageKey = if (isForAddToList) "errors.704.items.exciseProductCode" else {
-    s"errors.704.items.exciseProductCode.itemExciseProductCodeConsignorNotApprovedToSendError"
-  }
-  override val id = s"fix-item-${idx.displayIndex}-excise-product-code-consignor-not-approved-to-send"
-
-  override def route()(implicit request: DataRequest[_]): Call =
-    controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, CheckMode)
-
-  override val index = Some(idx)
+object ConsignorNotApprovedToSendError extends SubmissionError {
+  override val code = "4408"
+  override val messageKey = "errors.704.consignorNotApprovedToSendError"
+  override val id = s"fix-consignor-not-approved-to-send"
 }
 
-object ItemExciseProductCodeConsignorNotApprovedToSendError {
-  val code = "4408"
+object ConsigneeNotApprovedToReceiveError extends SubmissionError {
+  override val code = "4409"
+  override val messageKey = s"errors.704.consigneeNotApprovedToReceiveError"
+  override val id = s"fix-consignee-not-approved-to-receive"
 }
 
-case class ItemExciseProductCodeConsigneeNotApprovedToReceiveError(idx: Index, isForAddToList: Boolean) extends SubmissionError {
-  override val code = ItemExciseProductCodeConsigneeNotApprovedToReceiveError.code
-  override val messageKey = if (isForAddToList) "errors.704.items.exciseProductCode" else {
-    s"errors.704.items.exciseProductCode.itemExciseProductCodeConsigneeNotApprovedToReceiveError"
-  }
-  override val id = s"fix-item-${idx.displayIndex}-excise-product-code-consignee-not-approved-to-receive"
-
-  override def route()(implicit request: DataRequest[_]): Call =
-    controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, CheckMode)
-
-  override val index = Some(idx)
+object DestinationNotApprovedToReceiveError extends SubmissionError {
+  override val code = "4410"
+  override val messageKey = "errors.704.destinationNotApprovedToReceiveError"
+  override val id = s"fix-destination-not-approved-to-receive"
 }
 
-object ItemExciseProductCodeConsigneeNotApprovedToReceiveError {
-  val code = "4409"
-}
-
-case class ItemExciseProductCodeDestinationNotApprovedToReceiveError(idx: Index, isForAddToList: Boolean) extends SubmissionError {
-  override val code = ItemExciseProductCodeDestinationNotApprovedToReceiveError.code
-  override val messageKey = if (isForAddToList) "errors.704.items.exciseProductCode" else {
-    s"errors.704.items.exciseProductCode.itemExciseProductCodeDestinationNotApprovedToReceiveError"
-  }
-  override val id = s"fix-item-${idx.displayIndex}-excise-product-code-destination-not-approved-to-receive"
-
-  override def route()(implicit request: DataRequest[_]): Call =
-    controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, CheckMode)
-
-  override val index = Some(idx)
-}
-
-object ItemExciseProductCodeDestinationNotApprovedToReceiveError {
-  val code = "4410"
-}
-
-case class ItemExciseProductCodeDispatchPlaceNotAllowedError(idx: Index, isForAddToList: Boolean) extends SubmissionError {
-  override val code = ItemExciseProductCodeDispatchPlaceNotAllowedError.code
-  override val messageKey = if (isForAddToList) "errors.704.items.exciseProductCode" else {
-    s"errors.704.items.exciseProductCode.itemExciseProductCodeDispatchPlaceNotAllowed"
-  }
-  override val id = s"fix-item-${idx.displayIndex}-excise-product-code-dispatch-place-not-allowed"
-
-  override def route()(implicit request: DataRequest[_]): Call =
-    controllers.sections.items.routes.ItemExciseProductCodeController.onPageLoad(request.ern, request.draftId, idx, CheckMode)
-
-  override val index = Some(idx)
-}
-
-object ItemExciseProductCodeDispatchPlaceNotAllowedError {
-  val code = "4527"
+object DispatchPlaceNotAllowedError extends SubmissionError {
+  override val code = "4527"
+  override val messageKey = "errors.704.dispatchPlaceNotAllowed"
+  override val id = s"fix-dispatch-place-not-allowed"
 }
 
 case object PlaceOfDestinationExciseIdInvalidError extends SubmissionError {
@@ -293,8 +269,9 @@ case object PlaceOfDestinationExciseIdInvalidError extends SubmissionError {
   override val messageKey = "errors.704.placeOfDestinationExciseIdInvalidError"
   override val id = "excise-id-for-tax-warehouse-of-destination-invalid-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError extends SubmissionError {
@@ -302,8 +279,9 @@ case object PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError exte
   override val messageKey = "errors.704.placeOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError"
   override val id = "excise-id-for-tax-warehouse-of-destination-needs-consignee-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object PlaceOfDestinationExciseIdForTaxWarehouseInvalidError extends SubmissionError {
@@ -311,8 +289,9 @@ case object PlaceOfDestinationExciseIdForTaxWarehouseInvalidError extends Submis
   override val messageKey = "errors.704.placeOfDestinationExciseIdForTaxWarehouseInvalidError"
   override val id = "excise-id-for-tax-warehouse-invalid-error"
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object DispatchDateInPastValidationError extends UIError[DispatchDetailsModel] {
@@ -321,8 +300,9 @@ case object DispatchDateInPastValidationError extends UIError[DispatchDetailsMod
   override val id = "dispatch-date-validation-error"
   override val page = DispatchDetailsPage(isOnPreDraftFlow = false)
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.info.routes.DispatchDetailsController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 case object DispatchDateInFutureValidationError extends UIError[DispatchDetailsModel] {
@@ -331,8 +311,9 @@ case object DispatchDateInFutureValidationError extends UIError[DispatchDetailsM
   override val id = "dispatch-date-validation-error"
   override val page = DispatchDetailsPage(isOnPreDraftFlow = false)
 
-  override def route()(implicit request: DataRequest[_]): Call =
+  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
     controllers.sections.info.routes.DispatchDetailsController.onPageLoad(request.ern, request.draftId, CheckMode)
+  )
 }
 
 object SubmissionError {
@@ -361,6 +342,10 @@ object SubmissionError {
     case DispatchWarehouseConsignorDoesNotManageWarehouseError.code => DispatchWarehouseConsignorDoesNotManageWarehouseError
     case DispatchDateInPastValidationError.code => DispatchDateInPastValidationError
     case DispatchDateInFutureValidationError.code => DispatchDateInFutureValidationError
+    case ConsignorNotApprovedToSendError.code => ConsignorNotApprovedToSendError
+    case ConsigneeNotApprovedToReceiveError.code => ConsigneeNotApprovedToReceiveError
+    case DestinationNotApprovedToReceiveError.code => DestinationNotApprovedToReceiveError
+    case DispatchPlaceNotAllowedError.code => DispatchPlaceNotAllowedError
     case errorCode => throw new IllegalArgumentException(s"Invalid submission error code: $errorCode")
   }
 
@@ -368,10 +353,6 @@ object SubmissionError {
   def apply(errorType: String, idx: Index, isForAddToList: Boolean = false): SubmissionError = errorType match {
     case ItemQuantityError.code => ItemQuantityError(idx, isForAddToList)
     case ItemDegreesPlatoError.code => ItemDegreesPlatoError(idx, isForAddToList)
-    case ItemExciseProductCodeConsignorNotApprovedToSendError.code => ItemExciseProductCodeConsignorNotApprovedToSendError(idx, isForAddToList)
-    case ItemExciseProductCodeConsigneeNotApprovedToReceiveError.code => ItemExciseProductCodeConsigneeNotApprovedToReceiveError(idx, isForAddToList)
-    case ItemExciseProductCodeDestinationNotApprovedToReceiveError.code => ItemExciseProductCodeDestinationNotApprovedToReceiveError(idx, isForAddToList)
-    case ItemExciseProductCodeDispatchPlaceNotAllowedError.code => ItemExciseProductCodeDispatchPlaceNotAllowedError(idx, isForAddToList)
     case errorCode => throw new IllegalArgumentException(s"Invalid submission error code: $errorCode")
   }
 }

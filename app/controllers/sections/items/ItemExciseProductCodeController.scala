@@ -23,7 +23,7 @@ import models.sections.items.ExciseProductCodeRules
 import models.{Index, Mode, UserAnswers}
 import navigation.ItemsNavigator
 import pages.sections.guarantor.GuarantorSection
-import pages.sections.items.{ItemExciseProductCodePage, ItemsSectionItem, ItemsSectionItems}
+import pages.sections.items.{ItemExciseProductCodePage, ItemsSectionItems}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -59,7 +59,7 @@ class ItemExciseProductCodeController @Inject()(
               defaultTextMessageKey = "itemExciseProductCode.select.defaultValue",
               existingAnswer = ItemExciseProductCodePage(idx).value
             )
-            renderView(Ok, formProvider(exciseProductCodes, idx), idx, selectItems, mode)
+            renderView(Ok, formProvider(exciseProductCodes), idx, selectItems, mode)
         }
       }
     }
@@ -69,7 +69,7 @@ class ItemExciseProductCodeController @Inject()(
       validateIndexAsync(idx) {
         exciseProductCodesService.getExciseProductCodes().flatMap {
           exciseProductCodes => {
-            formProvider(exciseProductCodes, idx).bindFromRequest().fold(
+            formProvider(exciseProductCodes).bindFromRequest().fold(
               formWithErrors => {
                 val selectItems = SelectItemHelper.constructSelectItems(
                   exciseProductCodes,
@@ -78,12 +78,7 @@ class ItemExciseProductCodeController @Inject()(
                 renderView(BadRequest, formWithErrors, idx, selectItems, mode)
               },
               value => {
-                val updatedUserAnswers = cleanseUserAnswersIfValueHasChanged(
-                  page = ItemExciseProductCodePage(idx),
-                  newAnswer = value,
-                  cleansingFunction = removeItemSubmissionFailure(idx, request.userAnswers.resetIndexedSection(ItemsSectionItem(idx), idx))
-                )
-                saveAndRedirect(ItemExciseProductCodePage(idx), value, userAnswersWithGuarantorSectionMaybeRemoved(updatedUserAnswers, value), mode)
+                saveAndRedirect(ItemExciseProductCodePage(idx), value, userAnswersWithGuarantorSectionMaybeRemoved(request.userAnswers, value), mode)
               }
             )
           }

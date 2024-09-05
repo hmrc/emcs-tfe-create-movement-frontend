@@ -46,26 +46,6 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
 
             SubmissionError.apply("4445", testIndex1, isForAddToList) mustBe ItemDegreesPlatoError(testIndex1, isForAddToList)
           }
-
-          "should return ItemExciseProductCodeConsignorNotApprovedToSendError for error code: 4408" - {
-
-            SubmissionError.apply("4408", testIndex1, isForAddToList) mustBe ItemExciseProductCodeConsignorNotApprovedToSendError(testIndex1, isForAddToList)
-          }
-
-          "should return ItemExciseProductCodeConsigneeNotApprovedToReceiveError for error code: 4409" - {
-
-            SubmissionError.apply("4409", testIndex1, isForAddToList) mustBe ItemExciseProductCodeConsigneeNotApprovedToReceiveError(testIndex1, isForAddToList)
-          }
-
-          "should return ItemExciseProductCodeDestinationNotApprovedToReceiveError for error code: 4410" - {
-
-            SubmissionError.apply("4410", testIndex1, isForAddToList) mustBe ItemExciseProductCodeDestinationNotApprovedToReceiveError(testIndex1, isForAddToList)
-          }
-
-          "should return ItemExciseProductCodeDispatchPlaceNotAllowedError for error code: 4527" - {
-
-            SubmissionError.apply("4527", testIndex1, isForAddToList) mustBe ItemExciseProductCodeDispatchPlaceNotAllowedError(testIndex1, isForAddToList)
-          }
         }
       }
     }
@@ -94,7 +74,11 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
         DispatchWarehouseInvalidError -> "4458",
         DispatchWarehouseConsignorDoesNotManageWarehouseError -> "4461",
         DispatchDateInFutureValidationError -> "8085",
-        DispatchDateInPastValidationError -> "8084"
+        DispatchDateInPastValidationError -> "8084",
+        ConsignorNotApprovedToSendError -> "4408",
+        ConsigneeNotApprovedToReceiveError -> "4409",
+        DestinationNotApprovedToReceiveError -> "4410",
+        DispatchPlaceNotAllowedError -> "4527"
       ).foreach {
         case (submissionError, expectedErrorCode) =>
 
@@ -116,39 +100,35 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
       val itemIndex = 1
       val isForAddToList = true
 
-      Seq(
-        LocalReferenceNumberError -> LocalReferenceNumberController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        ImportCustomsOfficeCodeError -> ImportCustomsOfficeCodeController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        ExportCustomsOfficeNumberError -> ExportCustomsOfficeController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        InvalidOrMissingConsigneeError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        LinkIsPendingError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        LinkIsAlreadyUsedError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        LinkIsWithdrawnError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        LinkIsCancelledError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        LinkIsExpiredError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        LinkMissingOrInvalidError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        DirectDeliveryNotAllowedError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        ConsignorNotAuthorisedError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        RegisteredConsignorToRegisteredConsigneeError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        ConsigneeRoleInvalidError -> ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        ItemQuantityError(itemIndex, isForAddToList) -> ItemQuantityController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
-        ItemDegreesPlatoError(itemIndex, isForAddToList) -> ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
-        ItemExciseProductCodeConsignorNotApprovedToSendError(itemIndex, isForAddToList) ->
-          ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
-        ItemExciseProductCodeConsigneeNotApprovedToReceiveError(itemIndex, isForAddToList) ->
-          ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
-        ItemExciseProductCodeDestinationNotApprovedToReceiveError(itemIndex, isForAddToList) ->
-          ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
-        ItemExciseProductCodeDispatchPlaceNotAllowedError(itemIndex, isForAddToList) ->
-          ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url,
-        PlaceOfDestinationExciseIdInvalidError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        PlaceOfDestinationExciseIdForTaxWarehouseInvalidError -> DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        DispatchDateInFutureValidationError -> DispatchDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url,
-        DispatchDateInPastValidationError -> DispatchDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url
+      Seq[(SubmissionError, Option[String])](
+        LocalReferenceNumberError -> Some(LocalReferenceNumberController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        ImportCustomsOfficeCodeError -> Some(ImportCustomsOfficeCodeController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        ExportCustomsOfficeNumberError -> Some(ExportCustomsOfficeController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        InvalidOrMissingConsigneeError -> Some(ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        LinkIsPendingError -> Some(ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        LinkIsAlreadyUsedError -> Some(ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        LinkIsWithdrawnError -> Some(ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        LinkIsCancelledError -> Some(ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        LinkIsExpiredError -> Some(ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        LinkMissingOrInvalidError -> Some(ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        DirectDeliveryNotAllowedError -> Some(ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        ConsignorNotAuthorisedError -> Some(ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        RegisteredConsignorToRegisteredConsigneeError -> Some(ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        ConsigneeRoleInvalidError -> Some(ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        PlaceOfDestinationExciseIdInvalidError -> Some(DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        PlaceOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError -> Some(DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        PlaceOfDestinationExciseIdForTaxWarehouseInvalidError -> Some(DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        DispatchDateInFutureValidationError -> Some(DispatchDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        DispatchDateInPastValidationError -> Some(DispatchDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url),
+        ItemQuantityError(itemIndex, isForAddToList) -> Some(ItemQuantityController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url),
+        ItemDegreesPlatoError(itemIndex, isForAddToList) -> Some(ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url),
+        ConsignorNotApprovedToSendError -> None,
+        ConsigneeNotApprovedToReceiveError -> None,
+        DestinationNotApprovedToReceiveError -> None,
+        DispatchPlaceNotAllowedError -> None
       ).foreach {
         case (error, expectedUrl) =>
-          error.route().url mustBe expectedUrl
+          error.route().map(_.url) mustBe expectedUrl
       }
     }
 

@@ -15,11 +15,9 @@
  *@
 
 @import models.requests.DataRequest
-@import pages.sections.items.ItemExciseProductCodePage
 @import uk.gov.hmrc.govukfrontend.views.Implicits.RichSelect
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
-@import viewmodels.helpers.ErrorNotificationBannerHelper
-@import viewmodels.helpers.ItemExciseProductCodeHelper
+@import viewmodels.helpers.{ErrorNotificationBannerHelper, ItemExciseProductCodeHelper}
 @import views.html.helper.CSPNonce
 
 @this(
@@ -60,10 +58,6 @@
 @layout(pageTitle = title(form, messages("itemExciseProductCode.title", idx.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
 
     @formHelper(action = action) {
-
-        @if(ItemExciseProductCodePage(idx).isMovementSubmissionError && form.errors.isEmpty) {
-            @notificationBannerHelper.content(ItemExciseProductCodePage(idx).getSubmissionErrorCodes(isOnAddToList = false), hasContentHeading = false).map(notificationBanner(_))
-        }
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

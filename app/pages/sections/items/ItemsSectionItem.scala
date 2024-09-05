@@ -167,12 +167,9 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
 
 
   def getSubmissionFailuresForItem(isOnAddToList: Boolean = false)(implicit request: DataRequest[_]): Seq[SubmissionError] = {
-    val itemExciseProductCodeErrors = ItemExciseProductCodePage(idx).getSubmissionErrorCodes(isOnAddToList)
     Seq(
       ItemQuantityPage(idx).getSubmissionErrorCode(isOnAddToList),
-      ItemDegreesPlatoPage(idx).getSubmissionErrorCode(isOnAddToList),
-      //Prevent duplicate links in notification banner on add to list
-      if(isOnAddToList) itemExciseProductCodeErrors.headOption else itemExciseProductCodeErrors
+      ItemDegreesPlatoPage(idx).getSubmissionErrorCode(isOnAddToList)
     ).flatten
   }
 

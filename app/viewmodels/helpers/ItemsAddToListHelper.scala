@@ -172,10 +172,13 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
         content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
           Html(messages("errors.704.notificationBanner.p")),
           list(itemErrors.map { error =>
-            link(
-              link = error.route().url,
-              messageKey = messages(error.messageKey, error.index.get.displayIndex),
-              id = Some(error.id)
+            val msg = messages(error.messageKey, error.index.get.displayIndex)
+            error.route().fold(Html(msg))(errorRoute =>
+              link(
+                link = errorRoute.url,
+                messageKey = messages(error.messageKey, error.index.get.displayIndex),
+                id = Some(error.id)
+              )
             )
           }, id = Some("list-of-submission-failures"))
         )))))

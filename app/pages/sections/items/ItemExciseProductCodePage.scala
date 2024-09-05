@@ -16,41 +16,11 @@
 
 package pages.sections.items
 
-import models.requests.DataRequest
-import models.{Index, MovementSubmissionFailure}
+import models.Index
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import utils.IndexedSubmissionFailureHelper.submissionHasItemErrorAtIndex
-import utils._
 
-// indexesOfMovementSubmissionErrors is not needed here because when the user
-// changes their answer, all the errors for this item are deleted
 case class ItemExciseProductCodePage(idx: Index) extends QuestionPage[String] {
   override val toString: String = "itemExciseProductCode"
   override val path: JsPath = ItemsSectionItem(idx).path \ toString
-
-  private val itemExciseProductCodesError: Seq[String] = Seq(
-    ItemExciseProductCodeConsignorNotApprovedToSendError.code,
-    ItemExciseProductCodeConsigneeNotApprovedToReceiveError.code,
-    ItemExciseProductCodeDestinationNotApprovedToReceiveError.code,
-    ItemExciseProductCodeDispatchPlaceNotAllowedError.code
-  )
-
-  private def isExciseProductCodeAtIndex: MovementSubmissionFailure => Boolean = submissionFailure =>
-    submissionHasItemErrorAtIndex(idx, submissionFailure) &&
-      itemExciseProductCodesError.contains(submissionFailure.errorType)
-
-  private def getMovementSubmissionFailure(implicit request: DataRequest[_]): Option[MovementSubmissionFailure] =
-    request.userAnswers.submissionFailures.find(isExciseProductCodeAtIndex)
-
-  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean =
-    getMovementSubmissionFailure.exists(!_.hasBeenFixed)
-
-  override def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] =
-    getMovementSubmissionFailure.flatMap(_.originalAttributeValue)
-
-  def getSubmissionErrorCodes(isOnAddToList: Boolean)(implicit request: DataRequest[_]): Seq[SubmissionError] =
-    request.userAnswers.submissionFailures.collect {
-      case error if isExciseProductCodeAtIndex(error) && !error.hasBeenFixed => SubmissionError(error.errorType, idx, isOnAddToList)
-    }
 }

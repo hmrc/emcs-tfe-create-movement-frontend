@@ -1417,13 +1417,6 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
 
   "getSubmissionFailuresForItem" - {
 
-    def possibleExciseProductCodeErrorCodes(itemIndex: Int = 1, isForAddToList: Boolean = false): Seq[MovementSubmissionFailure] = Seq(
-      itemExciseProductCodeFailure(ItemExciseProductCodeConsignorNotApprovedToSendError(itemIndex - 1, isForAddToList), itemIndex = itemIndex),
-      itemExciseProductCodeFailure(ItemExciseProductCodeConsigneeNotApprovedToReceiveError(itemIndex - 1, isForAddToList), itemIndex = itemIndex),
-      itemExciseProductCodeFailure(ItemExciseProductCodeDestinationNotApprovedToReceiveError(itemIndex - 1, isForAddToList), itemIndex = itemIndex),
-      itemExciseProductCodeFailure(ItemExciseProductCodeDispatchPlaceNotAllowedError(itemIndex - 1, isForAddToList), itemIndex = itemIndex)
-    )
-
     "return an empty list" - {
 
       "when no submission failures exist" in {
@@ -1440,24 +1433,21 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
         section.getSubmissionFailuresForItem()(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(
             itemQuantityFailure(itemIndex = 1).copy(hasBeenFixed = true),
-            itemDegreesPlatoFailure(itemIndex = 1).copy(hasBeenFixed = true),
-          ) ++ possibleExciseProductCodeErrorCodes().map(_.copy(hasBeenFixed = true))
+            itemDegreesPlatoFailure(itemIndex = 1).copy(hasBeenFixed = true)
+          )
         ))) mustBe Seq.empty
       }
     }
 
     "return the submission failures that exist" - {
       "returning only the number of errors that haven't been fixed" in {
-        val itemEPCErrorCodesFixed = possibleExciseProductCodeErrorCodes().map(_.copy(hasBeenFixed = true))
         section.getSubmissionFailuresForItem()(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(
             itemQuantityFailure(itemIndex = 1).copy(hasBeenFixed = false),
-            itemDegreesPlatoFailure(itemIndex = 1).copy(hasBeenFixed = true),
-            possibleExciseProductCodeErrorCodes().head
-          ) ++ itemEPCErrorCodesFixed.drop(1)
+            itemDegreesPlatoFailure(itemIndex = 1).copy(hasBeenFixed = true)
+          )
         ))) mustBe Seq(
-          ItemQuantityError(testIndex1, isForAddToList = false),
-          ItemExciseProductCodeConsignorNotApprovedToSendError(testIndex1, isForAddToList = false)
+          ItemQuantityError(testIndex1, isForAddToList = false)
         )
       }
 
@@ -1468,29 +1458,24 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
             itemDegreesPlatoFailure(itemIndex = 1),
             itemQuantityFailure(itemIndex = 2),
             itemDegreesPlatoFailure(itemIndex = 2)
-          ) ++ possibleExciseProductCodeErrorCodes() ++ possibleExciseProductCodeErrorCodes(itemIndex = 2)
+          )
         ))) mustBe Seq(
           ItemQuantityError(testIndex1, isForAddToList = false),
-          ItemDegreesPlatoError(testIndex1, isForAddToList = false),
-          ItemExciseProductCodeConsignorNotApprovedToSendError(testIndex1, isForAddToList = false),
-          ItemExciseProductCodeConsigneeNotApprovedToReceiveError(testIndex1, isForAddToList = false),
-          ItemExciseProductCodeDestinationNotApprovedToReceiveError(testIndex1, isForAddToList = false),
-          ItemExciseProductCodeDispatchPlaceNotAllowedError(testIndex1, isForAddToList = false)
+          ItemDegreesPlatoError(testIndex1, isForAddToList = false)
         )
       }
 
-      "when the user is on the add to list page (return only one EPC error code)" in {
+      "when the user is on the add to list page (return only one error code)" in {
         section.getSubmissionFailuresForItem(isOnAddToList = true)(dataRequest(FakeRequest(), emptyUserAnswers.copy(
           submissionFailures = Seq(
             itemQuantityFailure(1),
             itemDegreesPlatoFailure(1),
             itemQuantityFailure(2),
             itemDegreesPlatoFailure(2)
-          ) ++ possibleExciseProductCodeErrorCodes() ++ possibleExciseProductCodeErrorCodes(itemIndex = 2)
+          )
         ))) mustBe Seq(
           ItemQuantityError(testIndex1, isForAddToList = true),
-          ItemDegreesPlatoError(testIndex1, isForAddToList = true),
-          ItemExciseProductCodeConsignorNotApprovedToSendError(testIndex1, isForAddToList = true)
+          ItemDegreesPlatoError(testIndex1, isForAddToList = true)
         )
       }
     }

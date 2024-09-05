@@ -30,7 +30,7 @@ class IndexedSubmissionFailureHelperSpec extends SpecBase with MovementSubmissio
         IndexedSubmissionFailureHelper
           .submissionHasItemErrorAtIndex(
             testIndex1,
-            itemExciseProductCodeFailure(ItemExciseProductCodeDestinationNotApprovedToReceiveError(testIndex1, isForAddToList = false), itemIndex = 1)
+            itemQuantityFailure(1)
           ) mustBe true
       }
     }
@@ -42,7 +42,7 @@ class IndexedSubmissionFailureHelperSpec extends SpecBase with MovementSubmissio
         IndexedSubmissionFailureHelper
           .submissionHasItemErrorAtIndex(
             testIndex2,
-            itemExciseProductCodeFailure(ItemExciseProductCodeDestinationNotApprovedToReceiveError(testIndex1, isForAddToList = false), itemIndex = 1)
+            itemQuantityFailure(1)
           ) mustBe false
       }
 

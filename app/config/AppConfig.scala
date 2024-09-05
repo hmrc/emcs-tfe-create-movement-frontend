@@ -52,7 +52,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   lazy val signUpBetaFormUrl: String = configuration.get[String]("urls.signupBetaForm")
   lazy val exciseWarehouseGuidanceUrl: String = configuration.get[String]("urls.exciseWarehouseGuidance")
 
-
   lazy val findCommodityCodeUrl: String = configuration.get[String]("urls.findCommodityCode")
 
   private lazy val feedbackFrontendHost: String = configuration.get[String]("feedback-frontend.host")
@@ -63,6 +62,9 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   def emcsTfeDraftsUrl(ern: String): String =
     configuration.get[String]("urls.emcsTfeDrafts").replace("{ern}", ern)
+
+  def prevalidateTraderUrl(implicit request: DataRequest[_]): String =
+    configuration.get[String]("urls.prevalidateTraderUrl").replace("{ern}", request.ern)
 
   def returnToDraft(implicit request: DataRequest[_]): String = controllers.routes.DraftMovementController.onPageLoad(request.ern, request.draftId).url
 

@@ -22,19 +22,18 @@ import models.sections.items.ItemsAddToListItemModel
 import models.{Index, NormalMode}
 import pages.sections.items.{ItemBulkPackagingChoicePage, ItemCommodityCodePage, ItemExciseProductCodePage, ItemsSectionItem}
 import play.api.i18n.Messages
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.HtmlFormat
 import queries.{ItemsCount, ItemsPackagingCount}
 import services.GetCnCodeInformationService
-import uk.gov.hmrc.govukfrontend.views.Aliases.{NotificationBanner, Text}
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{Logging, SubmissionError}
+import utils.Logging
 import viewmodels.checkAnswers.sections.items.{ItemBrandNameSummary, ItemCommercialDescriptionSummary, ItemPackagingSummary, ItemQuantitySummary}
 import viewmodels.govuk.TagFluency
 import viewmodels.govuk.summarylist._
-import viewmodels.taskList.{Completed, InProgress, UpdateNeeded}
-import views.html.components.{link, list, p}
+import viewmodels.taskList.{Completed, InProgress}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,9 +43,6 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
                                      cnCodeInformationService: GetCnCodeInformationService,
                                      itemPackagingSummary: ItemPackagingSummary,
                                      itemQuantitySummary: ItemQuantitySummary,
-                                     p: p,
-                                     list: list,
-                                     link: link,
                                      tagHelper: TagHelper) extends TagFluency with Logging {
 
   private val headingLevel = 2
@@ -86,7 +82,7 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
       rows = Seq(
         ItemBrandNameSummary.row(item.idx, showChangeLinks = false),
         ItemCommercialDescriptionSummary.row(item.idx, showChangeLinks = false),
-        item.unitOfMeasure.flatMap(itemQuantitySummary.row(item.idx, _, showChangeLinks = false, showUpdateNeededTag = false)),
+        item.unitOfMeasure.flatMap(itemQuantitySummary.row(item.idx, _, showChangeLinks = false)),
         itemPackagingSummary.row(item.idx)
       ).flatten
     ).withCard(
@@ -103,12 +99,11 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
 
   private def cardTitle(item: ItemsAddToListItemModel)(implicit messages: Messages): CardTitle =
     item.status match {
-      case status@(InProgress | UpdateNeeded) =>
-        val statusTag = if (status == InProgress) tagHelper.incompleteTag() else tagHelper.updateNeededTag(withNoFloat = false)
+      case InProgress =>
         CardTitle(
           content = HtmlContent(HtmlFormat.fill(Seq(
             span(messages("itemsAddToList.itemCardTitle", item.idx.displayIndex), Some("govuk-!-margin-right-2")),
-            statusTag
+            tagHelper.incompleteTag()
           ))),
           headingLevel = Some(headingLevel)
         )
@@ -120,7 +115,7 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
 
   private def changeLink(item: ItemsAddToListItemModel)(implicit request: DataRequest[_], messages: Messages): Option[ActionItem] = {
     item.status match {
-      case Completed | UpdateNeeded =>
+      case Completed =>
         Some(ActionItemViewModel(
           content = Text(messages("site.change")),
           href = routes.ItemCheckAnswersController.onPageLoad(request.ern, request.draftId, item.idx).url,
@@ -163,25 +158,4 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
         ).withVisuallyHiddenText(messages("itemsAddToList.itemCardTitle", item.idx.displayIndex)))
       case _ => None
     }
-
-  def showNotificationBannerWhenSubmissionError(itemErrors: Seq[SubmissionError])
-                                               (implicit request: DataRequest[_], messages: Messages): Option[NotificationBanner] = {
-    Option.when(itemErrors.nonEmpty) {
-      NotificationBanner(
-        title = Text(messages("errors.704.notificationBanner.title")),
-        content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
-          Html(messages("errors.704.notificationBanner.p")),
-          list(itemErrors.map { error =>
-            val msg = messages(error.messageKey, error.index.get.displayIndex)
-            error.route().fold(Html(msg))(errorRoute =>
-              link(
-                link = errorRoute.url,
-                messageKey = messages(error.messageKey, error.index.get.displayIndex),
-                id = Some(error.id)
-              )
-            )
-          }, id = Some("list-of-submission-failures"))
-        )))))
-    }
-  }
 }

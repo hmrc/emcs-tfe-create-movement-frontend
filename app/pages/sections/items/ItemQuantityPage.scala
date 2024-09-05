@@ -16,35 +16,11 @@
 
 package pages.sections.items
 
-import models.requests.DataRequest
-import models.{Index, MovementSubmissionFailure}
+import models.Index
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import utils.IndexedSubmissionFailureHelper.submissionHasItemErrorAtIndex
-import utils.{ItemQuantityError, SubmissionError}
 
 case class ItemQuantityPage(idx: Index) extends QuestionPage[BigDecimal] {
   override val toString: String = "itemQuantity"
   override val path: JsPath = ItemsSectionItem(idx).path \ toString
-
-  private def isQuantityErrorAtIndex: MovementSubmissionFailure => Boolean = submissionFailure =>
-    submissionHasItemErrorAtIndex(idx, submissionFailure) && submissionFailure.errorType == ItemQuantityError.code
-
-  private def getMovementSubmissionFailure(implicit request: DataRequest[_]): Option[MovementSubmissionFailure] =
-    request.userAnswers.submissionFailures.find(isQuantityErrorAtIndex)
-
-  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean =
-    getMovementSubmissionFailure.exists(!_.hasBeenFixed)
-
-  override def getOriginalAttributeValue(implicit request: DataRequest[_]): Option[String] =
-    getMovementSubmissionFailure.flatMap(_.originalAttributeValue)
-
-  override def indexesOfMovementSubmissionErrors(implicit request: DataRequest[_]): Seq[Int] =
-    Seq(request.userAnswers.submissionFailures.indexWhere(isQuantityErrorAtIndex))
-
-  def getSubmissionErrorCode(isOnAddToList: Boolean)(implicit request: DataRequest[_]): Option[SubmissionError] = {
-    request.userAnswers.submissionFailures.find(isQuantityErrorAtIndex).filter(!_.hasBeenFixed).map(error =>
-      SubmissionError(error.errorType, idx, isOnAddToList)
-    )
-  }
 }

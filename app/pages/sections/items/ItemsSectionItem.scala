@@ -23,7 +23,7 @@ import models.{GoodsType, Index}
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import queries.ItemsPackagingCount
-import utils.{ItemHelper, ExciseProductCodeHelper, JsonOptionFormatter, SubmissionError}
+import utils.{ExciseProductCodeHelper, ItemHelper, JsonOptionFormatter}
 import viewmodels.taskList._
 
 case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptionFormatter {
@@ -164,22 +164,6 @@ case class ItemsSectionItem(idx: Index) extends Section[JsObject] with JsonOptio
     })
 
   private[items] def mandatoryIf(condition: Boolean)(f: => Seq[Option[_]]): Seq[Option[_]] = if (condition) f else Seq()
-
-
-  def getSubmissionFailuresForItem(isOnAddToList: Boolean = false)(implicit request: DataRequest[_]): Seq[SubmissionError] = {
-    Seq(
-      ItemQuantityPage(idx).getSubmissionErrorCode(isOnAddToList),
-      ItemDegreesPlatoPage(idx).getSubmissionErrorCode(isOnAddToList)
-    ).flatten
-  }
-
-  /**
-   * Constructs a list of item pages (which could have submission failures) and checks if there are
-   * submission failures (that have not been fixed).
-   *
-   * @return true/false depending on if there is an outstanding submission failure within this item
-   */
-  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = getSubmissionFailuresForItem().nonEmpty
 
   // $COVERAGE-OFF$
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =

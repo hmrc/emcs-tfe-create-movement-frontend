@@ -16,6 +16,7 @@
 
 package models
 
+import models.requests.DataRequest
 import pages.QuestionPage
 import pages.sections.Section
 import play.api.libs.json._
@@ -86,7 +87,11 @@ final case class UserAnswers(ern: String,
       throw JsResultException(errors)
   }
 
-  def haveAllSubmissionErrorsBeenFixed: Boolean = submissionFailures.forall(_.hasBeenFixed)
+  def haveAllFixableSubmissionErrorsBeenFixed(implicit request: DataRequest[_]): Boolean =
+    submissionFailures.filter(_.isFixable).forall(_.hasBeenFixed)
+
+  def hasUnfixableErrors(implicit request: DataRequest[_]): Boolean =
+    submissionFailures.map(_.asSubmissionError).exists(!_.isFixable())
 
 }
 

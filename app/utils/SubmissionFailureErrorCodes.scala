@@ -27,7 +27,7 @@ sealed trait SubmissionError {
   val code: String
   val messageKey: String
   val id: String
-  def nonFixable()(implicit request: DataRequest[_]): Boolean = route.isEmpty
+  def isFixable()(implicit request: DataRequest[_]): Boolean = route.isDefined
 
   def route()(implicit request: DataRequest[_]): Option[Call] = None
 
@@ -208,36 +208,16 @@ case object DispatchWarehouseConsignorDoesNotManageWarehouseError extends Submis
   )
 }
 
-case class ItemQuantityError(idx: Index, isForAddToList: Boolean) extends SubmissionError {
-  override val code = ItemQuantityError.code
-  override val messageKey = s"errors.704.items.quantity${if (isForAddToList) ".addToList" else ""}"
-  override val id = s"fix-item-${idx.displayIndex}-quantity"
-
-  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
-    controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode)
-  )
-
-  override val index = Some(idx)
+object ItemQuantityError extends SubmissionError {
+  override val code = "4407"
+  override val messageKey = "errors.704.itemQuantity"
+  override val id = s"fix-quantity"
 }
 
-object ItemQuantityError {
-  val code = "4407"
-}
-
-case class ItemDegreesPlatoError(idx: Index, isForAddToList: Boolean) extends SubmissionError {
-  override val code = ItemDegreesPlatoError.code
-  override val messageKey = s"errors.704.items.degreesPlato${if (isForAddToList) ".addToList" else ""}"
-  override val id = s"fix-item-${idx.displayIndex}-degrees-plato"
-
-  override def route()(implicit request: DataRequest[_]): Option[Call] = Some(
-    controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, idx, CheckMode)
-  )
-
-  override val index = Some(idx)
-}
-
-object ItemDegreesPlatoError {
-  val code = "4445"
+object ItemDegreesPlatoError extends SubmissionError {
+  override val code = "4445"
+  override val messageKey = "errors.704.itemDegreesPlato"
+  override val id = s"fix-degrees-plato"
 }
 
 object ConsignorNotApprovedToSendError extends SubmissionError {
@@ -248,7 +228,7 @@ object ConsignorNotApprovedToSendError extends SubmissionError {
 
 object ConsigneeNotApprovedToReceiveError extends SubmissionError {
   override val code = "4409"
-  override val messageKey = s"errors.704.consigneeNotApprovedToReceiveError"
+  override val messageKey = "errors.704.consigneeNotApprovedToReceiveError"
   override val id = s"fix-consignee-not-approved-to-receive"
 }
 
@@ -318,6 +298,13 @@ case object DispatchDateInFutureValidationError extends UIError[DispatchDetailsM
 
 object SubmissionError {
 
+  val errorsWhichShowPrevalidateLink: Seq[SubmissionError] = Seq(
+    ConsignorNotApprovedToSendError,
+    ConsigneeNotApprovedToReceiveError,
+    DestinationNotApprovedToReceiveError,
+    DispatchPlaceNotAllowedError
+  )
+
   //scalastyle:off cyclomatic.complexity
   def apply(errorType: String): SubmissionError = errorType match {
     case LocalReferenceNumberError.code => LocalReferenceNumberError
@@ -346,13 +333,8 @@ object SubmissionError {
     case ConsigneeNotApprovedToReceiveError.code => ConsigneeNotApprovedToReceiveError
     case DestinationNotApprovedToReceiveError.code => DestinationNotApprovedToReceiveError
     case DispatchPlaceNotAllowedError.code => DispatchPlaceNotAllowedError
-    case errorCode => throw new IllegalArgumentException(s"Invalid submission error code: $errorCode")
-  }
-
-  //scalastyle:off cyclomatic.complexity
-  def apply(errorType: String, idx: Index, isForAddToList: Boolean = false): SubmissionError = errorType match {
-    case ItemQuantityError.code => ItemQuantityError(idx, isForAddToList)
-    case ItemDegreesPlatoError.code => ItemDegreesPlatoError(idx, isForAddToList)
+    case ItemQuantityError.code => ItemQuantityError
+    case ItemDegreesPlatoError.code => ItemDegreesPlatoError
     case errorCode => throw new IllegalArgumentException(s"Invalid submission error code: $errorCode")
   }
 }

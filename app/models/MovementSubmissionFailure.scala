@@ -16,7 +16,9 @@
 
 package models
 
+import models.requests.DataRequest
 import play.api.libs.json.{Format, Json}
+import utils.SubmissionError
 
 case class MovementSubmissionFailure(
                                       errorType: String,
@@ -24,7 +26,11 @@ case class MovementSubmissionFailure(
                                       errorLocation: Option[String],
                                       originalAttributeValue: Option[String],
                                       hasBeenFixed: Boolean
-                                    )
+                                    ) {
+
+  lazy val asSubmissionError: SubmissionError = SubmissionError.apply(errorType)
+  def isFixable(implicit request: DataRequest[_]): Boolean = asSubmissionError.isFixable
+}
 
 object MovementSubmissionFailure {
   implicit val format: Format[MovementSubmissionFailure] = Json.format[MovementSubmissionFailure]

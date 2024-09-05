@@ -19,7 +19,7 @@ package controllers.actions
 import config.{AppConfig, EnrolmentKeys}
 import connectors.emcsTfeFrontend.NavBarPartialConnector
 import models.requests.UserRequest
-import models.{GreatBritainWarehouse, NorthernIrelandTemporaryCertifiedConsignor, NorthernIrelandWarehouse, Unknown, UserType}
+import models.{GreatBritainWarehouse, NorthernIrelandWarehouse, Unknown, UserType}
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation

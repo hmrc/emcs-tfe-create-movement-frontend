@@ -86,27 +86,6 @@ class ItemRemoveItemControllerSpec extends SpecBase with MockUserAnswersService 
       contentAsString(result) mustEqual view(form, action, testIndex1)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to the Index Controller when yes is selected (removing the section) AND cleanse any submissionFailureMessages" in new Test(
-      Some(baseUserAnswers.copy(submissionFailures = Seq(
-        itemQuantityFailure(1).copy(originalAttributeValue = Some("1")),
-        itemQuantityFailure(2)
-      )))
-    ) {
-
-      MockUserAnswersService.set(
-        emptyUserAnswers
-          .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
-          .copy(submissionFailures = Seq(itemQuantityFailure(1)))
-      ).returns(
-        Future.successful(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine))
-      )
-
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1)(request.withFormUrlEncodedBody(("value", "true")))
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
-    }
-
     "must redirect to the Index Controller when yes is selected (removing the section) AND cleanse any packages that have the same shippingMark" +
       "where this items shipping mark is used on packages linked to this or other items" in new Test(
       Some(baseUserAnswers

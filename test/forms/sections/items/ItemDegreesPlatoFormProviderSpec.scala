@@ -97,26 +97,6 @@ class ItemDegreesPlatoFormProviderSpec extends SpecBase with BooleanFieldBehavio
       }
     }
 
-    "when a submission failure exists and the input is the same as the previous one" - {
-
-      val form = new ItemDegreesPlatoFormProvider()(testIndex2)(dataRequest(FakeRequest(),
-        answers = emptyUserAnswers.copy(submissionFailures = Seq(itemDegreesPlatoFailure(2)))
-      ))
-
-      "must error with the expected msg key" in {
-
-        val boundForm = form.bind(Map(
-          ItemDegreesPlatoFormProvider.hasDegreesPlatoField -> "true",
-          ItemDegreesPlatoFormProvider.degreesPlatoField -> "10"
-        ))
-        boundForm.errors mustBe Seq(FormError(
-          ItemDegreesPlatoFormProvider.degreesPlatoField,
-          ItemDegreesPlatoFormProvider.sameInputAsOriginalSubmissionErrorKey,
-          Seq()
-        ))
-      }
-    }
-
     "when degrees plato is valid" - {
 
       "must bind the form successfully when true with value" in {

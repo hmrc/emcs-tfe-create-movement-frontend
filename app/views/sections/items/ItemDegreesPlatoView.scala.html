@@ -30,7 +30,6 @@
         govukInput: GovukInput,
         govukButton: GovukButton,
         notificationBanner: GovukNotificationBanner,
-        errorNotificationBannerHelper: ErrorNotificationBannerHelper,
         h1: components.h1,
         h2: components.h2,
         p: components.p,
@@ -47,8 +46,6 @@
 
       @if(form.errors.nonEmpty) {
           @govukErrorSummary(ErrorSummaryViewModel(form))
-      } else {
-        @errorNotificationBannerHelper.content(Seq(ItemDegreesPlatoPage(idx).getSubmissionErrorCode(isOnAddToList = false)).flatten, hasContentHeading = false).map(notificationBanner(_))
       }
 
       @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))

@@ -20,8 +20,6 @@ import base.SpecBase
 import fixtures.{BaseFixtures, ItemFixtures, MovementSubmissionFailureFixtures}
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
-import play.api.test.FakeRequest
-import utils._
 
 class ItemExciseProductCodeFormProviderSpec extends SpecBase
   with StringFieldBehaviours

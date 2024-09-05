@@ -49,10 +49,12 @@
     showBackLink = false
 ) {
 
-    @if(!request.userAnswers.haveAllSubmissionErrorsBeenFixed) {
+    @if(!request.userAnswers.haveAllFixableSubmissionErrorsBeenFixed || request.userAnswers.hasUnfixableErrors) {
         @notificationBanner(NotificationBanner(
             title = Text(messages("errors.704.notificationBanner.title")),
-            content = HtmlContent(p("govuk-notification-banner__heading")(Html(messages("errors.704.notificationBanner.content"))))
+            content = helper.unfixableSubmissionFailureContent(request.userAnswers.submissionFailures).getOrElse(
+                HtmlContent(p("govuk-notification-banner__heading")(Html(messages("errors.704.notificationBanner.content"))))
+            )
         ))
     }
 

@@ -22,7 +22,6 @@ import controllers.sections.destination.routes._
 import controllers.sections.exportInformation.routes._
 import controllers.sections.importInformation.routes._
 import controllers.sections.info.routes._
-import controllers.sections.items.routes._
 import fixtures.messages.ValidationErrorMessages
 import models.CheckMode
 import models.requests.DataRequest
@@ -32,23 +31,6 @@ import play.api.test.FakeRequest
 class SubmissionFailureErrorCodesSpec extends SpecBase {
 
   "ErrorCode" - {
-
-    "for indexed errors" - {
-      Seq(true, false).foreach { isForAddToList =>
-
-        s"when isForAddToList = $isForAddToList" - {
-
-          "should return ItemQuantityError for error code: 4407" - {
-            SubmissionError.apply("4407", testIndex1, isForAddToList) mustBe ItemQuantityError(testIndex1, isForAddToList)
-          }
-
-          "should return ItemDegreesPlatoError for error code: 4445" - {
-
-            SubmissionError.apply("4445", testIndex1, isForAddToList) mustBe ItemDegreesPlatoError(testIndex1, isForAddToList)
-          }
-        }
-      }
-    }
 
     "must return the correct SubmissionError and code (non-indexed)" - {
 
@@ -75,10 +57,12 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
         DispatchWarehouseConsignorDoesNotManageWarehouseError -> "4461",
         DispatchDateInFutureValidationError -> "8085",
         DispatchDateInPastValidationError -> "8084",
+        ItemQuantityError -> "4407",
         ConsignorNotApprovedToSendError -> "4408",
         ConsigneeNotApprovedToReceiveError -> "4409",
         DestinationNotApprovedToReceiveError -> "4410",
-        DispatchPlaceNotAllowedError -> "4527"
+        DispatchPlaceNotAllowedError -> "4527",
+        ItemDegreesPlatoError -> "4445"
       ).foreach {
         case (submissionError, expectedErrorCode) =>
 
@@ -96,9 +80,6 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
     "must have the expected route" in {
 
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
-
-      val itemIndex = 1
-      val isForAddToList = true
 
       Seq[(SubmissionError, Option[String])](
         LocalReferenceNumberError -> Some(LocalReferenceNumberController.onPageLoad(testErn, testDraftId, CheckMode).url),
@@ -120,8 +101,8 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
         PlaceOfDestinationExciseIdForTaxWarehouseInvalidError -> Some(DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url),
         DispatchDateInFutureValidationError -> Some(DispatchDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url),
         DispatchDateInPastValidationError -> Some(DispatchDetailsController.onPageLoad(testErn, testDraftId, CheckMode).url),
-        ItemQuantityError(itemIndex, isForAddToList) -> Some(ItemQuantityController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url),
-        ItemDegreesPlatoError(itemIndex, isForAddToList) -> Some(ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, itemIndex, CheckMode).url),
+        ItemQuantityError -> None,
+        ItemDegreesPlatoError -> None,
         ConsignorNotApprovedToSendError -> None,
         ConsigneeNotApprovedToReceiveError -> None,
         DestinationNotApprovedToReceiveError -> None,
@@ -136,17 +117,6 @@ class SubmissionFailureErrorCodesSpec extends SpecBase {
 
       val actualResult = intercept[IllegalArgumentException] {
         SubmissionError("invalid code")
-      }.getMessage
-
-      val expectedResult = "Invalid submission error code: invalid code"
-
-      actualResult mustBe expectedResult
-    }
-
-    "when given an invalid error code (indexed)" in {
-
-      val actualResult = intercept[IllegalArgumentException] {
-        SubmissionError("invalid code", testIndex1)
       }.getMessage
 
       val expectedResult = "Invalid submission error code: invalid code"

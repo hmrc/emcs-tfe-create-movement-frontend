@@ -100,8 +100,8 @@ class DeclarationControllerSpec extends SpecBase
 
       "must redirect to Task List when not all IE704 errors have been fixed" in new Test(
         baseFullUserAnswers.copy(submissionFailures = Seq(
-          itemQuantityFailure(1),
-          itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
+          movementSubmissionFailure,
+          importCustomsOfficeCodeFailure.copy(hasBeenFixed = true)
         ))
       ) {
 
@@ -116,8 +116,7 @@ class DeclarationControllerSpec extends SpecBase
 
       "must return the declaration page (all submission failures have been fixed (including any UIErrorModels))" in new Test(
         baseFullUserAnswers.copy(submissionFailures = Seq(
-          itemQuantityFailure(1).copy(hasBeenFixed = true),
-          itemDegreesPlatoFailure(2).copy(hasBeenFixed = true),
+          movementSubmissionFailure.copy(hasBeenFixed = true),
           dispatchDateInPastValidationError().copy(hasBeenFixed = true)
         ))
       ) {
@@ -168,8 +167,7 @@ class DeclarationControllerSpec extends SpecBase
         "must save the timestamp and redirect (when all submission failures have been fixed)" in new Test(
           baseFullUserAnswers.copy(
             submissionFailures = Seq(
-              itemQuantityFailure(1).copy(hasBeenFixed = true),
-              itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
+              movementSubmissionFailure.copy(hasBeenFixed = true)
             )
           )
         ) {
@@ -177,8 +175,7 @@ class DeclarationControllerSpec extends SpecBase
             hasBeenSubmitted = true,
             submittedDraftId = Some(testDraftId),
             submissionFailures = Seq(
-              itemQuantityFailure(1).copy(hasBeenFixed = true),
-              itemDegreesPlatoFailure(2).copy(hasBeenFixed = true)
+              movementSubmissionFailure.copy(hasBeenFixed = true)
             ))
           MockAppConfig.destinationOfficeSuffix.returns("004098")
           MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel, ern).returns(Future.successful(Right(submitCreateMovementResponseEIS)))

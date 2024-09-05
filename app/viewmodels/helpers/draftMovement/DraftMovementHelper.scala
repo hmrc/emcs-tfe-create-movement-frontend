@@ -16,6 +16,7 @@
 
 package viewmodels.helpers.draftMovement
 
+import config.AppConfig
 import models._
 import models.requests.DataRequest
 import models.response.{InvalidUserTypeException, MissingMandatoryPage}
@@ -40,13 +41,13 @@ import pages.sections.transportUnit.TransportUnitsSection
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
-import utils.Logging
+import utils.{Logging, SubmissionError}
 import viewmodels.taskList._
-import views.html.components.{list, p}
+import views.html.components.{link, list, p}
 
 import javax.inject.Inject
 
-class DraftMovementHelper @Inject()(list: list, p: p) extends Logging {
+class DraftMovementHelper @Inject()(list: list, p: p, link: link, appConfig: AppConfig) extends Logging {
 
   // disable for "line too long" warnings
   // noinspection ScalaStyle
@@ -331,4 +332,34 @@ class DraftMovementHelper @Inject()(list: list, p: p) extends Logging {
       .replaceAll("\\s*Please amend your entry and resubmit\\.*", "")
       .replaceAll("origin type code is .Tax Warehouse.\\.", "origin type code is 'Tax Warehouse' or 'Duty Paid'.")
       .replaceAll("'(Import|Tax Warehouse|Duty Paid|Export)'", "‘$1’")
+
+  def unfixableSubmissionFailureContent(submissionFailures: Seq[MovementSubmissionFailure])
+                                       (implicit messages: Messages, request: DataRequest[_]): Option[HtmlContent] = {
+    submissionFailures.map(_.asSubmissionError).filter(!_.isFixable()) match {
+      case Nil => None
+      case unfixables =>
+
+        val errorMessages = list(unfixables.map { failure =>
+          p()(Html(messages(failure.messageKey)))
+        })
+
+        val prevalidateLink = Option.when(unfixables.exists(SubmissionError.errorsWhichShowPrevalidateLink.contains)){
+          p()(HtmlFormat.fill(Seq(
+            Html(messages("errors.704.nonFixable.prevalidate.preLink")),
+            link(
+              appConfig.prevalidateTraderUrl,
+              "errors.704.nonFixable.prevalidate.link",
+              opensInNewTab = true
+            ),
+            Html(messages("errors.704.nonFixable.prevalidate.afterLink"))
+          )))
+        }
+
+        Some(HtmlContent(HtmlFormat.fill(Seq(
+          Some(p("govuk-notification-banner__heading")(Html(messages("errors.704.notificationBanner.content")))),
+          Some(errorMessages),
+          prevalidateLink
+        ).flatten)))
+    }
+  }
 }

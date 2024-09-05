@@ -16,15 +16,12 @@
 
 package pages.sections.items
 
-import config.Constants.BODYEADESAD
+import models.GoodsType
 import models.requests.DataRequest
-import models.response.InvalidRegexException
 import models.sections.items.ItemSmallIndependentProducerType.CertifiedIndependentSmallProducer
-import models.{GoodsType, UserAnswers}
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import queries.ItemsCount
-import utils.SubmissionError
 import viewmodels.taskList._
 
 case object ItemsSectionItems extends Section[JsObject] {
@@ -33,50 +30,14 @@ case object ItemsSectionItems extends Section[JsObject] {
   val MAX: Int = 999
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    (request.userAnswers.getCount(ItemsCount), isMovementSubmissionError) match {
-      case (_, true) => UpdateNeeded
-      case (Some(0) | None, _) => NotStarted
-      case (Some(count), _) =>
+    request.userAnswers.getCount(ItemsCount) match {
+      case Some(0) | None => NotStarted
+      case Some(count) =>
         if ((0 until count).map(ItemsSectionItem(_).status).forall(_ == Completed)) {
           Completed
         } else {
           InProgress
         }
-    }
-
-  /**
-   * Picks out the index of the submission failure (1-indexed) and returns a list of all distinct occurrences.
-   * For example, if the submission failures have:
-   * <code>
-   * <pre>
-   * "errorLocation" : ".../BodyEadEsad[1]/DegreePlato[1]",
-   * ...
-   * "errorLocation" : ".../BodyEadEsad[1]/DegreePlato[1]",
-   * ...
-   * "errorLocation" : ".../BodyEadEsad[2]/DegreePlato[1]",
-   * ...
-   * "errorLocation" : ".../BodyEadEsad[2]/DegreePlato[1]"
-   * </pre>
-   * </code>
-   * Then this function will return Seq(1, 2).
-   *
-   * @return the (distinct) submission failure indexes of items with errors (regardless of them being fixed)
-   */
-  def indexesOfItemsWithSubmissionFailures(userAnswers: UserAnswers): Seq[Int] =
-    userAnswers.submissionFailures
-      .collect { case itemError if itemError.errorLocation.exists(_.contains(BODYEADESAD)) =>
-        val lookup = s"$BODYEADESAD\\[(\\d+)\\]".r.unanchored
-        itemError.errorLocation.get match {
-          case lookup(index) => index.toInt
-          case _ => throw InvalidRegexException(s"[indexesOfItemsWithSubmissionFailures] Invalid item error location received: ${itemError.errorLocation}")
-        }
-      }
-      .distinct
-
-  def getSubmissionFailuresForItems(isOnAddToList: Boolean = false)(implicit request: DataRequest[_]): Seq[SubmissionError] =
-    request.userAnswers.getCount(ItemsCount) match {
-      case Some(0) | None => Seq.empty
-      case Some(count) => (0 until count).flatMap(ItemsSectionItem(_).getSubmissionFailuresForItem(isOnAddToList))
     }
 
   def onlyContainsOrIsEmpty(goodsTypes: GoodsType*)(implicit request: DataRequest[_]): Boolean =
@@ -95,8 +56,6 @@ case object ItemsSectionItems extends Section[JsObject] {
     }
 
   def isEmpty(implicit request: DataRequest[_]): Boolean = request.userAnswers.getCount(ItemsCount).getOrElse(0) == 0
-
-  override def isMovementSubmissionError(implicit request: DataRequest[_]): Boolean = getSubmissionFailuresForItems().nonEmpty
 
   // $COVERAGE-OFF$
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true

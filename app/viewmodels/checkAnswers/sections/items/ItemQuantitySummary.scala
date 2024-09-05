@@ -21,30 +21,23 @@ import models.requests.DataRequest
 import models.{CheckMode, Index, UnitOfMeasure}
 import pages.sections.items.ItemQuantityPage
 import play.api.i18n.Messages
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
-import viewmodels.helpers.TagHelper
 import viewmodels.implicits._
 
-import javax.inject.Inject
+class ItemQuantitySummary {
 
-class ItemQuantitySummary @Inject()(tagHelper: TagHelper) {
-
-  def row(idx: Index, unitOfMeasure: UnitOfMeasure, showChangeLinks: Boolean = true, showUpdateNeededTag: Boolean = true)
+  def row(idx: Index, unitOfMeasure: UnitOfMeasure, showChangeLinks: Boolean = true)
          (implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     lazy val page = ItemQuantityPage(idx)
-    lazy val hasUnfixedQuantityError = page.isMovementSubmissionError
 
     page.value.map {
       answer =>
         SummaryListRowViewModel(
           key = s"$page.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
-            Some(Html(messages(s"$page.checkYourAnswersValue", answer, unitOfMeasure.toShortFormatMessage()))),
-            if(hasUnfixedQuantityError && showUpdateNeededTag) Some(tagHelper.updateNeededTag()) else None
-          ).flatten))),
+          value = ValueViewModel(HtmlContent(Html(messages(s"$page.checkYourAnswersValue", answer, unitOfMeasure.toShortFormatMessage())))),
           actions = if (!showChangeLinks) Seq() else Seq(ActionItemViewModel(
             href = routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, idx, CheckMode).url,
             content = "site.change",

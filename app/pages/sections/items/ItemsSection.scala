@@ -29,10 +29,9 @@ case object ItemsSection extends Section[JsObject] {
   override val path: JsPath = JsPath \ "items"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    (request.userAnswers.getCount(ItemsCount), ItemsAddToListPage.value, ItemsSectionItems.isMovementSubmissionError) match {
-      case (_, _, true) => UpdateNeeded
-      case (Some(0) | None, _, _) => NotStarted
-      case (_, Some(ItemsAddToList.No), _) =>
+    (request.userAnswers.getCount(ItemsCount), ItemsAddToListPage.value) match {
+      case (Some(0) | None, _) => NotStarted
+      case (_, Some(ItemsAddToList.No)) =>
         ItemsSectionItems.status
       case _ => InProgress
     }

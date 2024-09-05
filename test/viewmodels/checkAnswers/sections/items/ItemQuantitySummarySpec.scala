@@ -27,29 +27,24 @@ import pages.sections.items.ItemQuantityPage
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.Key
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
-import views.html.components.tag
 
 class ItemQuantitySummarySpec extends SpecBase with MovementSubmissionFailureFixtures {
 
   val summary: ItemQuantitySummary = app.injector.instanceOf[ItemQuantitySummary]
-  lazy val tag: tag = app.injector.instanceOf[tag]
 
   class Test(val userAnswers: UserAnswers) {
     implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
   }
 
-  private def summaryRow(hasUpdateNeededTag: Boolean = false)(implicit messagesForLanguage: ViewMessages, messages: Messages): Option[SummaryListRow] = {
+  private def summaryRow(implicit messagesForLanguage: ViewMessages, messages: Messages): Option[SummaryListRow] = {
     Some(SummaryListRowViewModel(
       key = Key(Text(messagesForLanguage.cyaLabel)),
-      value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
-        Some(Html(s"1.23 ${UnitOfMeasure.Kilograms.toShortFormatMessage()}")),
-        if(hasUpdateNeededTag) Some(tag("taskListStatus.updateNeeded", "orange", "float-none govuk-!-margin-left-1")) else None
-      ).flatten))),
+      value = ValueViewModel(HtmlContent(Html(s"1.23 ${UnitOfMeasure.Kilograms.toShortFormatMessage()}"))),
       actions = Seq(ActionItemViewModel(
         href = controllers.sections.items.routes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
         content = Text(messagesForLanguage.change),
@@ -71,23 +66,7 @@ class ItemQuantitySummarySpec extends SpecBase with MovementSubmissionFailureFix
         "if provided" - {
 
           "must return a row" in new Test(emptyUserAnswers.set(ItemQuantityPage(testIndex1), BigDecimal(1.23))) {
-            summary.row(idx = testIndex1, unitOfMeasure = UnitOfMeasure.Kilograms) mustBe summaryRow()
-          }
-
-          "must return a row with the update needed tag when a submission failure exists" in new Test(
-            emptyUserAnswers
-              .copy(submissionFailures = Seq(itemQuantityFailure(1)))
-              .set(ItemQuantityPage(testIndex1), BigDecimal(1.23))
-          ) {
-            summary.row(idx = testIndex1, unitOfMeasure = UnitOfMeasure.Kilograms) mustBe summaryRow(hasUpdateNeededTag = true)
-          }
-
-          "must return a row with no update needed tag when a submission failure exists but the 'showUpdateNeededTag' is false" in new Test(
-            emptyUserAnswers
-              .copy(submissionFailures = Seq(itemQuantityFailure(1)))
-              .set(ItemQuantityPage(testIndex1), BigDecimal(1.23))
-          ) {
-            summary.row(idx = testIndex1, unitOfMeasure = UnitOfMeasure.Kilograms, showUpdateNeededTag = false) mustBe summaryRow(hasUpdateNeededTag = false)
+            summary.row(idx = testIndex1, unitOfMeasure = UnitOfMeasure.Kilograms) mustBe summaryRow
           }
         }
 

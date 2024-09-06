@@ -31,8 +31,12 @@ class ItemAlcoholStrengthFormProvider @Inject() extends Mappings {
         .transform[String](_.replace(" ", ""), identity)
         .verifying(isDecimal(nonNumericErrorKey))
         .transform[BigDecimal](BigDecimal(_), _.toString())
-        .verifying(decimalRange(minValue, maxValue, rangeErrorKey))
-        .verifying(maxDecimalPlaces(maxDecimalPlacesValue, maxDecimalPlacesErrorKey))
+        .verifying(
+          firstError(
+            decimalRange(minValue, maxValue, rangeErrorKey),
+            maxDecimalPlaces(maxDecimalPlacesValue, maxDecimalPlacesErrorKey)
+          )
+        )
     )
 }
 

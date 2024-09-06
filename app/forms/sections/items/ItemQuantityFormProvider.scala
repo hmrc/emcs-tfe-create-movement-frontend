@@ -33,11 +33,15 @@ class ItemQuantityFormProvider @Inject() extends Mappings {
         .transform[String](_.replace(" ", ""), identity)
         .verifying(isDecimal(nonNumericErrorKey))
         .transform[BigDecimal](BigDecimal(_), _.toString())
-        .verifying(decimalRange(minValue, maxValue, rangeErrorKey))
-        .verifying(maxDecimalPlaces(maxDecimalPlacesValue, maxDecimalPlacesErrorKey))
-        .verifying(isNotEqualToOptExistingAnswer(
-          existingAnswer = ItemQuantityPage(idx).getOriginalAttributeValue.map(BigDecimal(_)),
-          errorKey = "errors.704.items.quantity.input")
+        .verifying(
+          firstError(
+            decimalRange(minValue, maxValue, rangeErrorKey),
+            maxDecimalPlaces(maxDecimalPlacesValue, maxDecimalPlacesErrorKey),
+            isNotEqualToOptExistingAnswer(
+              existingAnswer = ItemQuantityPage(idx).getOriginalAttributeValue.map(BigDecimal(_)),
+              errorKey = "errors.704.items.quantity.input"
+            )
+          )
         )
     )
 }

@@ -32,7 +32,11 @@ class DestinationWarehouseVatFormProvider @Inject() extends Mappings {
   def apply(destinationType: MovementScenario): Form[String] =
     Form(
       "value" -> text("destinationWarehouseVat.error.required" + (if(DestinationWarehouseVatPage.isSkippable(destinationType)) ".skippable" else ""))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseVat.error.invalidCharacters"))
-        .verifying(maxLength(VAT_NUMBER_MAX_LENGTH, "destinationWarehouseVat.error.length"))
+        .verifying(
+          firstError(
+            regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseVat.error.invalidCharacters"),
+            maxLength(VAT_NUMBER_MAX_LENGTH, "destinationWarehouseVat.error.length")
+          )
+        )
     )
 }

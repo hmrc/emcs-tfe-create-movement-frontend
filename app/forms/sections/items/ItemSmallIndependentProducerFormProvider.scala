@@ -35,8 +35,12 @@ class ItemSmallIndependentProducerFormProvider @Inject() extends Mappings {
         producerField -> enumerable[ItemSmallIndependentProducerType](producerRequiredError),
         producerIdField -> mandatoryIf(isOptionSelected(producerField, SelfCertifiedIndependentSmallProducerAndNotConsignor.toString),
           text(producerIdRequiredError)
-            .verifying(maxLength(producerIdMaxLength, producerIdMaxLengthError))
-            .verifying(regexpUnlessEmpty(XSS_REGEX, producerIdInvalidError))
+            .verifying(
+              firstError(
+                maxLength(producerIdMaxLength, producerIdMaxLengthError),
+                regexpUnlessEmpty(XSS_REGEX, producerIdInvalidError)
+              )
+            )
         )
       )(ItemSmallIndependentProducerModel.apply)(ItemSmallIndependentProducerModel.unapply)
     )

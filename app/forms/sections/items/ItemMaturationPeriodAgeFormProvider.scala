@@ -37,8 +37,12 @@ class ItemMaturationPeriodAgeFormProvider @Inject() extends Mappings {
         hasMaturationPeriodAgeField -> boolean(radioRequired, args = Seq(messages(goodsType.toSingularOutput()))),
         maturationPeriodAgeField -> mandatoryIfTrue(hasMaturationPeriodAgeField,
           text(maturationPeriodAgeRequired)
-            .verifying(maxLength(maturationPeriodAgeMaxLength, maturationPeriodAgeLength))
-            .verifying(regexp(XSS_REGEX, maturationPeriodAgeInvalid))
+            .verifying(
+              firstError(
+                maxLength(maturationPeriodAgeMaxLength, maturationPeriodAgeLength),
+                regexp(XSS_REGEX, maturationPeriodAgeInvalid)
+              )
+            )
         )
       )(ItemMaturationPeriodAgeModel.apply)(ItemMaturationPeriodAgeModel.unapply)
     )

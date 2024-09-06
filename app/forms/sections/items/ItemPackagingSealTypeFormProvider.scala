@@ -33,14 +33,22 @@ class ItemPackagingSealTypeFormProvider @Inject() extends Mappings {
       mapping(
         packagingSealTypeField ->
           text(sealTypeRequiredErrorKey)
-            .verifying(maxLength(maxLengthSealTypeField, sealTypeLengthErrorKey))
-            .verifying(regexp(XSS_REGEX, sealTypeInvalidErrorKey)),
+            .verifying(
+              firstError(
+                maxLength(maxLengthSealTypeField, sealTypeLengthErrorKey),
+                regexp(XSS_REGEX, sealTypeInvalidErrorKey)
+              )
+            ),
         packagingSealInformationField ->
           optional(
             playText
-              .verifying(maxLength(maxLengthSealInformationField, sealInformationLengthErrorKey))
-              .verifying(regexp(XSS_REGEX, sealInformationInvalidErrorKey))
-              .verifying(regexp(ALPHANUMERIC_REGEX, sealInformationAlphanumericErrorKey))
+              .verifying(
+                firstError(
+                  maxLength(maxLengthSealInformationField, sealInformationLengthErrorKey),
+                  regexp(XSS_REGEX, sealInformationInvalidErrorKey),
+                  regexp(ALPHANUMERIC_REGEX, sealInformationAlphanumericErrorKey)
+                )
+              )
           )
       )(ItemPackagingSealTypeModel.apply)(ItemPackagingSealTypeModel.unapply)
     )

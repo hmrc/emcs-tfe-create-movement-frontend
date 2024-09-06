@@ -37,9 +37,13 @@ class ItemPackagingQuantityFormProvider @Inject() extends Mappings {
         wholeNumberKey = decimalPlacesErrorKey,
         nonNumericKey = invalidCharactersErrorKey
       ).transform[String](_.toString(), BigInt(_))
-        .verifying(maxLength(maxDigits, maxLengthErrorKey))
-        .verifying(validateZeroEntry)
-        .verifying(validateChangedValue(itemIndex, packagingIndex))
+        .verifying(
+          firstError(
+            maxLength(maxDigits, maxLengthErrorKey),
+            validateZeroEntry,
+            validateChangedValue(itemIndex, packagingIndex)
+          )
+        )
     )
 
   private def validateZeroEntry(implicit request: DataRequest[_]): Constraint[String] =
@@ -59,7 +63,7 @@ class ItemPackagingQuantityFormProvider @Inject() extends Mappings {
       //If a shipping mark is defined for this packaging and the original quantity > 0 (i.e., this is the lead shipping mark)
       //show an error (user can't set a lead shipping mark quantity to 0)
       case str if BigInt(str) == 0 && ItemPackagingQuantityPage(itemIndex, packagingIndex).value.exists(BigInt(_) > 0) =>
-        if(ItemPackagingShippingMarksPage(itemIndex, packagingIndex).value.isDefined) {
+        if (ItemPackagingShippingMarksPage(itemIndex, packagingIndex).value.isDefined) {
           Invalid(cannotBeZeroMustBeMoreThanZeroErrorKey)
         } else {
           Valid

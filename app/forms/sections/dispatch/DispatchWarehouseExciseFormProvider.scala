@@ -34,21 +34,23 @@ class DispatchWarehouseExciseFormProvider @Inject() extends Mappings {
     Form(
       "value" -> text("dispatchWarehouseExcise.error.required")
         .transform[String](_.toUpperCase.replace(" ", ""), identity)
-        .verifying(firstError(
-          fixedLength(13, "dispatchWarehouseExcise.error.length"),
-          regexpUnlessEmpty(XSS_REGEX, "dispatchWarehouseExcise.error.xss"),
-          validationForERNBasedOnConsignor
-        ))
-        .verifying(isNotEqualToOptExistingAnswer(
-          existingAnswer = DispatchWarehouseExcisePage.getOriginalAttributeValue,
-          errorKey = "dispatchWarehouseExcise.error.submissionError"
-        ))
+        .verifying(
+          firstError(
+            fixedLength(13, "dispatchWarehouseExcise.error.length"),
+            regexpUnlessEmpty(XSS_REGEX, "dispatchWarehouseExcise.error.xss"),
+            validationForERNBasedOnConsignor,
+            isNotEqualToOptExistingAnswer(
+              existingAnswer = DispatchWarehouseExcisePage.getOriginalAttributeValue,
+              errorKey = "dispatchWarehouseExcise.error.submissionError"
+            )
+          )
+        )
     )
   }
 
   private[dispatch] def validationForERNBasedOnConsignor(implicit request: DataRequest[_]): Constraint[String] = {
-    if(request.isNorthernIrelandErn) {
-      if(request.isWarehouseKeeper) {
+    if (request.isNorthernIrelandErn) {
+      if (request.isWarehouseKeeper) {
         DispatchPlacePage.value.map {
           case DispatchPlace.GreatBritain => regexpUnlessEmpty(GB_00_EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.mustStartWithGB00")
           case DispatchPlace.NorthernIreland => regexpUnlessEmpty(XI_00_EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.mustStartWithXI00")

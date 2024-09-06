@@ -88,7 +88,6 @@ class GiveInformationOtherTransportFormProviderSpec extends StringFieldBehaviour
 
         result.errors mustBe Seq(
           FormError("value", "giveInformationOtherTransport.error.character", Seq(ALPHANUMERIC_REGEX)),
-          FormError("value", "giveInformationOtherTransport.error.xss", Seq(XSS_REGEX))
         )
       }
     }

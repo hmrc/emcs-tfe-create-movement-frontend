@@ -27,7 +27,11 @@ class ItemCommercialDescriptionFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "value" -> text("itemCommercialDescription.error.required")
-        .verifying(maxLength(350, "itemCommercialDescription.error.length"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "itemCommercialDescription.error.invalidCharacter"))
+        .verifying(
+          firstError(
+            maxLength(350, "itemCommercialDescription.error.length"),
+            regexpUnlessEmpty(XSS_REGEX, "itemCommercialDescription.error.invalidCharacter")
+          )
+        )
     )
 }

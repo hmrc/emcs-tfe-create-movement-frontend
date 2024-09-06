@@ -33,8 +33,12 @@ class ItemWineOperationsChoiceFormProvider @Inject() extends Mappings {
           invalidKey = "itemWineOperationsChoice.error.invalid"
         )
       )
-        .verifying(nonEmptySet("itemWineOperationsChoice.error.required"))
-        .verifying(exclusiveItemInSet("itemWineOperationsChoice.error.exclusive", "0"))
+        .verifying(
+          firstError(
+            nonEmptySet("itemWineOperationsChoice.error.required"),
+            exclusiveItemInSet("itemWineOperationsChoice.error.exclusive", "0")
+          )
+        )
     )
   }
 

@@ -42,8 +42,12 @@ class ItemDesignationOfOriginFormProvider @Inject() extends Mappings {
           ProtectedDesignationOfOrigin.toString,
           protectedDesignationOfOriginTextField,
           playText()
-            .verifying(maxLength(geographicalIndicationIdentificationMaxLength, geographicalIndicationIdentificationLengthError))
-            .verifying(regexp(XSS_REGEX, geographicalIndicationIdentificationInvalidError))
+            .verifying(
+              firstError(
+                maxLength(geographicalIndicationIdentificationMaxLength, geographicalIndicationIdentificationLengthError),
+                regexp(XSS_REGEX, geographicalIndicationIdentificationInvalidError)
+              )
+            )
             .transform[String](
               normaliseSpacesAndControlCharacters,
               identity
@@ -55,8 +59,12 @@ class ItemDesignationOfOriginFormProvider @Inject() extends Mappings {
           ProtectedGeographicalIndication.toString,
           protectedGeographicalIndicationTextField,
           playText()
-            .verifying(maxLength(geographicalIndicationIdentificationMaxLength, geographicalIndicationIdentificationLengthError))
-            .verifying(regexp(XSS_REGEX, geographicalIndicationIdentificationInvalidError))
+            .verifying(
+              firstError(
+                maxLength(geographicalIndicationIdentificationMaxLength, geographicalIndicationIdentificationLengthError),
+                regexp(XSS_REGEX, geographicalIndicationIdentificationInvalidError)
+              )
+            )
             .transform[String](
               normaliseSpacesAndControlCharacters,
               identity

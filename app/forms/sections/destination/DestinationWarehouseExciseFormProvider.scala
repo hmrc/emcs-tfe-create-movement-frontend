@@ -45,10 +45,14 @@ class DestinationWarehouseExciseFormProvider @Inject() extends Mappings {
     Form(
       "value" -> text("destinationWarehouseExcise.error.required")
         .transform[String](_.toUpperCase.replace(" ", ""), identity)
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseExcise.error.invalidCharacter"))
-        .verifying(maxLength(16, "destinationWarehouseExcise.error.length"))
-        .verifying(isNotEqualToOptExistingAnswer(optOriginalValueSentInPreviousSubmission, "destinationWarehouseExcise.error.submissionError"))
-        .verifying(inputIsValidForDestinationType(movementScenario))
+        .verifying(
+          firstError(
+            regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseExcise.error.invalidCharacter"),
+            maxLength(16, "destinationWarehouseExcise.error.length"),
+            isNotEqualToOptExistingAnswer(optOriginalValueSentInPreviousSubmission, "destinationWarehouseExcise.error.submissionError"),
+            inputIsValidForDestinationType(movementScenario)
+          )
+        )
     )
   }
 }

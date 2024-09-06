@@ -35,9 +35,13 @@ class GuarantorVatFormProvider @Inject() extends Mappings {
         hasVatNumberField -> boolean(vatRadioRequired(guarantorArranger)),
         vatNumberField -> ConditionalMappings.mandatoryIfTrue(hasVatNumberField,
           text(vatNumberRequired)
-            .verifying(maxLength(14, vatNumberLength))
             .transform[String](_.replace("-", "").replace(" ", ""), identity)
-            .verifying(regexp(ONLY_ALPHANUMERIC_REGEX, vatNumberAlphanumeric))
+            .verifying(
+              firstError(
+                maxLength(14, vatNumberLength),
+                regexp(ONLY_ALPHANUMERIC_REGEX, vatNumberAlphanumeric)
+              )
+            )
         )
       )(VatNumberModel.apply)(VatNumberModel.unapply)
     )

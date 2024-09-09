@@ -32,8 +32,8 @@ trait MockMovementTemplatesConnector extends MockFactory {
 
   object MockMovementTemplatesConnector {
 
-    def getList(): CallHandler3[DataRequest[_], HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, Seq[MovementTemplate]]]] =
-      (mockMovementTemplatesConnector.getList()(_: DataRequest[_], _: HeaderCarrier, _: ExecutionContext)).expects(*, *, *)
+    def getList(ern: String): CallHandler3[String, HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, Seq[MovementTemplate]]]] =
+      (mockMovementTemplatesConnector.getList(_: String)(_: HeaderCarrier, _: ExecutionContext)).expects(ern, *, *)
   }
 
 }

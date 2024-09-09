@@ -44,3 +44,4 @@ POST        /trader/:ern/draft/:draftId/draft-movement/delete   controllers.Dele
 ->          /                                                   items.Routes
 ->          /                                                   documents.Routes
 ->          /                                                   sad.Routes
+->          /                                                   templates.Routes

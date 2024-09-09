@@ -4,7 +4,6 @@ import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, urlEqual
 import com.github.tomakehurst.wiremock.http.Fault
 import connectors.emcsTfe.MovementTemplatesConnector
 import fixtures.{BaseFixtures, TemplateFixtures}
-import models.requests.{DataRequest, UserRequest}
 import models.response.UnexpectedDownstreamResponseError
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -13,7 +12,6 @@ import org.scalatest.{EitherValues, OptionValues}
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.tools.LogCapturing
@@ -43,9 +41,6 @@ class MovementTemplatesConnectorISpec extends AnyFreeSpec
 
   lazy val connector: MovementTemplatesConnector = app.injector.instanceOf[MovementTemplatesConnector]
 
-  implicit lazy val dr: DataRequest[_] =
-    DataRequest(UserRequest(FakeRequest(), testErn, "", "", "", hasMultipleErns = false), testDraftId, emptyUserAnswers, Some(testMinTraderKnownFacts))
-
   ".getList" - {
 
     "when templates are returned from emcs-tfe" - {
@@ -61,7 +56,7 @@ class MovementTemplatesConnectorISpec extends AnyFreeSpec
             )
         )
 
-        connector.getList().futureValue mustBe Right(Seq(templateModel))
+        connector.getList(testErn).futureValue mustBe Right(Seq(templateModel))
       }
     }
 
@@ -77,7 +72,7 @@ class MovementTemplatesConnectorISpec extends AnyFreeSpec
             )
         )
 
-        connector.getList().futureValue mustBe Right(Seq())
+        connector.getList(testErn).futureValue mustBe Right(Seq())
       }
     }
 
@@ -88,7 +83,7 @@ class MovementTemplatesConnectorISpec extends AnyFreeSpec
           .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
       )
 
-      connector.getList().futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.getList(testErn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
 
     "must fail when the connection fails" in {
@@ -99,7 +94,7 @@ class MovementTemplatesConnectorISpec extends AnyFreeSpec
       )
 
       withCaptureOfLoggingFrom(connector.logger) { logs =>
-        connector.getList().futureValue mustBe Left(UnexpectedDownstreamResponseError)
+        connector.getList(testErn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
         logs.exists(_.getMessage == "[MovementTemplatesConnector][getList] Unexpected exception of type RemotelyClosedException was thrown") mustBe true
       }
     }

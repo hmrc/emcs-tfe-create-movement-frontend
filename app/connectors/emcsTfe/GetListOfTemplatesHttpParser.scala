@@ -18,7 +18,7 @@ package connectors.emcsTfe
 
 import connectors.BaseConnectorUtils
 import models.response.templates.MovementTemplate
-import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamDraftSubmissionResponseError, UnexpectedDownstreamResponseError}
+import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.Status.{NO_CONTENT, OK}
 import play.api.libs.json.Reads
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}

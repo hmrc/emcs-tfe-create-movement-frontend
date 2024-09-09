@@ -18,12 +18,8 @@ package services
 
 import base.SpecBase
 import fixtures.TemplateFixtures
-import mocks.connectors.{MockDeleteDraftMovementConnector, MockMovementTemplatesConnector}
-import models.requests.DataRequest
-import models.response.{DeleteDraftMovementException, UnexpectedDownstreamResponseError}
-import play.api.mvc.AnyContentAsEmpty
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import mocks.connectors.MockMovementTemplatesConnector
+import models.response.UnexpectedDownstreamResponseError
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.tools.LogCapturing
 
@@ -39,15 +35,13 @@ class MovementTemplatesServiceSpec extends SpecBase
 
   lazy val testService = new MovementTemplatesService(mockMovementTemplatesConnector)
 
-  implicit val dr: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
-
   ".userHasTemplates" - {
 
     "should return 'true'" - {
 
       "when Connector returns seq of templates" in {
-        MockMovementTemplatesConnector.getList().returns(Future(Right(Seq(templateModel))))
-        val result = testService.userHasTemplates().futureValue
+        MockMovementTemplatesConnector.getList(testErn).returns(Future(Right(Seq(templateModel))))
+        val result = testService.userHasTemplates(testErn).futureValue
         result mustBe true
       }
     }
@@ -55,15 +49,15 @@ class MovementTemplatesServiceSpec extends SpecBase
     "should return 'false'" - {
 
       "when Connector returns empty seq" in {
-        MockMovementTemplatesConnector.getList().returns(Future(Right(Seq())))
-        val result = testService.userHasTemplates().futureValue
+        MockMovementTemplatesConnector.getList(testErn).returns(Future(Right(Seq())))
+        val result = testService.userHasTemplates(testErn).futureValue
         result mustBe false
       }
 
       "when Connector fails (but log a warning message)" in {
         withCaptureOfLoggingFrom(testService.logger) { logs =>
-          MockMovementTemplatesConnector.getList().returns(Future(Left(UnexpectedDownstreamResponseError)))
-          val result = testService.userHasTemplates().futureValue
+          MockMovementTemplatesConnector.getList(testErn).returns(Future(Left(UnexpectedDownstreamResponseError)))
+          val result = testService.userHasTemplates(testErn).futureValue
           result mustBe false
           logs.exists(_.getMessage == "[MovementTemplatesService][userHasTemplates] Failed to retrieve templates from emcs-tfe, defaulting response to false") mustBe true
         }

@@ -17,7 +17,6 @@
 package services
 
 import connectors.emcsTfe.MovementTemplatesConnector
-import models.requests.DataRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 
@@ -28,8 +27,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class MovementTemplatesService @Inject()(connector: MovementTemplatesConnector)
                                         (implicit ec: ExecutionContext) extends Logging {
 
-  def userHasTemplates()(implicit request: DataRequest[_], hc: HeaderCarrier): Future[Boolean] =
-    connector.getList().map {
+  def userHasTemplates(ern: String)(implicit hc: HeaderCarrier): Future[Boolean] =
+    connector.getList(ern).map {
       case Left(_) =>
         logger.warn("[userHasTemplates] Failed to retrieve templates from emcs-tfe, defaulting response to false")
         false

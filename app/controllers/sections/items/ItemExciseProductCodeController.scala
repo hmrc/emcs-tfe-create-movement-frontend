@@ -23,7 +23,7 @@ import models.sections.items.ExciseProductCodeRules
 import models.{Index, Mode, UserAnswers}
 import navigation.ItemsNavigator
 import pages.sections.guarantor.GuarantorSection
-import pages.sections.items.{ItemExciseProductCodePage, ItemsSectionItems}
+import pages.sections.items.{ItemExciseProductCodePage, ItemsSectionItem, ItemsSectionItems}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -78,7 +78,12 @@ class ItemExciseProductCodeController @Inject()(
                 renderView(BadRequest, formWithErrors, idx, selectItems, mode)
               },
               value => {
-                saveAndRedirect(ItemExciseProductCodePage(idx), value, userAnswersWithGuarantorSectionMaybeRemoved(request.userAnswers, value), mode)
+                val updatedUserAnswers = cleanseUserAnswersIfValueHasChanged(
+                  page = ItemExciseProductCodePage(idx),
+                  newAnswer = value,
+                  cleansingFunction = request.userAnswers.resetIndexedSection(ItemsSectionItem(idx), idx)
+                )
+                saveAndRedirect(ItemExciseProductCodePage(idx), value, userAnswersWithGuarantorSectionMaybeRemoved(updatedUserAnswers, value), mode)
               }
             )
           }

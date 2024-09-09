@@ -28,7 +28,7 @@ import models.{ExciseProductCode, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.guarantor.GuarantorRequiredPage
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
-import pages.sections.items.ItemExciseProductCodePage
+import pages.sections.items.{ItemExciseProductCodePage, ItemQuantityPage}
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call, Result}
 import play.api.test.Helpers._
@@ -158,6 +158,31 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
           MockUserAnswersService.set(
             emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)
           ).returns(Future.successful(emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcWine)))
+
+          val result: Future[Result] =
+            controller.onSubmit(ern, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual testOnwardRoute.url
+        }
+
+        "and clear down the current item's answers when the previous answer is different to the new answer" in new Fixture(Some(
+          emptyUserAnswers
+            .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+            .set(ItemQuantityPage(testIndex1), BigDecimal("5.0"))
+            .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
+        )) {
+          MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
+
+          MockUserAnswersService.set(
+            emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+              .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
+          ).returns(Future.successful(
+            emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
+              .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
+          ))
 
           val result: Future[Result] =
             controller.onSubmit(ern, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("excise-product-code", testEpcWine)))

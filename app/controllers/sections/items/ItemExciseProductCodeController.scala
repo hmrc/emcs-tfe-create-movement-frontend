@@ -59,7 +59,7 @@ class ItemExciseProductCodeController @Inject()(
               defaultTextMessageKey = "itemExciseProductCode.select.defaultValue",
               existingAnswer = ItemExciseProductCodePage(idx).value
             )
-            renderView(Ok, formProvider(exciseProductCodes, idx), idx, selectItems, mode)
+            renderView(Ok, formProvider(exciseProductCodes), idx, selectItems, mode)
         }
       }
     }
@@ -69,7 +69,7 @@ class ItemExciseProductCodeController @Inject()(
       validateIndexAsync(idx) {
         exciseProductCodesService.getExciseProductCodes().flatMap {
           exciseProductCodes => {
-            formProvider(exciseProductCodes, idx).bindFromRequest().fold(
+            formProvider(exciseProductCodes).bindFromRequest().fold(
               formWithErrors => {
                 val selectItems = SelectItemHelper.constructSelectItems(
                   exciseProductCodes,
@@ -81,7 +81,7 @@ class ItemExciseProductCodeController @Inject()(
                 val updatedUserAnswers = cleanseUserAnswersIfValueHasChanged(
                   page = ItemExciseProductCodePage(idx),
                   newAnswer = value,
-                  cleansingFunction = removeItemSubmissionFailure(idx, request.userAnswers.resetIndexedSection(ItemsSectionItem(idx), idx))
+                  cleansingFunction = request.userAnswers.resetIndexedSection(ItemsSectionItem(idx), idx)
                 )
                 saveAndRedirect(ItemExciseProductCodePage(idx), value, userAnswersWithGuarantorSectionMaybeRemoved(updatedUserAnswers, value), mode)
               }

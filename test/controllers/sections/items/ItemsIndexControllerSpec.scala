@@ -60,19 +60,6 @@ class ItemsIndexControllerSpec extends SpecBase
       }
     }
 
-    "when ItemsSectionItems status is UpdateNeeded" - {
-
-      "must redirect to the Items Add to List controller" in new Test(Some(
-        singleCompletedWineItem.copy(submissionFailures = Seq(itemQuantityFailure(1)))
-      )) {
-
-        val result = controller.onPageLoad(testErn, testDraftId)(request)
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe routes.ItemsAddToListController.onPageLoad(testErn, testDraftId).url
-      }
-    }
-
     "when more than one item is added and is in progress" - {
 
       "must redirect to the Items Add to List controller" in new Test(Some(singleCompletedWineItem

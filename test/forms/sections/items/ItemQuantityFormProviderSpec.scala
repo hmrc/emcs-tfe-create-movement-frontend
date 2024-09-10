@@ -122,18 +122,5 @@ class ItemQuantityFormProviderSpec extends BooleanFieldBehaviours with SpecBase 
         ))
       }
     }
-
-    "when a submission failure exists and the input is the same as the previous one" - {
-
-      val form = new ItemQuantityFormProvider()(testIndex2)(dataRequest(FakeRequest(),
-        answers = emptyUserAnswers.copy(submissionFailures = Seq(itemQuantityFailure(2)))
-      ))
-
-      "must error with the expected msg key" in {
-
-        val boundForm = form.bind(Map(fieldName -> "10000"))
-        boundForm.errors.headOption mustBe Some(FormError(fieldName, "errors.704.items.quantity.input", Seq()))
-      }
-    }
   }
 }

@@ -17,26 +17,16 @@
 package forms.sections.items
 
 import forms.mappings.Mappings
-import models.{ExciseProductCode, Index}
-import models.requests.DataRequest
-import pages.sections.items.ItemExciseProductCodePage
+import models.ExciseProductCode
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class ItemExciseProductCodeFormProvider @Inject() extends Mappings {
 
-  def apply(exciseProductCodes: Seq[ExciseProductCode], idx: Index)(implicit request: DataRequest[_]): Form[String] =
+  def apply(exciseProductCodes: Seq[ExciseProductCode]): Form[String] =
     Form(
       "excise-product-code" -> text("itemExciseProductCode.error.required")
-        .verifying(
-          firstError(
-            valueInList(exciseProductCodes.map(_.code), "itemExciseProductCode.error.required"),
-            isNotEqualToOptExistingAnswer(
-              existingAnswer = ItemExciseProductCodePage(idx).getOriginalAttributeValue,
-              errorKey = "itemExciseProductCode.error.submissionFailure"
-            )
-          )
-        )
+        .verifying(valueInList(exciseProductCodes.map(_.code), "itemExciseProductCode.error.required"))
     )
 }

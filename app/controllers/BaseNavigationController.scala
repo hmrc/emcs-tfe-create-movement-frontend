@@ -70,7 +70,7 @@ trait BaseNavigationController extends BaseController with Logging {
 
   private[controllers] def markErrorAsFixedIfPresent(page: QuestionPage[_], currentAnswers: UserAnswers)
                                                     (implicit request: DataRequest[_]): UserAnswers = {
-    if (currentAnswers.haveAllSubmissionErrorsBeenFixed) currentAnswers else {
+    if (currentAnswers.haveAllFixableSubmissionErrorsBeenFixed) currentAnswers else {
       val errorIndexes = page.indexesOfMovementSubmissionErrors
       errorIndexes.foldLeft(currentAnswers) { (userAnswers, index) =>
         if (index == -1) userAnswers else {

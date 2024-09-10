@@ -18,13 +18,13 @@ package views.sections.items
 
 import base.SpecBase
 import controllers.sections.items.routes
-import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import fixtures.messages.sections.items.ItemCheckAnswersMessages
-import models.{CheckMode, NormalMode}
+import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
+import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.sections.items.{ItemBulkPackagingChoicePage, ItemCommodityCodePage, ItemExciseProductCodePage, ItemPackagingQuantityPage, ItemPackagingSealChoicePage, ItemPackagingShippingMarksChoicePage, ItemSelectPackagingPage, ItemsPackagingSection}
+import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.FakeRequest
@@ -34,12 +34,7 @@ import views.{BaseSelectors, ViewBehaviours}
 class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFixtures with MovementSubmissionFailureFixtures {
 
   object Selectors extends BaseSelectors {
-    val fixQuantityErrorAtIndex: Int => String = index => s"#fix-item-$index-quantity"
-    val notificationBannerList = "#list-of-submission-failures"
-    val notificationBannerListElement: Int => String = index => s"#list-of-submission-failures > li:nth-of-type($index)"
-
     val addMorePackagingButton: String = "#add-more-packaging"
-
     override val button: String = ".govuk-button-group > .govuk-button"
   }
 
@@ -143,59 +138,6 @@ class ItemCheckAnswersViewSpec extends SpecBase with ViewBehaviours with ItemFix
           implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine.copy(cnCode = testCnCodeSpirit), testOnwardRoute, addMorePackagingCall, isBulk = false, packagingCount = Some(1)).toString())
 
           doc.selectFirst(Selectors.summaryCardHeading(wineDetailsIndex)).text() must not be messagesForLanguage.cardTitleWineDetails(testIndex1)
-        }
-      }
-
-      "when there is one 704 error" - {
-
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), singleCompletedWineItem
-          .copy(submissionFailures = Seq(itemQuantityFailure(1))))
-
-        implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute, addMorePackagingCall, isBulk = false, packagingCount = Some(1)).toString())
-
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
-          Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
-          Selectors.notificationBannerContent -> messagesForLanguage.notificationBannerContentForQuantity,
-          Selectors.addMorePackagingButton -> messagesForLanguage.addMorePackaging,
-          Selectors.button -> messagesForLanguage.confirmAnswers
-        ))
-
-        "link to the item Quantity page" in {
-          doc.select(Selectors.fixQuantityErrorAtIndex(1)).attr("href") mustBe controllers.sections.items.routes.ItemQuantityController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url
-        }
-      }
-
-      "when there are multiple 704 errors" - {
-
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), singleCompletedWineItem
-          .copy(submissionFailures = Seq(itemQuantityFailure(1), itemDegreesPlatoFailure(1))))
-
-        implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute, addMorePackagingCall, isBulk = false, packagingCount = Some(1)).toString())
-
-        "have the correct banner content - rendering a list of errors" in {
-          doc.select(Selectors.notificationBannerList).isEmpty mustBe false
-          doc.select(Selectors.notificationBannerContent).first().ownText() mustBe messagesForLanguage.notificationBannerParagraphForItems
-          doc.select(Selectors.notificationBannerListElement(1)).text mustBe messagesForLanguage.notificationBannerContentForQuantity
-          doc.select(Selectors.notificationBannerListElement(2)).text mustBe messagesForLanguage.notificationBannerContentForDegreesPlato
-        }
-      }
-
-      "when there is a 704 error (in another item)" - {
-
-        "don't show the notification banner" - {
-
-          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), singleCompletedWineItem
-            .copy(submissionFailures = Seq(itemQuantityFailure(2))))
-
-          implicit val doc: Document = Jsoup.parse(view(testIndex1, testCommodityCodeWine, testOnwardRoute, addMorePackagingCall, isBulk = false, packagingCount = Some(1)).toString())
-
-          behave like pageWithElementsNotPresent(Seq(
-            Selectors.notificationBannerList,
-            Selectors.notificationBannerContent
-          ))
         }
       }
     }

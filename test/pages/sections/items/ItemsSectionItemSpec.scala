@@ -27,9 +27,8 @@ import models.sections.items.ItemSmallIndependentProducerType.{NotAIndependentSm
 import models.sections.items.ItemWineGrowingZone.CIII_A
 import models.sections.items.ItemWineProductCategory.{ImportedWine, Other}
 import models.sections.items._
-import models.{GoodsType, MovementSubmissionFailure, UserAnswers}
+import models.{GoodsType, UserAnswers}
 import play.api.test.FakeRequest
-import utils._
 
 class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmissionFailureFixtures {
 
@@ -711,32 +710,6 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
 
         section.isCompleted mustBe false
       }
-
-      "when there is a submission failure message within the item" in {
-
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
-          .set(ItemCommodityCodePage(testIndex1), testCnCodeWine)
-          .set(ItemBrandNamePage(testIndex1), ItemBrandNameModel(hasBrandName = true, Some("brand")))
-          .set(ItemCommercialDescriptionPage(testIndex1), "Wine from grapes")
-          .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(12.5))
-          .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("Italy - DOCG"), None))
-          .set(ItemQuantityPage(testIndex1), BigDecimal("1000"))
-          .set(ItemNetGrossMassPage(testIndex1), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
-          .set(ItemBulkPackagingChoicePage(testIndex1), true)
-          .set(ItemBulkPackagingSelectPage(testIndex1), BulkPackagingType(BulkLiquid, "bulk"))
-          .set(ItemWineOperationsChoicePage(testIndex1), testWineOperations)
-          .set(ItemWineProductCategoryPage(testIndex1), Other)
-          .set(ItemWineGrowingZonePage(testIndex1), CIII_A)
-          .set(ItemWineMoreInformationChoicePage(testIndex1), true)
-          .set(ItemWineMoreInformationPage(testIndex1), Some("Info"))
-          .set(ItemBulkPackagingSealChoicePage(testIndex1), true)
-          .set(ItemBulkPackagingSealTypePage(testIndex1), ItemPackagingSealTypeModel("Seal", Some("Seal Info")))
-          .copy(submissionFailures = Seq(itemQuantityFailure(1)))
-        )
-
-        section.isCompleted mustBe false
-      }
     }
   }
 
@@ -1377,121 +1350,6 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
     "must return an empty Seq" - {
       "if false" in {
         section.mandatoryIf(condition = false)(fRes) mustBe Nil
-      }
-    }
-  }
-
-  "isMovementSubmissionError" - {
-
-    "return true" - {
-
-      "when a quantity submission error exists in the items section" in {
-
-        section.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(itemQuantityFailure(1))))) mustBe true
-      }
-
-      "when a degrees plato submission error exists in the items section" in {
-
-        section.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(itemDegreesPlatoFailure(1))))) mustBe true
-      }
-    }
-
-    "return false" - {
-
-      "when there are no submission failures" in {
-
-        section.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers)) mustBe false
-      }
-
-      "when there are no item submission failures" in {
-
-        section.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(movementSubmissionFailure)))) mustBe false
-      }
-
-      "when there are item submission failures but not at this index" in {
-
-        section.isMovementSubmissionError(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(itemQuantityFailure(2))))) mustBe false
-      }
-    }
-  }
-
-  "getSubmissionFailuresForItem" - {
-
-    def possibleExciseProductCodeErrorCodes(itemIndex: Int = 1, isForAddToList: Boolean = false): Seq[MovementSubmissionFailure] = Seq(
-      itemExciseProductCodeFailure(ItemExciseProductCodeConsignorNotApprovedToSendError(itemIndex - 1, isForAddToList), itemIndex = itemIndex),
-      itemExciseProductCodeFailure(ItemExciseProductCodeConsigneeNotApprovedToReceiveError(itemIndex - 1, isForAddToList), itemIndex = itemIndex),
-      itemExciseProductCodeFailure(ItemExciseProductCodeDestinationNotApprovedToReceiveError(itemIndex - 1, isForAddToList), itemIndex = itemIndex),
-      itemExciseProductCodeFailure(ItemExciseProductCodeDispatchPlaceNotAllowedError(itemIndex - 1, isForAddToList), itemIndex = itemIndex)
-    )
-
-    "return an empty list" - {
-
-      "when no submission failures exist" in {
-
-        section.getSubmissionFailuresForItem()(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq()))) mustBe Seq.empty
-      }
-
-      "when no submission failures exist for this item" in {
-
-        section.getSubmissionFailuresForItem()(dataRequest(FakeRequest(), emptyUserAnswers.copy(submissionFailures = Seq(itemQuantityFailure(2))))) mustBe Seq.empty
-      }
-
-      "when submission failures exist for this item but all are fixed" in {
-        section.getSubmissionFailuresForItem()(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(
-            itemQuantityFailure(itemIndex = 1).copy(hasBeenFixed = true),
-            itemDegreesPlatoFailure(itemIndex = 1).copy(hasBeenFixed = true),
-          ) ++ possibleExciseProductCodeErrorCodes().map(_.copy(hasBeenFixed = true))
-        ))) mustBe Seq.empty
-      }
-    }
-
-    "return the submission failures that exist" - {
-      "returning only the number of errors that haven't been fixed" in {
-        val itemEPCErrorCodesFixed = possibleExciseProductCodeErrorCodes().map(_.copy(hasBeenFixed = true))
-        section.getSubmissionFailuresForItem()(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(
-            itemQuantityFailure(itemIndex = 1).copy(hasBeenFixed = false),
-            itemDegreesPlatoFailure(itemIndex = 1).copy(hasBeenFixed = true),
-            possibleExciseProductCodeErrorCodes().head
-          ) ++ itemEPCErrorCodesFixed.drop(1)
-        ))) mustBe Seq(
-          ItemQuantityError(testIndex1, isForAddToList = false),
-          ItemExciseProductCodeConsignorNotApprovedToSendError(testIndex1, isForAddToList = false)
-        )
-      }
-
-      "when all errors haven't been fixed" in {
-        section.getSubmissionFailuresForItem()(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(
-            itemQuantityFailure(itemIndex = 1),
-            itemDegreesPlatoFailure(itemIndex = 1),
-            itemQuantityFailure(itemIndex = 2),
-            itemDegreesPlatoFailure(itemIndex = 2)
-          ) ++ possibleExciseProductCodeErrorCodes() ++ possibleExciseProductCodeErrorCodes(itemIndex = 2)
-        ))) mustBe Seq(
-          ItemQuantityError(testIndex1, isForAddToList = false),
-          ItemDegreesPlatoError(testIndex1, isForAddToList = false),
-          ItemExciseProductCodeConsignorNotApprovedToSendError(testIndex1, isForAddToList = false),
-          ItemExciseProductCodeConsigneeNotApprovedToReceiveError(testIndex1, isForAddToList = false),
-          ItemExciseProductCodeDestinationNotApprovedToReceiveError(testIndex1, isForAddToList = false),
-          ItemExciseProductCodeDispatchPlaceNotAllowedError(testIndex1, isForAddToList = false)
-        )
-      }
-
-      "when the user is on the add to list page (return only one EPC error code)" in {
-        section.getSubmissionFailuresForItem(isOnAddToList = true)(dataRequest(FakeRequest(), emptyUserAnswers.copy(
-          submissionFailures = Seq(
-            itemQuantityFailure(1),
-            itemDegreesPlatoFailure(1),
-            itemQuantityFailure(2),
-            itemDegreesPlatoFailure(2)
-          ) ++ possibleExciseProductCodeErrorCodes() ++ possibleExciseProductCodeErrorCodes(itemIndex = 2)
-        ))) mustBe Seq(
-          ItemQuantityError(testIndex1, isForAddToList = true),
-          ItemDegreesPlatoError(testIndex1, isForAddToList = true),
-          ItemExciseProductCodeConsignorNotApprovedToSendError(testIndex1, isForAddToList = true)
-        )
       }
     }
   }

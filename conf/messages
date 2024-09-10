@@ -1760,14 +1760,10 @@ errors.704.importCustomsOfficeCode = The import customs office code you have ent
 errors.704.importCustomsOfficeCode.input = The import customs office code you have entered is not valid so you must now enter different details
 
 # EMCS Core Error Number 4407:
-errors.704.items.quantity.addToList = Item {0} quantity
-errors.704.items.quantity = The item quantity is over the approved limit for the Temporary Registered Consignee
-errors.704.items.quantity.input = You must update the item quantity so that it is different to the original submission
+errors.704.itemQuantity = The quantity of one or more items is over the approved limit for the Temporary Consignee
 
 # EMCS Core Error Number 4445:
-errors.704.items.degreesPlato.addToList = Item {0} degree plato
-errors.704.items.degreesPlato = Invalid degree plato for beer
-errors.704.items.degreesPlato.input = You must update the degree plato so that it is different to the original submission
+errors.704.itemDegreesPlato = The degree plato is invalid. Check the degree plato and alcohol strength by volume (ABV) are accurate before you resubmit.
 
 # EMCS Core Error Number 4404:
 errors.704.dispatchWarehouseInvalidOrMissingOnSeedError = The excise ID for the tax warehouse of dispatch is not valid
@@ -1820,17 +1816,25 @@ errors.704.dispatchWarehouseInvalidError = The excise ID for the tax warehouse o
 # EMCS Core Error Number 4461:
 errors.704.dispatchWarehouseConsignorDoesNotManageWarehouseError = Excise ID entered for the tax warehouse of dispatch is not linked with the consignor
 
-# EMCS Core Error Number 4408, 4409, 4410, 4527
-errors.704.items.exciseProductCode = Item {0} excise product code
+# EMCS Core Error Number 4408:
+errors.704.consignorNotApprovedToSendError = The consignor is not allowed to send one or more items in this movement.
 
-errors.704.items.exciseProductCode.itemExciseProductCodeConsignorNotApprovedToSendError = The excise product code for this item must be one that the consignor is approved to send
-errors.704.items.exciseProductCode.itemExciseProductCodeConsigneeNotApprovedToReceiveError = The excise product code for this item must be one that the consignee is approved to receive
-errors.704.items.exciseProductCode.itemExciseProductCodeDestinationNotApprovedToReceiveError = The excise product code for this item must be one that the tax warehouse of destination is approved to receive
-errors.704.items.exciseProductCode.itemExciseProductCodeDispatchPlaceNotAllowed = The tax warehouse of dispatch entered is not allowed to dispatch items with this excise product code
+# EMCS Core Error Number 4409:
+errors.704.consigneeNotApprovedToReceiveError = The consignee is not allowed to receive one or more items in this movement.
+
+# EMCS Core Error Number 4410:
+errors.704.destinationNotApprovedToReceiveError = The tax warehouse of destination is not allowed to receive one or more items in this movement.
+
+# EMCS Core Error Number 4527:
+errors.704.dispatchPlaceNotAllowed = The tax warehouse of dispatch is not allowed to hold one or more items in this movement.
+
+errors.704.nonFixable.prevalidate.preLink = Use the
+errors.704.nonFixable.prevalidate.link = prevalidate trader tool
+errors.704.nonFixable.prevalidate.afterLink = to check what the approved Excise Product Codes (EPC) are for the traders and premises of this movement. Check each item is approved and then resubmit the movement.
+
 
 errors.ui.dispatchDate.inPast = The date of dispatch must be today’s date or up to 7 days in the future because this is not a deferred movement using fallback procedures
 errors.ui.dispatchDate.inFuture = The date of dispatch must be before or equal to today’s date because this a deferred movement using fallback procedures
-
 
 deleteDraft.title = Are you sure you want to delete this draft?
 deleteDraft.heading = Are you sure you want to delete this draft?

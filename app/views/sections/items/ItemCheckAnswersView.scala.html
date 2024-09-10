@@ -16,8 +16,8 @@
 
 @import models.requests.DataRequest
 @import models.response.referenceData.CnCodeInformation
-@import pages.sections.items.{ItemsPackagingSection, ItemsSectionItem}
-@import viewmodels.helpers.{ErrorNotificationBannerHelper, ItemCheckAnswersHelper}
+@import pages.sections.items.ItemsPackagingSection
+@import viewmodels.helpers.ItemCheckAnswersHelper
 @import utils.ItemHelper
 
 @this(
@@ -30,7 +30,6 @@
         list: components.list,
         link: components.link,
         helper: ItemCheckAnswersHelper,
-        notificationBannerHelper: ErrorNotificationBannerHelper,
         saveAndContinue: components.saveAndContinue
 )
 
@@ -39,8 +38,6 @@
 @layout(pageTitle = titleNoForm(messages("itemCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action) {
-
-      @notificationBannerHelper.content(ItemsSectionItem(idx).getSubmissionFailuresForItem(), withLinks = true).map(notificationBanner(_))
 
       @h1("itemCheckAnswers.heading", Some("items.subHeading"), hiddenContent = Some(messages("subHeading.hidden")), classes = "govuk-heading-l")
 

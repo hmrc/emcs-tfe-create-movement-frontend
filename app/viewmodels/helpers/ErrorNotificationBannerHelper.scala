@@ -50,8 +50,8 @@ class ErrorNotificationBannerHelper @Inject()(list: list, p: p, link: link){
   private def singleErrorContent(error: SubmissionError, withLink: Boolean)
                                 (implicit request: DataRequest[_], messages: Messages): Html = {
     val message = error.index.map(idx => messages(error.messageKey, idx.displayIndex)).getOrElse(messages(error.messageKey))
-    if(withLink) {
-      link(error.route().url, message, id = Some(error.id))
+    if(withLink && error.route().isDefined) {
+      link(error.route().get.url, message, id = Some(error.id))
     } else {
       Html(message)
     }

@@ -47,18 +47,6 @@ class ItemsSectionSpec extends SpecBase with ItemFixtures with MovementSubmissio
       }
     }
 
-    "must return UpdateNeeded" - {
-
-      "when there is a Quantity-related submission failure within the Items section" in {
-
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), singleCompletedWineItem.copy(
-          submissionFailures = Seq(itemQuantityFailure(1))
-        ))
-
-        ItemsSection.status mustBe UpdateNeeded
-      }
-    }
-
     "must return InProgress" - {
 
       "when all items are completed and ItemsAddToList.Yes" in {

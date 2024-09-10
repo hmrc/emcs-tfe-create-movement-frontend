@@ -76,7 +76,7 @@ class ErrorNotificationBannerHelperSpec extends SpecBase {
           title = Text(English.updateNeeded),
           content = HtmlContent(
             p("govuk-notification-banner__heading")(link(
-              InvalidOrMissingConsigneeError.route().url,
+              InvalidOrMissingConsigneeError.route().get.url,
               English.invalidOrMissingConsignee,
               Some(InvalidOrMissingConsigneeError.id)
             )
@@ -125,12 +125,12 @@ class ErrorNotificationBannerHelperSpec extends SpecBase {
               p("govuk-notification-banner__heading")(Html(English.notificationBannerParagraph)),
               list(Seq(
                 link(
-                  InvalidOrMissingConsigneeError.route().url,
+                  InvalidOrMissingConsigneeError.route().get.url,
                   English.invalidOrMissingConsignee,
                   Some(InvalidOrMissingConsigneeError.id)
                 ),
                 link(
-                  LinkIsPendingError.route().url,
+                  LinkIsPendingError.route().get.url,
                   English.linkIsPending,
                   Some(LinkIsPendingError.id)
                 )
@@ -155,12 +155,12 @@ class ErrorNotificationBannerHelperSpec extends SpecBase {
             HtmlFormat.fill(Seq(
               list(Seq(
                 link(
-                  InvalidOrMissingConsigneeError.route().url,
+                  InvalidOrMissingConsigneeError.route().get.url,
                   English.invalidOrMissingConsignee,
                   Some(InvalidOrMissingConsigneeError.id)
                 ),
                 link(
-                  LinkIsPendingError.route().url,
+                  LinkIsPendingError.route().get.url,
                   English.linkIsPending,
                   Some(LinkIsPendingError.id)
                 )

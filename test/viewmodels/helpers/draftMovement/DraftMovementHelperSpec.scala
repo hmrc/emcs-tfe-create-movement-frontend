@@ -17,6 +17,7 @@
 package viewmodels.helpers.draftMovement
 
 import base.SpecBase
+import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.DraftMovementMessages
 import models._
 import models.requests.DataRequest
@@ -48,14 +49,15 @@ import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import viewmodels.taskList._
 import views.ViewUtils.titleNoForm
-import views.html.components.{list, p}
+import views.html.components.{link, list, p}
 
 //scalastyle:off magic.number
-class DraftMovementHelperSpec extends SpecBase {
+class DraftMovementHelperSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
   lazy val list: list = app.injector.instanceOf[list]
   lazy val p: p = app.injector.instanceOf[p]
-  lazy val helper: DraftMovementHelper = new DraftMovementHelper(list, p)
+  lazy val link: link = app.injector.instanceOf[link]
+  lazy val helper: DraftMovementHelper = new DraftMovementHelper(list, p, link, appConfig)
 
   Seq(DraftMovementMessages.English).foreach { messagesForLanguage =>
     s"when being rendered in lang code of ${messagesForLanguage.lang.code}" - {
@@ -1170,6 +1172,70 @@ class DraftMovementHelperSpec extends SpecBase {
         "must not modify the error reason if 'Please amend your entry and resubmit.' is not present, 'origin type code is 'Tax Warehouse'.' is not present, and there are no quotes to be replaced with smart quotes" in {
           val result = helper.removeAmendEntryMessageFromErrorReason("This is an error.")
           result mustBe "This is an error."
+        }
+      }
+
+      "unfixableSubmissionFailureContent" - {
+
+        implicit val dr = dataRequest(testErn, emptyUserAnswers)
+
+        "should show all unfixable error types (including the prevlidate)" in {
+
+          val content = helper.unfixableSubmissionFailureContent(Seq(
+            itemQuantityFailure,
+            itemDegreesPlatoFailure,
+            consignorNotApprovedToSendFailure,
+            consigneeNotApprovedToRetrieveFailure,
+            destinationNotApprovedToReceiveFailure,
+            dispatchPlaceNotAllowedFailure
+          ))
+
+          content mustBe Some(HtmlContent(HtmlFormat.fill(Seq(
+            p("govuk-notification-banner__heading")(Html(messagesForLanguage.notificationBanner704Content)),
+            list(Seq(
+              p()(Html("The quantity of one or more items is over the approved limit for the Temporary Consignee")),
+              p()(Html("The degree plato is invalid. Check the degree plato and alcohol strength by volume (ABV) are accurate before you resubmit.")),
+              p()(Html("The consignor is not allowed to send one or more items in this movement.")),
+              p()(Html("The consignee is not allowed to receive one or more items in this movement.")),
+              p()(Html("The tax warehouse of destination is not allowed to receive one or more items in this movement.")),
+              p()(Html("The tax warehouse of dispatch is not allowed to hold one or more items in this movement."))
+            )),
+            p()(HtmlFormat.fill(Seq(
+              Html("Use the"),
+              link(
+                appConfig.prevalidateTraderUrl,
+                "prevalidate trader tool",
+                opensInNewTab = true
+              ),
+              Html("to check what the approved Excise Product Codes (EPC) are for the traders and premises of this movement. Check each item is approved and then resubmit the movement.")
+            )))
+          ))))
+        }
+
+        "should show all unfixable error types (without the prevlidate when not applicable)" in {
+
+          val content = helper.unfixableSubmissionFailureContent(Seq(
+            itemQuantityFailure,
+            itemDegreesPlatoFailure
+          ))
+
+          content mustBe Some(HtmlContent(HtmlFormat.fill(Seq(
+            p("govuk-notification-banner__heading")(Html(messagesForLanguage.notificationBanner704Content)),
+            list(Seq(
+              p()(Html("The quantity of one or more items is over the approved limit for the Temporary Consignee")),
+              p()(Html("The degree plato is invalid. Check the degree plato and alcohol strength by volume (ABV) are accurate before you resubmit."))
+            ))
+          ))))
+        }
+
+        "should return None when no errors" in {
+          val content = helper.unfixableSubmissionFailureContent(Seq())
+          content mustBe None
+        }
+
+        "should return None when errors are fixable ones" in {
+          val content = helper.unfixableSubmissionFailureContent(Seq(movementSubmissionFailure))
+          content mustBe None
         }
       }
     }

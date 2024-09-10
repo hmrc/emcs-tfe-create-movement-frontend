@@ -26,16 +26,14 @@ import models.requests.{CnCodeInformationItem, DataRequest}
 import models.response.referenceData.{BulkPackagingType, CnCodeInformation}
 import models.sections.items.ItemBrandNameModel
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
-import models.{CheckMode, NormalMode, UserAnswers}
+import models.{NormalMode, UserAnswers}
 import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.govukfrontend.views.Aliases.NotificationBanner
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{ItemDegreesPlatoError, ItemQuantityError}
 import viewmodels.checkAnswers.sections.items._
 import views.html.components._
 
@@ -49,9 +47,6 @@ class ItemsAddToListHelperSpec extends SpecBase
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
   implicit lazy val span: span = app.injector.instanceOf[span]
-  implicit lazy val p: p = app.injector.instanceOf[p]
-  implicit lazy val list: list = app.injector.instanceOf[list]
-  implicit lazy val link: link = app.injector.instanceOf[link]
   implicit lazy val tagHelper: TagHelper = app.injector.instanceOf[TagHelper]
   lazy val itemPackagingSummary: ItemPackagingSummary = app.injector.instanceOf[ItemPackagingSummary]
   lazy val itemQuantitySummary: ItemQuantitySummary = app.injector.instanceOf[ItemQuantitySummary]
@@ -63,10 +58,7 @@ class ItemsAddToListHelperSpec extends SpecBase
     span = span,
     cnCodeInformationService = mockGetCnCodeInformationService,
     itemPackagingSummary = itemPackagingSummary,
-    itemQuantitySummary = itemQuantitySummary,
-    p = p,
-    list = list,
-    link = link
+    itemQuantitySummary = itemQuantitySummary
   )
 
   class Setup(userAnswers: UserAnswers = emptyUserAnswers) {
@@ -344,145 +336,6 @@ class ItemsAddToListHelperSpec extends SpecBase
                 )
               )
             )
-          }
-
-          s"when the item has a submission failure" in new Setup(
-            singleCompletedWineItem.copy(submissionFailures = Seq(itemQuantityFailure(1)))
-          ) {
-
-            val item = CnCodeInformationItem(testEpcWine, testCnCodeWine)
-
-            MockGetCnCodeInformationService.getCnCodeInformationWithMovementItems(Seq(item))
-              .returns(Future.successful(Seq(item -> CnCodeInformation(item.cnCode, "Sparkling Wine", item.productCode, "Wine", Litres20))))
-
-            helper.allItemsSummary.futureValue mustBe Seq(
-              SummaryList(
-                card = Some(Card(
-                  title = Some(CardTitle(
-                    content = HtmlContent(HtmlFormat.fill(Seq(
-                      span(messagesForLanguage.itemCardTitle(testIndex1), Some("govuk-!-margin-right-2")),
-                      tagHelper.updateNeededTag(withNoFloat = false)
-                    ))),
-                    headingLevel = Some(headingLevel)
-                  )),
-                  actions = Some(Actions(items = Seq(
-                    ActionItem(
-                      href = routes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1).url,
-                      content = Text(messagesForLanguage.change),
-                      visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex1)),
-                      attributes = Map("id" -> "changeItem-1")
-                    ),
-                    ActionItem(
-                      href = routes.ItemRemoveItemController.onPageLoad(testErn, testDraftId, testIndex1).url,
-                      content = Text(messagesForLanguage.remove),
-                      visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex1)),
-                      attributes = Map("id" -> "removeItem-1")
-                    )
-                  )))
-                )),
-                rows = Seq(
-                  ItemBrandNameSummary.row(testIndex1, showChangeLinks = false).get,
-                  ItemCommercialDescriptionSummary.row(testIndex1, showChangeLinks = false).get,
-                  itemQuantitySummary.row(testIndex1, Litres20, showChangeLinks = false, showUpdateNeededTag = false).get,
-                  itemPackagingSummary.row(testIndex1).get
-                )
-              )
-            )
-          }
-        }
-      }
-
-      "when calling showNotificationBannerWhenSubmissionError" - {
-
-        implicit val request = dataRequest(FakeRequest())
-
-        "return None" - {
-
-          "when no submission failures are provided" in {
-            helper.showNotificationBannerWhenSubmissionError(Seq.empty) mustBe None
-          }
-        }
-
-        "return the correct notification banner" - {
-
-          "when there is one 704 error" in {
-
-            helper.showNotificationBannerWhenSubmissionError(Seq(
-              ItemQuantityError(testIndex1, isForAddToList = true)
-            )) mustBe Some(NotificationBanner(
-              title = Text(msgs("errors.704.notificationBanner.title")),
-              content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
-                Html(msgs("errors.704.notificationBanner.p")),
-                list(Seq(
-                  link(
-                    link = controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,
-                    messageKey = msgs("errors.704.items.quantity.addToList", testIndex1.displayIndex),
-                    id = Some("fix-item-1-quantity")
-                  )
-                ), id = Some("list-of-submission-failures"))
-              ))))
-            ))
-          }
-
-          "when there are multiple 704 errors for a single item" in {
-
-            helper.showNotificationBannerWhenSubmissionError(Seq(
-              ItemQuantityError(testIndex1, isForAddToList = true),
-              ItemDegreesPlatoError(testIndex1, isForAddToList = true)
-            )) mustBe Some(NotificationBanner(
-              title = Text(msgs("errors.704.notificationBanner.title")),
-              content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
-                Html(msgs("errors.704.notificationBanner.p")),
-                list(Seq(
-                  link(
-                    link = controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,
-                    messageKey = msgs("errors.704.items.quantity.addToList", testIndex1.displayIndex),
-                    id = Some("fix-item-1-quantity")
-                  ),
-                  link(
-                    link = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,
-                    messageKey = msgs("errors.704.items.degreesPlato.addToList", testIndex1.displayIndex),
-                    id = Some("fix-item-1-degrees-plato")
-                  )), id = Some("list-of-submission-failures"))
-              ))))
-            ))
-          }
-
-          "when there are multiple 704 errors for multiple items" in {
-
-            helper.showNotificationBannerWhenSubmissionError(Seq(
-              ItemQuantityError(testIndex1, isForAddToList = true),
-              ItemDegreesPlatoError(testIndex1, isForAddToList = true),
-              ItemQuantityError(testIndex2, isForAddToList = true),
-              ItemDegreesPlatoError(testIndex2, isForAddToList = true)
-            )) mustBe Some(NotificationBanner(
-              title = Text(msgs("errors.704.notificationBanner.title")),
-              content = HtmlContent(p("govuk-notification-banner__heading")(HtmlFormat.fill(Seq(
-                Html(msgs("errors.704.notificationBanner.p")),
-                list(Seq(
-                  link(
-                    link = controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,
-                    messageKey = msgs("errors.704.items.quantity.addToList", testIndex1.displayIndex),
-                    id = Some("fix-item-1-quantity")
-                  ),
-                  link(
-                    link = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, testIndex1, CheckMode).url,
-                    messageKey = msgs("errors.704.items.degreesPlato.addToList", testIndex1.displayIndex),
-                    id = Some("fix-item-1-degrees-plato")
-                  ),
-                  link(
-                    link = controllers.sections.items.routes.ItemQuantityController.onPageLoad(request.ern, request.draftId, testIndex2, CheckMode).url,
-                    messageKey = msgs("errors.704.items.quantity.addToList", testIndex2.displayIndex),
-                    id = Some("fix-item-2-quantity")
-                  ),
-                  link(
-                    link = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(request.ern, request.draftId, testIndex2, CheckMode).url,
-                    messageKey = msgs("errors.704.items.degreesPlato.addToList", testIndex2.displayIndex),
-                    id = Some("fix-item-2-degrees-plato")
-                  )
-                ), id = Some("list-of-submission-failures"))
-              ))))
-            ))
           }
         }
       }

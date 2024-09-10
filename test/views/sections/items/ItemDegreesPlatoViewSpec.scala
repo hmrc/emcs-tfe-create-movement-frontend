@@ -82,25 +82,6 @@ class ItemDegreesPlatoViewSpec extends SpecBase with ViewBehaviours with Movemen
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))(doc())
-
-        "when there is a 704 error" - {
-
-          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
-            .copy(submissionFailures = Seq(itemDegreesPlatoFailure(1))))
-
-          behave like pageWithExpectedElementsAndMessages(Seq(
-            Selectors.title -> messagesForLanguage.title(Beer.toSingularOutput()),
-            Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
-            Selectors.h1 -> messagesForLanguage.heading(Beer.toSingularOutput()),
-            Selectors.notificationBannerTitle -> messagesForLanguage.updateNeeded,
-            Selectors.notificationBannerContent -> messagesForLanguage.degreesPlatoSubmissionFailure
-          ))(doc())
-
-          "not show the notification banner when there is an error" - {
-            doc(isFormError = true).select(".govuk-error-summary").isEmpty mustBe false
-            doc(isFormError = true).select(".govuk-notification-banner").isEmpty mustBe true
-          }
-        }
       }
     }
   }

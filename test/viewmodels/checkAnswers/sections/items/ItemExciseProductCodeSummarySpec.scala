@@ -31,7 +31,6 @@ import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.Key
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import utils._
 import viewmodels.govuk.summarylist._
 import views.html.components.{p, tag}
 
@@ -77,17 +76,6 @@ class ItemExciseProductCodeSummarySpec extends SpecBase
               dataRequest(FakeRequest(), emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testCommodityCodeWine.exciseProductCode))
 
             itemExciseProductCodeSummary.row(testIndex1, testCommodityCodeWine, ReviewMode) mustBe summaryRow()
-          }
-
-          "must return a row with the update needed tag when a submission failure exists" in {
-            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
-              dataRequest(FakeRequest(), emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testCommodityCodeWine.exciseProductCode).copy(
-                submissionFailures = Seq(
-                  itemExciseProductCodeFailure(ItemExciseProductCodeConsignorNotApprovedToSendError(testIndex1, isForAddToList = false), itemIndex = 1)
-                )
-              ))
-
-            itemExciseProductCodeSummary.row(idx = testIndex1, testCommodityCodeWine, ReviewMode) mustBe summaryRow(hasUpdateNeededTag = true)
           }
         }
       }

@@ -86,7 +86,7 @@ class ItemRemoveItemController @Inject()(
         req.copy(userAnswers = updatedAnswers)
       }
 
-      val cleansedAnswers = updateItemSubmissionFailureIndexes(index, reqWithOrphanedShippingMarkPackagesRemoved.userAnswers.remove(ItemsSectionItem(index)))
+      val cleansedAnswers = reqWithOrphanedShippingMarkPackagesRemoved.userAnswers.remove(ItemsSectionItem(index))
 
       userAnswersService.set(cleansedAnswers).map {
         _ => Redirect(routes.ItemsIndexController.onPageLoad(ern, draftId))

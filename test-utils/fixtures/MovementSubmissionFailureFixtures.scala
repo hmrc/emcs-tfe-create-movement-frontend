@@ -56,28 +56,51 @@ trait MovementSubmissionFailureFixtures extends BaseFixtures {
     hasBeenFixed = false
   )
 
-  def itemQuantityFailure(itemIndex: Int): MovementSubmissionFailure = MovementSubmissionFailure(
+  val consignorNotApprovedToSendFailure: MovementSubmissionFailure = MovementSubmissionFailure(
+    errorType = ConsignorNotApprovedToSendError.code,
+    errorReason = "The link between the nature of goods on the draft movement and those allowed for the consignor as held on SEED is missing or invalid",
+    errorLocation = None,
+    originalAttributeValue = None,
+    hasBeenFixed = false
+  )
+
+  val consigneeNotApprovedToRetrieveFailure: MovementSubmissionFailure = MovementSubmissionFailure(
+    errorType = ConsigneeNotApprovedToReceiveError.code,
+    errorReason = "The link between the nature of goods on the draft movement and those allowed for the consignee as held on SEED is missing or invalid",
+    errorLocation = None,
+    originalAttributeValue = None,
+    hasBeenFixed = false
+  )
+
+  val dispatchPlaceNotAllowedFailure: MovementSubmissionFailure = MovementSubmissionFailure(
+    errorType = DispatchPlaceNotAllowedError.code,
+    errorReason = "Dispatch place not approved to send goods",
+    errorLocation = None,
+    originalAttributeValue = None,
+    hasBeenFixed = false
+  )
+
+  val destinationNotApprovedToReceiveFailure: MovementSubmissionFailure = MovementSubmissionFailure(
+    errorType = DestinationNotApprovedToReceiveError.code,
+    errorReason = "Destination not approved to receive goods",
+    errorLocation = None,
+    originalAttributeValue = None,
+    hasBeenFixed = false
+  )
+
+  val itemQuantityFailure: MovementSubmissionFailure = MovementSubmissionFailure(
     errorType = ItemQuantityError.code,
     errorReason = "The quantitiy entered exceeds the amount approved for this Temporary Consignment Authorisation (TCA). Please check and amend your entry.",
-    errorLocation = Some(s"/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/BodyEadEsad[$itemIndex]/Quantity[1]"),
-    originalAttributeValue = Some("10000"),
+    errorLocation = None,
+    originalAttributeValue = None,
     hasBeenFixed = false
   )
 
-
-  def itemDegreesPlatoFailure(itemIndex: Int): MovementSubmissionFailure = MovementSubmissionFailure(
+  val itemDegreesPlatoFailure: MovementSubmissionFailure = MovementSubmissionFailure(
     errorType = ItemDegreesPlatoError.code,
     errorReason = "The alcoholic strength for wine and spirits you have entered is not valid.  Please amend your entry and resubmit",
-    errorLocation = Some(s"/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/BodyEadEsad[$itemIndex]/DegreePlato[1]"),
-    originalAttributeValue = Some("10"),
-    hasBeenFixed = false
-  )
-
-  def itemExciseProductCodeFailure(errorCode: SubmissionError, itemIndex: Int): MovementSubmissionFailure = MovementSubmissionFailure(
-    errorType = errorCode.code,
-    errorReason = "Not used",
-    errorLocation = Some(s"/IE815[1]/Body[1]/SubmittedDraftOfEADESAD[1]/BodyEadEsad[$itemIndex]/ExciseProductCode[1]"),
-    originalAttributeValue = Some("B000"),
+    errorLocation = None,
+    originalAttributeValue = None,
     hasBeenFixed = false
   )
 

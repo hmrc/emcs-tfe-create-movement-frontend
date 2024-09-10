@@ -28,7 +28,7 @@ import pages.sections.items.ItemDegreesPlatoPage
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 import viewmodels.govuk.summarylist._
@@ -43,14 +43,11 @@ class ItemDegreesPlatoSummarySpec extends SpecBase with Matchers with MovementSu
     implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
   }
 
-  private def summaryRow(value: String, hasUpdateNeededTag: Boolean = false)
-                        (implicit messagesForLanguage: ViewMessages, messages: Messages): SummaryListRow = {
+  private def summaryRow(value: String)
+                        (implicit messagesForLanguage: ViewMessages): SummaryListRow = {
     SummaryListRowViewModel(
       key = Key(Text(messagesForLanguage.cyaLabel)),
-      value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
-        Some(Html(value)),
-        if (hasUpdateNeededTag) Some(tag("taskListStatus.updateNeeded", "orange", "float-none govuk-!-margin-left-1")) else None
-      ).flatten))),
+      value = ValueViewModel(HtmlContent(Html(value))),
       actions = Seq(ActionItemViewModel(
         href = controllers.sections.items.routes.ItemDegreesPlatoController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
         content = Text(messagesForLanguage.change),
@@ -82,16 +79,6 @@ class ItemDegreesPlatoSummarySpec extends SpecBase with Matchers with MovementSu
                 .set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(hasDegreesPlato = true, degreesPlato = None))
             ) {
               summary.row(idx = testIndex1) mustBe Some(summaryRow(messagesForLanguage.no))
-            }
-            "must return a row with the update needed tag when a submission failure exists" in new Test(
-              emptyUserAnswers
-                .copy(submissionFailures = Seq(itemDegreesPlatoFailure(1)))
-                .set(ItemDegreesPlatoPage(testIndex1), ItemDegreesPlatoModel(hasDegreesPlato = true, degreesPlato = Some(BigDecimal(1.59))))
-            ) {
-              summary.row(idx = testIndex1) mustBe Some(summaryRow(
-                value = s"1.59${messagesForLanguage.cyaSuffix}",
-                hasUpdateNeededTag = true
-              ))
             }
           }
 

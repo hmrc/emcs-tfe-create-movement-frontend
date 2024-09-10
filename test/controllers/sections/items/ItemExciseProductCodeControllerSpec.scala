@@ -28,7 +28,7 @@ import models.{ExciseProductCode, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.guarantor.GuarantorRequiredPage
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
-import pages.sections.items.ItemExciseProductCodePage
+import pages.sections.items.{ItemExciseProductCodePage, ItemQuantityPage}
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call, Result}
 import play.api.test.Helpers._
@@ -49,7 +49,7 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
   val sampleEPCs: Seq[ExciseProductCode] = Seq(beerExciseProductCode, wineExciseProductCode)
 
   lazy val formProvider: ItemExciseProductCodeFormProvider = new ItemExciseProductCodeFormProvider()
-  lazy val form: Form[String] = formProvider.apply(sampleEPCs, testIndex1)(dataRequest(FakeRequest()))
+  lazy val form: Form[String] = formProvider.apply(sampleEPCs)
   lazy val view: ItemExciseProductCodeView = app.injector.instanceOf[ItemExciseProductCodeView]
 
   class Fixture(val userAnswers: Option[UserAnswers]) {
@@ -165,17 +165,12 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual testOnwardRoute.url
         }
-        "and only clear down the current item's answers when the previous answer is different to the new answer" +
-          " (and remove any 704 errors at this index only)" in new Fixture(Some(
+
+        "and clear down the current item's answers when the previous answer is different to the new answer" in new Fixture(Some(
           emptyUserAnswers
             .set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+            .set(ItemQuantityPage(testIndex1), BigDecimal("5.0"))
             .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
-            .copy(submissionFailures =
-              Seq(
-                itemQuantityFailure(1),
-                itemQuantityFailure(2).copy(originalAttributeValue = Some("UPDATED")), movementSubmissionFailure
-              )
-            )
         )) {
           MockGetExciseProductCodesService.getExciseProductCodes().returns(Future.successful(sampleEPCs))
 
@@ -183,12 +178,10 @@ class ItemExciseProductCodeControllerSpec extends SpecBase
             emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
               .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
-              .copy(submissionFailures = Seq(itemQuantityFailure(2).copy(originalAttributeValue = Some("UPDATED")), movementSubmissionFailure))
           ).returns(Future.successful(
             emptyUserAnswers
               .set(ItemExciseProductCodePage(testIndex1), testEpcWine)
               .set(ItemExciseProductCodePage(testIndex2), testExciseProductCodeB000.code)
-              .copy(submissionFailures = Seq(itemQuantityFailure(2).copy(originalAttributeValue = Some("UPDATED")), movementSubmissionFailure))
           ))
 
           val result: Future[Result] =

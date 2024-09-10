@@ -25,6 +25,7 @@ import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import pages.QuestionPage
 import play.api.libs.json._
+import play.api.test.FakeRequest
 import queries.Derivable
 
 
@@ -386,37 +387,40 @@ class UserAnswersSpec extends SpecBase with MovementSubmissionFailureFixtures {
 
     "when calling haveAllSubmissionErrorsBeenFixed" - {
 
+      implicit val dr = dataRequest(FakeRequest())
+
       def userAnswers(hasBeenFixed: Boolean) = emptyUserAnswers.copy(
-        submissionFailures = Seq(movementSubmissionFailure.copy(hasBeenFixed = hasBeenFixed))
+        submissionFailures = Seq(
+          movementSubmissionFailure.copy(hasBeenFixed = hasBeenFixed),
+          consignorNotApprovedToSendFailure //nonFixable failure (not linked to specific field)
+        )
       )
 
       "return true" - {
 
         "when there are no errors" in {
-
-          emptyUserAnswers.haveAllSubmissionErrorsBeenFixed mustBe true
+          emptyUserAnswers.haveAllFixableSubmissionErrorsBeenFixed mustBe true
         }
 
-        "when all the errors have been fixed" in {
-
-          userAnswers(hasBeenFixed = true).haveAllSubmissionErrorsBeenFixed mustBe true
+        "when all the fixable errors have been fixed" in {
+          userAnswers(hasBeenFixed = true).haveAllFixableSubmissionErrorsBeenFixed mustBe true
         }
       }
 
       "return false" - {
 
-        "when an error hasn't been fixed" in {
-
-          userAnswers(hasBeenFixed = false).haveAllSubmissionErrorsBeenFixed mustBe false
+        "when a fixable error hasn't been fixed" in {
+          userAnswers(hasBeenFixed = false).haveAllFixableSubmissionErrorsBeenFixed mustBe false
         }
 
         "when multiple errors exist and only one hasn't been fixed" in {
-
           emptyUserAnswers.copy(
-            submissionFailures = Seq(movementSubmissionFailure.copy(hasBeenFixed = true),
+            submissionFailures = Seq(
+              movementSubmissionFailure.copy(hasBeenFixed = true),
               movementSubmissionFailure.copy(hasBeenFixed = false),
-              movementSubmissionFailure.copy(hasBeenFixed = true))
-          ).haveAllSubmissionErrorsBeenFixed mustBe false
+              movementSubmissionFailure.copy(hasBeenFixed = true)
+            )
+          ).haveAllFixableSubmissionErrorsBeenFixed mustBe false
         }
       }
     }

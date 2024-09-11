@@ -17,18 +17,18 @@
 package connectors.emcsTfe
 
 import connectors.BaseConnectorUtils
-import models.response.templates.MovementTemplate
+import models.response.templates.MovementTemplates
 import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.Status.{NO_CONTENT, OK}
 import play.api.libs.json.Reads
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
-trait GetListOfTemplatesHttpParser extends BaseConnectorUtils[Seq[MovementTemplate]] {
+trait GetListOfTemplatesHttpParser extends BaseConnectorUtils[MovementTemplates] {
 
-  override implicit val reads: Reads[Seq[MovementTemplate]] = Reads.seq[MovementTemplate]
+  override implicit val reads: Reads[MovementTemplates] = MovementTemplates.format
 
-  implicit object GetListOfTemplatesReads extends HttpReads[Either[ErrorResponse, Seq[MovementTemplate]]] {
-    override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, Seq[MovementTemplate]] = {
+  implicit object GetListOfTemplatesReads extends HttpReads[Either[ErrorResponse, MovementTemplates]] {
+    override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, MovementTemplates] = {
       response.status match {
         case OK => response.validateJson match {
           case Some(valid) => Right(valid)
@@ -36,7 +36,7 @@ trait GetListOfTemplatesHttpParser extends BaseConnectorUtils[Seq[MovementTempla
             logger.warn(s"[read] Bad JSON response from emcs-tfe")
             Left(JsonValidationError)
         }
-        case NO_CONTENT => Right(Seq())
+        case NO_CONTENT => Right(MovementTemplates.empty)
         case status =>
           logger.warn(s"[read] Unexpected status from emcs-tfe: $status")
           Left(UnexpectedDownstreamResponseError)

@@ -19,6 +19,7 @@ package connectors.emcsTfe
 import base.SpecBase
 import fixtures.TemplateFixtures
 import mocks.connectors.MockHttpClient
+import models.response.templates.MovementTemplates
 import models.response.{JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.libs.json.Json
@@ -44,13 +45,17 @@ class GetListOfTemplatesHttpParserSpec extends SpecBase
     "should return a successful response" - {
 
       "when valid JSON is returned that can be parsed to the model" in {
-        val httpResponse = HttpResponse(Status.OK, Json.arr(templateJson), Map())
-        GetListOfTemplatesReads.read("", "", httpResponse) mustBe Right(Seq(templateModel))
+        val httpResponse = HttpResponse(
+          status = Status.OK,
+          json = Json.obj("templates" -> Json.arr(templateJson), "count" -> 1),
+          headers = Map()
+        )
+        GetListOfTemplatesReads.read("", "", httpResponse) mustBe Right(MovementTemplates(Seq(templateModel), 1))
       }
 
       "when valid NO_CONTENT is returned" in {
         val httpResponse = HttpResponse(Status.NO_CONTENT, Json.obj(), Map())
-        GetListOfTemplatesReads.read("", "", httpResponse) mustBe Right(Seq())
+        GetListOfTemplatesReads.read("", "", httpResponse) mustBe Right(MovementTemplates.empty)
       }
     }
 

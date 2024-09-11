@@ -32,7 +32,7 @@ class MovementTemplatesService @Inject()(connector: MovementTemplatesConnector)
       case Left(_) =>
         logger.warn("[userHasTemplates] Failed to retrieve templates from emcs-tfe, defaulting response to false")
         false
-      case Right(templates) =>
-        templates.nonEmpty
+      case Right(value) =>
+        value.count > 0
     }
 }

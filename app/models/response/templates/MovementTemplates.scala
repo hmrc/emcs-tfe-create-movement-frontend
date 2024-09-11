@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,12 @@
 
 package models.response.templates
 
-import play.api.libs.json._
+import play.api.libs.json.{Json, OFormat}
 
-import java.time.Instant
+final case class MovementTemplates(templates: Seq[MovementTemplate], count: Int)
 
-final case class MovementTemplate(ern: String,
-                                  templateId: String,
-                                  templateName: String,
-                                  data: JsObject,
-                                  lastUpdated: Instant)
+object MovementTemplates {
+  implicit val format: OFormat[MovementTemplates] = Json.format[MovementTemplates]
 
-object MovementTemplate {
-  implicit val format: OFormat[MovementTemplate] = Json.format[MovementTemplate]
+  def empty: MovementTemplates = MovementTemplates(Seq.empty, 0)
 }

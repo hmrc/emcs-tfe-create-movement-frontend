@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.http.Fault
 import connectors.emcsTfe.MovementTemplatesConnector
 import fixtures.{BaseFixtures, TemplateFixtures}
 import models.response.UnexpectedDownstreamResponseError
+import models.response.templates.MovementTemplates
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -48,15 +49,15 @@ class MovementTemplatesConnectorISpec extends AnyFreeSpec
       "must return the list of templates" in {
 
         server.stubFor(
-          get(urlEqualTo(s"/emcs-tfe/templates/$testErn"))
+          get(urlEqualTo(s"/emcs-tfe/templates/$testErn?page=1&pageSize=10"))
             .willReturn(
               aResponse()
                 .withStatus(OK)
-                .withBody(Json.stringify(Json.arr(templateJson)))
+                .withBody(Json.stringify(Json.obj("templates" -> Json.arr(templateJson), "count" -> 1)))
             )
         )
 
-        connector.getList(testErn).futureValue mustBe Right(Seq(templateModel))
+        connector.getList(testErn).futureValue mustBe Right(MovementTemplates(Seq(templateModel), 1))
       }
     }
 
@@ -65,21 +66,21 @@ class MovementTemplatesConnectorISpec extends AnyFreeSpec
       "must empty list" in {
 
         server.stubFor(
-          get(urlEqualTo(s"/emcs-tfe/templates/$testErn"))
+          get(urlEqualTo(s"/emcs-tfe/templates/$testErn?page=1&pageSize=10"))
             .willReturn(
               aResponse()
                 .withStatus(NO_CONTENT)
             )
         )
 
-        connector.getList(testErn).futureValue mustBe Right(Seq())
+        connector.getList(testErn).futureValue mustBe Right(MovementTemplates.empty)
       }
     }
 
     "must fail when the server responds with any other status" in {
 
       server.stubFor(
-        get(urlEqualTo(s"/emcs-tfe/templates/$testErn"))
+        get(urlEqualTo(s"/emcs-tfe/templates/$testErn?page=1&pageSize=10"))
           .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
       )
 
@@ -89,7 +90,7 @@ class MovementTemplatesConnectorISpec extends AnyFreeSpec
     "must fail when the connection fails" in {
 
       server.stubFor(
-        get(urlEqualTo(s"/emcs-tfe/templates/$testErn"))
+        get(urlEqualTo(s"/emcs-tfe/templates/$testErn?page=1&pageSize=10"))
           .willReturn(aResponse().withFault(Fault.RANDOM_DATA_THEN_CLOSE))
       )
 

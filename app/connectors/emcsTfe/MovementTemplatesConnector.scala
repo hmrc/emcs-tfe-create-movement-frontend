@@ -18,7 +18,7 @@ package connectors.emcsTfe
 
 import config.AppConfig
 import models.response.ErrorResponse
-import models.response.templates.MovementTemplate
+import models.response.templates.MovementTemplates
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import javax.inject.{Inject, Singleton}
@@ -30,8 +30,8 @@ class MovementTemplatesConnector @Inject()(val http: HttpClient,
 
   lazy val baseUrl: String = config.emcsTfeBaseUrl
 
-  def getList(ern: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[MovementTemplate]]] =
+  def getList(ern: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, MovementTemplates]] =
     withExceptionRecovery("getList") {
-      http.GET[Either[ErrorResponse, Seq[MovementTemplate]]](s"$baseUrl/templates/$ern")
+      http.GET[Either[ErrorResponse, MovementTemplates]](s"$baseUrl/templates/$ern?page=1&pageSize=10")
     }(ec, logger)
 }

@@ -17,9 +17,8 @@
 package mocks.connectors
 
 import connectors.emcsTfe.MovementTemplatesConnector
-import models.requests.DataRequest
 import models.response.ErrorResponse
-import models.response.templates.MovementTemplate
+import models.response.templates.MovementTemplates
 import org.scalamock.handlers.CallHandler3
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
@@ -32,7 +31,7 @@ trait MockMovementTemplatesConnector extends MockFactory {
 
   object MockMovementTemplatesConnector {
 
-    def getList(ern: String): CallHandler3[String, HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, Seq[MovementTemplate]]]] =
+    def getList(ern: String): CallHandler3[String, HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, MovementTemplates]]] =
       (mockMovementTemplatesConnector.getList(_: String)(_: HeaderCarrier, _: ExecutionContext)).expects(ern, *, *)
   }
 

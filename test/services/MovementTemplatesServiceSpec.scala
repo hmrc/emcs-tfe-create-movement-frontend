@@ -20,6 +20,7 @@ import base.SpecBase
 import fixtures.TemplateFixtures
 import mocks.connectors.MockMovementTemplatesConnector
 import models.response.UnexpectedDownstreamResponseError
+import models.response.templates.MovementTemplates
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.tools.LogCapturing
 
@@ -40,7 +41,7 @@ class MovementTemplatesServiceSpec extends SpecBase
     "should return 'true'" - {
 
       "when Connector returns seq of templates" in {
-        MockMovementTemplatesConnector.getList(testErn).returns(Future(Right(Seq(templateModel))))
+        MockMovementTemplatesConnector.getList(testErn).returns(Future(Right(MovementTemplates(Seq(templateModel), 1))))
         val result = testService.userHasTemplates(testErn).futureValue
         result mustBe true
       }
@@ -48,8 +49,8 @@ class MovementTemplatesServiceSpec extends SpecBase
 
     "should return 'false'" - {
 
-      "when Connector returns empty seq" in {
-        MockMovementTemplatesConnector.getList(testErn).returns(Future(Right(Seq())))
+      "when Connector returns empty count" in {
+        MockMovementTemplatesConnector.getList(testErn).returns(Future(Right(MovementTemplates.empty)))
         val result = testService.userHasTemplates(testErn).futureValue
         result mustBe false
       }

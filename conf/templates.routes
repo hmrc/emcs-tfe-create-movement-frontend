@@ -1,0 +1,2 @@
+GET        /trader/:ern/templates/how-create-movement                                      controllers.sections.templates.UseTemplateController.onPageLoad(ern: String)
+POST       /trader/:ern/templates/how-create-movement                                      controllers.sections.templates.UseTemplateController.onSubmit(ern: String)

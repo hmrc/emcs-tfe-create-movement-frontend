@@ -20,7 +20,7 @@ import controllers.actions.AuthAction
 import models.UserAnswers
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.{PreDraftService, UserAnswersService}
+import services.{MovementTemplatesService, PreDraftService, UserAnswersService}
 
 import javax.inject.Inject
 
@@ -28,13 +28,13 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
                                 val preDraftService: PreDraftService,
                                 val userAnswersService: UserAnswersService,
                                 authAction: AuthAction,
-                                val controllerComponents: MessagesControllerComponents) extends BaseController {
+                                val controllerComponents: MessagesControllerComponents,
+                                val movementTemplatesService: MovementTemplatesService) extends BaseController {
 
   def onPageLoad(ern: String): Action[AnyContent] =
-    authAction(ern) { request =>
+    authAction(ern).async { implicit request =>
 
-      // clear down any in flight pre draft and start again
-      preDraftService.set(
+      val clearPreDraftDraft = preDraftService.set(
         UserAnswers(
           ern = ern,
           draftId = request.sessionId,
@@ -45,7 +45,18 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
         )
       )
 
-      Redirect(controllers.sections.info.routes.InfoIndexController.onPreDraftPageLoad(ern))
+      val userHasTemplates = movementTemplatesService.userHasTemplates(ern)
+
+      for {
+        _ <- clearPreDraftDraft
+        hasTemplates <- userHasTemplates
+      } yield {
+        if(hasTemplates) {
+          Redirect(controllers.sections.templates.routes.UseTemplateController.onPageLoad(ern))
+        } else {
+          Redirect(controllers.sections.info.routes.InfoIndexController.onPreDraftPageLoad(ern))
+        }
+      }
     }
 
 }

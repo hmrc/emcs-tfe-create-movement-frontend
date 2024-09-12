@@ -38,6 +38,8 @@ trait BaseFixtures {
   val testCredId: String = "credId"
   val testInternalId: String = "internalId"
   val testErn: String = "XIRC123456789"
+  val templateId: String = "templateId1"
+  val templateName: String = "MyTemplate"
   val testNorthernIrelandErn = "XIWK123456789"
   val testEuErn = "FR00123456789"
   val testNICertifiedConsignorErn = "XIPA123456789"

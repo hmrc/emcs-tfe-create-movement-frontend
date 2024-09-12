@@ -28,7 +28,7 @@ trait PreDraftAuthActionHelper {
   val getPreDraftData: PreDraftDataRetrievalAction
   val requirePreDraftData: PreDraftDataRequiredAction
 
-  private def authorisedWithPreDraftData(ern: String): ActionBuilder[DataRequest, AnyContent] =
+  def authorisedWithPreDraftData(ern: String): ActionBuilder[DataRequest, AnyContent] =
     auth(ern) andThen getPreDraftData() andThen requirePreDraftData
 
   def authorisedPreDraftDataRequestAsync(ern: String)(block: DataRequest[_] => Future[Result]): Action[AnyContent] =

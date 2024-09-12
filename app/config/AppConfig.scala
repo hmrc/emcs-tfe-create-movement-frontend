@@ -66,6 +66,9 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   def prevalidateTraderUrl(implicit request: DataRequest[_]): String =
     configuration.get[String]("urls.prevalidateTraderUrl").replace("{ern}", request.ern)
 
+  def emcsTfeTemplatesUrl(ern: String): String =
+    configuration.get[String]("urls.emcsTfeTemplates").replace("{ern}", ern)
+
   def returnToDraft(implicit request: DataRequest[_]): String = controllers.routes.DraftMovementController.onPageLoad(request.ern, request.draftId).url
 
   lazy val timeout: Int = configuration.get[Int]("timeout-dialog.timeout")

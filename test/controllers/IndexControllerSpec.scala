@@ -17,26 +17,36 @@
 package controllers
 
 import base.SpecBase
-import mocks.services.{MockPreDraftService, MockUserAnswersService}
+import mocks.services.{MockMovementTemplatesService, MockPreDraftService, MockUserAnswersService}
 import models.UserAnswers
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
-class IndexControllerSpec extends SpecBase with MockPreDraftService with MockUserAnswersService {
+class IndexControllerSpec extends SpecBase
+  with MockPreDraftService
+  with MockUserAnswersService
+  with MockMovementTemplatesService {
+
+  lazy val testController = new IndexController(
+    messagesApi,
+    mockPreDraftService,
+    mockUserAnswersService,
+    fakeAuthAction,
+    messagesControllerComponents,
+    mockMovementTemplatesService
+  )
 
   "Index Controller" - {
-    "must redirect to the info Index controller" in {
-      lazy val testController = new IndexController(
-        messagesApi,
-        mockPreDraftService,
-        mockUserAnswersService,
-        fakeAuthAction,
-          messagesControllerComponents
-      )
 
-      MockPreDraftService.set(UserAnswers(
+    "when user has templates" - {
+
+      "must redirect to the info Index controller" in {
+
+        MockMovementTemplatesService.userHasTemplates(testNorthernIrelandErn).returns(Future.successful(true))
+
+        MockPreDraftService.set(UserAnswers(
           testNorthernIrelandErn,
           testSessionId,
           hasBeenSubmitted = false,
@@ -45,11 +55,35 @@ class IndexControllerSpec extends SpecBase with MockPreDraftService with MockUse
           submittedDraftId = None
         )).returns(Future.successful(true))
 
-      val request = FakeRequest()
-      val result = testController.onPageLoad(testNorthernIrelandErn)(request)
+        val request = FakeRequest()
+        val result = testController.onPageLoad(testNorthernIrelandErn)(request)
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.sections.info.routes.InfoIndexController.onPreDraftPageLoad(testNorthernIrelandErn).url)
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(controllers.sections.templates.routes.UseTemplateController.onPageLoad(testNorthernIrelandErn).url)
+      }
+    }
+
+    "when user DOES NOT have templates" - {
+
+      "must redirect to the info Index controller" in {
+
+        MockMovementTemplatesService.userHasTemplates(testNorthernIrelandErn).returns(Future.successful(false))
+
+        MockPreDraftService.set(UserAnswers(
+          testNorthernIrelandErn,
+          testSessionId,
+          hasBeenSubmitted = false,
+          submissionFailures = Seq.empty,
+          validationErrors = Seq.empty,
+          submittedDraftId = None
+        )).returns(Future.successful(true))
+
+        val request = FakeRequest()
+        val result = testController.onPageLoad(testNorthernIrelandErn)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(controllers.sections.info.routes.InfoIndexController.onPreDraftPageLoad(testNorthernIrelandErn).url)
+      }
     }
   }
 }

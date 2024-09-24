@@ -26,7 +26,8 @@ import javax.inject.Singleton
 class FeatureSwitchingModule extends Module with FeatureSwitchRegistry {
 
   val switches: Seq[FeatureSwitch] = Seq(
-    EnableNRS
+    EnableNRS,
+    TemplatesLink
   )
 
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
@@ -39,4 +40,9 @@ class FeatureSwitchingModule extends Module with FeatureSwitchRegistry {
 case object EnableNRS extends FeatureSwitch {
   override val configName: String = "features.enableNRS"
   override val displayName: String = "Enables sending submissions to NRS"
+}
+
+case object TemplatesLink extends FeatureSwitch {
+  override val configName: String = "features.templatesLink"
+  override val displayName: String = "Enables the templates pages"
 }

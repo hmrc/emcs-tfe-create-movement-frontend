@@ -16,12 +16,15 @@
 
 package controllers.actions
 
+import config.AppConfig
 import models.requests.DataRequest
+import play.api.mvc.Results.Redirect
 import play.api.mvc.{Action, ActionBuilder, AnyContent, Result}
+import utils.Logging
 
 import scala.concurrent.Future
 
-trait AuthActionHelper {
+trait AuthActionHelper extends Logging {
 
   val auth: AuthAction
   val getData: DataRetrievalAction
@@ -35,5 +38,14 @@ trait AuthActionHelper {
 
   def authorisedDataRequestAsync(ern: String, draftId: String)(block: DataRequest[_] => Future[Result]): Action[AnyContent] =
     authorisedWithData(ern, draftId).async(block)
+
+  def ifCanUseDraftTemplates(ern: String, draftId: String)(block: => Future[Result])(implicit appConfig: AppConfig): Future[Result] = {
+    if (appConfig.templateVisible) {
+      block
+    } else {
+      logger.warn(s"[ifCanAccessDraftTemplates] User with ERN: $ern is not allowed to use draft templates")
+      Future.successful(Redirect(controllers.routes.DeclarationController.onPageLoad(ern, draftId)))
+    }
+  }
 
 }

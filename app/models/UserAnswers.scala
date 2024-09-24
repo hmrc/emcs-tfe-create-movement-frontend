@@ -33,7 +33,9 @@ final case class UserAnswers(ern: String,
                              validationErrors: Seq[MovementValidationFailure],
                              lastUpdated: Instant = Instant.now,
                              hasBeenSubmitted: Boolean,
-                             submittedDraftId: Option[String]) {
+                             submittedDraftId: Option[String],
+                             createdFromTemplateId: Option[String] = None,
+                             createdFromTemplateName: Option[String] = None) {
 
   /**
    * @param pages a Seq of pages you want to leave in UserAnswers
@@ -107,6 +109,8 @@ object UserAnswers {
   val submissionFailures = "submissionFailures"
   val validationErrors = "validationErrors"
   val submittedDraftId = "submittedDraftId"
+  val createdFromTemplateId = "createdFromTemplateId"
+  val createdFromTemplateName = "createdFromTemplateName"
 
   val reads: Reads[UserAnswers] =
     (
@@ -117,7 +121,9 @@ object UserAnswers {
         (__ \ validationErrors).readNullable[Seq[MovementValidationFailure]].map(_.getOrElse(Seq.empty)) and
         (__ \ lastUpdated).read(MongoJavatimeFormats.instantFormat) and
         (__ \ hasBeenSubmitted).read[Boolean] and
-        (__ \ submittedDraftId).readNullable[String]
+        (__ \ submittedDraftId).readNullable[String] and
+        (__ \ createdFromTemplateId).readNullable[String]and
+        (__ \ createdFromTemplateName).readNullable[String]
       )(UserAnswers.apply _)
 
   val writes: OWrites[UserAnswers] =
@@ -129,7 +135,9 @@ object UserAnswers {
         (__ \ validationErrors).write[Seq[MovementValidationFailure]] and
         (__ \ lastUpdated).write(MongoJavatimeFormats.instantFormat) and
         (__ \ hasBeenSubmitted).write[Boolean] and
-        (__ \ submittedDraftId).writeNullable[String]
+        (__ \ submittedDraftId).writeNullable[String] and
+        (__ \ createdFromTemplateId).writeNullable[String] and
+        (__ \ createdFromTemplateName).writeNullable[String]
       )(unlift(UserAnswers.unapply))
 
   implicit val format: OFormat[UserAnswers] = OFormat(reads, writes)

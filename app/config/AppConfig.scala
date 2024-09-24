@@ -105,4 +105,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   def earliestDispatchDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestDispatchDate"))
   lazy val earliestInvoiceDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestInvoiceDate"))
   def maxDispatchDateFutureDays: Int = configuration.get[Int]("constants.maxDispatchDateFutureDays")
+
+  def templateVisible: Boolean = isEnabled(TemplatesLink)
 }

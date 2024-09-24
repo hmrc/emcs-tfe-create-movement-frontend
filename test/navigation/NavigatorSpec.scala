@@ -52,6 +52,7 @@ class NavigatorSpec extends SpecBase {
             routes.ConfirmationController.onPageLoad(testErn, testDraftId)
         }
       }
+
     }
 
     "in Check mode" - {

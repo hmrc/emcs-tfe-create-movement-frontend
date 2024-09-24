@@ -1,2 +1,5 @@
 GET        /trader/:ern/templates/how-create-movement                                      controllers.sections.templates.UseTemplateController.onPageLoad(ern: String)
 POST       /trader/:ern/templates/how-create-movement                                      controllers.sections.templates.UseTemplateController.onSubmit(ern: String)
+
+GET        /trader/:ern/draft/:draftId/templates/choose-save-template                      controllers.sections.templates.SaveTemplateController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
+POST       /trader/:ern/draft/:draftId/templates/choose-save-template                      controllers.sections.templates.SaveTemplateController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)

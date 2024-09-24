@@ -49,7 +49,7 @@ class CheckYourAnswersImportController @Inject()(override val messagesApi: Messa
             Ok(view(
               ern,
               draftId,
-              checkYourAnswersImportHelper.summaryList
+              checkYourAnswersImportHelper.summaryList()
             ))
         }
     }

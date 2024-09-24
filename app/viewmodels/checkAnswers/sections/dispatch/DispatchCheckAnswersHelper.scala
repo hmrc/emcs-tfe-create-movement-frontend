@@ -25,12 +25,20 @@ import javax.inject.Inject
 
 class DispatchCheckAnswersHelper @Inject()(dispatchWarehouseExciseSummary: DispatchWarehouseExciseSummary) {
 
-  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
-    SummaryListViewModel(
+  def summaryList(asCard: Boolean = false)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+
+    val summary = SummaryListViewModel(
       rows = Seq(
         DispatchUseConsignorDetailsSummary.row(),
         dispatchWarehouseExciseSummary.row(),
         Some(DispatchAddressSummary.row())
       ).flatten
-    ).withCssClass("govuk-!-margin-bottom-9")
+    )
+
+    if(asCard) {
+      summary.withCard(CardViewModel(messages("checkYourAnswers.dispatch.cardTitle"), 2, None))
+    } else {
+      summary.withCssClass("govuk-!-margin-bottom-9")
+    }
+  }
 }

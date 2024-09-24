@@ -201,9 +201,28 @@ draftMovement.section.documents.documents = Documents
 draftMovement.section.submit = Submit
 draftMovement.section.submit.reviewAndSubmit = Review and submit
 
-checkYourAnswers.title = Check your answers before submitting your movement
-checkYourAnswers.heading = Check your answers before submitting your movement
-checkYourAnswers.submit.button = Submit movement
+checkYourAnswers.title = Check your answers
+checkYourAnswers.heading = Check your answers
+checkYourAnswers.info.cardTitle = Movement information
+checkYourAnswers.consignor.cardTitle = Consignor
+checkYourAnswers.dispatch.cardTitle = Place of dispatch
+checkYourAnswers.import.cardTitle = Import
+checkYourAnswers.consignee.cardTitle = Consignee
+checkYourAnswers.destination.cardTitle = Place of destination
+checkYourAnswers.export.cardTitle = Export
+checkYourAnswers.guarantor.cardTitle = Guarantor
+checkYourAnswers.journeyType.cardTitle = Journey type
+checkYourAnswers.transportArranger.cardTitle = Transport arranger
+checkYourAnswers.firstTransporter.cardTitle = First transporter
+checkYourAnswers.transportUnits.cardTitle = Transport units
+checkYourAnswers.transportUnits.key = Transport unit {0}
+checkYourAnswers.items.cardTitle = Items
+checkYourAnswers.sad.cardTitle = Single Administrative Document(s) (SAD)
+checkYourAnswers.sad.key = SAD number {0}
+checkYourAnswers.documents.cardTitle = Documents
+checkYourAnswers.documents.key = Document {0}
+checkYourAnswers.documents.noDocuments = No documents
+checkYourAnswers.submit.button = Confirm answers
 
 deferredMovement.title = Is this a deferred movement?
 deferredMovement.heading = Is this a deferred movement?
@@ -1073,7 +1092,6 @@ sadRemoveDocument.title = Are you sure you want to remove this Single Administra
 sadRemoveDocument.heading = Are you sure you want to remove this Single Administrative Document (SAD) number?
 sadRemoveDocument.error.required = Select yes if you want to remove this Single Administrative Document
 
-#TODO: Waiting on wording confirmation from Lexi
 goodsType.W.singular = wine
 goodsType.W.plural = wines
 goodsType.B.singular = beer

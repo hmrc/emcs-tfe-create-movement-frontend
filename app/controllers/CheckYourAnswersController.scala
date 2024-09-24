@@ -16,17 +16,17 @@
 
 package controllers
 
-import config.SessionKeys.SUBMISSION_RECEIPT_REFERENCE
 import controllers.actions._
 import models.NormalMode
 import navigation.Navigator
 import pages.CheckAnswersPage
+import pages.sections.info.DeferredMovementPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import viewmodels.helpers.ItemsAddToListHelper
 import views.html.CheckYourAnswersView
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class CheckYourAnswersController @Inject()(override val messagesApi: MessagesApi,
                                            override val auth: AuthAction,
@@ -34,20 +34,25 @@ class CheckYourAnswersController @Inject()(override val messagesApi: MessagesApi
                                            override val requireData: DataRequiredAction,
                                            val controllerComponents: MessagesControllerComponents,
                                            val navigator: Navigator,
-                                           view: CheckYourAnswersView
+                                           view: CheckYourAnswersView,
+                                           itemsAddToListHelper: ItemsAddToListHelper
                                           ) extends BaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      Future.successful(Ok(view(
-        routes.CheckYourAnswersController.onSubmit(ern, draftId)
-      )))
+      withAnswerAsync(DeferredMovementPage(isOnPreDraftFlow = false)) { isDeferred =>
+        itemsAddToListHelper.finalCyaSummary.map { itemsSummary =>
+          Ok(view(
+            routes.CheckYourAnswersController.onSubmit(ern, draftId),
+            isDeferred,
+            itemsSummary
+          ))
+        }
+      }
     }
 
   def onSubmit(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequest(ern, draftId) { implicit request =>
-      //TODO: Add Call to Submission Service and replace `PLACEHOLDER` with receipt from Downstream
       Redirect(navigator.nextPage(CheckAnswersPage, NormalMode, request.userAnswers))
-        .addingToSession(SUBMISSION_RECEIPT_REFERENCE -> "PLACEHOLDER")
     }
 }

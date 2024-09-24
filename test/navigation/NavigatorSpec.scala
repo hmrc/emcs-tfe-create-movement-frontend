@@ -38,10 +38,10 @@ class NavigatorSpec extends SpecBase {
 
       "for the CheckYourAnswers page" - {
 
-        "must go to the Confirmation page" in {
+        "must go to the Declaration page" in {
 
           navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            routes.ConfirmationController.onPageLoad(testErn, testDraftId)
+            routes.DeclarationController.onPageLoad(testErn, testDraftId)
         }
       }
       "for the Declaration page" - {

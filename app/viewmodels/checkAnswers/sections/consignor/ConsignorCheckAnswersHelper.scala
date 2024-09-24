@@ -25,14 +25,21 @@ import javax.inject.Inject
 
 class ConsignorCheckAnswersHelper @Inject()() {
 
-  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
-    SummaryListViewModel(
+  def summaryList(asCard: Boolean = false)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+
+    val summary = SummaryListViewModel(
       rows = Seq(
         ConsignorERNSummary.row,
         ConsignorPaidTemporaryAuthorisationCodeSummary.row,
         ConsignorAddressSummary.row
       ).flatten
-    ).withCssClass("govuk-!-margin-bottom-9")
+    )
+
+    if(asCard) {
+      summary.withCard(CardViewModel(messages("checkYourAnswers.consignor.cardTitle"), 2, None))
+    } else {
+      summary.withCssClass("govuk-!-margin-bottom-9")
+    }
   }
 
 }

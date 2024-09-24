@@ -24,6 +24,8 @@ import org.scalamock.scalatest.MockFactory
 import pages.sections.journeyType._
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import viewmodels.govuk.all.CardViewModel
 import viewmodels.helpers.CheckYourAnswersJourneyTypeHelper
 
 class JourneyTypeCheckAnswersHelperSpec extends SpecBase with MockFactory {
@@ -37,29 +39,53 @@ class JourneyTypeCheckAnswersHelperSpec extends SpecBase with MockFactory {
   }
 
   "summaryList" - {
-        "must render three rows" - {
-          s"when Journey Type has Hours of value is 12" in new Test {
-            implicit val request: DataRequest[_] = dataRequest(
-              FakeRequest(),
-              emptyUserAnswers
-                .set(GiveInformationOtherTransportPage, "true")
-                .set(HowMovementTransportedPage, AirTransport)
-                .set(JourneyTimeHoursPage, hours)
-            )
-            helper.summaryList()(request, msgs).rows.length mustBe 3
-          }
-        }
-        "must render three rows" - {
-          s"when Journey Type Days value is 2" in new Test {
-            implicit val request: DataRequest[_] = dataRequest(
-              FakeRequest(),
-              emptyUserAnswers
-                .set(GiveInformationOtherTransportPage, "true")
-                .set(HowMovementTransportedPage, AirTransport)
-                .set(JourneyTimeDaysPage, days)
-            )
-            helper.summaryList()(request, msgs).rows.length mustBe 3
-          }
-        }
+    "must render three rows" - {
+      s"when Journey Type has Hours of value is 12" in new Test {
+        implicit val request: DataRequest[_] = dataRequest(
+          FakeRequest(),
+          emptyUserAnswers
+            .set(GiveInformationOtherTransportPage, "true")
+            .set(HowMovementTransportedPage, AirTransport)
+            .set(JourneyTimeHoursPage, hours)
+        )
+        helper.summaryList()(request, msgs).rows.length mustBe 3
+      }
+    }
+    "must render three rows" - {
+      s"when Journey Type Days value is 2" in new Test {
+        implicit val request: DataRequest[_] = dataRequest(
+          FakeRequest(),
+          emptyUserAnswers
+            .set(GiveInformationOtherTransportPage, "true")
+            .set(HowMovementTransportedPage, AirTransport)
+            .set(JourneyTimeDaysPage, days)
+        )
+        helper.summaryList()(request, msgs).rows.length mustBe 3
+      }
+    }
+    "must render card layout" - {
+      s"when asCard is true" in new Test {
+        implicit val request: DataRequest[_] = dataRequest(
+          FakeRequest(),
+          emptyUserAnswers
+            .set(GiveInformationOtherTransportPage, "true")
+            .set(HowMovementTransportedPage, AirTransport)
+            .set(JourneyTimeDaysPage, days)
+        )
+        helper.summaryList(asCard = true)(request, msgs) mustBe SummaryList(
+          rows = Seq(
+            HowMovementTransportedSummary.row(),
+            GiveInformationOtherTransportSummary.row(),
+            JourneyTimeDaysSummary.row(),
+            JourneyTimeHoursSummary.row()
+          ).flatten,
+          card = Some(CardViewModel(
+            title = "Journey type",
+            headingLevel = 2,
+            actions = None
+          ))
+        )
+      }
+    }
   }
 }

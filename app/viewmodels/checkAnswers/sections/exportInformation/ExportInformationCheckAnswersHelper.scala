@@ -25,10 +25,17 @@ import javax.inject.Inject
 
 class ExportInformationCheckAnswersHelper @Inject()(exportCustomsOfficeSummary: ExportCustomsOfficeSummary) {
 
-  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
-    SummaryListViewModel(
+  def summaryList(asCard: Boolean = false)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+    val summary = SummaryListViewModel(
       rows = Seq(
         exportCustomsOfficeSummary.row(showActionLinks = true)
       ).flatten
-    ).withCssClass("govuk-!-margin-bottom-9")
+    )
+
+    if(asCard) {
+      summary.withCard(CardViewModel(messages("checkYourAnswers.export.cardTitle"), 2, None))
+    } else {
+      summary.withCssClass("govuk-!-margin-bottom-9")
+    }
+  }
 }

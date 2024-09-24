@@ -25,6 +25,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.checkAnswers.sections.importInformation.ImportCustomsOfficeCodeSummary
+import viewmodels.govuk.all.CardViewModel
 
 class CheckAnswersImportHelperSpec extends SpecBase {
 
@@ -38,19 +39,35 @@ class CheckAnswersImportHelperSpec extends SpecBase {
 
   "CheckAnswersConsigneeHelper" - {
 
-    ".buildSummaryRows should return the correct rows when" - {
+    ".buildSummaryRows" - {
 
+      "should return the correct rows" - {
 
-      "given a customs office import code" - new Setup() {
+        "when rendering as a card" in new Setup() {
 
+          val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
+            importCustomsOfficeCodeSummary.row(true)(fakeDataRequest, msgs),
+          ).flatten
 
-        val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          importCustomsOfficeCodeSummary.row(true)(fakeDataRequest, msgs),
-        ).flatten
+          checkAnswersImportHelper.summaryList(asCard = true) mustBe SummaryList(
+            rows = expectedSummaryListRows,
+            card = Some(CardViewModel(
+              title = "Import",
+              headingLevel = 2,
+              actions = None
+            ))
+          )
+        }
 
-        checkAnswersImportHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
+        "when given a customs office import code" in new Setup() {
+
+          val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
+            importCustomsOfficeCodeSummary.row(true)(fakeDataRequest, msgs),
+          ).flatten
+
+          checkAnswersImportHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
+        }
       }
     }
-
   }
 }

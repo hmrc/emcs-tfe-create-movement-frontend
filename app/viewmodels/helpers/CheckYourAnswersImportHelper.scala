@@ -26,12 +26,14 @@ import javax.inject.Inject
 
 class CheckYourAnswersImportHelper @Inject()(importCustomsOfficeCodeSummary: ImportCustomsOfficeCodeSummary) {
 
-  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
-    SummaryListViewModel(
+  def summaryList(asCard: Boolean = false)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+    val summary = SummaryListViewModel(
       rows = Seq(
         importCustomsOfficeCodeSummary.row(showActionLinks = true)
       ).flatten
     )
+
+    if(!asCard) summary else summary.withCard(CardViewModel(messages("checkYourAnswers.import.cardTitle"), 2, None))
   }
 
 }

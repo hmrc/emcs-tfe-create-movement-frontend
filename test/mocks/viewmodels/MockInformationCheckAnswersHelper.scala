@@ -17,7 +17,7 @@
 package mocks.viewmodels
 
 import models.requests.DataRequest
-import org.scalamock.handlers.CallHandler3
+import org.scalamock.handlers.CallHandler4
 import org.scalamock.scalatest.MockFactory
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
@@ -29,8 +29,8 @@ trait MockInformationCheckAnswersHelper extends MockFactory {
 
   object MockCheckAnswersJourneyTypeHelper {
 
-    def summaryList(deferredMovement: Boolean): CallHandler3[Boolean, DataRequest[_], Messages, SummaryList] =
-      (MockInformationCheckAnswersHelper.summaryList(_: Boolean)(_: DataRequest[_], _: Messages))
-        .expects(deferredMovement, *, *)
+    def summaryList(deferredMovement: Boolean): CallHandler4[Boolean, Boolean, DataRequest[_], Messages, SummaryList] =
+      (MockInformationCheckAnswersHelper.summaryList(_: Boolean, _: Boolean)(_: DataRequest[_], _: Messages))
+        .expects(deferredMovement, *, *, *)
   }
 }

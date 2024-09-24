@@ -15,25 +15,27 @@
  *@
 
 @import models.requests.DataRequest
+@import viewmodels.helpers.FinalCheckYourAnswersHelper
 
 @this(
         layout: templates.Layout,
         govukSummaryList: GovukSummaryList,
         formHelper: FormWithCSRF,
         h1: components.h1,
-        saveAndContinue: components.saveAndContinue
+        h2: components.h2,
+        saveAndContinue: components.saveAndContinue,
+        helper: FinalCheckYourAnswersHelper
 )
 
-@(submitAction: Call)(implicit request: DataRequest[_], messages: Messages)
+@(submitAction: Call, deferredMovement: Boolean, itemsSummary: Option[SummaryList])(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(submitAction) {
 
-     @h1("checkYourAnswers.heading", Some(messages("lrn.subHeading", request.draftId)), "govuk-heading-l")
+     @h1("checkYourAnswers.heading", Some(messages("draftMovement.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
 
-     @* TODO: implement this in future story *@
-     @govukSummaryList(SummaryList(Seq.empty))
+     @helper.cya(deferredMovement, itemsSummary)
 
      @saveAndContinue("checkYourAnswers.submit.button")
 

@@ -62,6 +62,23 @@ class ConsignorCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures 
 
         checkAnswersHelper.summaryList() mustBe expectedResult
       }
+
+      "should render as card layout when asCard is 'true'" in new Setup(baseUserAnswers) {
+
+        val expectedResult: SummaryList = SummaryList(
+          Seq(
+            ConsignorERNSummary.row,
+            ConsignorAddressSummary.row,
+          ).flatten,
+          card = Some(CardViewModel(
+            title = "Consignor",
+            headingLevel = 2,
+            actions = None
+          ))
+        )
+
+        checkAnswersHelper.summaryList(asCard = true) mustBe expectedResult
+      }
     }
   }
 

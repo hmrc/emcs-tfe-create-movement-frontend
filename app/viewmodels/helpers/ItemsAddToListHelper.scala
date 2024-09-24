@@ -18,11 +18,11 @@ package viewmodels.helpers
 
 import controllers.sections.items.routes
 import models.requests.{CnCodeInformationItem, DataRequest}
-import models.sections.items.ItemsAddToListItemModel
+import models.sections.items.{ItemPackagingCYA, ItemsAddToListItemModel}
 import models.{Index, NormalMode}
-import pages.sections.items.{ItemBulkPackagingChoicePage, ItemCommodityCodePage, ItemExciseProductCodePage, ItemsSectionItem}
+import pages.sections.items._
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
 import queries.{ItemsCount, ItemsPackagingCount}
 import services.GetCnCodeInformationService
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -43,7 +43,8 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
                                      cnCodeInformationService: GetCnCodeInformationService,
                                      itemPackagingSummary: ItemPackagingSummary,
                                      itemQuantitySummary: ItemQuantitySummary,
-                                     tagHelper: TagHelper) extends TagFluency with Logging {
+                                     tagHelper: TagHelper,
+                                     list: views.html.components.list) extends TagFluency with Logging {
 
   private val headingLevel = 2
 
@@ -53,14 +54,62 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
       case items => itemsWithUnitOfMeasure(items).map(_.map(summaryList))
     }
 
+  def finalCyaSummary()
+                     (implicit request: DataRequest[_], messages: Messages, headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Option[SummaryList]] =
+    itemsWithUnitOfMeasure(getAddedItems).map {
+      case Nil => None
+      case items =>
+        Some(SummaryListViewModel(
+          rows = items.flatMap { item =>
+            for {
+              quantity <- ItemQuantityPage(item.idx).value
+              unitOfMeasure <- item.unitOfMeasure
+            } yield {
+              SummaryListRow(
+                key = Key(Text(s"$quantity ${messages(s"unitOfMeasure.$unitOfMeasure.short")} of ${item.goodsType.toSingularOutput}")),
+                value = Value(HtmlContent(
+                  ItemBulkPackagingSelectPage(item.idx).value.fold(
+                    list(packagingForItem(item.idx).map { packaging =>
+                      Html(messages("itemsAddToList.packagesCyaValue", packaging.quantity, packaging.packagingType.description))
+                    })
+                  )(bulkPackage => Html(bulkPackage.description))
+                ))
+              )
+            }
+          }
+        ).withCard(CardViewModel(messages("checkYourAnswers.items.cardTitle"), 2, Some(
+          Actions(items = Seq(
+            ActionItemViewModel(
+              href = controllers.sections.items.routes.ItemsAddToListController.onPageLoad(request.ern, request.draftId).url,
+              content = Text(messages("site.change")),
+              id = "changeItems"
+            )
+          ))
+        ))))
+    }
+
+  private def packagingForItem(itemIndex: Index)(implicit request: DataRequest[_]): Seq[ItemPackagingCYA] =
+    request.userAnswers.getCount(ItemsPackagingCount(itemIndex)).fold[Seq[ItemPackagingCYA]](Seq()) { count =>
+      (0 until count).flatMap { packageIdx =>
+        for {
+          packageQuantity <- ItemPackagingQuantityPage(itemIndex, packageIdx).value
+          packagingType <- ItemSelectPackagingPage(itemIndex, packageIdx).value
+        } yield {
+          ItemPackagingCYA(packageQuantity, packagingType)
+        }
+      }
+    }
+
   private def itemsWithUnitOfMeasure(items: Seq[ItemsAddToListItemModel])
                                     (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Seq[ItemsAddToListItemModel]] =
-    cnCodeInformationService.getCnCodeInformation(CnCodeInformationItem(items).distinct).map { response =>
-      items.map { item =>
-        item.copy(unitOfMeasure = response.collectFirst {
-          case (cnItem, cnInfo) if cnItem.productCode == item.exciseProductCode && item.commodityCode.contains(cnItem.cnCode) =>
-            cnInfo.unitOfMeasure
-        })
+    if(items.isEmpty) Future.successful(items) else {
+      cnCodeInformationService.getCnCodeInformation(CnCodeInformationItem(items).distinct).map { response =>
+        items.map { item =>
+          item.copy(unitOfMeasure = response.collectFirst {
+            case (cnItem, cnInfo) if cnItem.productCode == item.exciseProductCode && item.commodityCode.contains(cnItem.cnCode) =>
+              cnInfo.unitOfMeasure
+          })
+        }
       }
     }
 

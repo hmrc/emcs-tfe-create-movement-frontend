@@ -42,12 +42,14 @@ class CheckYourAnswersViewSpec extends SpecBase with ViewBehaviours {
        lazy val view = app.injector.instanceOf[CheckYourAnswersView]
 
         implicit val doc: Document = Jsoup.parse(view(
-          controllers.routes.CheckYourAnswersController.onSubmit(testErn, testDraftId)
+          controllers.routes.CheckYourAnswersController.onSubmit(testErn, testDraftId),
+          false,
+          None
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
-          Selectors.h2(1) -> messagesForLanguage.lrnSubheading(testDraftId),
+          Selectors.h2(1) -> messagesForLanguage.draftMovementSection,
           Selectors.h1 -> messagesForLanguage.heading
         ))
       }

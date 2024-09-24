@@ -28,6 +28,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.sad._
+import viewmodels.govuk.all.{ActionItemViewModel, CardViewModel, SummaryListRowViewModel}
 import views.html.components.link
 
 class SadAddToListHelperSpec extends SpecBase {
@@ -36,86 +37,160 @@ class SadAddToListHelperSpec extends SpecBase {
 
   class Setup(userAnswers: UserAnswers = emptyUserAnswers) {
     implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
-
     lazy val helper: SadAddToListHelper = app.injector.instanceOf[SadAddToListHelper]
   }
 
   "SadAddToListHelper" - {
+
     Seq(SadAddToListMessages.English).foreach { msg =>
-      "return nothing" - {
-        s"when no answers specified for '${msg.lang.code}'" in new Setup() {
-          implicit val msgs: Messages = messages(Seq(msg.lang))
 
-          helper.allSadSummary() mustBe Nil
+      s"when rendered in language code of '${msg.lang.code}'" - {
+
+        implicit lazy val msgs: Messages = messages(Seq(msg.lang))
+
+        ".allSadSummary()" - {
+
+          "return nothing" - {
+            s"when no answers specified for" in new Setup() {
+              helper.allSadSummary() mustBe Nil
+            }
+          }
+
+          "return required rows when all answers filled out" - {
+
+            s"when all answers entered and single Sad" in new Setup(
+              emptyUserAnswers
+                .set(ImportNumberPage(testIndex1), "wee")) {
+
+              helper.allSadSummary() mustBe Seq(
+                SummaryList(
+                  card = Some(Card(
+                    title = Some(CardTitle(Text(msg.sad1))),
+                    actions = Some(Actions(items = Seq(
+                      ActionItem(
+                        href = sadRoutes.SadRemoveDocumentController.onPageLoad(testErn, testDraftId, testIndex1).url,
+                        content = Text(msg.remove),
+                        visuallyHiddenText = Some(msg.sad1),
+                        attributes = Map("id" -> "removeSad1")
+                      )
+                    ))))),
+                  rows = Seq(
+                    ImportNumberSummary.row(testIndex1).get
+                  )
+                )
+              )
+            }
+
+            s"when all answers entered and multiple Sads" in new Setup(emptyUserAnswers
+              .set(ImportNumberPage(testIndex1), "wee")
+              .set(ImportNumberPage(testIndex2), "wee2")) {
+
+              helper.allSadSummary() mustBe Seq(
+                SummaryList(
+                  card = Some(Card(
+                    title = Some(CardTitle(Text(msg.sad1))),
+                    actions = Some(Actions(items = Seq(
+                      ActionItem(
+                        href = sadRoutes.SadRemoveDocumentController.onPageLoad(testErn, testDraftId, testIndex1).url,
+                        content = Text(msg.remove),
+                        visuallyHiddenText = Some(msg.sad1),
+                        attributes = Map("id" -> "removeSad1")
+                      )
+                    ))))),
+                  rows = Seq(
+                    ImportNumberSummary.row(testIndex1).get
+                  )
+                ),
+                SummaryList(
+                  card = Some(Card(
+                    title = Some(CardTitle(Text(msg.sad2))),
+                    actions = Some(Actions(items = Seq(
+                      ActionItem(
+                        href = sadRoutes.SadRemoveDocumentController.onPageLoad(testErn, testDraftId, testIndex2).url,
+                        content = Text(msg.remove),
+                        visuallyHiddenText = Some(msg.sad2),
+                        attributes = Map("id" -> "removeSad2")
+                      )
+                    ))))),
+                  rows = Seq(
+                    ImportNumberSummary.row(testIndex2).get
+                  )
+                )
+              )
+            }
+          }
+        }
+
+        ".finalCyaSummary()" - {
+
+          "return nothing" - {
+            s"when no answers specified for" in new Setup() {
+              helper.finalCyaSummary() mustBe None
+            }
+          }
+
+          "return required rows when all answers filled out" - {
+
+            s"when all answers entered and single Sad" in new Setup(emptyUserAnswers
+              .set(ImportNumberPage(testIndex1), "wee")
+            ) {
+
+              helper.finalCyaSummary() mustBe Some(
+                SummaryList(
+                  card = Some(CardViewModel(
+                    title = msg.finalCyaCardTitle,
+                    actions = Some(Actions(items = Seq(
+                      ActionItemViewModel(
+                        href = sadRoutes.SadAddToListController.onPageLoad(testErn, testDraftId).url,
+                        content = Text(msg.change),
+                        id = "changeSAD"
+                      )
+                    ))),
+                    headingLevel = 2
+                  )),
+                  rows = Seq(
+                    SummaryListRowViewModel(
+                      Key(Text(msg.finalCyaKey(1))),
+                      Value(Text("wee"))
+                    )
+                  )
+                )
+              )
+            }
+
+            s"when all answers entered and multiple Sads" in new Setup(emptyUserAnswers
+              .set(ImportNumberPage(testIndex1), "wee")
+              .set(ImportNumberPage(testIndex2), "wee2")) {
+
+              helper.finalCyaSummary() mustBe Some(
+                SummaryList(
+                  card = Some(CardViewModel(
+                    title = msg.finalCyaCardTitle,
+                    actions = Some(Actions(items = Seq(
+                      ActionItemViewModel(
+                        href = sadRoutes.SadAddToListController.onPageLoad(testErn, testDraftId).url,
+                        content = Text(msg.change),
+                        id = "changeSAD"
+                      )
+                    ))),
+                    headingLevel = 2
+                  )),
+                  rows = Seq(
+                    SummaryListRowViewModel(
+                      Key(Text(msg.finalCyaKey(1))),
+                      Value(Text("wee"))
+                    ),
+                    SummaryListRowViewModel(
+                      Key(Text(msg.finalCyaKey(2))),
+                      Value(Text("wee2"))
+                    )
+                  )
+                )
+              )
+            }
+          }
         }
       }
-      "return required rows when all answers filled out" - {
-
-        s"when all answers entered '${msg.lang.code}' and single Sad" in new Setup(
-          emptyUserAnswers
-            .set(ImportNumberPage(testIndex1), "wee")) {
-          implicit lazy val msgs: Messages = messages(Seq(msg.lang))
-
-          helper.allSadSummary() mustBe Seq(
-            SummaryList(
-              card = Some(Card(
-                title = Some(CardTitle(Text(msg.sad1))),
-                actions = Some(Actions(items = Seq(
-                  ActionItem(
-                    href = sadRoutes.SadRemoveDocumentController.onPageLoad(testErn, testDraftId, testIndex1).url,
-                    content = Text(msg.remove),
-                    visuallyHiddenText = Some(msg.sad1),
-                    attributes = Map("id" -> "removeSad1")
-                  )
-                ))))),
-              rows = Seq(
-                ImportNumberSummary.row(testIndex1).get
-              )
-            )
-          )
-        }
-
-        s"when all answers entered '${msg.lang.code}' and multiple Sads" in new Setup(emptyUserAnswers
-          .set(ImportNumberPage(testIndex1), "wee")
-          .set(ImportNumberPage(testIndex2), "wee2")) {
-          implicit lazy val msgs: Messages = messages(Seq(msg.lang))
-
-          helper.allSadSummary() mustBe Seq(
-            SummaryList(
-              card = Some(Card(
-                title = Some(CardTitle(Text(msg.sad1))),
-                actions = Some(Actions(items = Seq(
-                  ActionItem(
-                    href = sadRoutes.SadRemoveDocumentController.onPageLoad(testErn, testDraftId, testIndex1).url,
-                    content = Text(msg.remove),
-                    visuallyHiddenText = Some(msg.sad1),
-                    attributes = Map("id" -> "removeSad1")
-                  )
-                ))))),
-              rows = Seq(
-                ImportNumberSummary.row(testIndex1).get
-              )
-            ),
-            SummaryList(
-              card = Some(Card(
-                title = Some(CardTitle(Text(msg.sad2))),
-                actions = Some(Actions(items = Seq(
-                  ActionItem(
-                    href = sadRoutes.SadRemoveDocumentController.onPageLoad(testErn, testDraftId, testIndex2).url,
-                    content = Text(msg.remove),
-                    visuallyHiddenText = Some(msg.sad2),
-                    attributes = Map("id" -> "removeSad2")
-                  )
-                ))))),
-              rows = Seq(
-                ImportNumberSummary.row(testIndex2).get
-              )
-            )
-          )
-        }
-      }
-
     }
   }
-
 }

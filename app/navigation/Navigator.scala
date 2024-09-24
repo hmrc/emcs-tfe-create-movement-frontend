@@ -28,7 +28,7 @@ class Navigator @Inject()() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case CheckAnswersPage =>
-      (userAnswers: UserAnswers) => routes.ConfirmationController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      (userAnswers: UserAnswers) => routes.DeclarationController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case DeclarationPage =>
       (userAnswers: UserAnswers) => routes.ConfirmationController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case _ =>

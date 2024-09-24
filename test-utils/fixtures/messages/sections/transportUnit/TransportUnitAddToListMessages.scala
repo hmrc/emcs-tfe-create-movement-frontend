@@ -48,6 +48,10 @@ object TransportUnitAddToListMessages {
     val transportUnitGiveMoreInformationMessages: BaseMessages
     val transportUnitIdentityMessages: BaseMessages
     val transportUnitTypeMessages: BaseMessages
+
+    val finalCyaCardTitle = "Transport units"
+    val finalCyaKey: Int => String = "Transport unit " + _
+    def finalCyaValue(transportUnit: String, id: String): String = s"$transportUnit ($id)"
   }
 
   object English extends ViewMessages with BaseEnglish {

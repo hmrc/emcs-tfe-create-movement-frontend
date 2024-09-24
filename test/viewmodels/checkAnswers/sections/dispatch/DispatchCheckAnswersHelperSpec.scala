@@ -25,7 +25,7 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.govuk.all.FluentSummaryList
+import viewmodels.govuk.all.{CardViewModel, FluentSummaryList, SummaryListViewModel}
 
 class DispatchCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures {
 
@@ -54,6 +54,28 @@ class DispatchCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures {
 
 
         dispatchCheckAnswersSummary.summaryList() mustBe expectedResult
+      }
+
+      "should render as card layout when asCard is 'true'" in new Setup(emptyUserAnswers
+        .set(DispatchWarehouseExcisePage, testErn)
+        .set(DispatchUseConsignorDetailsPage, false)
+        .set(DispatchAddressPage, userAddressModelMax)
+      ) {
+
+        val expectedResult: SummaryList = SummaryListViewModel(
+          Seq(
+          DispatchUseConsignorDetailsSummary.row()(fakeDataRequest, msgs),
+          dispatchWarehouseExciseSummary.row()(fakeDataRequest, msgs),
+          Some(DispatchAddressSummary.row()(fakeDataRequest, msgs))
+        ).flatten,
+          card = Some(CardViewModel(
+            title = "Place of dispatch",
+            headingLevel = 2,
+            actions = None
+          ))
+        )
+
+        dispatchCheckAnswersSummary.summaryList(asCard = true) mustBe expectedResult
       }
     }
   }

@@ -22,7 +22,7 @@ import fixtures.messages.sections.transportUnit.TransportUnitAddToListMessages
 import models.{NormalMode, UserAnswers}
 import models.requests.DataRequest
 import models.sections.transportUnit.TransportSealTypeModel
-import models.sections.transportUnit.TransportUnitType.{Container, FixedTransport, Tractor}
+import models.sections.transportUnit.TransportUnitType.{Container, FixedTransport, Tractor, Trailer}
 import pages.sections.transportUnit._
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
@@ -31,6 +31,7 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.transportUnit._
+import viewmodels.govuk.all.{ActionItemViewModel, CardViewModel, ValueViewModel}
 import views.html.components.{link, span, tag}
 
 class TransportUnitsAddToListHelperSpec extends SpecBase {
@@ -46,152 +47,240 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
   }
 
   "TransportUnitsAddToListHelper" - {
+
     Seq(TransportUnitAddToListMessages.English).foreach { msg =>
-      "return nothing" - {
-        s"when no answers specified for '${msg.lang.code}'" in new Setup() {
-          implicit val msgs: Messages = messages(Seq(msg.lang))
 
-          helper.allTransportUnitsSummary() mustBe Nil
-        }
-      }
-      "return required rows when all answers filled out" - {
+      implicit lazy val msgs: Messages = messages(Seq(msg.lang))
 
-        s"when all answers entered '${msg.lang.code}' and single transport units" in new Setup(
-          emptyUserAnswers
-            .set(TransportUnitTypePage(testIndex1), Tractor)
-            .set(TransportUnitIdentityPage(testIndex1), "wee")
-            .set(TransportSealChoicePage(testIndex1), true)
-            .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal Type", Some("more seal info")))
-            .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
-            .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information for transport unit"))) {
-          implicit lazy val msgs: Messages = messages(Seq(msg.lang))
+      s"when rendering in language code of '${msg.lang.code}'" - {
 
-          helper.allTransportUnitsSummary() mustBe Seq(
-            SummaryList(
-              card = Some(Card(
-                title = Some(CardTitle(Text(msg.transportUnit1))),
-                actions = Some(Actions(items = Seq(
-                  ActionItem(
-                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
-                    content = Text(msg.remove),
-                    visuallyHiddenText = Some(msg.transportUnit1),
-                    attributes = Map("id" -> "removeTransportUnit1")
-                  )
-                ))))),
-              rows = Seq(
-                TransportUnitTypeSummary.row(testIndex1, true).get,
-                TransportUnitIdentitySummary.row(testIndex1, true).get,
-                TransportSealChoiceSummary.row(testIndex1, true).get,
-                TransportSealTypeSummary.row(testIndex1, true).get,
-                TransportSealInformationSummary.row(testIndex1, true).get,
-                TransportUnitGiveMoreInformationSummary.row(testIndex1, true).get
-              )
-            )
-          )
-        }
+        ".allTransportUnitsSummary()" - {
 
-        s"when incomplete answers entered '${msg.lang.code}' for container unit type" in new Setup(
-          emptyUserAnswers
-            .set(TransportUnitTypePage(testIndex1), Container)
-            .set(TransportUnitIdentityPage(testIndex1), "1234")) {
-          implicit lazy val msgs: Messages = messages(Seq(msg.lang))
+          "return nothing" - {
+            s"when no answers specified for" in new Setup() {
+              helper.allTransportUnitsSummary() mustBe Nil
+            }
+          }
+          "return required rows when all answers filled out" - {
 
-          helper.allTransportUnitsSummary() mustBe Seq(
-            SummaryList(
-              card = Some(Card(
-                title = Some(
-                  CardTitle(
-                    HtmlContent(HtmlFormat.fill(
-                      Seq(
-                        span(msg.transportUnit1, Some("govuk-!-margin-right-2")),
-                        tag(
-                          message = "Incomplete",
-                          colour = "red"
-                        )
+            s"when all answers entered and single transport units" in new Setup(
+              emptyUserAnswers
+                .set(TransportUnitTypePage(testIndex1), Tractor)
+                .set(TransportUnitIdentityPage(testIndex1), "wee")
+                .set(TransportSealChoicePage(testIndex1), true)
+                .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal Type", Some("more seal info")))
+                .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
+                .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information for transport unit"))) {
+
+              helper.allTransportUnitsSummary() mustBe Seq(
+                SummaryList(
+                  card = Some(Card(
+                    title = Some(CardTitle(Text(msg.transportUnit1))),
+                    actions = Some(Actions(items = Seq(
+                      ActionItem(
+                        href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
+                        content = Text(msg.remove),
+                        visuallyHiddenText = Some(msg.transportUnit1),
+                        attributes = Map("id" -> "removeTransportUnit1")
                       )
-                    ))
+                    ))))),
+                  rows = Seq(
+                    TransportUnitTypeSummary.row(testIndex1, true).get,
+                    TransportUnitIdentitySummary.row(testIndex1, true).get,
+                    TransportSealChoiceSummary.row(testIndex1, true).get,
+                    TransportSealTypeSummary.row(testIndex1, true).get,
+                    TransportSealInformationSummary.row(testIndex1, true).get,
+                    TransportUnitGiveMoreInformationSummary.row(testIndex1, true).get
+                  )
+                )
+              )
+            }
+
+            s"when incomplete answers entered for container unit type" in new Setup(
+              emptyUserAnswers
+                .set(TransportUnitTypePage(testIndex1), Container)
+                .set(TransportUnitIdentityPage(testIndex1), "1234")) {
+
+              helper.allTransportUnitsSummary() mustBe Seq(
+                SummaryList(
+                  card = Some(Card(
+                    title = Some(
+                      CardTitle(
+                        HtmlContent(HtmlFormat.fill(
+                          Seq(
+                            span(msg.transportUnit1, Some("govuk-!-margin-right-2")),
+                            tag(
+                              message = "Incomplete",
+                              colour = "red"
+                            )
+                          )
+                        ))
+                      )
+                    ),
+                    actions = Some(Actions(items = Seq(
+                      ActionItem(
+                        href = transportUnitRoutes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url,
+                        content = Text(msg.continueEditing),
+                        visuallyHiddenText = Some(msg.transportUnit1),
+                        attributes = Map("id" -> "editTransportUnit1")
+                      ),
+                      ActionItem(
+                        href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
+                        content = Text(msg.remove),
+                        visuallyHiddenText = Some(msg.transportUnit1),
+                        attributes = Map("id" -> "removeTransportUnit1")
+                      )
+                    ))))),
+                  rows = Seq(
+                    TransportUnitTypeSummary.row(testIndex1, false).get,
+                    TransportUnitIdentitySummary.row(testIndex1, false).get,
+                    TransportSealChoiceSummary.row(testIndex1, false).get,
+                    TransportUnitGiveMoreInformationSummary.row(testIndex1, false).get
+                  )
+                )
+              )
+            }
+
+            s"when all answers entered and multiple transport units" in new Setup(emptyUserAnswers
+              .set(TransportUnitTypePage(testIndex1), Tractor)
+              .set(TransportUnitIdentityPage(testIndex1), "wee")
+              .set(TransportSealChoicePage(testIndex1), true)
+              .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal Type", Some("more seal info")))
+              .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
+              .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information for transport unit"))
+              .set(TransportUnitTypePage(testIndex2), FixedTransport)
+              .set(TransportUnitIdentityPage(testIndex2), "wee2")
+              .set(TransportSealChoicePage(testIndex2), true)
+              .set(TransportSealTypePage(testIndex2), TransportSealTypeModel("seal Type", Some("more seal info 2")))
+              .set(TransportUnitGiveMoreInformationChoicePage(testIndex2), true)
+              .set(TransportUnitGiveMoreInformationPage(testIndex2), Some("more information for transport unit 2"))) {
+
+              helper.allTransportUnitsSummary() mustBe Seq(
+                SummaryList(
+                  card = Some(Card(
+                    title = Some(CardTitle(Text(msg.transportUnit1))),
+                    actions = Some(Actions(items = Seq(
+                      ActionItem(
+                        href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
+                        content = Text(msg.remove),
+                        visuallyHiddenText = Some(msg.transportUnit1),
+                        attributes = Map("id" -> "removeTransportUnit1")
+                      )
+                    ))))),
+                  rows = Seq(
+                    TransportUnitTypeSummary.row(testIndex1, true).get,
+                    TransportUnitIdentitySummary.row(testIndex1, true).get,
+                    TransportSealChoiceSummary.row(testIndex1, true).get,
+                    TransportSealTypeSummary.row(testIndex1, true).get,
+                    TransportSealInformationSummary.row(testIndex1, true).get,
+                    TransportUnitGiveMoreInformationSummary.row(testIndex1, true).get
                   )
                 ),
-                actions = Some(Actions(items = Seq(
-                  ActionItem(
-                    href = transportUnitRoutes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url,
-                    content = Text(msg.continueEditing),
-                    visuallyHiddenText = Some(msg.transportUnit1),
-                    attributes = Map("id" -> "editTransportUnit1")
-                  ),
-                  ActionItem(
-                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
-                    content = Text(msg.remove),
-                    visuallyHiddenText = Some(msg.transportUnit1),
-                    attributes = Map("id" -> "removeTransportUnit1")
+                SummaryList(
+                  card = Some(Card(
+                    title = Some(CardTitle(Text(msg.transportUnit2))),
+                    actions = Some(Actions(items = Seq(
+                      ActionItem(
+                        href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex2).url,
+                        content = Text(msg.remove),
+                        visuallyHiddenText = Some(msg.transportUnit2),
+                        attributes = Map("id" -> "removeTransportUnit2")
+                      )
+                    ))))),
+                  rows = Seq(
+                    TransportUnitTypeSummary.row(testIndex2, true).get
                   )
-                ))))),
-              rows = Seq(
-                TransportUnitTypeSummary.row(testIndex1, false).get,
-                TransportUnitIdentitySummary.row(testIndex1, false).get,
-                TransportSealChoiceSummary.row(testIndex1, false).get,
-                TransportUnitGiveMoreInformationSummary.row(testIndex1, false).get
+                )
               )
-            )
-          )
+            }
+          }
         }
 
-        s"when all answers entered '${msg.lang.code}' and multiple transport units" in new Setup(emptyUserAnswers
-          .set(TransportUnitTypePage(testIndex1), Tractor)
-          .set(TransportUnitIdentityPage(testIndex1), "wee")
-          .set(TransportSealChoicePage(testIndex1), true)
-          .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal Type", Some("more seal info")))
-          .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
-          .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information for transport unit"))
-          .set(TransportUnitTypePage(testIndex2), FixedTransport)
-          .set(TransportUnitIdentityPage(testIndex2), "wee2")
-          .set(TransportSealChoicePage(testIndex2), true)
-          .set(TransportSealTypePage(testIndex2), TransportSealTypeModel("seal Type", Some("more seal info 2")))
-          .set(TransportUnitGiveMoreInformationChoicePage(testIndex2), true)
-          .set(TransportUnitGiveMoreInformationPage(testIndex2), Some("more information for transport unit 2"))) {
-          implicit lazy val msgs: Messages = messages(Seq(msg.lang))
+        ".finalCyaSummary()" - {
 
-          helper.allTransportUnitsSummary() mustBe Seq(
-            SummaryList(
-              card = Some(Card(
-                title = Some(CardTitle(Text(msg.transportUnit1))),
-                actions = Some(Actions(items = Seq(
-                  ActionItem(
-                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
-                    content = Text(msg.remove),
-                    visuallyHiddenText = Some(msg.transportUnit1),
-                    attributes = Map("id" -> "removeTransportUnit1")
+          "return nothing" - {
+            s"when no answers specified for" in new Setup() {
+              helper.finalCyaSummary() mustBe None
+            }
+          }
+
+          "return required rows when all answers filled out" - {
+
+            s"single transport units" in new Setup(
+              emptyUserAnswers
+                .set(TransportUnitTypePage(testIndex1), Tractor)
+                .set(TransportUnitIdentityPage(testIndex1), "wee")
+                .set(TransportSealChoicePage(testIndex1), true)
+                .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal Type", Some("more seal info")))
+                .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
+                .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information for transport unit"))) {
+
+              helper.finalCyaSummary() mustBe Some(
+                SummaryList(
+                  card = Some(CardViewModel(
+                    title = msg.finalCyaCardTitle,
+                    actions = Some(Actions(items = Seq(
+                      ActionItemViewModel(
+                        href = transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId).url,
+                        content = Text(msg.change),
+                        id = "changeTransportUnits"
+                      )
+                    ))),
+                    headingLevel = 2
+                  )),
+                  rows = Seq(
+                    SummaryListRow(
+                      key = Key(Text(msg.finalCyaKey(1))),
+                      value = ValueViewModel(Text(msg.finalCyaValue("Tractor", "wee")))
+                    )
                   )
-                ))))),
-              rows = Seq(
-                TransportUnitTypeSummary.row(testIndex1, true).get,
-                TransportUnitIdentitySummary.row(testIndex1, true).get,
-                TransportSealChoiceSummary.row(testIndex1, true).get,
-                TransportSealTypeSummary.row(testIndex1, true).get,
-                TransportSealInformationSummary.row(testIndex1, true).get,
-                TransportUnitGiveMoreInformationSummary.row(testIndex1, true).get
+                )
               )
-            ),
-            SummaryList(
-              card = Some(Card(
-                title = Some(CardTitle(Text(msg.transportUnit2))),
-                actions = Some(Actions(items = Seq(
-                  ActionItem(
-                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex2).url,
-                    content = Text(msg.remove),
-                    visuallyHiddenText = Some(msg.transportUnit2),
-                    attributes = Map("id" -> "removeTransportUnit2")
+            }
+
+            s"multiple transport units" in new Setup(
+              emptyUserAnswers
+                .set(TransportUnitTypePage(testIndex1), Tractor)
+                .set(TransportUnitIdentityPage(testIndex1), "wee")
+                .set(TransportSealChoicePage(testIndex1), true)
+                .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal Type", Some("more seal info")))
+                .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
+                .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information for transport unit"))
+                .set(TransportUnitTypePage(testIndex2), Trailer)
+                .set(TransportUnitIdentityPage(testIndex2), "ID1234")
+                .set(TransportSealChoicePage(testIndex2), false)
+                .set(TransportUnitGiveMoreInformationChoicePage(testIndex2), false)
+            ) {
+
+              helper.finalCyaSummary() mustBe Some(
+                SummaryList(
+                  card = Some(CardViewModel(
+                    title = msg.finalCyaCardTitle,
+                    actions = Some(Actions(items = Seq(
+                      ActionItemViewModel(
+                        href = transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId).url,
+                        content = Text(msg.change),
+                        id = "changeTransportUnits"
+                      )
+                    ))),
+                    headingLevel = 2
+                  )),
+                  rows = Seq(
+                    SummaryListRow(
+                      key = Key(Text(msg.finalCyaKey(1))),
+                      value = ValueViewModel(Text(msg.finalCyaValue("Tractor", "wee")))
+                    ),
+                    SummaryListRow(
+                      key = Key(Text(msg.finalCyaKey(2))),
+                      value = ValueViewModel(Text(msg.finalCyaValue("Trailer", "ID1234")))
+                    )
                   )
-                ))))),
-              rows = Seq(
-                TransportUnitTypeSummary.row(testIndex2, true).get
+                )
               )
-            )
-          )
+            }
+          }
         }
       }
-
     }
   }
-
 }

@@ -17,7 +17,7 @@
 package mocks.viewmodels
 
 import models.requests.DataRequest
-import org.scalamock.handlers.CallHandler4
+import org.scalamock.handlers.CallHandler5
 import org.scalamock.scalatest.MockFactory
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
@@ -29,8 +29,8 @@ trait MockConsigneeCheckYourAnswersHelper extends MockFactory {
 
   object MockConsigneeCheckAnswersHelper {
 
-    def summaryList(): CallHandler4[Boolean, Boolean, DataRequest[_], Messages, SummaryList] =
-      (mockConsigneeCheckYourAnswersHelper.summaryList(_:Boolean, _:Boolean)(_: DataRequest[_], _: Messages)).expects(*, *, *, *)
+    def summaryList(): CallHandler5[Boolean, Boolean, Boolean, DataRequest[_], Messages, SummaryList] =
+      (mockConsigneeCheckYourAnswersHelper.summaryList(_: Boolean, _: Boolean, _: Boolean)(_: DataRequest[_], _: Messages)).expects(*, *, *, *, *)
   }
 
 }

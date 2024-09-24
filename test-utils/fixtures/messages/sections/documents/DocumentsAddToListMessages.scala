@@ -40,6 +40,10 @@ object DocumentsAddToListMessages {
     val no2 = "No, these are the only documents in this movement"
     val moreLater = "I will add more documents later"
     val errorRequired = "Select yes if you need to add another document"
+
+    val finalCyaCardTitle = "Documents"
+    val finalCyaNoDocuments = "No documents"
+    val finalCyaValue: Int => String = "Document " + _
   }
 
   object English extends ViewMessages with BaseEnglish

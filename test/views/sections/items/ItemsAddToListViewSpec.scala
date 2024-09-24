@@ -56,7 +56,8 @@ class ItemsAddToListViewSpec extends SpecBase
     span = app.injector.instanceOf[span],
     cnCodeInformationService = mockGetCnCodeInformationService,
     itemPackagingSummary = app.injector.instanceOf[ItemPackagingSummary],
-    itemQuantitySummary = app.injector.instanceOf[ItemQuantitySummary]
+    itemQuantitySummary = app.injector.instanceOf[ItemQuantitySummary],
+    list = app.injector.instanceOf[list]
   )
 
   object Selectors extends BaseSelectors {

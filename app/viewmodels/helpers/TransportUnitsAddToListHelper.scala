@@ -18,10 +18,13 @@ package viewmodels.helpers
 
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import models.requests.DataRequest
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.sections.transportUnit.TransportUnitType.FixedTransport
 import models.{Index, NormalMode}
+import pages.sections.journeyType.HowMovementTransportedPage
 import pages.sections.transportUnit.{TransportUnitIdentityPage, TransportUnitSection, TransportUnitTypePage}
 import play.api.i18n.Messages
+import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
 import queries.TransportUnitsCount
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -43,31 +46,43 @@ class TransportUnitsAddToListHelper @Inject()(implicit link: link, tagHelper: Ta
     }
   }
 
+  private def finalCyaChangeLink()(implicit request: DataRequest[_]): Option[Call] =
+    Option.when(
+      !(request.userAnswers.getCount(TransportUnitsCount).contains(1) &&
+        request.userAnswers.get(TransportUnitTypePage(0)).contains(FixedTransport) &&
+        request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations))
+    )(controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(request.ern, request.draftId))
+
   def finalCyaSummary()(implicit request: DataRequest[_], messages: Messages): Option[SummaryList] =
     request.userAnswers.getCount(TransportUnitsCount).map { count =>
       SummaryListViewModel(
         rows = (0 until count).flatMap { idx =>
           for {
             transportType <- TransportUnitTypePage(idx).value
-            transportId <- TransportUnitIdentityPage(idx).value
           } yield {
+            val transportId = TransportUnitIdentityPage(idx).value
             SummaryListRow(
               key = Key(Text(messages("checkYourAnswers.transportUnits.key", idx + 1))),
               value = ValueViewModel(Text(
-                s"${messages(s"transportUnitType.$transportType")} ($transportId)"
+                s"${messages(s"transportUnitType.$transportType")}${transportId.fold("")(id => s" ($id)")}"
               ))
             )
           }
         }
-      ).withCard(CardViewModel(messages("checkYourAnswers.transportUnits.cardTitle"), 2, Some(
-        Actions(items = Seq(
-          ActionItemViewModel(
-            href = controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(request.ern, request.draftId).url,
-            content = Text(messages("site.change")),
-            id = "changeTransportUnits"
+      ).withCard(
+        CardViewModel(
+          title = messages("checkYourAnswers.transportUnits.cardTitle"),
+          headingLevel = 2,
+          actions = finalCyaChangeLink.map(route =>
+            Actions(items = Seq(
+              ActionItemViewModel(
+                href = route.url,
+                content = Text(messages("site.change")),
+                id = "changeTransportUnits"
+              )
+            ))
           )
-        ))
-      )))
+      ))
     }
 
   private def summaryList(idx: Index)(implicit request: DataRequest[_], messages: Messages): SummaryList = {

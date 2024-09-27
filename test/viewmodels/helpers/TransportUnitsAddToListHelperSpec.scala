@@ -21,8 +21,10 @@ import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import fixtures.messages.sections.transportUnit.TransportUnitAddToListMessages
 import models.{NormalMode, UserAnswers}
 import models.requests.DataRequest
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.sections.transportUnit.TransportSealTypeModel
 import models.sections.transportUnit.TransportUnitType.{Container, FixedTransport, Tractor, Trailer}
+import pages.sections.journeyType.HowMovementTransportedPage
 import pages.sections.transportUnit._
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
@@ -231,11 +233,37 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                   rows = Seq(
                     SummaryListRow(
                       key = Key(Text(msg.finalCyaKey(1))),
-                      value = ValueViewModel(Text(msg.finalCyaValue("Tractor", "wee")))
+                      value = ValueViewModel(Text(msg.finalCyaValue("Tractor", Some("wee"))))
                     )
                   )
                 )
               )
+            }
+
+            s"single transport unit of fixed, and how movement transported is fixed" - {
+
+              "should have no change link on the card" in new Setup(
+                emptyUserAnswers
+                  .set(HowMovementTransportedPage, FixedTransportInstallations)
+                  .set(TransportUnitTypePage(testIndex1), FixedTransport)
+              ) {
+
+                helper.finalCyaSummary() mustBe Some(
+                  SummaryList(
+                    card = Some(CardViewModel(
+                      title = msg.finalCyaCardTitle,
+                      actions = None,
+                      headingLevel = 2
+                    )),
+                    rows = Seq(
+                      SummaryListRow(
+                        key = Key(Text(msg.finalCyaKey(1))),
+                        value = ValueViewModel(Text(msg.finalCyaValue("Fixed transport installations", None)))
+                      )
+                    )
+                  )
+                )
+              }
             }
 
             s"multiple transport units" in new Setup(
@@ -268,11 +296,11 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                   rows = Seq(
                     SummaryListRow(
                       key = Key(Text(msg.finalCyaKey(1))),
-                      value = ValueViewModel(Text(msg.finalCyaValue("Tractor", "wee")))
+                      value = ValueViewModel(Text(msg.finalCyaValue("Tractor", Some("wee"))))
                     ),
                     SummaryListRow(
                       key = Key(Text(msg.finalCyaKey(2))),
-                      value = ValueViewModel(Text(msg.finalCyaValue("Trailer", "ID1234")))
+                      value = ValueViewModel(Text(msg.finalCyaValue("Trailer", Some("ID1234"))))
                     )
                   )
                 )

@@ -1341,6 +1341,7 @@ itemSelectPackaging.select.defaultValue = Choose packaging type
 declaration.title = Declaration
 declaration.heading = Declaration
 declaration.content = By submitting this draft movement you are confirming that to the best of your knowledge, the details you are providing are correct.
+declaration.templateContent = This movement was created from a draft template. It is therefore important that all details have been checked for accuracy.
 declaration.submit = Submit draft movement
 
 itemBulkPackagingChoice.title = Is the {0} being moved in bulk?

@@ -23,6 +23,7 @@ object DeclarationMessages {
     val heading = "Declaration"
     val title: String = titleHelper(heading)
     val content = "By submitting this draft movement you are confirming that to the best of your knowledge, the details you are providing are correct."
+    val templateContent = "This movement was created from a draft template. It is therefore important that all details have been checked for accuracy."
     val submit = "Submit draft movement"
   }
 

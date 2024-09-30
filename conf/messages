@@ -1849,3 +1849,8 @@ useTemplate.no.hint = You will enter all required information. You can choose to
 useTemplate.yes = Select a saved draft template
 useTemplate.yes.hint = You can edit and reuse the movement information saved in the template.
 useTemplate.error.required = Select how you would like to create this movement
+
+saveTemplate.title = Do you want to save this draft as a template for future use?
+saveTemplate.heading = Do you want to save this draft as a template for future use?
+saveTemplate.hint = Templates allow you to edit and reuse the draft for another movement.
+saveTemplate.error.required = Select yes if you would like to save this draft as a template

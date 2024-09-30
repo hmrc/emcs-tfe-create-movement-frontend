@@ -19,8 +19,8 @@ package forms.sections.info
 import base.SpecBase
 import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.info.LocalReferenceNumberMessages
-import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
+import forms.sections.info.LocalReferenceNumberFormProvider.LRN_REGEX
 import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -55,7 +55,12 @@ class LocalReferenceNumberFormProviderSpec extends SpecBase with StringFieldBeha
         }
       }
 
-      fieldWithXSSCharacters(form, "value", FormError("value", "localReferenceNumber.deferred.error.invalid", Seq(XSS_REGEX)))
+      s"allow certain non-alphanumeric characters" in {
+        val boundForm = form.bind(Map(fieldName -> "LRN;123:BEANS/EGGS")).apply(fieldName)
+        boundForm.value mustBe Some("LRN;123:BEANS/EGGS")
+      }
+
+      fieldWithXSSCharacters(form, "value", FormError("value", "localReferenceNumber.deferred.error.invalid", Seq(LRN_REGEX)))
     }
 
     "when movement is NOT deferred (new)" - {
@@ -89,7 +94,12 @@ class LocalReferenceNumberFormProviderSpec extends SpecBase with StringFieldBeha
         }
       }
 
-      fieldWithXSSCharacters(form, "value", FormError("value", "localReferenceNumber.new.error.invalid", Seq(XSS_REGEX)))
+      s"allow certain non-alphanumeric characters" in {
+        val boundForm = form.bind(Map(fieldName -> "LRN;123:BEANS/EGGS")).apply(fieldName)
+        boundForm.value mustBe Some("LRN;123:BEANS/EGGS")
+      }
+
+      fieldWithXSSCharacters(form, "value", FormError("value", "localReferenceNumber.new.error.invalid", Seq(LRN_REGEX)))
     }
 
     "when a submission failure exists and the input is the same as the previous one" - {

@@ -18,6 +18,7 @@ package forms.sections.info
 
 import forms.XSS_REGEX
 import forms.mappings.Mappings
+import forms.sections.info.LocalReferenceNumberFormProvider.LRN_REGEX
 import models.requests.DataRequest
 import pages.sections.info.LocalReferenceNumberPage
 import play.api.data.Form
@@ -33,7 +34,7 @@ class LocalReferenceNumberFormProvider @Inject() extends Mappings {
           firstError(
             maxLength(22, errMsgForKey("length")(isDeferred)),
             isNotEqualToOptExistingAnswer(LocalReferenceNumberPage().getOriginalAttributeValue, "errors.704.lrn.input"),
-            regexpUnlessEmpty(XSS_REGEX, errMsgForKey("invalid")(isDeferred))
+            regexpUnlessEmpty(LRN_REGEX, errMsgForKey("invalid")(isDeferred))
           )
         )
     )
@@ -43,4 +44,8 @@ class LocalReferenceNumberFormProvider @Inject() extends Mappings {
     val infix = if (isDeferred) "deferred" else "new"
     s"localReferenceNumber.$infix.error.$key"
   }
+}
+
+object LocalReferenceNumberFormProvider {
+  private[info] val LRN_REGEX = XSS_REGEX.replaceAll(";:", "")
 }

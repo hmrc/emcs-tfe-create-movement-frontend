@@ -17,7 +17,6 @@
 package controllers
 
 import base.SpecBase
-import config.AppConfig
 import controllers.actions.FakeDataRetrievalAction
 import controllers.sections.templates.SaveTemplateController
 import featureswitch.core.config.{FeatureSwitching, TemplatesLink}
@@ -28,8 +27,8 @@ import navigation.FakeNavigators.FakeNavigator
 import pages.SaveTemplatePage
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
-import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Helpers}
 import views.html.SaveTemplateView
 
 class SaveTemplateControllerSpec extends SpecBase with MockUserAnswersService with FeatureSwitching {

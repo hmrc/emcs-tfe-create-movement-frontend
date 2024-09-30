@@ -287,7 +287,7 @@ class DraftMovementHelper @Inject()(list: list, p: p, link: link, appConfig: App
       rows = Seq(TaskListSectionRow(
         taskName = messages("draftMovement.section.submit.reviewAndSubmit"),
         id = "submit",
-        link =  if (completed && (request.userAnswers.createdFromTemplateId == None)) Some(controllers.sections.templates.routes.SaveTemplateController.onPageLoad(request.ern, request.draftId).url) else if (completed) Some(controllers.routes.CheckYourAnswersController.onPageLoad(request.ern, request.draftId).url) else None,
+        link =  if (completed) Some(controllers.routes.CheckYourAnswersController.onPageLoad(request.ern, request.draftId).url) else None,
         section = None,
         status = if (completed) None else Some(CannotStartYet)
       ))

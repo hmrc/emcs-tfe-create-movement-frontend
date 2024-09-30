@@ -16,6 +16,7 @@
 
 package navigation
 
+import config.AppConfig
 import controllers.routes
 import models._
 import pages._
@@ -24,11 +25,16 @@ import play.api.mvc.Call
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class Navigator @Inject()() extends BaseNavigator {
+class Navigator @Inject()(appConfig: AppConfig) extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case CheckAnswersPage =>
-      (userAnswers: UserAnswers) => routes.DeclarationController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+      (userAnswers: UserAnswers) =>
+        if(appConfig.templatesFeatureEnabled && userAnswers.createdFromTemplateId.isEmpty) {
+          controllers.sections.templates.routes.SaveTemplateController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+        } else {
+          routes.DeclarationController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+        }
     case DeclarationPage =>
       (userAnswers: UserAnswers) => routes.ConfirmationController.onPageLoad(userAnswers.ern, userAnswers.draftId)
     case _ =>

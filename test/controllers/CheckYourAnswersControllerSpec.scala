@@ -64,9 +64,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
           .set(DeferredMovementPage(false), false)
         )) {
 
-          val result = controller.onPageLoad(testErn, testDraftId)(request)
-
           MockItemsAddToListHelper.finalCyaSummary().returns(Future.successful(None))
+
+          val result = controller.onPageLoad(testErn, testDraftId)(request)
 
           status(result) mustBe OK
           contentAsString(result) mustBe

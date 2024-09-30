@@ -17,13 +17,16 @@
 package navigation
 
 import base.SpecBase
+import config.AppConfig
 import controllers.routes
+import featureswitch.core.config.{FeatureSwitching, TemplatesLink}
 import models._
 import pages._
 
-class NavigatorSpec extends SpecBase {
+class NavigatorSpec extends SpecBase with FeatureSwitching {
 
-  val navigator = new Navigator
+  lazy val config = app.injector.instanceOf[AppConfig]
+  lazy val navigator = app.injector.instanceOf[Navigator]
 
   "Navigator" - {
 
@@ -38,10 +41,26 @@ class NavigatorSpec extends SpecBase {
 
       "for the CheckYourAnswers page" - {
 
-        "must go to the Declaration page" in {
+        "when the Templates feature is enabled and was not created from a Template" - {
 
-          navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            routes.DeclarationController.onPageLoad(testErn, testDraftId)
+          "must go to the SaveTemplate page" in {
+
+            enable(TemplatesLink)
+
+            navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers.copy(createdFromTemplateId = None)) mustBe
+              controllers.sections.templates.routes.SaveTemplateController.onPageLoad(testErn, testDraftId)
+          }
+        }
+
+        "when the Templates feature is disabled" - {
+
+          "must go to the Declaration page" in {
+
+            disable(TemplatesLink)
+
+            navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
+              routes.DeclarationController.onPageLoad(testErn, testDraftId)
+          }
         }
       }
       "for the Declaration page" - {

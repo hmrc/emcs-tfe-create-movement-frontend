@@ -3,3 +3,6 @@ POST       /trader/:ern/templates/how-create-movement                           
 
 GET        /trader/:ern/draft/:draftId/templates/choose-save-template                      controllers.sections.templates.SaveTemplateController.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)
 POST       /trader/:ern/draft/:draftId/templates/choose-save-template                      controllers.sections.templates.SaveTemplateController.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)
+
+GET        /trader/:ern/draft/:draftId/templates/update-template                           controllers.sections.templates.UpdateTemplateController.onPageLoad(ern: String, draftId: String)
+POST       /trader/:ern/draft/:draftId/templates/update-template                           controllers.sections.templates.UpdateTemplateController.onSubmit(ern: String, draftId: String)

@@ -142,5 +142,29 @@ class InformationNavigatorSpec extends SpecBase {
         }
       }
     }
+
+    "in Review mode" - {
+
+      "from the LRN page" - {
+
+        "if created from a template" - {
+
+          "must got to the Task List (DraftMovement) page" in {
+
+            navigator.nextPage(LocalReferenceNumberPage(false), ReviewMode, emptyUserAnswers.copy(createdFromTemplateId = Some(templateId))) mustBe
+              routes.DraftMovementController.onPageLoad(testErn, testDraftId)
+          }
+        }
+
+        "if NOT created from a template" - {
+
+          "must got to the InvoiceDetails page" in {
+
+              navigator.nextPage(LocalReferenceNumberPage(false), ReviewMode, emptyUserAnswers) mustBe
+                controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(testErn, testDraftId, ReviewMode)
+          }
+        }
+      }
+    }
   }
 }

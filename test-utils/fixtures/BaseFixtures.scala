@@ -88,6 +88,11 @@ trait BaseFixtures {
     hasBeenSubmitted = false
   )
 
+  val emptyUserAnswersFromTemplate = emptyUserAnswers.copy(
+    createdFromTemplateId = Some(templateId),
+    createdFromTemplateName = Some(templateName)
+  )
+
   val testMinTraderKnownFacts: TraderKnownFacts = TraderKnownFacts(
     traderName = "testTraderName",
     addressLine1 = None,

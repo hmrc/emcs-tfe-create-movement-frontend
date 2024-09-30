@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sections.templates
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
-import controllers.sections.templates.SaveTemplateController
 import featureswitch.core.config.{FeatureSwitching, TemplatesLink}
 import forms.sections.templates.SaveTemplateFormProvider
 import mocks.services.{MockMovementTemplatesService, MockUserAnswersService}

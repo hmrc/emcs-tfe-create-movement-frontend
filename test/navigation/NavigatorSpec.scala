@@ -41,14 +41,28 @@ class NavigatorSpec extends SpecBase with FeatureSwitching {
 
       "for the CheckYourAnswers page" - {
 
-        "when the Templates feature is enabled and was not created from a Template" - {
+        "when the Templates feature is enabled" - {
 
-          "must go to the SaveTemplate page" in {
+          "when movement was created from a template" - {
 
-            enable(TemplatesLink)
+            "must go to the UpdateTemplate page" in {
 
-            navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers.copy(createdFromTemplateId = None)) mustBe
-              controllers.sections.templates.routes.SaveTemplateController.onPageLoad(testErn, testDraftId)
+              enable(TemplatesLink)
+
+              navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers.copy(createdFromTemplateId = Some(templateId))) mustBe
+                controllers.sections.templates.routes.UpdateTemplateController.onPageLoad(testErn, testDraftId)
+            }
+          }
+
+          "when movement was NOT created from a template" - {
+
+            "must go to the SaveTemplate page" in {
+
+              enable(TemplatesLink)
+
+              navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers.copy(createdFromTemplateId = None)) mustBe
+                controllers.sections.templates.routes.SaveTemplateController.onPageLoad(testErn, testDraftId)
+            }
           }
         }
 

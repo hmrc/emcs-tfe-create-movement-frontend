@@ -72,12 +72,12 @@ case object ItemsSection extends Section[JsObject] {
    * @tparam A      type for the function to return. Can be String, (Index, Index), etc
    * @return        for every item, for every packaging within that item, perform function f
    */
-  private def forEveryPackagingInsideEveryItem[A](f: (Int, Int) => IterableOnce[A])(implicit request: DataRequest[_]): Seq[A] =
-    request.userAnswers.getCount(ItemsCount)
+  private def forEveryPackagingInsideEveryItem[A](userAnswers: UserAnswers)(f: (Int, Int) => IterableOnce[A]): Seq[A] =
+    userAnswers.getCount(ItemsCount)
       .map {
         itemsCount =>
           (0 until itemsCount)
-            .flatMap(itemIdx => request.userAnswers.getCount(ItemsPackagingCount(itemIdx)).map {
+            .flatMap(itemIdx => userAnswers.getCount(ItemsPackagingCount(itemIdx)).map {
               packagingCount =>
                 (0 until packagingCount)
                   .flatMap {
@@ -88,6 +88,9 @@ case object ItemsSection extends Section[JsObject] {
       }
       .map(_.flatten.distinct)
       .getOrElse(Seq())
+
+  private def forEveryPackagingInsideEveryItem[A](f: (Int, Int) => IterableOnce[A])(implicit request: DataRequest[_]): Seq[A] =
+    forEveryPackagingInsideEveryItem(request.userAnswers)(f)
 
   def shippingMarkForItemIsUsedOnOtherItems(itemIdx: Index, packageIdx: Index)(implicit request: DataRequest[_]): Boolean =
     (for {
@@ -114,6 +117,31 @@ case object ItemsSection extends Section[JsObject] {
     //which would lead to the subsequence indexes being out of sync and an array out of bounds error being thrown
     indexesToRemove.reverse.foldLeft(request.userAnswers) { case (answers, (iIdx, pIdx)) =>
       answers.remove(ItemsPackagingSectionItems(iIdx, pIdx))
+    }
+  }
+
+  def removePackagingIfHasShippingMark(userAnswers: UserAnswers): UserAnswers =
+    forEveryPackagingInsideEveryItem(userAnswers) { (itemIdx, packagingIdx) =>
+      Option.when(userAnswers.get(ItemPackagingShippingMarksPage(itemIdx, packagingIdx)).nonEmpty)(itemIdx -> packagingIdx)
+    }.foldLeft(userAnswers) { case (answers, (iIdx, pIdx)) =>
+      answers.remove(ItemsPackagingSectionItems(iIdx, pIdx))
+    }
+
+  def removeCommercialSealFromPackaging(userAnswers: UserAnswers): UserAnswers = {
+    //Remove any seal information against individual items
+    val removeIndividualItem = forEveryPackagingInsideEveryItem(userAnswers) { (itemIdx, packagingIdx) =>
+      Option.when(userAnswers.get(ItemPackagingSealChoicePage(itemIdx, packagingIdx)).contains(true))(itemIdx -> packagingIdx)
+    }.foldLeft(userAnswers) { case (answers, (iIdx, pIdx)) =>
+      answers.remove(ItemPackagingSealTypePage(iIdx, pIdx).sealInfoPath)
+    }
+
+    //Remove any bulk packaging seal information
+    userAnswers.getCount(ItemsCount).map { itemsCount =>
+      (0 until itemsCount).flatMap { itemIdx =>
+        Option.when(userAnswers.get(ItemBulkPackagingSealChoicePage(itemIdx)).contains(true))(itemIdx)
+      }
+    }.getOrElse(Seq()).foldLeft(removeIndividualItem) { case (answers, iIdx) =>
+      answers.remove(ItemBulkPackagingSealTypePage(iIdx).sealInfoPath)
     }
   }
 }

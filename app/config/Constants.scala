@@ -25,4 +25,5 @@ object Constants {
   val GBWK_PREFIX = "GBWK"
   val XIWK_PREFIX = "XIWK"
   val TFE_DELETED_DRAFT_LRN = "tfeDeletedDraftLrn"
+  val TEMPLATE_NAME_MAX_LENGTH = 100
 }

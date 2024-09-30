@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package forms
+package utils
 
-import javax.inject.Inject
+import com.google.inject.Singleton
 
-import forms.mappings.Mappings
-import play.api.data.Form
+import java.util.UUID
 
-class SaveTemplateFormProvider @Inject() extends Mappings {
-
-  def apply(): Form[Boolean] =
-    Form(
-      "value" -> boolean("saveTemplate.error.required")
-    )
+@Singleton
+class UUIDGenerator {
+  def randomUUID(): String = UUID.randomUUID.toString
 }

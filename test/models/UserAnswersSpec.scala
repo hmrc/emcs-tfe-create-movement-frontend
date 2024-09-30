@@ -22,14 +22,29 @@
 package models
 
 import base.SpecBase
-import fixtures.MovementSubmissionFailureFixtures
+import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
+import models.response.templates.MovementTemplate
+import org.scalamock.scalatest.MockFactory
 import pages.QuestionPage
+import pages.sections.documents.DocumentsSection
+import pages.sections.info.{DeferredMovementPage, DispatchDetailsPage, InvoiceDetailsPage, LocalReferenceNumberPage}
+import pages.sections.items.ItemsSection
+import pages.sections.sad.SadSection
+import pages.sections.transportUnit.TransportUnitsSection
 import play.api.libs.json._
 import play.api.test.FakeRequest
 import queries.Derivable
+import utils.{TimeMachine, UUIDGenerator}
+
+import java.time.Instant
 
 
-class UserAnswersSpec extends SpecBase with MovementSubmissionFailureFixtures {
+class UserAnswersSpec extends SpecBase with MovementSubmissionFailureFixtures with ItemFixtures with MockFactory {
+
+  implicit lazy val mockUUIDGenerator: UUIDGenerator = mock[UUIDGenerator]
+  implicit lazy val mockTimeMachine: TimeMachine = mock[TimeMachine]
+
+  val now = Instant.now()
 
   case class TestPage(jsPath: JsPath = JsPath) extends QuestionPage[String] {
     override val toString: String = "TestPage"
@@ -421,6 +436,67 @@ class UserAnswersSpec extends SpecBase with MovementSubmissionFailureFixtures {
               movementSubmissionFailure.copy(hasBeenFixed = true)
             )
           ).haveAllFixableSubmissionErrorsBeenFixed mustBe false
+        }
+      }
+    }
+
+    "when calling .toTemplate" - {
+
+      "when an existing ID is provided" - {
+
+        "must remove sections that shouldn't be saved and create a MovementTemplate model, using supplied ID" in {
+
+          (() => mockUUIDGenerator.randomUUID()).expects().never()
+          (() => mockTimeMachine.instant()).expects().returns(now)
+
+          baseFullUserAnswers.toTemplate(templateName, Some("existingId")) mustBe MovementTemplate(
+            ern = baseFullUserAnswers.ern,
+            templateId = "existingId",
+            templateName = templateName,
+            data = ItemsSection.removeCommercialSealFromPackaging(
+                ItemsSection.removePackagingIfHasShippingMark(baseFullUserAnswers)
+              )
+              //Remove Info Section pages
+              .remove(LocalReferenceNumberPage(isOnPreDraftFlow = false))
+              .remove(DispatchDetailsPage(isOnPreDraftFlow = false))
+              .remove(DispatchDetailsPage(isOnPreDraftFlow = false))
+              .remove(InvoiceDetailsPage(isOnPreDraftFlow = false))
+              .remove(DeferredMovementPage(isOnPreDraftFlow = false))
+              //Remove other full sections
+              .remove(TransportUnitsSection)
+              .remove(SadSection)
+              .remove(DocumentsSection).data,
+            lastUpdated = now
+          )
+        }
+      }
+
+      "when an existing ID is NOT provided" - {
+
+        "must remove sections that shouldn't be saved and create a MovementTemplate model, using a new ID" in {
+
+          (() => mockUUIDGenerator.randomUUID()).expects().returns(templateId)
+          (() => mockTimeMachine.instant()).expects().returns(now)
+
+          baseFullUserAnswers.toTemplate(templateName, None) mustBe MovementTemplate(
+            ern = baseFullUserAnswers.ern,
+            templateId = templateId,
+            templateName = templateName,
+            data = ItemsSection.removeCommercialSealFromPackaging(
+                ItemsSection.removePackagingIfHasShippingMark(baseFullUserAnswers)
+              )
+              //Remove Info Section pages
+              .remove(LocalReferenceNumberPage(isOnPreDraftFlow = false))
+              .remove(DispatchDetailsPage(isOnPreDraftFlow = false))
+              .remove(DispatchDetailsPage(isOnPreDraftFlow = false))
+              .remove(InvoiceDetailsPage(isOnPreDraftFlow = false))
+              .remove(DeferredMovementPage(isOnPreDraftFlow = false))
+              //Remove other full sections
+              .remove(TransportUnitsSection)
+              .remove(SadSection)
+              .remove(DocumentsSection).data,
+            lastUpdated = now
+          )
         }
       }
     }

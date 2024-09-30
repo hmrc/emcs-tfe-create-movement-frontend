@@ -121,6 +121,14 @@ trait Constraints {
         Invalid(errorKey, args: _*)
     }
 
+  protected def valueNotInList(list: Seq[String], errorKey: String, args: Any*): Constraint[String] =
+    Constraint {
+      case value if !list.contains(value) =>
+        Valid
+      case _ =>
+        Invalid(errorKey, args: _*)
+    }
+
   protected def decimalMaxLength(maximum: Int, errorKey: String): Constraint[String] =
     Constraint {
       case str if str.replace(".", "").length <= maximum =>

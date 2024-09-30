@@ -64,6 +64,7 @@ trait BaseFixtures {
   val testIndex1: Index = Index(0)
   val testIndex2: Index = Index(1)
   val testIndex3: Index = Index(2)
+  val testIndex4: Index = Index(3)
   val testPackagingIndex1: Index = testIndex1
   val testPackagingIndex2: Index = testIndex2
   val testPackagingIndex3: Index = testIndex3

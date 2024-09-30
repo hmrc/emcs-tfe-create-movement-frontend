@@ -16,15 +16,17 @@
 
 @import models.requests.DataRequest
 @import viewmodels.LegendSize
+@import viewmodels.InputWidth.Fixed30
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukRadios: GovukRadios,
-    govukButton: GovukButton,
-    h1: components.h1,
-    h2: components.h2
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukRadios: GovukRadios,
+        govukButton: GovukButton,
+        h1: components.h1,
+        h2: components.h2,
+        govukInput: GovukInput
 )
 
 @(form: Form[_], submitAction: Call, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
@@ -39,8 +41,21 @@
 
         @h2(messages("draftMovement.subHeading"), "govuk-caption-xl")
         @govukRadios(
-            RadiosViewModel.yesNo(
+            RadiosViewModel.apply(
                 field = form("value"),
+                items = Seq(
+                    RadioItem(
+                        id      = Some("value"),
+                        value   = Some("true"),
+                        content = Text(messages("site.yes")),
+                        conditionalHtml = Some(nameInput)
+                    ),
+                    RadioItem(
+                        id      = Some("value-no"),
+                        value   = Some("false"),
+                        content = Text(messages("site.no"))
+                    )
+                ),
                 legend = LegendViewModel(Text(messages("saveTemplate.heading"))).asPageHeading(LegendSize.Large)
             ).withHint(HintViewModel(messages("saveTemplate.hint")))
         )
@@ -49,6 +64,16 @@
             ButtonViewModel(messages("site.continue"))
         )
     }
+}
+
+@nameInput = {
+    @govukInput(
+        InputViewModel(
+            field = form("name"),
+            label = LabelViewModel(Text(messages("saveTemplate.name")))
+        )
+        .withWidth(Fixed30)
+    )
 }
 
 @{

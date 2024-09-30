@@ -23,6 +23,7 @@ import models.response.UnexpectedDownstreamResponseError
 import models.response.templates.MovementTemplates
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.tools.LogCapturing
+import utils.{TimeMachine, UUIDGenerator}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,6 +34,9 @@ class MovementTemplatesServiceSpec extends SpecBase
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.global
+
+  implicit val mockUUIDGenerator: UUIDGenerator  = mock[UUIDGenerator]
+  implicit val mockTimeMachine: TimeMachine  = mock[TimeMachine]
 
   lazy val testService = new MovementTemplatesService(mockMovementTemplatesConnector)
 

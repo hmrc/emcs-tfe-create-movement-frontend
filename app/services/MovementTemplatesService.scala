@@ -17,22 +17,39 @@
 package services
 
 import connectors.emcsTfe.MovementTemplatesConnector
+import models.requests.DataRequest
+import models.response.templates.MovementTemplates
+import models.response.{ErrorResponse, TemplatesException}
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
+import utils.{Logging, TimeMachine, UUIDGenerator}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class MovementTemplatesService @Inject()(connector: MovementTemplatesConnector)
-                                        (implicit ec: ExecutionContext) extends Logging {
+                                        (implicit ec: ExecutionContext,
+                                         uuid: UUIDGenerator,
+                                         timeMachine: TimeMachine) extends Logging {
+
+  def getList(ern: String)(implicit hc: HeaderCarrier): Future[MovementTemplates] =
+    connector.getList(ern).map {
+      case Right(templates) => templates
+      case Left(_) =>
+        logger.warn(s"[getList] Failed to retrieve templates from emcs-tfe for ern: $ern")
+        throw TemplatesException(s"Failed to retrieve templates from emcs-tfe for ern: $ern")
+    }
 
   def userHasTemplates(ern: String)(implicit hc: HeaderCarrier): Future[Boolean] =
-    connector.getList(ern).map {
-      case Left(_) =>
-        logger.warn("[userHasTemplates] Failed to retrieve templates from emcs-tfe, defaulting response to false")
-        false
-      case Right(value) =>
-        value.count > 0
+    getList(ern).map(_.count > 0).recoverWith { _ =>
+      logger.warn("[userHasTemplates] Failed to retrieve templates from emcs-tfe, defaulting response to false")
+      Future.successful(false)
     }
+
+  def getExistingTemplateNames(ern: String)(implicit hc: HeaderCarrier): Future[Seq[String]] =
+    getList(ern).map(_.templates.map(_.templateName))
+
+  def saveTemplate(templateName: String, existingIdToUpdate: Option[String] = None)
+                  (implicit request: DataRequest[_], hc: HeaderCarrier): Future[Either[ErrorResponse, Boolean]] =
+    connector.saveTemplate(request.userAnswers.toTemplate(templateName, existingIdToUpdate))
 }

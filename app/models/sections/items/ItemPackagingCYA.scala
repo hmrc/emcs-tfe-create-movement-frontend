@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package config
+package models.sections.items
 
-object SessionKeys {
-  val SUBMISSION_RECEIPT_REFERENCE = "SUBMISSION_RECEIPT_REFERENCE"
-}
+import models.response.referenceData.ItemPackaging
+
+case class ItemPackagingCYA(quantity: String, packagingType: ItemPackaging)
+

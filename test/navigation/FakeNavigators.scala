@@ -16,13 +16,15 @@
 
 package navigation
 
+import config.AppConfig
 import models.{Mode, UserAnswers}
+import org.scalamock.scalatest.MockFactory
 import pages._
 import play.api.mvc.Call
 
-object FakeNavigators {
+object FakeNavigators extends MockFactory {
 
-  class FakeNavigator(desiredRoute: Call) extends Navigator {
+  class FakeNavigator(desiredRoute: Call) extends Navigator(mock[AppConfig]) {
     override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
       desiredRoute
   }

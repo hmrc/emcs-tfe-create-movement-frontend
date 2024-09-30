@@ -27,9 +27,9 @@ class InformationCheckAnswersHelper @Inject()(informationLocalReferenceNumberSum
                                               informationDateOfDispatchSummary: InformationDateOfDispatchSummary
                                              ) {
 
-  def summaryList(deferredMovement: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+  def summaryList(deferredMovement: Boolean, asCard: Boolean = false)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
 
-    SummaryListViewModel(
+    val summary = SummaryListViewModel(
       rows = Seq(
         InformationPlaceOfDispatchSummary.row,
         InformationDestinationTypeSummary.row,
@@ -40,7 +40,13 @@ class InformationCheckAnswersHelper @Inject()(informationLocalReferenceNumberSum
         informationDateOfDispatchSummary.row,
         InformationTimeOfDispatchSummary.row
       ).flatten
-    ).withCssClass("govuk-!-margin-bottom-9")
+    )
+
+    if(asCard) {
+      summary.withCard(CardViewModel(messages("checkYourAnswers.info.cardTitle"), 2, None))
+    } else {
+      summary.withCssClass("govuk-!-margin-bottom-9")
+    }
   }
 
 }

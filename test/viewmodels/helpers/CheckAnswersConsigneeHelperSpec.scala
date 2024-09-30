@@ -28,6 +28,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.checkAnswers.sections.consignee._
+import viewmodels.govuk.all.CardViewModel
 import views.html.components.list
 
 class CheckAnswersConsigneeHelperSpec extends SpecBase with MovementSubmissionFailureFixtures {
@@ -76,6 +77,23 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase with MovementSubmissionFa
       val noVatNumberOrEoriUserAnswers = {
         emptyUserAnswers
           .set(ConsigneeAddressPage, testUserAddress)
+      }
+
+      "rendering as a card layout" in new Setup(testGbWarehouseErn, warehouseUserAnswers) {
+
+        val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
+          consigneeExciseSummary.row(true)(fakeDataRequest, msgs),
+          ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
+        ).flatten
+
+        checkAnswersConsigneeHelper.summaryList(asCard = true) mustBe SummaryList(
+          rows = expectedSummaryListRows,
+          card = Some(CardViewModel(
+            title = "checkYourAnswers.consignee.cardTitle",
+            headingLevel = 2,
+            actions = None
+          ))
+        )
       }
 
       "the user type is GreatBritainWarehouse" in new Setup(testGbWarehouseErn, warehouseUserAnswers) {

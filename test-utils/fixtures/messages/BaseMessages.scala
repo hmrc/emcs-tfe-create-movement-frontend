@@ -39,7 +39,6 @@ trait BaseMessages { _: i18n =>
   val journeyTypeSection: String = s"$hiddenSectionContent Journey type"
   val guarantorSection: String = s"$hiddenSectionContent Guarantor"
 
-  def lrnSubheading(lrn: String): String = s"Create movement for $lrn"
   val continue = "Continue"
   val confirmAnswers = "Confirm answers"
   val notProvided = "Not provided"

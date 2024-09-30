@@ -26,7 +26,7 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.govuk.all.FluentSummaryList
+import viewmodels.govuk.all.{CardViewModel, FluentSummaryList, SummaryListViewModel}
 
 class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with UserAddressFixtures {
 
@@ -120,6 +120,25 @@ class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with U
 
 
           dispatchCheckAnswersSummary.summaryList() mustBe expectedResult
+        }
+      }
+
+      "render as card layout" - {
+
+        "when asCard is 'true'" in new Setup(emptyUserAnswers) {
+
+          val expectedResult = SummaryListViewModel(
+            Seq(
+              Some(DestinationAddressSummary.row())
+            ).flatten,
+            card = Some(CardViewModel(
+              title = "Place of destination",
+              headingLevel = 2,
+              actions = None
+            ))
+          )
+
+          dispatchCheckAnswersSummary.summaryList(asCard = true) mustBe expectedResult
         }
       }
     }

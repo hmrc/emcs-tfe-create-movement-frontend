@@ -19,17 +19,18 @@ package viewmodels.helpers
 import base.SpecBase
 import controllers.sections.documents.routes
 import fixtures.DocumentTypeFixtures
-import fixtures.messages.sections.documents.DocumentsAddToListMessages.English
+import fixtures.messages.sections.documents.DocumentsAddToListMessages
 import models.requests.DataRequest
-import models.{NormalMode, UserAnswers}
+import models.{CheckMode, NormalMode, UserAnswers}
 import pages.sections.documents.{DocumentReferencePage, DocumentTypePage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Empty, HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.documents.{DocumentReferenceSummary, DocumentTypeSummary}
+import viewmodels.govuk.all.{ActionItemViewModel, CardViewModel, SummaryListRowViewModel}
 import views.html.components.{link, span, tag}
 
 class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
@@ -46,99 +47,191 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
 
   "DocumentsAddToListHelper" - {
 
-    "return nothing" - {
+    Seq(DocumentsAddToListMessages.English).foreach { messagesForLanguage =>
 
-      s"when no answers specified for '${English.lang.code}'" in new Setup() {
+      implicit lazy val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        implicit lazy val msgs: Messages = messages(Seq(English.lang))
+      s"when rendered for language of '${messagesForLanguage.lang.code}'" - {
 
-        helper.allDocumentsSummary() mustBe Nil
-      }
-    }
+        ".allDocumentsSummary()" - {
 
-    "return required rows when all answers filled out" - {
+          "return nothing" - {
 
-      s"when the row is Complete" in new Setup(emptyUserAnswers
-        .set(DocumentTypePage(0), documentTypeModel)
-        .set(DocumentReferencePage(0), "reference")
-      ) {
+            s"when no answers specified" in new Setup() {
 
-        implicit lazy val msgs: Messages = messages(Seq(English.lang))
+              helper.allDocumentsSummary() mustBe Nil
+            }
+          }
 
-        helper.allDocumentsSummary() mustBe Seq(
-          SummaryList(
-            card = Some(Card(
-              title = Some(CardTitle(HtmlContent(span(English.documentCardTitle(0))))),
-              actions = Some(Actions(items = Seq(
-                ActionItem(
-                  href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 0).url,
-                  content = Text(English.remove),
-                  visuallyHiddenText = Some(English.documentCardTitle(0)),
-                  attributes = Map("id" -> "removeDocuments-1")
+          "return required rows when all answers filled out" - {
+
+            s"when the row is Complete" in new Setup(emptyUserAnswers
+              .set(DocumentTypePage(0), documentTypeModel)
+              .set(DocumentReferencePage(0), "reference")
+            ) {
+
+              helper.allDocumentsSummary() mustBe Seq(
+                SummaryList(
+                  card = Some(Card(
+                    title = Some(CardTitle(HtmlContent(span(messagesForLanguage.documentCardTitle(0))))),
+                    actions = Some(Actions(items = Seq(
+                      ActionItem(
+                        href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 0).url,
+                        content = Text(messagesForLanguage.remove),
+                        visuallyHiddenText = Some(messagesForLanguage.documentCardTitle(0)),
+                        attributes = Map("id" -> "removeDocuments-1")
+                      )
+                    )))
+                  )),
+                  rows = Seq(
+                    DocumentTypeSummary.row(0).get,
+                    DocumentReferenceSummary.row(0).get
+                  )
                 )
-              )))
-            )),
-            rows = Seq(
-              DocumentTypeSummary.row(0).get,
-              DocumentReferenceSummary.row(0).get
-            )
-          )
-        )
-      }
+              )
+            }
 
 
-      s"when all answers entered and there is both a Completed and an InProgress row" in new Setup(emptyUserAnswers
-        .set(DocumentTypePage(0), documentTypeModel)
-        .set(DocumentReferencePage(0), "reference")
-        .set(DocumentTypePage(1), documentTypeModel)
-      ) {
+            s"when all answers entered and there is both a Completed and an InProgress row" in new Setup(emptyUserAnswers
+              .set(DocumentTypePage(0), documentTypeModel)
+              .set(DocumentReferencePage(0), "reference")
+              .set(DocumentTypePage(1), documentTypeModel)
+            ) {
 
-        implicit lazy val msgs: Messages = messages(Seq(English.lang))
-
-        helper.allDocumentsSummary() mustBe Seq(
-          SummaryList(
-            card = Some(Card(
-              title = Some(CardTitle(HtmlContent(span(English.documentCardTitle(0))))),
-              actions = Some(Actions(items = Seq(
-                ActionItem(
-                  href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 0).url,
-                  content = Text(English.remove),
-                  visuallyHiddenText = Some(English.documentCardTitle(0)),
-                  attributes = Map("id" -> "removeDocuments-1")
-                )
-              )))
-            )),
-            rows = Seq(
-              DocumentTypeSummary.row(0).get,
-              DocumentReferenceSummary.row(0).get
-            )
-          ),
-          SummaryList(
-            card = Some(Card(
-              title = Some(CardTitle(HtmlContent(HtmlFormat.fill(Seq(
-                span(English.documentCardTitle(1), Some("govuk-!-margin-right-2")),
-                tag(English.incomplete, "red")
-              ))))),
-              actions = Some(Actions(items = Seq(
-                ActionItem(
-                  href = routes.DocumentTypeController.onPageLoad(testErn, testDraftId, 1, NormalMode).url,
-                  content = Text(English.continueEditing),
-                  visuallyHiddenText = Some(English.documentCardTitle(1)),
-                  attributes = Map("id" -> "editDocuments-2")
+              helper.allDocumentsSummary() mustBe Seq(
+                SummaryList(
+                  card = Some(Card(
+                    title = Some(CardTitle(HtmlContent(span(messagesForLanguage.documentCardTitle(0))))),
+                    actions = Some(Actions(items = Seq(
+                      ActionItem(
+                        href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 0).url,
+                        content = Text(messagesForLanguage.remove),
+                        visuallyHiddenText = Some(messagesForLanguage.documentCardTitle(0)),
+                        attributes = Map("id" -> "removeDocuments-1")
+                      )
+                    )))
+                  )),
+                  rows = Seq(
+                    DocumentTypeSummary.row(0).get,
+                    DocumentReferenceSummary.row(0).get
+                  )
                 ),
-                ActionItem(
-                  href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 1).url,
-                  content = Text(English.remove),
-                  visuallyHiddenText = Some(English.documentCardTitle(1)),
-                  attributes = Map("id" -> "removeDocuments-2")
+                SummaryList(
+                  card = Some(Card(
+                    title = Some(CardTitle(HtmlContent(HtmlFormat.fill(Seq(
+                      span(messagesForLanguage.documentCardTitle(1), Some("govuk-!-margin-right-2")),
+                      tag(messagesForLanguage.incomplete, "red")
+                    ))))),
+                    actions = Some(Actions(items = Seq(
+                      ActionItem(
+                        href = routes.DocumentTypeController.onPageLoad(testErn, testDraftId, 1, NormalMode).url,
+                        content = Text(messagesForLanguage.continueEditing),
+                        visuallyHiddenText = Some(messagesForLanguage.documentCardTitle(1)),
+                        attributes = Map("id" -> "editDocuments-2")
+                      ),
+                      ActionItem(
+                        href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 1).url,
+                        content = Text(messagesForLanguage.remove),
+                        visuallyHiddenText = Some(messagesForLanguage.documentCardTitle(1)),
+                        attributes = Map("id" -> "removeDocuments-2")
+                      )
+                    )))
+                  )),
+                  rows = Seq(
+                    DocumentTypeSummary.row(1).get
+                  )
                 )
-              )))
-            )),
-            rows = Seq(
-              DocumentTypeSummary.row(1).get
-            )
-          )
-        )
+              )
+            }
+          }
+        }
+
+        ".finalCyaSummary()" - {
+
+          "return No Documents" - {
+
+            s"when no documents added" in new Setup() {
+              helper.finalCyaSummary() mustBe SummaryList(
+                card = Some(CardViewModel(
+                  title = messagesForLanguage.finalCyaCardTitle,
+                  actions = Some(Actions(items = Seq(
+                    ActionItemViewModel(
+                      href = routes.DocumentsCertificatesController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      content = Text(messagesForLanguage.change),
+                      id = "changeDocuments"
+                    )
+                  ))),
+                  headingLevel = 2
+                )),
+                rows = Seq(SummaryListRowViewModel(
+                  key = Key(Text(messagesForLanguage.finalCyaNoDocuments)),
+                  value = Value(Empty)
+                ))
+              )
+            }
+          }
+
+          "return required rows when all answers filled out" - {
+
+            s"when single document has been added" in new Setup(emptyUserAnswers
+              .set(DocumentTypePage(testIndex1), documentTypeModel)
+              .set(DocumentReferencePage(testIndex1), "reference")
+            ) {
+
+              helper.finalCyaSummary() mustBe
+                SummaryList(
+                  card = Some(CardViewModel(
+                    title = messagesForLanguage.finalCyaCardTitle,
+                    actions = Some(Actions(items = Seq(
+                      ActionItemViewModel(
+                        href = routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId).url,
+                        content = Text(messagesForLanguage.change),
+                        id = "changeDocuments"
+                      )
+                    ))),
+                    headingLevel = 2
+                  )),
+                  rows = Seq(SummaryListRowViewModel(
+                    key = Key(Text(messagesForLanguage.finalCyaValue(1))),
+                    value = Value(Text(documentTypeModel.description))
+                  ))
+                )
+            }
+          }
+
+          s"when multiple documents have been added" in new Setup(emptyUserAnswers
+            .set(DocumentTypePage(testIndex1), documentTypeModel)
+            .set(DocumentReferencePage(testIndex1), "reference")
+            .set(DocumentTypePage(testIndex2), documentTypeModel)
+            .set(DocumentReferencePage(testIndex2), "reference")
+          ) {
+
+            helper.finalCyaSummary() mustBe
+              SummaryList(
+                card = Some(CardViewModel(
+                  title = messagesForLanguage.finalCyaCardTitle,
+                  actions = Some(Actions(items = Seq(
+                    ActionItemViewModel(
+                      href = routes.DocumentsAddToListController.onPageLoad(testErn, testDraftId).url,
+                      content = Text(messagesForLanguage.change),
+                      id = "changeDocuments"
+                    )
+                  ))),
+                  headingLevel = 2
+                )),
+                rows = Seq(
+                  SummaryListRowViewModel(
+                    key = Key(Text(messagesForLanguage.finalCyaValue(1))),
+                    value = Value(Text(documentTypeModel.description))
+                  ),
+                  SummaryListRowViewModel(
+                    key = Key(Text(messagesForLanguage.finalCyaValue(2))),
+                    value = Value(Text(documentTypeModel.description))
+                  )
+                )
+              )
+          }
+        }
       }
     }
   }

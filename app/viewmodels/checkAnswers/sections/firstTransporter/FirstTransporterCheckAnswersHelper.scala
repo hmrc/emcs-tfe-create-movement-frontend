@@ -25,13 +25,20 @@ import javax.inject.Inject
 
 class FirstTransporterCheckAnswersHelper @Inject()() {
 
-  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
-    SummaryListViewModel(
+  def summaryList(asCard: Boolean = false)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+
+    val summary = SummaryListViewModel(
       rows = Seq(
         FirstTransporterVatChoiceSummary.row(),
         FirstTransporterVatSummary.row(),
         Some(FirstTransporterAddressSummary.row())
-      )
-        .flatten
-    ).withCssClass("govuk-!-margin-bottom-9")
+      ).flatten
+    )
+
+    if(asCard) {
+      summary.withCard(CardViewModel(messages("checkYourAnswers.firstTransporter.cardTitle"), 2, None))
+    } else {
+      summary.withCssClass("govuk-!-margin-bottom-9")
+    }
+  }
 }

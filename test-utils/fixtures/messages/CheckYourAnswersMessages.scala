@@ -19,9 +19,9 @@ package fixtures.messages
 object CheckYourAnswersMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "Check your answers before submitting your movement"
+    val heading = "Check your answers"
     val title: String = titleHelper(heading)
-    val submitButton = "Submit movement"
+    val submitButton = "Confirm answers"
   }
 
   object English extends ViewMessages with BaseEnglish

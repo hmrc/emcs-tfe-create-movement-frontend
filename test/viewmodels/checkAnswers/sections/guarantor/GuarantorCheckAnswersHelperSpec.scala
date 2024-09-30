@@ -31,6 +31,8 @@ import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import viewmodels.govuk.all.CardViewModel
 
 class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
   trait Test {
@@ -166,6 +168,31 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
             testGreatBritainWarehouseKeeperErn
           )
           helper.summaryList()(request, msgs).rows.length mustBe 1
+        }
+      }
+
+      "must render as card layout" - {
+        "when asCard is 'true'" in new Test {
+          implicit val request: DataRequest[_] = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers
+              .set(DestinationTypePage, UkTaxWarehouse.GB)
+              .set(GuarantorRequiredPage, false),
+            testGreatBritainWarehouseKeeperErn
+          )
+          helper.summaryList(asCard = true)(request, msgs) mustBe SummaryList(
+            rows = Seq(
+              GuarantorRequiredSummary.row,
+              GuarantorArrangerSummary.row,
+              GuarantorErnVatSummary.rows,
+              GuarantorAddressSummary.row
+            ).flatten,
+            card = Some(CardViewModel(
+              title = "Guarantor",
+              headingLevel = 2,
+              actions = None
+            ))
+          )
         }
       }
     }

@@ -19,10 +19,11 @@ package viewmodels.helpers
 import controllers.sections.sad.{routes => sadRoutes}
 import models.Index
 import models.requests.DataRequest
+import pages.sections.sad.ImportNumberPage
 import play.api.i18n.Messages
 import queries.SadCount
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList}
+import uk.gov.hmrc.govukfrontend.views.Aliases.{SummaryListRow, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.sad._
 import viewmodels.govuk.summarylist._
 
@@ -36,6 +37,28 @@ class SadAddToListHelper @Inject()() {
       case None => Nil
     }
   }
+
+  def finalCyaSummary()(implicit request: DataRequest[_], messages: Messages): Option[SummaryList] =
+    request.userAnswers.getCount(SadCount).map { count =>
+      SummaryListViewModel(
+        rows = (0 until count).flatMap { idx =>
+          ImportNumberPage(idx).value.map { sadNumber =>
+            SummaryListRow(
+              key = Key(Text(messages("checkYourAnswers.sad.key", idx + 1))),
+              value = ValueViewModel(Text(sadNumber))
+            )
+          }
+        }
+      ).withCard(CardViewModel(messages("checkYourAnswers.sad.cardTitle"), 2, Some(
+        Actions(items = Seq(
+          ActionItemViewModel(
+            href = controllers.sections.sad.routes.SadAddToListController.onPageLoad(request.ern, request.draftId).url,
+            content = Text(messages("site.change")),
+            id = "changeSAD"
+          )
+        ))
+      )))
+    }
 
   private def summaryList(idx: Index)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(

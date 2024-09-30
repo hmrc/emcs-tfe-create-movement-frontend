@@ -55,6 +55,9 @@ object ItemsAddToListMessages {
       s"${quantity}x $description (shipping mark: ${shippingMark.take(30)}...)"
 
     val notificationBannerContentForQuantity: Int => String = index => s"Item $index quantity"
+
+    val finalCyaCardTitle = "Items"
+    def finalCyaKey(quantity: String, unit: String, goodsType: String) = s"$quantity $unit of $goodsType"
   }
 
   object English extends ViewMessages with BaseEnglish

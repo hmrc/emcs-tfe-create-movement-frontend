@@ -35,6 +35,10 @@ trait MockItemsAddToListHelper extends MockFactory {
     def allItemsSummary(): CallHandler4[DataRequest[_], Messages, HeaderCarrier, ExecutionContext, Future[Seq[SummaryList]]] =
       (mockItemsAddToListHelper.allItemsSummary(_: DataRequest[_], _: Messages, _: HeaderCarrier, _: ExecutionContext))
         .expects(*, *, *, *)
+
+    def finalCyaSummary(): CallHandler4[DataRequest[_], Messages, HeaderCarrier, ExecutionContext, Future[Option[SummaryList]]] =
+      (mockItemsAddToListHelper.finalCyaSummary()(_: DataRequest[_], _: Messages, _: HeaderCarrier, _: ExecutionContext))
+        .expects(*, *, *, *)
   }
 
 }

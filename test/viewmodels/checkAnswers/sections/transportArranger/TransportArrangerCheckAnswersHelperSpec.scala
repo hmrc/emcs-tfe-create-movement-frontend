@@ -26,6 +26,8 @@ import org.scalamock.scalatest.MockFactory
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import viewmodels.govuk.all.CardViewModel
 
 class TransportArrangerCheckAnswersHelperSpec extends SpecBase with MockFactory {
 
@@ -61,6 +63,29 @@ class TransportArrangerCheckAnswersHelperSpec extends SpecBase with MockFactory 
                 .set(TransportArrangerVatPage, vatNumberInputModel)
             )
             helper.summaryList()(request, msgs).rows.length mustBe 2
+          }
+        }
+        "must render card layout" - {
+          s"when TransportArranger value is $value and asCard is `true`" in new Test {
+            implicit val request: DataRequest[_] = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(TransportArrangerPage, value)
+                .set(TransportArrangerVatPage, vatNumberInputModel)
+            )
+            helper.summaryList(asCard = true)(request, msgs) mustBe SummaryList(
+              rows = Seq(
+                TransportArrangerSummary.row(),
+                TransportArrangerVatChoiceSummary.row(),
+                TransportArrangerVatSummary.row(),
+                Some(TransportArrangerAddressSummary.row())
+              ).flatten,
+              card = Some(CardViewModel(
+                title = "Transport arranger",
+                headingLevel = 2,
+                actions = None
+              ))
+            )
           }
         }
     }

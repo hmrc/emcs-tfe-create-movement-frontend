@@ -510,7 +510,7 @@ class DraftMovementHelperSpec extends SpecBase with MovementSubmissionFailureFix
         implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
 
         "must return a TaskList with a link" - {
-          "when all sections are completed" - {
+          "when all sections are completed" in {
             object TestSection extends Section[JsObject] {
               override def status(implicit request: DataRequest[_]): TaskListStatus = Completed
 
@@ -560,20 +560,18 @@ class DraftMovementHelperSpec extends SpecBase with MovementSubmissionFailureFix
               )
             )
 
-            "and not using a template" in {
-              helper.submitSection(testSections) mustBe TaskListSection(
-                sectionHeading = messagesForLanguage.submitSectionHeading,
-                rows = Seq(
-                  TaskListSectionRow(
-                    taskName = messagesForLanguage.reviewAndSubmit,
-                    id = "submit",
-                    link = Some(controllers.sections.templates.routes.SaveTemplateController.onPageLoad(testErn,testDraftId).url),
-                    section = None,
-                    status = None
-                  )
+            helper.submitSection(testSections) mustBe TaskListSection(
+              sectionHeading = messagesForLanguage.submitSectionHeading,
+              rows = Seq(
+                TaskListSectionRow(
+                  taskName = messagesForLanguage.reviewAndSubmit,
+                  id = "submit",
+                  link = Some(controllers.routes.CheckYourAnswersController.onPageLoad(testErn,testDraftId).url),
+                  section = None,
+                  status = None
                 )
               )
-            }
+            )
           }
         }
 

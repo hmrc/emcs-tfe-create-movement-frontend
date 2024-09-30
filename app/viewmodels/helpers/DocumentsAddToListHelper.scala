@@ -18,13 +18,14 @@ package viewmodels.helpers
 
 import controllers.sections.documents.routes
 import models.requests.DataRequest
-import models.{Index, NormalMode}
-import pages.sections.documents.DocumentSection
+import models.{CheckMode, Index, NormalMode}
+import pages.sections.documents.{DocumentSection, DocumentTypePage}
 import play.api.i18n.Messages
+import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
 import queries.DocumentsCount
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, SummaryListRow, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Empty, HtmlContent}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.checkAnswers.sections.documents._
 import viewmodels.govuk.TagFluency
@@ -40,6 +41,45 @@ class DocumentsAddToListHelper @Inject()(tagHelper: TagHelper, span: views.html.
     request.userAnswers.getCount(DocumentsCount) match {
       case Some(value) => (0 until value).map(int => summaryList(Index(int)))
       case None => Nil
+    }
+  }
+
+  def finalCyaSummary()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+
+    def withCardChangeLink(url: Call): SummaryList => SummaryList =
+      _.withCard(CardViewModel(messages("checkYourAnswers.documents.cardTitle"), 2, Some(
+        Actions(items = Seq(
+          ActionItemViewModel(
+            href = url.url,
+            content = Text(messages("site.change")),
+            id = "changeDocuments"
+          )
+        ))
+      )))
+
+    request.userAnswers.getCount(DocumentsCount) match {
+      case Some(count) if count > 0 =>
+        withCardChangeLink(controllers.sections.documents.routes.DocumentsAddToListController.onPageLoad(request.ern, request.draftId)) {
+          SummaryListViewModel(
+            rows = (0 until count).flatMap { idx =>
+              DocumentTypePage(idx).value.map { documentType =>
+                SummaryListRow(
+                  key = Key(Text(messages("checkYourAnswers.documents.key", idx + 1))),
+                  value = ValueViewModel(Text(documentType.description))
+                )
+              }
+            }
+          )
+        }
+      case _ =>
+        withCardChangeLink(controllers.sections.documents.routes.DocumentsCertificatesController.onPageLoad(request.ern, request.draftId, CheckMode)) {
+          SummaryListViewModel(
+            rows = Seq(SummaryListRow(
+              key = Key(Text(messages("checkYourAnswers.documents.noDocuments"))),
+              value = ValueViewModel(Empty)
+            ))
+          )
+        }
     }
   }
 

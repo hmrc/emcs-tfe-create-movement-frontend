@@ -39,6 +39,9 @@ object SadAddToListMessages {
     val removeLink2WithHiddenText    = "Remove SAD document number 2"
 
     val importNumberMessages: BaseMessages
+
+    val finalCyaCardTitle = "Single Administrative Document(s) (SAD)"
+    val finalCyaKey: Int => String = "SAD number " + _
   }
 
   object English extends ViewMessages with BaseEnglish {

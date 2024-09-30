@@ -26,9 +26,12 @@ import javax.inject.Inject
 
 class ConsigneeCheckAnswersHelper @Inject()(list: list, consigneeExciseSummary: ConsigneeExciseSummary) {
 
-  def summaryList(consigneeReviewVatEori: Boolean = false, consigneeReviewBusinessName: Boolean = false)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+  def summaryList(consigneeReviewVatEori: Boolean = false,
+                  consigneeReviewBusinessName: Boolean = false,
+                  asCard: Boolean = false)
+                 (implicit request: DataRequest[_], messages: Messages): SummaryList = {
 
-    if (consigneeReviewVatEori == true) {
+    val summary = if(consigneeReviewVatEori) {
       SummaryListViewModel(
         rows = Seq(
           ConsigneeExportInformationSummary(list).row(),
@@ -37,7 +40,7 @@ class ConsigneeCheckAnswersHelper @Inject()(list: list, consigneeExciseSummary: 
         ).flatten
       )
     }
-    else if (consigneeReviewBusinessName == true) {
+    else if (consigneeReviewBusinessName) {
       SummaryListViewModel(
         rows = Seq(
           ConsigneeAddressSummary.row(showActionLinks = true),
@@ -45,7 +48,6 @@ class ConsigneeCheckAnswersHelper @Inject()(list: list, consigneeExciseSummary: 
           ConsigneeExemptOrganisationSummary.row(showActionLinks = true)
         ).flatten
       )
-
     } else {
       SummaryListViewModel(
         rows = Seq(
@@ -57,6 +59,12 @@ class ConsigneeCheckAnswersHelper @Inject()(list: list, consigneeExciseSummary: 
           ConsigneeAddressSummary.row(showActionLinks = true)
         ).flatten
       )
+    }
+
+    if(asCard) {
+      summary.withCard(CardViewModel(messages("checkYourAnswers.consignee.cardTitle"), 2, None))
+    } else {
+      summary
     }
   }
 

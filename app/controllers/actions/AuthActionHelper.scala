@@ -40,7 +40,7 @@ trait AuthActionHelper extends Logging {
     authorisedWithData(ern, draftId).async(block)
 
   def ifCanUseDraftTemplates(ern: String, draftId: String)(block: => Future[Result])(implicit appConfig: AppConfig): Future[Result] = {
-    if (appConfig.templateVisible) {
+    if (appConfig.templatesFeatureEnabled) {
       block
     } else {
       logger.warn(s"[ifCanAccessDraftTemplates] User with ERN: $ern is not allowed to use draft templates")

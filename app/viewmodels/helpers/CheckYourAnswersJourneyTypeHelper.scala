@@ -26,13 +26,20 @@ import javax.inject.Inject
 
 class CheckYourAnswersJourneyTypeHelper @Inject()() {
 
-  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
-    SummaryListViewModel(
+  def summaryList(asCard: Boolean = false)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+    val summary = SummaryListViewModel(
       rows = Seq(
         HowMovementTransportedSummary.row(),
         GiveInformationOtherTransportSummary.row(),
         JourneyTimeDaysSummary.row(),
         JourneyTimeHoursSummary.row()
       ).flatten
-    ).withCssClass("govuk-!-margin-bottom-9")
+    )
+
+    if(asCard) {
+      summary.withCard(CardViewModel(messages("checkYourAnswers.journeyType.cardTitle"), 2, None))
+    } else {
+      summary.withCssClass("govuk-!-margin-bottom-9")
+    }
+  }
 }

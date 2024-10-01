@@ -22,6 +22,7 @@ import controllers.routes
 import featureswitch.core.config.{FeatureSwitching, TemplatesLink}
 import models._
 import pages._
+import utils.SHA256Hashing.getHash
 
 class NavigatorSpec extends SpecBase with FeatureSwitching {
 
@@ -45,12 +46,29 @@ class NavigatorSpec extends SpecBase with FeatureSwitching {
 
           "when movement was created from a template" - {
 
-            "must go to the UpdateTemplate page" in {
+            "when the data is different from the template" - {
 
-              enable(TemplatesLink)
+              "must go to the UpdateTemplate page" in {
 
-              navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers.copy(createdFromTemplateId = Some(templateId))) mustBe
-                controllers.sections.templates.routes.UpdateTemplateController.onPageLoad(testErn, testDraftId)
+                enable(TemplatesLink)
+
+                navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers.copy(createdFromTemplateId = Some(templateId))) mustBe
+                  controllers.sections.templates.routes.UpdateTemplateController.onPageLoad(testErn, testDraftId)
+              }
+            }
+
+            "when the data is NOT different from the template" - {
+
+              "must go to the Declaration page" in {
+
+                enable(TemplatesLink)
+
+                navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers.copy(
+                  createdFromTemplateId = Some(templateId),
+                  templateDataHash = Some(getHash(emptyUserAnswers.toTemplateData.toString()))
+                )) mustBe
+                  routes.DeclarationController.onPageLoad(testErn, testDraftId)
+              }
             }
           }
 

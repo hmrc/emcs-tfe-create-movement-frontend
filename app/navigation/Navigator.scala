@@ -33,6 +33,8 @@ class Navigator @Inject()(appConfig: AppConfig) extends BaseNavigator {
         if(appConfig.templatesFeatureEnabled) {
           if(userAnswers.createdFromTemplateId.isEmpty) {
             controllers.sections.templates.routes.SaveTemplateController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+          } else if (userAnswers.templateDataUnchanged) {
+            routes.DeclarationController.onPageLoad(userAnswers.ern, userAnswers.draftId)
           } else {
             controllers.sections.templates.routes.UpdateTemplateController.onPageLoad(userAnswers.ern, userAnswers.draftId)
           }

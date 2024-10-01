@@ -28,6 +28,7 @@ import pages.sections.transportUnit.TransportUnitsSection
 import play.api.libs.json._
 import queries.{Derivable, Gettable, Settable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+import utils.SHA256Hashing.getHash
 import utils.{TimeMachine, UUIDGenerator}
 
 import java.time.Instant
@@ -42,7 +43,8 @@ final case class UserAnswers(ern: String,
                              hasBeenSubmitted: Boolean,
                              submittedDraftId: Option[String],
                              createdFromTemplateId: Option[String] = None,
-                             createdFromTemplateName: Option[String] = None) {
+                             createdFromTemplateName: Option[String] = None,
+                             templateDataHash: Option[String] = None) {
 
   /**
    * @param pages a Seq of pages you want to leave in UserAnswers
@@ -107,27 +109,32 @@ final case class UserAnswers(ern: String,
   def hasUnfixableErrors(implicit request: DataRequest[_]): Boolean =
     submissionFailures.map(_.asSubmissionError).exists(!_.isFixable())
 
+  def toTemplateData: JsObject =
+    ItemsSection.removeCommercialSealFromPackaging(
+        ItemsSection.removePackagingIfHasShippingMark(this)
+      )
+      //Remove Info Section pages
+      .remove(LocalReferenceNumberPage(isOnPreDraftFlow = false))
+      .remove(DispatchDetailsPage(isOnPreDraftFlow = false))
+      .remove(DispatchDetailsPage(isOnPreDraftFlow = false))
+      .remove(InvoiceDetailsPage(isOnPreDraftFlow = false))
+      .remove(DeferredMovementPage(isOnPreDraftFlow = false))
+      //Remove other full sections
+      .remove(TransportUnitsSection)
+      .remove(SadSection)
+      .remove(DocumentsSection).data
+
   def toTemplate(templateName: String, existingIdToUpdate: Option[String])(implicit uuid: UUIDGenerator, timeMachine: TimeMachine): MovementTemplate =
     MovementTemplate(
       ern = ern,
       templateId = existingIdToUpdate.getOrElse(uuid.randomUUID()),
       templateName = templateName,
-      data =
-        ItemsSection.removeCommercialSealFromPackaging(
-            ItemsSection.removePackagingIfHasShippingMark(this)
-          )
-          //Remove Info Section pages
-          .remove(LocalReferenceNumberPage(isOnPreDraftFlow = false))
-          .remove(DispatchDetailsPage(isOnPreDraftFlow = false))
-          .remove(DispatchDetailsPage(isOnPreDraftFlow = false))
-          .remove(InvoiceDetailsPage(isOnPreDraftFlow = false))
-          .remove(DeferredMovementPage(isOnPreDraftFlow = false))
-          //Remove other full sections
-          .remove(TransportUnitsSection)
-          .remove(SadSection)
-          .remove(DocumentsSection).data,
+      data = toTemplateData,
       lastUpdated = timeMachine.instant()
     )
+
+  def templateDataUnchanged: Boolean =
+    templateDataHash.contains(getHash(toTemplateData.toString()))
 }
 
 object UserAnswers {
@@ -144,6 +151,7 @@ object UserAnswers {
   val submittedDraftId = "submittedDraftId"
   val createdFromTemplateId = "createdFromTemplateId"
   val createdFromTemplateName = "createdFromTemplateName"
+  val templateDataHash = "templateDataHash"
 
   val reads: Reads[UserAnswers] =
     (
@@ -155,8 +163,9 @@ object UserAnswers {
         (__ \ lastUpdated).read(MongoJavatimeFormats.instantFormat) and
         (__ \ hasBeenSubmitted).read[Boolean] and
         (__ \ submittedDraftId).readNullable[String] and
-        (__ \ createdFromTemplateId).readNullable[String]and
-        (__ \ createdFromTemplateName).readNullable[String]
+        (__ \ createdFromTemplateId).readNullable[String] and
+        (__ \ createdFromTemplateName).readNullable[String] and
+        (__ \ templateDataHash).readNullable[String]
       )(UserAnswers.apply _)
 
   val writes: OWrites[UserAnswers] =
@@ -170,7 +179,8 @@ object UserAnswers {
         (__ \ hasBeenSubmitted).write[Boolean] and
         (__ \ submittedDraftId).writeNullable[String] and
         (__ \ createdFromTemplateId).writeNullable[String] and
-        (__ \ createdFromTemplateName).writeNullable[String]
+        (__ \ createdFromTemplateName).writeNullable[String] and
+        (__ \ templateDataHash).writeNullable[String]
       )(unlift(UserAnswers.unapply))
 
   implicit val format: OFormat[UserAnswers] = OFormat(reads, writes)

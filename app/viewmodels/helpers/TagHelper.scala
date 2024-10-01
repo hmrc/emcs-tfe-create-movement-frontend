@@ -31,9 +31,10 @@ class TagHelper @Inject()(tag: views.html.components.tag) {
     extraClasses = if (withNoFloat) "float-none govuk-!-margin-left-1" else ""
   )
 
-  def incompleteTag()(implicit messages: Messages): Html = tag(
+  def incompleteTag(withNoFloat: Boolean = false)(implicit messages: Messages): Html = tag(
     message = messages("taskListStatus.incomplete"),
-    colour = "red"
+    colour = "red",
+    extraClasses = if (withNoFloat) "float-none" else ""
   )
 
 }

@@ -845,6 +845,8 @@ invoiceDetails.invoice-reference.checkYourAnswersLabel = Invoice reference
 invoiceDetails.invoice-reference.change.hidden = Invoice reference
 invoiceDetails.invoice-date.checkYourAnswersLabel = Invoice date of issue
 invoiceDetails.invoice-date.change.hidden = Invoice date of issue
+invoiceDetails.invoice-reference.add = Add invoice reference
+invoiceDetails.invoice-date.add = Add invoice date of issue
 
 dispatchDetails.title = Dispatch details
 dispatchDetails.heading = Dispatch details
@@ -870,6 +872,8 @@ dispatchDetails.time.error.required = Enter the time the goods will be dispatche
 dispatchDetails.time.error.invalid = Enter a time in 12 hour or 24 hour format
 dispatchDetails.time.checkYourAnswersLabel = Time of dispatch
 dispatchDetails.time.change.hidden = time of dispatch
+dispatchDetails.date.add = Add date of dispatch
+dispatchDetails.time.add = Add time of dispatch
 
 destinationDetailsChoice.title = Do you want to give the address and business name of the {0}?
 destinationDetailsChoice.heading = Do you want to give the address and business name of the {0}?

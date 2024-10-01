@@ -16,45 +16,66 @@
 
 package viewmodels.checkAnswers.sections.info
 
+import com.google.inject.Inject
 import models.CheckMode
 import models.requests.DataRequest
 import models.sections.info.InvoiceDetailsModel
 import pages.sections.info.InvoiceDetailsPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
 import viewmodels.govuk.summarylist._
+import viewmodels.helpers.TagHelper
 import viewmodels.implicits._
+import views.html.components
 
-object InformationInvoiceReferenceSummary {
+class InformationInvoiceReferenceSummary @Inject()(link: components.link,
+                                                   tagHelper: TagHelper) {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-
     val data: Option[InvoiceDetailsModel] = InvoiceDetailsPage().value
 
-    val value: String = data match {
-      case Some(invoiceDetailsPage) => invoiceDetailsPage.reference
-      case None => messages("site.notProvided")
+    val changeLink = if (isOnPreDraftFlow) {
+      controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(request.ern, CheckMode)
+    } else {
+      controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(request.ern, request.draftId, CheckMode)
+    }
+
+    val value: Html = data match {
+      case Some(invoiceDetailsPage) => HtmlFormat.escape(invoiceDetailsPage.reference)
+      case None => link(
+        link = changeLink.url,
+        messageKey = messages("invoiceDetails.invoice-reference.add"),
+        id = Some("changeInvoiceReference")
+      )
     }
 
     Some(
       SummaryListRowViewModel(
         key = "invoiceDetails.invoice-reference.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlFormat.escape(value).toString()),
-        actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            if (isOnPreDraftFlow) {
-              controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url
-            } else {
-              controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(request.ern, request.draftId, CheckMode).url
-            },
-            id = "changeInvoiceReference")
-            .withVisuallyHiddenText(messages("invoiceDetails.invoice-reference.change.hidden"))
-        )
-      )
-    )
+        value = ValueViewModel(HtmlContent(value)),
+        actions =
+          (data, isOnPreDraftFlow) match {
+            case (None, true) =>
+              Seq()
+            case (None, false) =>
+              Seq(ActionItem(
+                content = HtmlContent(tagHelper.incompleteTag(withNoFloat = true)),
+                href = changeLink.url,
+                visuallyHiddenText = Some(messages("invoiceDetails.invoice-reference.add")),
+                classes = "cursor-default",
+                attributes = Map("tabindex" -> "-1")
+              ))
+            case (Some(_), _) =>
+              Seq(ActionItemViewModel(
+                content = "site.change",
+                href = changeLink.url,
+                id = "changeInvoiceReference"
+              ).withVisuallyHiddenText(messages("invoiceDetails.invoice-reference.change.hidden")))
+          }
+      ))
 
   }
 

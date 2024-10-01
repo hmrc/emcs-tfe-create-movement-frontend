@@ -24,27 +24,58 @@ import models.sections.info.DispatchDetailsModel
 import pages.sections.info.DispatchDetailsPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
+import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, Key, SummaryListRow, Value}
 import viewmodels.govuk.summarylist._
+import viewmodels.helpers.TagHelper
+import views.html.components
 
 import java.time.{LocalDate, LocalTime}
 
 
 class InformationDispatchTimeSummarySpec extends SpecBase {
 
-  private def expectedRow(value: String)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
-    Some(
-      SummaryListRowViewModel(
+  lazy val informationTimeOfDispatchSummary = app.injector.instanceOf[InformationTimeOfDispatchSummary]
+  val link = app.injector.instanceOf[components.link]
+  val tagHelper = app.injector.instanceOf[TagHelper]
+
+  private def expectedRow(value: Option[String],
+                          isPreDraft: Boolean)(implicit messagesForLanguage: ViewMessages, messages: Messages): Option[SummaryListRow] = {
+
+    val changeLink = if (isPreDraft) {
+      controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(testErn, CheckMode)
+    } else {
+      controllers.sections.info.routes.DispatchDetailsController.onPageLoad(testErn, testDraftId, CheckMode)
+    }
+
+    value match {
+      case Some(value) =>
+        Some(SummaryListRowViewModel(
+          key = Key(Text(messagesForLanguage.cyaDispatchTimeLabel)),
+          value = Value(HtmlContent(value)),
+          actions = Seq(ActionItemViewModel(
+            content = Text(messagesForLanguage.change),
+            href = changeLink.url,
+            id = "changeTimeOfDispatch"
+          ).withVisuallyHiddenText(messagesForLanguage.cyaChangeDispatchTimeHidden))
+        ))
+      case None => Some(SummaryListRowViewModel(
         key = Key(Text(messagesForLanguage.cyaDispatchTimeLabel)),
-        value = Value(Text(value)),
-        actions = Seq(ActionItemViewModel(
-          content = Text(messagesForLanguage.change),
-          href = controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(testErn, CheckMode).url,
-          id = "changeTimeOfDispatch"
-        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeDispatchTimeHidden))
-      )
-    )
+        value = ValueViewModel(HtmlContent(link(
+          link = changeLink.url,
+          messageKey = messagesForLanguage.addTime,
+          id = Some("changeTimeOfDispatch")
+        ))),
+        actions = if (isPreDraft) Seq() else Seq(ActionItem(
+          content = HtmlContent(tagHelper.incompleteTag(withNoFloat = true)),
+          href = changeLink.url,
+          visuallyHiddenText = Some(messagesForLanguage.addTime),
+          classes = "cursor-default",
+          attributes = Map("tabindex" -> "-1")
+        ))
+      ))
+    }
   }
 
   Seq(DispatchDetailsMessages.English).foreach { implicit messagesForLanguage =>
@@ -54,22 +85,57 @@ class InformationDispatchTimeSummarySpec extends SpecBase {
       implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
       "and there is no answer for the DispatchDetailsPage" - {
+        "when on pre-draft flow" - {
+          "then must return add data row, with no incomplete tag" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-        "then must return not provided row" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            informationTimeOfDispatchSummary.row mustBe expectedRow(
+              value = None,
+              isPreDraft = true
+            )
+          }
+        }
 
-          InformationTimeOfDispatchSummary.row mustBe expectedRow(messagesForLanguage.notProvided)
+        "when on pre-draft flow" - {
+          "then must return add data row, with incomplete tag" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.copy(createdFromTemplateId = Some(templateId)))
+
+            informationTimeOfDispatchSummary.row mustBe expectedRow(
+              value = None,
+              isPreDraft = false
+            )
+          }
         }
       }
 
       "and there is a DispatchDetailsPage answer " - {
+        "when on pre-draft flow" - {
+          "then must return a row with the answer" in {
+            val model = DispatchDetailsModel(LocalDate.of(2023, 6, 7), LocalTime.of(7, 25))
 
-        "then must return a row with the answer" in {
-          val model = DispatchDetailsModel(LocalDate.of(2023, 6, 7), LocalTime.of(7, 25))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DispatchDetailsPage(), model))
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DispatchDetailsPage(), model))
+            informationTimeOfDispatchSummary.row mustBe expectedRow(
+              value = Some("07:25"),
+              isPreDraft = true
+            )
+          }
+        }
 
-          InformationTimeOfDispatchSummary.row mustBe expectedRow(value = "07:25")
+        "when NOT on pre-draft flow" - {
+          "then must return a row with the answer" in {
+            val model = DispatchDetailsModel(LocalDate.of(2023, 6, 7), LocalTime.of(7, 25))
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              .copy(createdFromTemplateId = Some(templateId))
+              .set(DispatchDetailsPage(), model)
+            )
+
+            informationTimeOfDispatchSummary.row mustBe expectedRow(
+              value = Some("07:25"),
+              isPreDraft = false
+            )
+          }
         }
       }
 

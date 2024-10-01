@@ -23,10 +23,9 @@ object SaveTemplateMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Do you want to save this draft as a template for future use?"
     val title = titleHelper(heading)
-    val saveTemplateNo = "No"
     val saveTemplateHint = "Templates allow you to edit and reuse the draft for another movement."
-    val saveTemplateYes = "Yes"
     val errorRequired = "Select how you would like to create this movement"
+    val templateNameLabel = "Enter a template name to identify this movement"
   }
 
   object English extends ViewMessages with BaseEnglish

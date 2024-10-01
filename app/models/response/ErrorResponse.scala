@@ -79,3 +79,5 @@ case class NRSBrokerJsonParsingError(errors: Seq[PlayJsonValidationError]) exten
 }
 
 case class IdentityDataException(message: String) extends ErrorResponse
+
+case class TemplatesException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse

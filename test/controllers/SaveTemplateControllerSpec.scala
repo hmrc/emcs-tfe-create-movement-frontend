@@ -20,22 +20,25 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import controllers.sections.templates.SaveTemplateController
 import featureswitch.core.config.{FeatureSwitching, TemplatesLink}
-import forms.SaveTemplateFormProvider
-import mocks.services.MockUserAnswersService
+import forms.sections.templates.SaveTemplateFormProvider
+import mocks.services.{MockMovementTemplatesService, MockUserAnswersService}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeNavigator
-import pages.SaveTemplatePage
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
-import views.html.SaveTemplateView
+import views.html.sections.templates.SaveTemplateView
 
-class SaveTemplateControllerSpec extends SpecBase with MockUserAnswersService with FeatureSwitching {
+import scala.concurrent.Future
+
+class SaveTemplateControllerSpec extends SpecBase with FeatureSwitching
+  with MockUserAnswersService
+  with MockMovementTemplatesService {
 
   lazy val config = appConfig
   lazy val formProvider = new SaveTemplateFormProvider()
-  lazy val form = formProvider()
+  lazy val form = formProvider(Seq())
   lazy val view = app.injector.instanceOf[SaveTemplateView]
 
 
@@ -54,7 +57,8 @@ class SaveTemplateControllerSpec extends SpecBase with MockUserAnswersService wi
       dataRequiredAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view
+      view,
+      mockMovementTemplatesService
     )(config)
   }
 
@@ -70,32 +74,35 @@ class SaveTemplateControllerSpec extends SpecBase with MockUserAnswersService wi
 
     "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers)) {
       enable(TemplatesLink)
+
+      MockMovementTemplatesService.getExistingTemplateNames(testErn).returns(Future.successful(Seq()))
+
       val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, controllers.sections.templates.routes.SaveTemplateController.onSubmit(testErn, testDraftId),NormalMode)(dataRequest(request, userAnswers.get), messages).toString
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
-      emptyUserAnswers.set(SaveTemplatePage, true)
-    )) {
+    "must save a template when valid data is submitted and value is true" in new Test(Some(emptyUserAnswers)) {
       enable(TemplatesLink)
-      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill(true), controllers.sections.templates.routes.SaveTemplateController.onSubmit(testErn, testDraftId), NormalMode)(dataRequest(request, userAnswers.get), messages).toString
-    }
+      MockMovementTemplatesService.getExistingTemplateNames(testErn).returns(Future.successful(Seq()))
+      MockMovementTemplatesService.saveTemplate("testTemplateName").returns(Future.successful(Right(true)))
 
-    "must redirect to the name template page when valid data is submitted and value is true" in new Test(Some(emptyUserAnswers)) {
-      enable(TemplatesLink)
-      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "true")))
+      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(
+        "value" -> "true",
+        "name" -> "testTemplateName"
+      ))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.routes.DeclarationController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must redirect to the declaration page when valid data is submitted and value is false" in new Test(Some(emptyUserAnswers)) {
+    "must redirect to the declaration page without saving a template when value is false" in new Test(Some(emptyUserAnswers)) {
       enable(TemplatesLink)
+
+      MockMovementTemplatesService.getExistingTemplateNames(testErn).returns(Future.successful(Seq()))
+
       val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "false")))
 
       status(result) mustEqual SEE_OTHER
@@ -104,8 +111,10 @@ class SaveTemplateControllerSpec extends SpecBase with MockUserAnswersService wi
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(emptyUserAnswers)) {
       enable(TemplatesLink)
-      val boundForm = form.bind(Map("value" -> ""))
 
+      MockMovementTemplatesService.getExistingTemplateNames(testErn).returns(Future.successful(Seq()))
+
+      val boundForm = form.bind(Map("value" -> ""))
       val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
       status(result) mustEqual BAD_REQUEST

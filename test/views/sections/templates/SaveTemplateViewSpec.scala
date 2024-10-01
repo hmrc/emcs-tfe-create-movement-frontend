@@ -18,7 +18,7 @@ package views.sections.templates
 
 import base.SpecBase
 import fixtures.messages.sections.templates.SaveTemplateMessages
-import forms.SaveTemplateFormProvider
+import forms.sections.templates.SaveTemplateFormProvider
 import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -26,7 +26,7 @@ import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.SaveTemplateView
+import views.html.sections.templates.SaveTemplateView
 import views.{BaseSelectors, ViewBehaviours}
 
 class SaveTemplateViewSpec extends SpecBase with ViewBehaviours {
@@ -43,7 +43,7 @@ class SaveTemplateViewSpec extends SpecBase with ViewBehaviours {
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
         lazy val view = app.injector.instanceOf[SaveTemplateView]
-        val form = app.injector.instanceOf[SaveTemplateFormProvider].apply()
+        val form = app.injector.instanceOf[SaveTemplateFormProvider].apply(Seq())
 
         implicit val doc: Document =
           Jsoup.parse(view(form, controllers.sections.templates.routes.SaveTemplateController.onSubmit(request.ern, request.draftId), NormalMode).toString())
@@ -51,8 +51,10 @@ class SaveTemplateViewSpec extends SpecBase with ViewBehaviours {
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.radioButton(1) -> messagesForLanguage.saveTemplateYes,
-          Selectors.radioButton(2) -> messagesForLanguage.saveTemplateNo,
+          Selectors.radioButton(1) -> messagesForLanguage.yes,
+          Selectors.label(SaveTemplateFormProvider.templateNameField) -> messagesForLanguage.templateNameLabel,
+          //Note, this is radio button 2 but index is 3 due to hidden HTML conditional content for radio 1
+          Selectors.radioButton(3) -> messagesForLanguage.no,
           Selectors.hint -> messagesForLanguage.saveTemplateHint,
           Selectors.button -> messagesForLanguage.continue
         ))

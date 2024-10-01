@@ -18,7 +18,7 @@ package connectors.emcsTfe
 
 import config.AppConfig
 import models.response.ErrorResponse
-import models.response.templates.MovementTemplates
+import models.response.templates.{MovementTemplate, MovementTemplates}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import javax.inject.{Inject, Singleton}
@@ -26,12 +26,20 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class MovementTemplatesConnector @Inject()(val http: HttpClient,
-                                           config: AppConfig) extends GetListOfTemplatesHttpParser {
+                                           config: AppConfig) extends GetListOfTemplatesHttpParser with SaveTemplateHttpParser {
 
   lazy val baseUrl: String = config.emcsTfeBaseUrl
 
   def getList(ern: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, MovementTemplates]] =
     withExceptionRecovery("getList") {
-      http.GET[Either[ErrorResponse, MovementTemplates]](s"$baseUrl/templates/$ern?page=1&pageSize=10")
+      http.GET[Either[ErrorResponse, MovementTemplates]](s"$baseUrl/templates/$ern")
+    }(ec, logger)
+
+  def saveTemplate(movementTemplate: MovementTemplate)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Boolean]] =
+    withExceptionRecovery("saveTemplate") {
+      http.PUT[MovementTemplate, Either[ErrorResponse, Boolean]](
+        s"$baseUrl/template/${movementTemplate.ern}/${movementTemplate.templateId}",
+        movementTemplate
+      )
     }(ec, logger)
 }

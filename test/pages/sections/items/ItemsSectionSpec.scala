@@ -19,7 +19,9 @@ package pages.sections.items
 import base.SpecBase
 import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import models.requests.DataRequest
-import models.sections.items.ItemsAddToList
+import models.sections.items.ItemGeographicalIndicationType.NoGeographicalIndication
+import models.sections.items.ItemWineProductCategory.Other
+import models.sections.items.{ItemBrandNameModel, ItemDesignationOfOriginModel, ItemNetGrossMassModel, ItemPackagingSealTypeModel, ItemsAddToList}
 import play.api.test.FakeRequest
 import viewmodels.taskList._
 
@@ -374,6 +376,139 @@ class ItemsSectionSpec extends SpecBase with ItemFixtures with MovementSubmissio
             .remove(ItemsPackagingSectionItems(testIndex1, testPackagingIndex2))
             .remove(ItemsPackagingSectionItems(testIndex1, testPackagingIndex1))
         }
+      }
+    }
+  }
+
+  "removePackagingIfHasShippingMark" - {
+
+    "when items have shipping marks" - {
+
+      "then those specific packaging objects with shipping marks should be removed at itemIdx and packageIdx" in {
+
+        val userAnswers = singleCompletedWineItem
+          //Item 1 (shipping mark):
+          .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "Mark1")
+          //Item 2 (no shipping mark):
+          .set(ItemExciseProductCodePage(testIndex2), testEpcWine)
+          .set(ItemCommodityCodePage(testIndex2), testCnCodeWine)
+          .set(ItemBrandNamePage(testIndex2), ItemBrandNameModel(hasBrandName = true, Some("brand")))
+          .set(ItemCommercialDescriptionPage(testIndex2), "Wine from grapes")
+          .set(ItemAlcoholStrengthPage(testIndex2), BigDecimal(12.5))
+          .set(ItemDesignationOfOriginPage(testIndex2), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
+          .set(ItemQuantityPage(testIndex2), BigDecimal("1000"))
+          .set(ItemNetGrossMassPage(testIndex2), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
+          .set(ItemBulkPackagingChoicePage(testIndex2), false)
+          .set(ItemWineProductCategoryPage(testIndex2), Other)
+          .set(ItemWineMoreInformationChoicePage(testIndex2), false)
+          .set(ItemSelectPackagingPage(testIndex2, testPackagingIndex1), testPackageBag)
+          .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "400")
+          .set(ItemPackagingShippingMarksChoicePage(testIndex2, testPackagingIndex1), false)
+          .set(ItemPackagingSealChoicePage(testIndex2, testPackagingIndex1), false)
+          //Item 3 (shipping mark, on package 2):
+          .set(ItemExciseProductCodePage(testIndex3), testEpcWine)
+          .set(ItemCommodityCodePage(testIndex3), testCnCodeWine)
+          .set(ItemBrandNamePage(testIndex3), ItemBrandNameModel(hasBrandName = true, Some("brand")))
+          .set(ItemCommercialDescriptionPage(testIndex3), "Wine from grapes")
+          .set(ItemAlcoholStrengthPage(testIndex3), BigDecimal(12.5))
+          .set(ItemDesignationOfOriginPage(testIndex3), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
+          .set(ItemQuantityPage(testIndex3), BigDecimal("1000"))
+          .set(ItemNetGrossMassPage(testIndex3), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
+          .set(ItemBulkPackagingChoicePage(testIndex3), false)
+          .set(ItemWineProductCategoryPage(testIndex3), Other)
+          .set(ItemWineMoreInformationChoicePage(testIndex3), false)
+          .set(ItemSelectPackagingPage(testIndex3, testPackagingIndex1), testPackageBag)
+          .set(ItemPackagingQuantityPage(testIndex3, testPackagingIndex1), "400")
+          .set(ItemPackagingShippingMarksChoicePage(testIndex3, testPackagingIndex1), false)
+          .set(ItemPackagingSealChoicePage(testIndex3, testPackagingIndex1), false)
+          .set(ItemSelectPackagingPage(testIndex3, testPackagingIndex2), testPackageBag)
+          .set(ItemPackagingQuantityPage(testIndex3, testPackagingIndex2), "400")
+          .set(ItemPackagingShippingMarksChoicePage(testIndex3, testPackagingIndex2), true)
+          .set(ItemPackagingShippingMarksPage(testIndex3, testPackagingIndex2), "Mark1")
+          .set(ItemPackagingSealChoicePage(testIndex3, testPackagingIndex2), false)
+          .set(ItemSelectPackagingPage(testIndex3, testPackagingIndex3), testPackageBag)
+          .set(ItemPackagingQuantityPage(testIndex3, testPackagingIndex3), "400")
+          .set(ItemPackagingShippingMarksChoicePage(testIndex3, testPackagingIndex3), true)
+          .set(ItemPackagingShippingMarksPage(testIndex3, testPackagingIndex3), "Mark1")
+          .set(ItemPackagingSealChoicePage(testIndex3, testPackagingIndex3), false)
+
+        val updatedAnswers = ItemsSection.removePackagingIfHasShippingMark(userAnswers)
+
+        updatedAnswers mustBe userAnswers
+          .remove(ItemsPackagingSectionItems(testIndex1, testPackagingIndex1))
+          .remove(ItemsPackagingSectionItems(testIndex3, testPackagingIndex2))
+          .remove(ItemsPackagingSectionItems(testIndex3, testPackagingIndex2)) //Uses 2 again, because index has moved.
+      }
+    }
+  }
+
+  "removePackagingIfHasShippingMark" - {
+
+    "when items have a commercial seal" - {
+
+      "then the additional information about those commercial seals should be removed" in {
+
+        val userAnswers = singleCompletedWineItem
+          //Item 1 (commercial seal):
+          .set(ItemPackagingSealChoicePage(testIndex1, testPackagingIndex1), true)
+          .set(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1), ItemPackagingSealTypeModel("Seal1", Some("info")))
+          //Item 2 (no shipping mark):
+          .set(ItemExciseProductCodePage(testIndex2), testEpcWine)
+          .set(ItemCommodityCodePage(testIndex2), testCnCodeWine)
+          .set(ItemBrandNamePage(testIndex2), ItemBrandNameModel(hasBrandName = true, Some("brand")))
+          .set(ItemCommercialDescriptionPage(testIndex2), "Wine from grapes")
+          .set(ItemAlcoholStrengthPage(testIndex2), BigDecimal(12.5))
+          .set(ItemDesignationOfOriginPage(testIndex2), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
+          .set(ItemQuantityPage(testIndex2), BigDecimal("1000"))
+          .set(ItemNetGrossMassPage(testIndex2), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
+          .set(ItemBulkPackagingChoicePage(testIndex2), false)
+          .set(ItemWineProductCategoryPage(testIndex2), Other)
+          .set(ItemWineMoreInformationChoicePage(testIndex2), false)
+          .set(ItemSelectPackagingPage(testIndex2, testPackagingIndex1), testPackageBag)
+          .set(ItemPackagingQuantityPage(testIndex2, testPackagingIndex1), "400")
+          .set(ItemPackagingShippingMarksChoicePage(testIndex2, testPackagingIndex1), false)
+          .set(ItemPackagingSealChoicePage(testIndex2, testPackagingIndex1), false)
+          //Item 3 (commercial seal, on package 2):
+          .set(ItemExciseProductCodePage(testIndex3), testEpcWine)
+          .set(ItemCommodityCodePage(testIndex3), testCnCodeWine)
+          .set(ItemBrandNamePage(testIndex3), ItemBrandNameModel(hasBrandName = true, Some("brand")))
+          .set(ItemCommercialDescriptionPage(testIndex3), "Wine from grapes")
+          .set(ItemAlcoholStrengthPage(testIndex3), BigDecimal(12.5))
+          .set(ItemDesignationOfOriginPage(testIndex3), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
+          .set(ItemQuantityPage(testIndex3), BigDecimal("1000"))
+          .set(ItemNetGrossMassPage(testIndex3), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
+          .set(ItemBulkPackagingChoicePage(testIndex3), false)
+          .set(ItemWineProductCategoryPage(testIndex3), Other)
+          .set(ItemWineMoreInformationChoicePage(testIndex3), false)
+          .set(ItemSelectPackagingPage(testIndex3, testPackagingIndex1), testPackageBag)
+          .set(ItemPackagingQuantityPage(testIndex3, testPackagingIndex1), "400")
+          .set(ItemPackagingShippingMarksChoicePage(testIndex3, testPackagingIndex1), false)
+          .set(ItemPackagingSealChoicePage(testIndex3, testPackagingIndex1), false)
+          .set(ItemSelectPackagingPage(testIndex3, testPackagingIndex2), testPackageBag)
+          .set(ItemPackagingQuantityPage(testIndex3, testPackagingIndex2), "400")
+          .set(ItemPackagingShippingMarksChoicePage(testIndex3, testPackagingIndex2), false)
+          .set(ItemPackagingSealChoicePage(testIndex3, testPackagingIndex2), true)
+          .set(ItemPackagingSealTypePage(testIndex3, testPackagingIndex2), ItemPackagingSealTypeModel("Seal2", Some("info")))
+          //Item 4 (bulk packaging with commercial seal):
+          .set(ItemExciseProductCodePage(testIndex4), testEpcWine)
+          .set(ItemCommodityCodePage(testIndex4), testCnCodeWine)
+          .set(ItemBrandNamePage(testIndex4), ItemBrandNameModel(hasBrandName = true, Some("brand")))
+          .set(ItemCommercialDescriptionPage(testIndex4), "Wine from grapes")
+          .set(ItemAlcoholStrengthPage(testIndex4), BigDecimal(12.5))
+          .set(ItemDesignationOfOriginPage(testIndex4), ItemDesignationOfOriginModel(NoGeographicalIndication, None, None))
+          .set(ItemQuantityPage(testIndex4), BigDecimal("1000"))
+          .set(ItemNetGrossMassPage(testIndex4), ItemNetGrossMassModel(BigDecimal("2000"), BigDecimal("2105")))
+          .set(ItemBulkPackagingChoicePage(testIndex4), true)
+          .set(ItemBulkPackagingSealChoicePage(testIndex4), true)
+          .set(ItemBulkPackagingSealTypePage(testIndex4), ItemPackagingSealTypeModel("Seal3", Some("info")))
+
+        val updatedAnswers = ItemsSection.removeCommercialSealFromPackaging(userAnswers)
+
+        updatedAnswers mustBe userAnswers
+          .remove(ItemPackagingSealTypePage(testIndex1, testPackagingIndex1).sealInfoPath)
+          .remove(ItemPackagingSealTypePage(testIndex3, testPackagingIndex2).sealInfoPath)
+          .remove(ItemBulkPackagingSealTypePage(testIndex4).sealInfoPath)
       }
     }
   }

@@ -24,5 +24,6 @@ import play.api.libs.json.JsPath
 case class ItemBulkPackagingSealTypePage(idx: Index) extends QuestionPage[ItemPackagingSealTypeModel] {
   override val toString: String = "itemBulkPackagingSealType"
   override val path: JsPath = ItemBulkPackagingSection(idx).path \ toString
+  val sealInfoPath: JsPath = path \ "optSealInformation"
 }
 

@@ -17,11 +17,18 @@
 package models
 
 import models.requests.DataRequest
+import models.response.templates.MovementTemplate
 import pages.QuestionPage
 import pages.sections.Section
+import pages.sections.documents.DocumentsSection
+import pages.sections.info.{DeferredMovementPage, DispatchDetailsPage, InvoiceDetailsPage, LocalReferenceNumberPage}
+import pages.sections.items.ItemsSection
+import pages.sections.sad.SadSection
+import pages.sections.transportUnit.TransportUnitsSection
 import play.api.libs.json._
 import queries.{Derivable, Gettable, Settable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+import utils.{TimeMachine, UUIDGenerator}
 
 import java.time.Instant
 import scala.annotation.unused
@@ -71,6 +78,11 @@ final case class UserAnswers(ern: String,
       data.removeObject(page.path)
     }
 
+  def remove(path: JsPath): UserAnswers =
+    handleResult {
+      data.removeObject(path)
+    }
+
   /**
    * @param section section to reset to an empty object
    * @param index to ensure this method is used to reset indexed Sections
@@ -95,6 +107,27 @@ final case class UserAnswers(ern: String,
   def hasUnfixableErrors(implicit request: DataRequest[_]): Boolean =
     submissionFailures.map(_.asSubmissionError).exists(!_.isFixable())
 
+  def toTemplate(templateName: String, existingIdToUpdate: Option[String])(implicit uuid: UUIDGenerator, timeMachine: TimeMachine): MovementTemplate =
+    MovementTemplate(
+      ern = ern,
+      templateId = existingIdToUpdate.getOrElse(uuid.randomUUID()),
+      templateName = templateName,
+      data =
+        ItemsSection.removeCommercialSealFromPackaging(
+            ItemsSection.removePackagingIfHasShippingMark(this)
+          )
+          //Remove Info Section pages
+          .remove(LocalReferenceNumberPage(isOnPreDraftFlow = false))
+          .remove(DispatchDetailsPage(isOnPreDraftFlow = false))
+          .remove(DispatchDetailsPage(isOnPreDraftFlow = false))
+          .remove(InvoiceDetailsPage(isOnPreDraftFlow = false))
+          .remove(DeferredMovementPage(isOnPreDraftFlow = false))
+          //Remove other full sections
+          .remove(TransportUnitsSection)
+          .remove(SadSection)
+          .remove(DocumentsSection).data,
+      lastUpdated = timeMachine.instant()
+    )
 }
 
 object UserAnswers {

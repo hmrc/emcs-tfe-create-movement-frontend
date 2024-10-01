@@ -120,12 +120,15 @@ case object ItemsSection extends Section[JsObject] {
     }
   }
 
+  //When removing the entire packaging section from an item, it causes the index of subsequence packages to reduce by 1
+  //Hence, the foldLeft below tracks an offset which is reset to 0 every time a new item is encountered
   def removePackagingIfHasShippingMark(userAnswers: UserAnswers): UserAnswers =
     forEveryPackagingInsideEveryItem(userAnswers) { (itemIdx, packagingIdx) =>
       Option.when(userAnswers.get(ItemPackagingShippingMarksPage(itemIdx, packagingIdx)).nonEmpty)(itemIdx -> packagingIdx)
-    }.foldLeft(userAnswers) { case (answers, (iIdx, pIdx)) =>
-      answers.remove(ItemsPackagingSectionItems(iIdx, pIdx))
-    }
+    }.foldLeft((userAnswers, 0, -1)) { case ((answers, offset, previousItemIdx), (iIdx, pIdx)) =>
+      val _offset = if (previousItemIdx == iIdx) offset else 0
+      (answers.remove(ItemsPackagingSectionItems(iIdx, pIdx - _offset)), _offset + 1, iIdx)
+    }._1
 
   def removeCommercialSealFromPackaging(userAnswers: UserAnswers): UserAnswers = {
     //Remove any seal information against individual items

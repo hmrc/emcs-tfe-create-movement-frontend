@@ -427,12 +427,18 @@ class ItemsSectionSpec extends SpecBase with ItemFixtures with MovementSubmissio
           .set(ItemPackagingShippingMarksChoicePage(testIndex3, testPackagingIndex2), true)
           .set(ItemPackagingShippingMarksPage(testIndex3, testPackagingIndex2), "Mark1")
           .set(ItemPackagingSealChoicePage(testIndex3, testPackagingIndex2), false)
+          .set(ItemSelectPackagingPage(testIndex3, testPackagingIndex3), testPackageBag)
+          .set(ItemPackagingQuantityPage(testIndex3, testPackagingIndex3), "400")
+          .set(ItemPackagingShippingMarksChoicePage(testIndex3, testPackagingIndex3), true)
+          .set(ItemPackagingShippingMarksPage(testIndex3, testPackagingIndex3), "Mark1")
+          .set(ItemPackagingSealChoicePage(testIndex3, testPackagingIndex3), false)
 
         val updatedAnswers = ItemsSection.removePackagingIfHasShippingMark(userAnswers)
 
         updatedAnswers mustBe userAnswers
           .remove(ItemsPackagingSectionItems(testIndex1, testPackagingIndex1))
           .remove(ItemsPackagingSectionItems(testIndex3, testPackagingIndex2))
+          .remove(ItemsPackagingSectionItems(testIndex3, testPackagingIndex2)) //Uses 2 again, because index has moved.
       }
     }
   }

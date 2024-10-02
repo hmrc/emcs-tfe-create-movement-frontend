@@ -39,6 +39,9 @@ object InvoiceDetailsMessages {
     val cyaInvoiceDateLabel: String = "Invoice date of issue"
     val cyaChangeInvoiceReferenceHidden: String = "Invoice reference"
     val cyaChangeInvoiceDateHidden: String = "Invoice date of issue"
+
+    val addReference = "Add invoice reference"
+    val addDate = "Add invoice date of issue"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -21,17 +21,19 @@ import models.requests.DataRequest
 import models.sections.info.DispatchDetailsModel
 import pages.sections.info.DispatchDetailsPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
 import utils.DateTimeUtils
 import viewmodels.govuk.summarylist._
 import viewmodels.helpers.TagHelper
 import viewmodels.implicits._
 
 import javax.inject.Inject
+import views.html.components
 
-class InformationDateOfDispatchSummary @Inject()(tagHelper: TagHelper) extends DateTimeUtils {
+class InformationDateOfDispatchSummary @Inject()(link: components.link,
+                                                 tagHelper: TagHelper) extends DateTimeUtils {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
@@ -39,29 +41,47 @@ class InformationDateOfDispatchSummary @Inject()(tagHelper: TagHelper) extends D
 
     val data: Option[DispatchDetailsModel] = DispatchDetailsPage().value
 
-    val value: String = data match {
-      case Some(dispatchDetailsPage) => dispatchDetailsPage.date.formatDateForUIOutput()
-      case None => messages("site.notProvided")
+    val changeLink = if (isOnPreDraftFlow) {
+      controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(request.ern, CheckMode)
+    } else {
+      controllers.sections.info.routes.DispatchDetailsController.onPageLoad(request.ern, request.draftId, CheckMode)
+    }
+
+    val value: Html = data match {
+      case Some(dispatchDetailsPage) => HtmlFormat.escape(dispatchDetailsPage.date.formatDateForUIOutput())
+      case None => link(
+        link = changeLink.url,
+        messageKey = messages("dispatchDetails.date.add"),
+        id = Some("changeDateOfDispatch")
+      )
     }
 
     Some(
       SummaryListRowViewModel(
         key = "dispatchDetails.value.checkYourAnswersLabel",
         value = ValueViewModel(HtmlContent(HtmlFormat.fill(Seq(
-          Some(HtmlFormat.escape(value)),
+          Some(value),
           if (hasUnfixedError) Some(tagHelper.updateNeededTag(withNoFloat = false)) else None
         ).flatten))),
-        actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            if (isOnPreDraftFlow) {
-              controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(request.ern, CheckMode).url
-            } else {
-              controllers.sections.info.routes.DispatchDetailsController.onPageLoad(request.ern, request.draftId, CheckMode).url
-            },
-            id = "changeDateOfDispatch")
-            .withVisuallyHiddenText(messages("dispatchDetails.value.change.hidden"))
-        )
+        actions =
+          (data, isOnPreDraftFlow) match {
+            case (None, true) =>
+              Seq()
+            case (None, false) =>
+              Seq(ActionItem(
+                content = HtmlContent(tagHelper.incompleteTag(withNoFloat = true)),
+                href = changeLink.url,
+                visuallyHiddenText = Some(messages("dispatchDetails.date.add")),
+                classes = "cursor-default",
+                attributes = Map("tabindex" -> "-1")
+              ))
+            case (Some(_), _) =>
+              Seq(ActionItemViewModel(
+                content = "site.change",
+                href = changeLink.url,
+                id = "changeDateOfDispatch"
+              ).withVisuallyHiddenText(messages("dispatchDetails.value.change.hidden")))
+          }
       )
     )
   }

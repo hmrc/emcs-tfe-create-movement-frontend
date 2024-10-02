@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.sections
+package forms.sections.templates
 
-import models.requests.DataRequest
-import pages.sections.info.InformationCheckAnswersPage
+import forms.mappings.Mappings
+import play.api.data.Form
 
-package object info {
-  def isOnPreDraftFlow(implicit request: DataRequest[_]): Boolean = InformationCheckAnswersPage.value match {
-    case Some(_) => false
-    case None if request.userAnswers.createdFromTemplateId.isDefined => false
-    case _ => true
-  }
+import javax.inject.Inject
+
+class UpdateTemplateFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] = Form("value" -> boolean("updateTemplate.error.required"))
 }

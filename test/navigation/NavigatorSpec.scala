@@ -22,6 +22,7 @@ import controllers.routes
 import featureswitch.core.config.{FeatureSwitching, TemplatesLink}
 import models._
 import pages._
+import utils.SHA256Hashing.getHash
 
 class NavigatorSpec extends SpecBase with FeatureSwitching {
 
@@ -41,14 +42,45 @@ class NavigatorSpec extends SpecBase with FeatureSwitching {
 
       "for the CheckYourAnswers page" - {
 
-        "when the Templates feature is enabled and was not created from a Template" - {
+        "when the Templates feature is enabled" - {
 
-          "must go to the SaveTemplate page" in {
+          "when movement was created from a template" - {
 
-            enable(TemplatesLink)
+            "when the data is different from the template" - {
 
-            navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers.copy(createdFromTemplateId = None)) mustBe
-              controllers.sections.templates.routes.SaveTemplateController.onPageLoad(testErn, testDraftId)
+              "must go to the UpdateTemplate page" in {
+
+                enable(TemplatesLink)
+
+                navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers.copy(createdFromTemplateId = Some(templateId))) mustBe
+                  controllers.sections.templates.routes.UpdateTemplateController.onPageLoad(testErn, testDraftId)
+              }
+            }
+
+            "when the data is NOT different from the template" - {
+
+              "must go to the Declaration page" in {
+
+                enable(TemplatesLink)
+
+                navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers.copy(
+                  createdFromTemplateId = Some(templateId),
+                  templateDataHash = Some(getHash(emptyUserAnswers.toTemplateData.toString()))
+                )) mustBe
+                  routes.DeclarationController.onPageLoad(testErn, testDraftId)
+              }
+            }
+          }
+
+          "when movement was NOT created from a template" - {
+
+            "must go to the SaveTemplate page" in {
+
+              enable(TemplatesLink)
+
+              navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers.copy(createdFromTemplateId = None)) mustBe
+                controllers.sections.templates.routes.SaveTemplateController.onPageLoad(testErn, testDraftId)
+            }
           }
         }
 

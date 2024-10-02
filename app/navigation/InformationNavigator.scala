@@ -71,7 +71,12 @@ class InformationNavigator @Inject()() extends BaseNavigator {
     case DeferredMovementPage(false) =>
       (userAnswers: UserAnswers) => controllers.sections.info.routes.LocalReferenceNumberController.onPageLoad(userAnswers.ern, userAnswers.draftId, ReviewMode)
     case LocalReferenceNumberPage(false) =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, ReviewMode)
+      (userAnswers: UserAnswers) =>
+        if(userAnswers.createdFromTemplateId.isDefined) {
+          controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+        } else {
+          controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, ReviewMode)
+        }
     case InvoiceDetailsPage(false) =>
       (userAnswers: UserAnswers) => controllers.sections.info.routes.DispatchDetailsController.onPageLoad(userAnswers.ern, userAnswers.draftId, ReviewMode)
     case DispatchDetailsPage(false) =>

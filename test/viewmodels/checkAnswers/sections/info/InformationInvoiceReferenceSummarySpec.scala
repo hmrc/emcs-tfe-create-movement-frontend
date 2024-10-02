@@ -24,27 +24,56 @@ import models.sections.info.InvoiceDetailsModel
 import pages.sections.info.InvoiceDetailsPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, Key, SummaryListRow, Value}
 import viewmodels.govuk.summarylist._
+import viewmodels.helpers.TagHelper
+import views.html.components
 
 import java.time.LocalDate
 
-
 class InformationInvoiceReferenceSummarySpec extends SpecBase {
 
-  private def expectedRow(value: String)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
-    Some(
-      SummaryListRowViewModel(
+  lazy val link = app.injector.instanceOf[components.link]
+  lazy val tagHelper = app.injector.instanceOf[TagHelper]
+  lazy val informationInvoiceReferenceSummary = app.injector.instanceOf[InformationInvoiceReferenceSummary]
+
+  private def expectedRow(value: Option[String],
+                          isPreDraft: Boolean)(implicit messagesForLanguage: ViewMessages, messages: Messages): Option[SummaryListRow] = {
+
+    val changeLink = if (isPreDraft) {
+      controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(testErn, CheckMode)
+    } else {
+      controllers.sections.info.routes.InvoiceDetailsController.onPageLoad(testErn, testDraftId, CheckMode)
+    }
+
+    value match {
+      case Some(value) =>
+        Some(SummaryListRowViewModel(
+          key = Key(Text(messagesForLanguage.cyaInvoiceReferenceLabel)),
+          value = Value(HtmlContent(value)),
+          actions = Seq(ActionItemViewModel(
+            content = Text(messagesForLanguage.change),
+            href = changeLink.url,
+            id = "changeInvoiceReference"
+          ).withVisuallyHiddenText(messagesForLanguage.cyaChangeInvoiceReferenceHidden))
+        ))
+      case None => Some(SummaryListRowViewModel(
         key = Key(Text(messagesForLanguage.cyaInvoiceReferenceLabel)),
-        value = Value(Text(value)),
-        actions = Seq(ActionItemViewModel(
-          content = Text(messagesForLanguage.change),
-          href = controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(testErn, CheckMode).url,
-          id = "changeInvoiceReference"
-        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeInvoiceReferenceHidden))
-      )
-    )
+        value = ValueViewModel(HtmlContent(link(
+          link = changeLink.url,
+          messageKey = messagesForLanguage.addReference,
+          id = Some("changeInvoiceReference")
+        ))),
+        actions = if (isPreDraft) Seq() else Seq(ActionItem(
+          content = HtmlContent(tagHelper.incompleteTag(withNoFloat = true)),
+          href = changeLink.url,
+          visuallyHiddenText = Some(messagesForLanguage.addReference),
+          classes = "cursor-default",
+          attributes = Map("tabindex" -> "-1")
+        ))
+      ))
+    }
   }
 
   Seq(InvoiceDetailsMessages.English).foreach { implicit messagesForLanguage =>
@@ -54,20 +83,57 @@ class InformationInvoiceReferenceSummarySpec extends SpecBase {
       implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
       "and there is no answer for the InvoiceDetailsPage" - {
-        "then must return not provided" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-          InformationInvoiceReferenceSummary.row mustBe expectedRow(value = messagesForLanguage.notProvided)
+        "when on pre-draft flow" - {
+          "then must return Add details row with NO incomplete tag" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+            informationInvoiceReferenceSummary.row mustBe expectedRow(
+              value = None,
+              isPreDraft = true
+            )
+          }
+        }
+
+        "when NOT on pre-draft flow" - {
+          "then must return Add details row with incomplete tag" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.copy(createdFromTemplateId = Some(templateId)))
+
+            informationInvoiceReferenceSummary.row mustBe expectedRow(
+              value = None,
+              isPreDraft = false
+            )
+          }
         }
       }
 
       "and there is a InvoiceDetailsPage answer " - {
-        "then must return a row with the answer" in {
-          val model = InvoiceDetailsModel("inv reference", LocalDate.now)
+        "when on pre-draft flow" - {
+          "then must return a row with the answer" in {
+            val model = InvoiceDetailsModel("inv reference", LocalDate.now)
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(InvoiceDetailsPage(), model))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(InvoiceDetailsPage(), model))
 
-          InformationInvoiceReferenceSummary.row mustBe expectedRow(value = "inv reference")
+            informationInvoiceReferenceSummary.row mustBe expectedRow(
+              value = Some("inv reference"),
+              isPreDraft = true
+            )
+          }
+        }
+        "when NOT on pre-draft flow" - {
+          "then must return a row with the answer" in {
+            val model = InvoiceDetailsModel("inv reference", LocalDate.now)
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              .copy(createdFromTemplateId = Some(templateId))
+              .set(InvoiceDetailsPage(), model)
+            )
+
+            informationInvoiceReferenceSummary.row mustBe expectedRow(
+              value = Some("inv reference"),
+              isPreDraft = false
+            )
+          }
         }
       }
 

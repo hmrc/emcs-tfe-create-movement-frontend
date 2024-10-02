@@ -627,6 +627,7 @@ consigneeExcise.error.length = The consignee’s ERN must be 13 characters
 consigneeExcise.error.invalidCharacters = The consignee’s ERN must only contain letters and numbers
 consigneeExcise.error.format = ERN must start with 2 capital letters followed by 11 numbers or mixed letters and numbers
 consigneeExcise.error.submissionError = You must update the consignee ID so that it is different to the original submission
+consigneeExcise.error.invalidMemberState = ERN must start with a valid EU Member State code
 consigneeExcise.checkYourAnswersLabel.ern = Excise registration number (ERN)
 consigneeExcise.change.hidden.ern = consignee excise registration number (ERN)
 consigneeExcise.checkYourAnswersLabel.ernForTemporaryRegisteredConsignee = Identification number for Temporary Registered Consignee

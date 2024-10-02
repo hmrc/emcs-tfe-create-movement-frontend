@@ -31,25 +31,26 @@ class GetMemberStatesService @Inject()(connector: GetMemberStatesConnector)
                                       (implicit ec: ExecutionContext) {
 
 
-  def getMemberStatesSelectItems()(implicit hc: HeaderCarrier): Future[Seq[SelectItem]] = {
+  def getEuMemberStates()(implicit hc: HeaderCarrier): Future[Seq[CountryModel]] =
     connector.getMemberStates().map {
       case Left(_) => throw MemberStatesException("No member states retrieved")
       case Right(value) =>
         value
           .filterNot(country => country.countryCode == GB_PREFIX || country.countryCode == NI_PREFIX)
-          .map { memberState =>
-            SelectItem(
-              value = Some(memberState.countryCode),
-              text = s"${memberState.country} (${memberState.countryCode})"
-            )
-          }
     }
-  }
 
-  def getMemberStates()(implicit hc: HeaderCarrier): Future[Seq[CountryModel]] = {
-    connector.getMemberStates().map {
-      case Left(_) => throw MemberStatesException("No member states retrieved")
-      case Right(value) => value
-    }
+  def getMemberStatesSelectItems()(implicit hc: HeaderCarrier): Future[Seq[SelectItem]] =
+    getEuMemberStates().map(_.map { memberState =>
+      SelectItem(
+        value = Some(memberState.countryCode),
+        text = s"${memberState.country} (${memberState.countryCode})"
+      )
+    })
+
+def getMemberStates()(implicit hc: HeaderCarrier): Future[Seq[CountryModel]] = {
+  connector.getMemberStates().map {
+    case Left(_) => throw MemberStatesException("No member states retrieved")
+    case Right(value) => value
   }
+}
 }

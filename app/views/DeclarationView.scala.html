@@ -15,17 +15,21 @@
  *@
 
 @import models.requests.DataRequest
+@import config.AppConfig
 
-@this(layout: templates.Layout,
+@this(
+        layout: templates.Layout,
         govukSummaryList: GovukSummaryList,
         formHelper: FormWithCSRF,
         p: components.p,
         h1: components.h1,
         h2: components.h2,
-        govukButton: GovukButton
-        )
+        govukButton: GovukButton,
+        appConfig: AppConfig,
+        inset: components.inset
+)
 
-@(submitAction: Call)(implicit request: DataRequest[_], messages: Messages)
+@(submitAction: Call, countOfTemplates: Int)(implicit request: DataRequest[_], messages: Messages)
 
 
 @layout(pageTitle = titleNoForm(messages("declaration.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
@@ -34,17 +38,34 @@
 
         @h1("declaration.heading", Some(messages("draftMovement.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
 
-        @if(request.userAnswers.createdFromTemplateId != None){
+        @if(request.userAnswers.createdFromTemplateId.isDefined){
             @p() {
                 @messages("declaration.templateContent")
             }
-
+        } else {
+            @if(countOfTemplates >= appConfig.maxTemplates) {
+                @inset(
+                    HtmlFormat.fill(Seq(
+                        p(id = Some("max-templates-reached-p1"))(Html(messages("declaration.maxTemplatesReached.p1", appConfig.maxTemplates))),
+                        p(id = Some("max-templates-reached-p2"))(Html(messages("declaration.maxTemplatesReached.p2", appConfig.maxTemplates)))
+                    ))
+                )
+            }
         }
-        @p() {
+
+        @p(id = Some("declaration-content")) {
             @messages("declaration.content")
         }
 
-        @govukButton(ButtonViewModel(messages("declaration.submit")).preventingDoubleClick())
+        <div class="govuk-button-group">
+
+            @govukButton(ButtonViewModel(messages("declaration.submit")).preventingDoubleClick())
+
+            @if(countOfTemplates >= appConfig.maxTemplates && request.userAnswers.createdFromTemplateId.isEmpty) {
+                <a class="govuk-link" id="save-and-exit-to-templates" href="@appConfig.emcsTfeTemplatesUrl(request.ern)">@messages("site.returnToTemplates")</a>
+            }
+
+        </div>
     }
 }
 

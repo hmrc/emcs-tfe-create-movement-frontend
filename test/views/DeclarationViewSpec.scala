@@ -32,7 +32,12 @@ import java.time.temporal.ChronoUnit
 
 class DeclarationViewSpec extends SpecBase with ViewBehaviours {
 
-  object Selectors extends BaseSelectors
+  object Selectors extends BaseSelectors {
+    val exitToTemplatesLink = "#save-and-exit-to-templates"
+    val content = "#declaration-content"
+    val insetP1 = "#max-templates-reached-p1"
+    val insetP2 = "#max-templates-reached-p2"
+  }
 
   "DeclarationView" - {
 
@@ -40,25 +45,61 @@ class DeclarationViewSpec extends SpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        "when movement was Satisfactory and has not used a template" - {
+        "when movement was Satisfactory and has not used a template (total templates < max)" - {
 
           implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
           implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
           val view = app.injector.instanceOf[DeclarationView]
 
-          implicit val doc: Document = Jsoup.parse(view(submitAction = testOnwardRoute).toString())
+          implicit val doc: Document = Jsoup.parse(view(
+            submitAction = testOnwardRoute,
+            countOfTemplates = appConfig.maxTemplates - 1
+          ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.title,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.draftMovementSection,
             Selectors.h1 -> messagesForLanguage.heading,
-            Selectors.p(1) -> messagesForLanguage.content,
+            Selectors.content -> messagesForLanguage.content,
             Selectors.button -> messagesForLanguage.submit
           ))
 
           "submit button should have prevent double click" in {
             doc.select(Selectors.button).attr("data-prevent-double-click") mustBe "true"
+          }
+        }
+
+        "when movement was Satisfactory and has not used a template (total templates >= max)" - {
+
+          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+          val view = app.injector.instanceOf[DeclarationView]
+
+          implicit val doc: Document = Jsoup.parse(view(
+            submitAction = testOnwardRoute,
+            countOfTemplates = appConfig.maxTemplates
+          ).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.draftMovementSection,
+            Selectors.insetP1 -> messagesForLanguage.maxTemplatesReachedP1(appConfig.maxTemplates),
+            Selectors.insetP2 -> messagesForLanguage.maxTemplatesReachedP2(appConfig.maxTemplates),
+            Selectors.h1 -> messagesForLanguage.heading,
+            Selectors.content -> messagesForLanguage.content,
+            Selectors.button -> messagesForLanguage.submit
+          ))
+
+          "submit button should have prevent double click" in {
+            doc.select(Selectors.button).attr("data-prevent-double-click") mustBe "true"
+          }
+
+          "should include a link to save and exit to templates" in {
+            val link = doc.select(Selectors.exitToTemplatesLink)
+            link.text mustBe messagesForLanguage.saveAndExitToTemplates
+            link.attr("href") mustBe appConfig.emcsTfeTemplatesUrl(testErn)
           }
         }
 
@@ -79,14 +120,17 @@ class DeclarationViewSpec extends SpecBase with ViewBehaviours {
 
           val view = app.injector.instanceOf[DeclarationView]
 
-          implicit val doc: Document = Jsoup.parse(view(submitAction = testOnwardRoute).toString())
+          implicit val doc: Document = Jsoup.parse(view(
+            submitAction = testOnwardRoute,
+            countOfTemplates = appConfig.maxTemplates
+          ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.title,
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.draftMovementSection,
             Selectors.h1 -> messagesForLanguage.heading,
             Selectors.p(1) -> messagesForLanguage.templateContent,
-            Selectors.p(2) -> messagesForLanguage.content,
+            Selectors.content -> messagesForLanguage.content,
             Selectors.button -> messagesForLanguage.submit
           ))
 

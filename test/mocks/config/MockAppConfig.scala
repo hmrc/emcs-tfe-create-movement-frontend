@@ -38,5 +38,7 @@ trait MockAppConfig extends MockFactory {
       val featureSwitchName = feature.configName
       (mockAppConfig.getFeatureSwitchValue(_: String)).expects(featureSwitchName)
     }
+
+    def maxTemplates: CallHandler0[Int] = (mockAppConfig.maxTemplates _).expects()
   }
 }

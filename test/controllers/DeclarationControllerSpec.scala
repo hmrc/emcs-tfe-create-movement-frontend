@@ -20,10 +20,11 @@ import base.SpecBase
 import controllers.actions.{DataRequiredAction, FakeDataRetrievalAction}
 import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import mocks.config.MockAppConfig
-import mocks.services.{MockSubmitCreateMovementService, MockUserAnswersService, MockValidationService}
+import mocks.services.{MockMovementTemplatesService, MockSubmitCreateMovementService, MockUserAnswersService, MockValidationService}
 import models.UserAnswers
 import models.requests.DataRequest
 import models.response.UnexpectedDownstreamDraftSubmissionResponseError
+import models.response.templates.{MovementTemplate, MovementTemplates}
 import navigation.FakeNavigators.FakeNavigator
 import pages.DeclarationPage
 import play.api.i18n.Messages
@@ -42,6 +43,7 @@ class DeclarationControllerSpec extends SpecBase
   with MockAppConfig
   with ItemFixtures
   with MovementSubmissionFailureFixtures
+  with MockMovementTemplatesService
   with MockValidationService {
 
   lazy val view: DeclarationView = app.injector.instanceOf[DeclarationView]
@@ -67,6 +69,7 @@ class DeclarationControllerSpec extends SpecBase
       mockSubmitCreateMovementService,
       view,
       mockValidationService,
+      mockMovementTemplatesService,
       errorHandler
     )(mockAppConfig)
   }
@@ -76,13 +79,15 @@ class DeclarationControllerSpec extends SpecBase
     "for GET onPageLoad" - {
       "must return the declaration page (no submission failure and journey complete)" in new Test() {
 
+        MockMovementTemplatesService.getList(ern).returns(Future.successful(MovementTemplates(Seq(), 0)))
+
         MockAppConfig.destinationOfficeSuffix.returns("004098")
         MockValidationService.validate().returns(Future.successful(userAnswers))
 
         val res = controller.onPageLoad(ern, testDraftId)(request)
 
         status(res) mustBe OK
-        contentAsString(res) mustBe view(submitRoute).toString()
+        contentAsString(res) mustBe view(submitAction = submitRoute, countOfTemplates = 0).toString()
       }
 
       "must redirect to Task List when validation service triggers a validation error to be added to the UserAnswers" in new Test() {
@@ -121,13 +126,15 @@ class DeclarationControllerSpec extends SpecBase
         ))
       ) {
 
+        MockMovementTemplatesService.getList(ern).returns(Future.successful(MovementTemplates(Seq(), 0)))
+
         MockAppConfig.destinationOfficeSuffix.returns("004098")
         MockValidationService.validate().returns(Future.successful(userAnswers))
 
         val res = controller.onPageLoad(ern, testDraftId)(request)
 
         status(res) mustBe OK
-        contentAsString(res) mustBe view(submitRoute).toString()
+        contentAsString(res) mustBe view(submitAction = submitRoute, countOfTemplates = 0).toString()
       }
 
       "when creating a request model fails" - {

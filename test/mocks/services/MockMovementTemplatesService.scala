@@ -18,6 +18,7 @@ package mocks.services
 
 import models.requests.DataRequest
 import models.response.ErrorResponse
+import models.response.templates.MovementTemplates
 import org.scalamock.handlers.{CallHandler2, CallHandler4}
 import org.scalamock.scalatest.MockFactory
 import services.MovementTemplatesService
@@ -41,6 +42,9 @@ trait MockMovementTemplatesService extends MockFactory {
 
     def getExistingTemplateNames(ern: String): CallHandler2[String, HeaderCarrier, Future[Seq[String]]] =
       (mockMovementTemplatesService.getExistingTemplateNames(_: String)(_: HeaderCarrier)).expects(ern, *)
+
+    def getList(ern: String): CallHandler2[String, HeaderCarrier, Future[MovementTemplates]] =
+      (mockMovementTemplatesService.getList(_: String)(_: HeaderCarrier)).expects(ern, *)
   }
 
 }

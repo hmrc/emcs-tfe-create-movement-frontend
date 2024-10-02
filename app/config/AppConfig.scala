@@ -107,4 +107,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   def maxDispatchDateFutureDays: Int = configuration.get[Int]("constants.maxDispatchDateFutureDays")
 
   def templatesFeatureEnabled: Boolean = isEnabled(TemplatesLink)
+
+  def maxTemplates: Int = configuration.get[String]("constants.maxTemplates").toInt
 }

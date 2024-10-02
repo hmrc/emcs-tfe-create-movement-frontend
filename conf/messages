@@ -18,6 +18,7 @@ site.saveAndContinue = Save and continue
 site.confirmAndContinue = Confirm and continue
 site.returnToDraft = Return to draft
 site.saveAndReturnToMovement = Save and return to movement
+site.returnToTemplates = Save and exit to manage my templates
 site.start = Start now
 site.skipQuestion = Skip this question for now
 site.skipThisQuestion = Skip this question
@@ -1364,6 +1365,8 @@ declaration.title = Declaration
 declaration.heading = Declaration
 declaration.content = By submitting this draft movement you are confirming that to the best of your knowledge, the details you are providing are correct.
 declaration.templateContent = This movement was created from a draft template. It is therefore important that all details have been checked for accuracy.
+declaration.maxTemplatesReached.p1 = You have reached the maximum limit of {0} templates. If you would like to save this draft as a new template you must first delete an existing template.
+declaration.maxTemplatesReached.p2 = If you exit this draft your answers will be saved and you can return to it later. Once you have managed your templates and are below the maximum limit of {0} you will be able to save this draft as a template before submitting.
 declaration.submit = Submit draft movement
 
 itemBulkPackagingChoice.title = Is the {0} being moved in bulk?

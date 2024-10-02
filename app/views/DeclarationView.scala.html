@@ -34,6 +34,12 @@
 
         @h1("declaration.heading", Some(messages("draftMovement.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
 
+        @if(request.userAnswers.createdFromTemplateId != None){
+            @p() {
+                @messages("declaration.templateContent")
+            }
+
+        }
         @p() {
             @messages("declaration.content")
         }

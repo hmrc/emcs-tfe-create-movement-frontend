@@ -23,6 +23,7 @@ import pages.sections.Section
 import pages.sections.documents.DocumentsSection
 import pages.sections.info.{DeferredMovementPage, DispatchDetailsPage, InvoiceDetailsPage, LocalReferenceNumberPage}
 import pages.sections.items.ItemsSection
+import pages.sections.journeyType.JourneyTypeSection
 import pages.sections.sad.SadSection
 import pages.sections.transportUnit.TransportUnitsSection
 import play.api.libs.json._
@@ -120,6 +121,7 @@ final case class UserAnswers(ern: String,
       .remove(InvoiceDetailsPage(isOnPreDraftFlow = false))
       .remove(DeferredMovementPage(isOnPreDraftFlow = false))
       //Remove other full sections
+      .remove(JourneyTypeSection)
       .remove(TransportUnitsSection)
       .remove(SadSection)
       .remove(DocumentsSection).data

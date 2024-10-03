@@ -42,7 +42,7 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours with Movement
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
       lazy val view = app.injector.instanceOf[ConsigneeExciseView]
-      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply()
+      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(None)
 
       implicit val doc: Document = Jsoup.parse(
         view(
@@ -78,7 +78,7 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours with Movement
       )
 
       lazy val view = app.injector.instanceOf[ConsigneeExciseView]
-      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply()
+      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(None)
 
       implicit val doc: Document = Jsoup.parse(
         view(
@@ -118,7 +118,7 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours with Movement
       )
 
       lazy val view = app.injector.instanceOf[ConsigneeExciseView]
-      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply()
+      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(None)
 
       implicit val doc: Document = Jsoup.parse(
         view(
@@ -141,7 +141,7 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours with Movement
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
       lazy val view = app.injector.instanceOf[ConsigneeExciseView]
-      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply()
+      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(None)
 
       implicit val doc: Document = Jsoup.parse(
         view(
@@ -172,7 +172,7 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours with Movement
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
       lazy val view = app.injector.instanceOf[ConsigneeExciseView]
-      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply()
+      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(None)
 
       implicit val doc: Document = Jsoup.parse(
         view(

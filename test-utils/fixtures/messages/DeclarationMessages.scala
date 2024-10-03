@@ -25,6 +25,9 @@ object DeclarationMessages {
     val content = "By submitting this draft movement you are confirming that to the best of your knowledge, the details you are providing are correct."
     val templateContent = "This movement was created from a draft template. It is therefore important that all details have been checked for accuracy."
     val submit = "Submit draft movement"
+    val maxTemplatesReachedP1: Int => String = max => s"You have reached the maximum limit of $max templates. If you would like to save this draft as a new template you must first delete an existing template."
+    val maxTemplatesReachedP2: Int => String = max => s"If you exit this draft your answers will be saved and you can return to it later. Once you have managed your templates and are below the maximum limit of $max you will be able to save this draft as a template before submitting."
+    val saveAndExitToTemplates = "Save and exit to manage my templates"
   }
 
   object English extends ViewMessages with BaseEnglish

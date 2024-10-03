@@ -18,8 +18,11 @@ package controllers
 
 import base.SpecBase
 import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeDataRetrievalAction}
+import mocks.config.MockAppConfig
+import mocks.services.MockMovementTemplatesService
 import mocks.viewmodels.MockItemsAddToListHelper
 import models.UserAnswers
+import models.response.templates.MovementTemplates
 import navigation.FakeNavigators.FakeNavigator
 import pages.sections.info.DeferredMovementPage
 import play.api.i18n.{Messages, MessagesApi}
@@ -31,7 +34,10 @@ import views.html.CheckYourAnswersView
 
 import scala.concurrent.Future
 
-class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency with MockItemsAddToListHelper {
+class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency
+  with MockItemsAddToListHelper
+  with MockMovementTemplatesService
+  with MockAppConfig {
 
   class Fixture(val userAnswers: Option[UserAnswers]) {
     implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
@@ -50,7 +56,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
       Helpers.stubMessagesControllerComponents(),
       new FakeNavigator(testOnwardRoute),
       view,
-      mockItemsAddToListHelper
+      mockMovementTemplatesService,
+      mockItemsAddToListHelper,
+      mockAppConfig
     )
   }
 
@@ -92,12 +100,32 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
 
     ".onSubmit" - {
 
-      "must redirect to the onward route" in new Fixture(Some(emptyUserAnswers)) {
+      "when the number of templates used >= maxTemplates" - {
 
-        val result = controller.onSubmit(testErn, testDraftId)(request)
+        "must redirect directly to Declaration controller" in new Fixture(Some(emptyUserAnswers)) {
 
-        status(result) mustBe SEE_OTHER
-        redirectLocation(result).value mustBe testOnwardRoute.url
+          MockAppConfig.maxTemplates.returns(30)
+          MockMovementTemplatesService.getList(testErn).returns(Future.successful(MovementTemplates(Seq(), 30)))
+
+          val result = controller.onSubmit(testErn, testDraftId)(request)
+
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result).value mustBe controllers.routes.DeclarationController.onPageLoad(testErn, testDraftId).url
+        }
+      }
+
+      "when the number of templates used < maxTemplates" - {
+
+        "must redirect via the navigator to the next route" in new Fixture(Some(emptyUserAnswers)) {
+
+          MockAppConfig.maxTemplates.returns(30)
+          MockMovementTemplatesService.getList(testErn).returns(Future.successful(MovementTemplates(Seq(), 29)))
+
+          val result = controller.onSubmit(testErn, testDraftId)(request)
+
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result).value mustBe testOnwardRoute.url
+        }
       }
     }
   }

@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.AppConfig
 import controllers.actions._
 import models.NormalMode
 import navigation.Navigator
@@ -23,6 +24,7 @@ import pages.CheckAnswersPage
 import pages.sections.info.DeferredMovementPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.MovementTemplatesService
 import viewmodels.helpers.ItemsAddToListHelper
 import views.html.CheckYourAnswersView
 
@@ -35,7 +37,9 @@ class CheckYourAnswersController @Inject()(override val messagesApi: MessagesApi
                                            val controllerComponents: MessagesControllerComponents,
                                            val navigator: Navigator,
                                            view: CheckYourAnswersView,
-                                           itemsAddToListHelper: ItemsAddToListHelper
+                                           movementTemplatesService: MovementTemplatesService,
+                                           itemsAddToListHelper: ItemsAddToListHelper,
+                                           appConfig: AppConfig
                                           ) extends BaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
@@ -52,7 +56,12 @@ class CheckYourAnswersController @Inject()(override val messagesApi: MessagesApi
     }
 
   def onSubmit(ern: String, draftId: String): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
-      Redirect(navigator.nextPage(CheckAnswersPage, NormalMode, request.userAnswers))
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      movementTemplatesService.getList(ern).map {
+        case templates if templates.count >= appConfig.maxTemplates =>
+          Redirect(controllers.routes.DeclarationController.onPageLoad(ern, draftId))
+        case _ =>
+          Redirect(navigator.nextPage(CheckAnswersPage, NormalMode, request.userAnswers))
+      }
     }
 }

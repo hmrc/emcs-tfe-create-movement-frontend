@@ -80,6 +80,8 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   def emcsTfeFrontendBaseUrl: String = servicesConfig.baseUrl("emcs-tfe-frontend")
 
+  def emcsTfeFrontendHomeUrl(ern: String): String = servicesConfig.baseUrl("emcs-tfe-frontend") + s"/emcs/trader/$ern"
+
   def traderKnownFactsReferenceDataBaseUrl: String =
     servicesConfig.baseUrl("emcs-tfe") + "/emcs-tfe/trader-known-facts"
 

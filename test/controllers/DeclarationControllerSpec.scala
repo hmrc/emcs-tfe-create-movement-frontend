@@ -24,7 +24,7 @@ import mocks.services.{MockMovementTemplatesService, MockSubmitCreateMovementSer
 import models.UserAnswers
 import models.requests.DataRequest
 import models.response.UnexpectedDownstreamDraftSubmissionResponseError
-import models.response.templates.{MovementTemplate, MovementTemplates}
+import models.response.templates.MovementTemplates
 import navigation.FakeNavigators.FakeNavigator
 import pages.DeclarationPage
 import play.api.i18n.Messages

@@ -17,6 +17,7 @@
 package views
 
 import base.SpecBase
+import config.Constants
 import fixtures.messages.DeclarationMessages
 import models.UserAnswers
 import models.requests.DataRequest
@@ -101,6 +102,36 @@ class DeclarationViewSpec extends SpecBase with ViewBehaviours {
             link.text mustBe messagesForLanguage.saveAndExitToTemplates
             link.attr("href") mustBe appConfig.emcsTfeTemplatesUrl(testErn)
           }
+        }
+
+        "when movement was Satisfactory and has not used a template (total templates >= max) BUT this draft has been saved as the last template" - {
+
+          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(
+            FakeRequest().withSession(Constants.HAS_SAVED_TEMPLATE -> "true"),
+            emptyUserAnswers
+          )
+
+          val view = app.injector.instanceOf[DeclarationView]
+
+          implicit val doc: Document = Jsoup.parse(view(
+            submitAction = testOnwardRoute,
+            countOfTemplates = appConfig.maxTemplates
+          ).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.draftMovementSection,
+            Selectors.h1 -> messagesForLanguage.heading,
+            Selectors.content -> messagesForLanguage.content,
+            Selectors.button -> messagesForLanguage.submit
+          ))
+
+          //Don't show the inset text as this is the 30th Template (added by this draft being saved)
+          behave like pageWithElementsNotPresent(Seq(
+            Selectors.insetP1,
+            Selectors.insetP2
+          ))
         }
 
         "when movement was Satisfactory and has used a template" - {

@@ -16,6 +16,7 @@
 
 @import models.requests.DataRequest
 @import config.AppConfig
+@import config.Constants
 
 @this(
         layout: templates.Layout,
@@ -43,7 +44,7 @@
                 @messages("declaration.templateContent")
             }
         } else {
-            @if(countOfTemplates >= appConfig.maxTemplates) {
+            @if(countOfTemplates >= appConfig.maxTemplates && request.session.get(Constants.HAS_SAVED_TEMPLATE).isEmpty) {
                 @inset(
                     HtmlFormat.fill(Seq(
                         p(id = Some("max-templates-reached-p1"))(Html(messages("declaration.maxTemplatesReached.p1", appConfig.maxTemplates))),
@@ -61,7 +62,9 @@
 
             @govukButton(ButtonViewModel(messages("declaration.submit")).preventingDoubleClick())
 
-            @if(countOfTemplates >= appConfig.maxTemplates && request.userAnswers.createdFromTemplateId.isEmpty) {
+            @if(countOfTemplates >= appConfig.maxTemplates &&
+                    request.userAnswers.createdFromTemplateId.isEmpty &&
+                    request.session.get(Constants.HAS_SAVED_TEMPLATE).isEmpty) {
                 <a class="govuk-link" id="save-and-exit-to-templates" href="@appConfig.emcsTfeTemplatesUrl(request.ern)">@messages("site.returnToTemplates")</a>
             }
 

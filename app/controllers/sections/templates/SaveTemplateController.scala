@@ -16,7 +16,7 @@
 
 package controllers.sections.templates
 
-import config.AppConfig
+import config.{AppConfig, Constants}
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.templates.SaveTemplateFormProvider
@@ -71,6 +71,7 @@ class SaveTemplateController @Inject()(
             case SaveTemplateModel(true, Some(name)) =>
               templatesService.saveTemplate(name).map { _ =>
                 Redirect(controllers.routes.DeclarationController.onPageLoad(ern, draftId))
+                  .addingToSession(Constants.HAS_SAVED_TEMPLATE -> "true")
               }
             case _ =>
               Future.successful(Redirect(controllers.routes.DeclarationController.onPageLoad(ern, draftId)))

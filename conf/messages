@@ -1193,7 +1193,7 @@ itemDesignationOfOrigin.PDO = The product has a Protected Designation of Origin 
 itemDesignationOfOrigin.PDO.input = Enter the name and register number of the PDO (optional)
 itemDesignationOfOrigin.PGI = The product has a Protected Geographical Indication (PGI)
 itemDesignationOfOrigin.PGI.input = Enter the name and register number of the PGI (optional)
-itemDesignationOfOrigin.None = I don’t want to provide a statement about the designation of origin
+itemDesignationOfOrigin.None = None
 # Separation needed due to the service sending ’ as ..., the message key below maintains the apostrophe
 itemDesignationOfOrigin.None.downstream = I don''t want to provide a statement about the designation of origin
 

@@ -19,19 +19,22 @@ package controllers.sections.destination
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.destination.DestinationWarehouseExciseFormProvider
-import models.Mode
+import models.{CountryModel, Mode}
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.EuTaxWarehouse
 import navigation.DestinationNavigator
 import pages.sections.destination.{DestinationAddressPage, DestinationWarehouseExcisePage}
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
+import services.{GetMemberStatesService, UserAnswersService}
 import views.html.sections.destination.DestinationWarehouseExciseView
 
 import javax.inject.Inject
 import scala.concurrent.Future
+import cats.implicits._
+import models.sections.info.movementScenario.MovementScenario
 
 class DestinationWarehouseExciseController @Inject()(
                                                       override val messagesApi: MessagesApi,
@@ -42,34 +45,36 @@ class DestinationWarehouseExciseController @Inject()(
                                                       override val requireData: DataRequiredAction,
                                                       formProvider: DestinationWarehouseExciseFormProvider,
                                                       val controllerComponents: MessagesControllerComponents,
+                                                      memberStatesService: GetMemberStatesService,
                                                       view: DestinationWarehouseExciseView
                                                     ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
-      withAnswer(DestinationTypePage) { movementScenario =>
-        renderView(Ok, fillForm(DestinationWarehouseExcisePage, formProvider(movementScenario)), mode)
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      withAnswerAsync(DestinationTypePage) { movementScenario =>
+        withOptionalEuMemberStates(movementScenario) { memberStates =>
+          renderView(Ok, fillForm(DestinationWarehouseExcisePage, formProvider(movementScenario, memberStates)), mode)
+        }
       }
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withAnswerAsync(DestinationTypePage) { movementScenario =>
-        formProvider(movementScenario).bindFromRequest().fold(
-          formWithError => Future.successful(renderView(BadRequest, formWithError, mode)),
-          cleanseSaveAndRedirect(_, mode)
-        )
+        withOptionalEuMemberStates(movementScenario) { memberStates =>
+          formProvider(movementScenario, memberStates).bindFromRequest().fold(
+            formWithError => renderView(BadRequest, formWithError, mode),
+            cleanseSaveAndRedirect(_, mode)
+          )
+        }
       }
     }
 
-  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
-    withAnswer(DestinationTypePage) { _ =>
-      status(view(
-        form,
-        onSubmitCall = controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(request.ern, request.draftId, mode)
-      ))
-    }
-  }
+  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+    Future.successful(status(view(
+      form,
+      onSubmitCall = controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(request.ern, request.draftId, mode)
+    )))
 
   def cleanseSaveAndRedirect(value: String, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
     val cleansedAnswers = {
@@ -80,5 +85,11 @@ class DestinationWarehouseExciseController @Inject()(
     }
     saveAndRedirect(DestinationWarehouseExcisePage, value, cleansedAnswers, mode)
   }
+
+  def withOptionalEuMemberStates[A](movementScenario: MovementScenario)
+                                   (f: Option[Seq[CountryModel]] => Future[A])(implicit request: DataRequest[_]): Future[A] =
+    Option.when(movementScenario == EuTaxWarehouse) {
+      memberStatesService.getEuMemberStates()
+    }.traverse(identity).flatMap(f)
 
 }

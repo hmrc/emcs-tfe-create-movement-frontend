@@ -45,12 +45,12 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
         .verifying(firstError(
           fixedLength(13, s"$keyPrefix.error.length"),
           regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"$keyPrefix.error.invalidCharacters"),
-          regexpUnlessEmpty(EXCISE_NUMBER_REGEX, s"$keyPrefix.error.format")
-        ))
-        .verifying(validateErn(memberStates))
-        .verifying(isNotEqualToOptExistingAnswer(
-          existingAnswer = ConsigneeExcisePage.getOriginalAttributeValue,
-          errorKey = "consigneeExcise.error.submissionError"
+          regexpUnlessEmpty(EXCISE_NUMBER_REGEX, s"$keyPrefix.error.format"),
+          validateErn(memberStates),
+          isNotEqualToOptExistingAnswer(
+            existingAnswer = ConsigneeExcisePage.getOriginalAttributeValue,
+            errorKey = "consigneeExcise.error.submissionError"
+          )
         ))
     )
   }

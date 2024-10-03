@@ -26,7 +26,7 @@ object ItemMaturationPeriodAgeMessages {
     def title(goodsType: String): String = titleHelper(heading(goodsType))
 
     val hint = "The maturation age refers to a production process that happens before bottling. It can usually be found in the description, presentation and labelling of the goods."
-    val maturationPeriodAgeLabel = "Enter the maturation age"
+    val maturationPeriodAgeLabel = "Enter the maturation period or age in years"
 
     val cyaLabel = "Maturation age"
     val cyaChangeHidden = "the maturation age"

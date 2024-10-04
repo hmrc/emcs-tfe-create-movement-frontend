@@ -12,7 +12,7 @@ GET         /there-is-a-problem                                 controllers.Jour
 
 GET         /account/signed-out                                 controllers.auth.SignedOutController.signedOutNotSaved()
 GET         /account/signed-out-saved                           controllers.auth.SignedOutController.signedOutSaved()
-GET         /account/sign-out                                   controllers.auth.SignedOutController.signOut()
+GET         /account/sign-out                                   controllers.auth.SignedOutController.signOut(becauseOfTimeout: Boolean ?= false)
 
 GET         /trader/:ern                                        controllers.IndexController.onPageLoad(ern: String)
 

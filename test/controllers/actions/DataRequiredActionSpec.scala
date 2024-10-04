@@ -83,7 +83,7 @@ class DataRequiredActionSpec extends SpecBase
       }
 
       "when the user answers are submitted and the user is not on the Confirmation screen" in {
-        MockAppConfig.emcsTfeFrontendHomeUrl.returns(testUrl)
+        MockAppConfig.emcsTfeHomeUrl.returns(testUrl)
 
         val request = OptionalDataRequest(
           userRequest(FakeRequest(controllers.routes.DeclarationController.onPageLoad(testErn, testDraftId))),

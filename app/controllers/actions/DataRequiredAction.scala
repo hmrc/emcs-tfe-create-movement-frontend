@@ -41,7 +41,7 @@ class DataRequiredActionImpl @Inject()(appConfig: AppConfig)(implicit val execut
           // hasBeenSubmitted is set to `true` on successful CaM submission
           // if an IE704 is generated, hasBeenSubmitted is set back to false so they should be able to access the draft again
           logger.debug(s"[refine] User with ERN: ${request.ern} has already submitted the movement, redirecting to account home page")
-          Future.successful(Left(Redirect(appConfig.emcsTfeFrontendHomeUrl(request.ern))))
+          Future.successful(Left(Redirect(appConfig.emcsTfeHomeUrl)))
         } else {
           Future.successful(Right(DataRequest(request.request, request.draftId, userAnswers, request.traderKnownFacts)))
         }

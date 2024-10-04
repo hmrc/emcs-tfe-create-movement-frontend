@@ -34,7 +34,7 @@ trait MockAppConfig extends MockFactory {
     def earliestDispatchDate: CallHandler0[LocalDate] = (mockAppConfig.earliestDispatchDate _).expects()
     def nrsBrokerBaseUrl: CallHandler0[String] = (mockAppConfig.nrsBrokerBaseUrl _).expects()
 
-    def emcsTfeFrontendHomeUrl: CallHandler1[String, String] = (mockAppConfig.emcsTfeFrontendHomeUrl _).expects(*)
+    def emcsTfeHomeUrl: CallHandler0[String] = (mockAppConfig.emcsTfeHomeUrl _).expects()
 
     def getFeatureSwitchValue(feature: FeatureSwitch): CallHandler1[String, Boolean] = {
       val featureSwitchName = feature.configName

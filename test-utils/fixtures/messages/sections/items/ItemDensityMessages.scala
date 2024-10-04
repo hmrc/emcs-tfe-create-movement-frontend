@@ -29,7 +29,7 @@ object ItemDensityMessages {
     val hint = "Enter the density in kilograms per cubic metres"
     val suffix = "kg/m3"
 
-    val cyaLabel = "Density at 15&deg;C"
+    val cyaLabel = "Density"
     val cyaChangeHidden = "density"
     val cyaSuffix = "kg/m<sup>3</sup>"
 

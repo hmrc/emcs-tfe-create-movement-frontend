@@ -1606,7 +1606,7 @@ itemDensity.error.length = Enter a density amount up to 5 digits long, which can
 itemDensity.error.greaterThanZero = Density amount must be greater than 0
 itemDensity.change.hidden = density
 itemDensity.suffix = kg/m<sup>3</sup>
-itemDensity.hint = Enter the density, at 15 degrees Celsius per kilogram per cubic metre.
+itemDensity.hint = Enter the density in kilograms per cubic metres
 
 itemCheckAnswers.title = Check your answers
 itemCheckAnswers.heading = Check your answers

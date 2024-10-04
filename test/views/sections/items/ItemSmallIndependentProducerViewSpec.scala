@@ -70,7 +70,6 @@ class ItemSmallIndependentProducerViewSpec extends SpecBase with ViewBehaviours 
           Selectors.label(ItemSmallIndependentProducerFormProvider.producerIdField) -> messagesForLanguage.selfCertifiedIndependentSmallProducerNotConsignorInput,
           Selectors.radioDividerButton(5) -> messagesForLanguage.or,
           Selectors.radioButton(6) -> messagesForLanguage.notAIndependentSmallProducer,
-          Selectors.radioButton(7) -> messagesForLanguage.smallProducerNotProvided,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))

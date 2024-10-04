@@ -1282,8 +1282,7 @@ itemSmallIndependentProducer.CertifiedProducer.hint = The certificate should be 
 itemSmallIndependentProducer.SelfCertifiedProducerAndConsignor = The producer is a self-certified independent small producer and the consignor
 itemSmallIndependentProducer.SelfCertifiedProducerAndNotConsignor = The producer is a self-certified independent small producer and not the consignor
 itemSmallIndependentProducer.SelfCertifiedProducerAndNotConsignor.input = Enter the self-certified producer’s excise ID or, if not available, the VAT registration number
-itemSmallIndependentProducer.None = The producer is not an independent small producer
-itemSmallIndependentProducer.NotProvided = I don’t want to provide information about the producer
+itemSmallIndependentProducer.None = Not applicable
 # Separation needed due to the service sending ’ as ..., the message key below maintains the apostrophe
 itemSmallIndependentProducer.NotProvided.downstream = I don''t want to provide information about the producer
 itemSmallIndependentProducer.error.producer.required = Select the type of producer or select ‘I don’t want to provide information about the producer’

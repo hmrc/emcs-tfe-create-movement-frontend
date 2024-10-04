@@ -28,7 +28,7 @@ case object ItemSmallIndependentProducerType extends Enumerable.Implicits {
 
   case object SelfCertifiedIndependentSmallProducerAndNotConsignor extends WithName("SelfCertifiedProducerAndNotConsignor") with ItemSmallIndependentProducerType
 
-  case object NotAIndependentSmallProducer extends WithName("None") with ItemSmallIndependentProducerType
+  case object NotApplicable extends WithName("None") with ItemSmallIndependentProducerType
 
   case object NotProvided extends WithName("NotProvided") with ItemSmallIndependentProducerType
 
@@ -36,12 +36,12 @@ case object ItemSmallIndependentProducerType extends Enumerable.Implicits {
     CertifiedIndependentSmallProducer,
     SelfCertifiedIndependentSmallProducerAndConsignor,
     SelfCertifiedIndependentSmallProducerAndNotConsignor,
-    NotAIndependentSmallProducer,
+    NotApplicable,
     NotProvided
   )
 
   val notProvidedValues: Seq[ItemSmallIndependentProducerType] = Seq(
-    NotAIndependentSmallProducer,
+    NotApplicable,
     NotProvided
   )
 

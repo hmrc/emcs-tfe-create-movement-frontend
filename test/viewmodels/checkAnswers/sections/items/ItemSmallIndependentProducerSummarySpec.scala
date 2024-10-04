@@ -23,7 +23,7 @@ import models.GoodsType._
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheEu, ExportWithCustomsDeclarationLodgedInTheUk, UkTaxWarehouse}
 import models.sections.items.ItemSmallIndependentProducerModel
-import models.sections.items.ItemSmallIndependentProducerType.{CertifiedIndependentSmallProducer, NotAIndependentSmallProducer, NotProvided, SelfCertifiedIndependentSmallProducerAndNotConsignor}
+import models.sections.items.ItemSmallIndependentProducerType.{CertifiedIndependentSmallProducer, NotApplicable, NotProvided, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.{CheckMode, UserAnswers}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.info.DestinationTypePage
@@ -147,8 +147,7 @@ class ItemSmallIndependentProducerSummarySpec extends SpecBase with Matchers wit
           }
 
           Seq(
-            NotAIndependentSmallProducer -> "The producer is not an independent small producer",
-            NotProvided -> "I don’t want to provide information about the producer"
+            NotApplicable -> "Not applicable",
           ).foreach { optionAndAnswer =>
             s"user selecting the option: ${optionAndAnswer._1}" in new Test(emptyUserAnswers
               .set(DestinationTypePage, EuTaxWarehouse)

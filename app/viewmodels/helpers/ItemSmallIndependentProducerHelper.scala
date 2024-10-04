@@ -73,14 +73,9 @@ class ItemSmallIndependentProducerHelper @Inject()(govukInput: GovukInput) {
           divider = Some(messages("site.divider"))
         ),
         RadioItem(
-          id = Some(s"${form(producerField).id}-${NotAIndependentSmallProducer.toString}"),
-          value = Some(NotAIndependentSmallProducer.toString),
-          content = Text(messages(s"itemSmallIndependentProducer.${NotAIndependentSmallProducer.toString}"))
-        ),
-        RadioItem(
-          id = Some(s"${form(producerField).id}-${NotProvided.toString}"),
-          value = Some(NotProvided.toString),
-          content = Text(messages(s"itemSmallIndependentProducer.${NotProvided.toString}"))
+          id = Some(s"${form(producerField).id}-${NotApplicable.toString}"),
+          value = Some(NotApplicable.toString),
+          content = Text(messages(s"itemSmallIndependentProducer.${NotApplicable.toString}"))
         )
       ),
       LegendViewModel(Text(messages("itemSmallIndependentProducer.legend"))).withCssClass(LegendSize.Small.toString)

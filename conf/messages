@@ -1599,7 +1599,7 @@ itemPackagingSealType.sealInformation.addMoreInfo = Enter more information about
 
 itemDensity.title = What is the density of the {0}?
 itemDensity.heading = What is the density of the {0}?
-itemDensity.checkYourAnswersLabel = Density at 15&deg;C
+itemDensity.checkYourAnswersLabel = Density
 itemDensity.checkYourAnswersValue = {0}kg/m<sup>3</sup>
 itemDensity.error.required = Enter the density of the {0}
 itemDensity.error.length = Enter a density amount up to 5 digits long, which can include up to 2 decimal places

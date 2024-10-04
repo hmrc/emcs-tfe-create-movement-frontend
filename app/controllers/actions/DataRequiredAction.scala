@@ -16,23 +16,35 @@
 
 package controllers.actions
 
+import config.AppConfig
 import controllers.routes
 import models.requests.{DataRequest, OptionalDataRequest}
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, Result}
+import utils.Logging
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class DataRequiredActionImpl @Inject()(implicit val executionContext: ExecutionContext) extends DataRequiredAction {
+class DataRequiredActionImpl @Inject()(appConfig: AppConfig)(implicit val executionContext: ExecutionContext) extends DataRequiredAction with Logging {
 
   override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
 
     request.userAnswers match {
       case None =>
         Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
-      case Some(data) =>
-        Future.successful(Right(DataRequest(request.request, request.draftId, data, request.traderKnownFacts)))
+      case Some(userAnswers) =>
+        lazy val isOnConfirmationScreen =
+          request.uri == routes.ConfirmationController.onPageLoad(request.ern, request.draftId).url
+
+        if(userAnswers.hasBeenSubmitted && !isOnConfirmationScreen) {
+          // hasBeenSubmitted is set to `true` on successful CaM submission
+          // if an IE704 is generated, hasBeenSubmitted is set back to false so they should be able to access the draft again
+          logger.debug(s"[refine] User with ERN: ${request.ern} has already submitted the movement, redirecting to account home page")
+          Future.successful(Left(Redirect(appConfig.emcsTfeFrontendHomeUrl(request.ern))))
+        } else {
+          Future.successful(Right(DataRequest(request.request, request.draftId, userAnswers, request.traderKnownFacts)))
+        }
     }
   }
 }

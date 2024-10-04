@@ -24,7 +24,6 @@ import models.sections.info.DispatchDetailsModel
 import pages.sections.info.DispatchDetailsPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, Key, SummaryListRow, Value}
 import viewmodels.govuk.summarylist._

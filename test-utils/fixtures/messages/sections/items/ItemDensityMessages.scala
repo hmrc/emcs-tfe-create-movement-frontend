@@ -26,10 +26,10 @@ object ItemDensityMessages {
 
     def title(goodsType: String): String = titleHelper(heading(goodsType))
 
-    val hint = "Enter the density, at 15 degrees Celsius per kilogram per cubic metre."
+    val hint = "Enter the density in kilograms per cubic metres"
     val suffix = "kg/m3"
 
-    val cyaLabel = "Density at 15&deg;C"
+    val cyaLabel = "Density"
     val cyaChangeHidden = "density"
     val cyaSuffix = "kg/m<sup>3</sup>"
 

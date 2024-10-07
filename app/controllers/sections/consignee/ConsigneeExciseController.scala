@@ -20,8 +20,8 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.consignee.ConsigneeExciseFormProvider
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
-import models.{CountryModel, Mode, UserType}
+import models.sections.info.movementScenario.MovementScenario.{TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
+import models.{Mode, UserType}
 import navigation.ConsigneeNavigator
 import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExcisePage}
 import pages.sections.info.DestinationTypePage
@@ -30,7 +30,6 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.{GetMemberStatesService, UserAnswersService}
 import views.html.sections.consignee.ConsigneeExciseView
-import cats.implicits._
 
 import javax.inject.Inject
 import scala.concurrent.Future
@@ -49,25 +48,20 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      withOptionalEuMemberStates { memberStates =>
+      memberStatesService.withEuMemberStatesWhenDestinationEU { memberStates =>
         renderView(Ok, fillForm(ConsigneeExcisePage, formProvider(memberStates)), ern, draftId, mode)
       }
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
-      withOptionalEuMemberStates { memberStates =>
+      memberStatesService.withEuMemberStatesWhenDestinationEU { memberStates =>
         formProvider(memberStates).bindFromRequest().fold(
           renderView(BadRequest, _, ern, draftId, mode),
           cleanseSaveAndRedirect(_, mode)
         )
       }
     }
-
-  def withOptionalEuMemberStates[A](f: Option[Seq[CountryModel]] => Future[A])(implicit request: DataRequest[_]): Future[A] =
-    Option.when(DestinationTypePage.value.contains(EuTaxWarehouse)) {
-      memberStatesService.getEuMemberStates()
-    }.traverse(identity).flatMap(f)
 
   private def isNorthernIrish(implicit request: DataRequest[_]): Boolean =
     UserType.northernIrelandUserTypes.contains(request.userTypeFromErn)

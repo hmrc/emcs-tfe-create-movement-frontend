@@ -74,7 +74,7 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase
       .set(DestinationTypePage, EuTaxWarehouse
       ))) {
 
-      MockGetMemberStatesService.getEuMemberStates().returns(Future.successful(Seq(CountryModel("FR", "France"))))
+      MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(Some(Seq(CountryModel("FR", "France")))).once()
 
       override lazy val form =  formProvider(MovementScenario.EuTaxWarehouse, Some(Seq(CountryModel("FR", "France"))))(dataRequest(FakeRequest()))
 
@@ -89,6 +89,9 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase
 
     "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers
       .set(DestinationTypePage, DirectDelivery))) {
+
+      MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
+
       val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
       status(result) mustEqual OK
@@ -100,6 +103,8 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(emptyUserAnswers
       .set(DestinationWarehouseExcisePage, "answer").set(DestinationTypePage, DirectDelivery))) {
+
+      MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
 
       val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
@@ -116,6 +121,8 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase
         .set(DestinationWarehouseExcisePage, testGreatBritainErn)
       )
     ) {
+
+      MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
 
       val expectedUserAnswers = optUserAnswers.get
         .remove(DestinationAddressPage)
@@ -134,6 +141,7 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase
     "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers
       .set(DestinationTypePage, DirectDelivery))) {
 
+      MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
       val req = FakeRequest(POST, destinationWarehouseExciseRoute).withFormUrlEncodedBody(("value", "answer"))
@@ -146,6 +154,8 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers
       .set(DestinationTypePage, DirectDelivery))) {
+
+      MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
 
       val req = FakeRequest(POST, destinationWarehouseExciseRoute).withFormUrlEncodedBody(("value", ""))
 

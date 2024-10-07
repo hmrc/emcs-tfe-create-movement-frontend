@@ -80,7 +80,7 @@ class ConsigneeExciseControllerSpec extends SpecBase
       "when Destination type is EuTaxWarehouse (retrieving EU member state country codes)" in
         new Fixture(Some(userAnswersWithDestinationTypeEU)) {
 
-          MockGetMemberStatesService.getEuMemberStates().returns(Future.successful(Seq(CountryModel("FR", "France"))))
+          MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(Some(Seq(CountryModel("FR", "France")))).once()
 
           override lazy val form = formProvider(Some(Seq(CountryModel("FR", "France"))))
 
@@ -97,6 +97,9 @@ class ConsigneeExciseControllerSpec extends SpecBase
 
       "when Destination type is TemporaryRegisteredConsignee and Northern Irish" in
         new Fixture(Some(userAnswersWithDestinationTypeTemporaryRegisteredConsignee)) {
+
+          MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
+
           val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
           status(result) mustEqual OK
@@ -110,6 +113,9 @@ class ConsigneeExciseControllerSpec extends SpecBase
 
       "when Destination type is TemporaryCertifiedConsignee and Northern Irish" in
         new Fixture(Some(userAnswersWithDestinationTypeTemporaryCertifiedConsignee)) {
+
+          MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
+
           val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
           status(result) mustEqual OK
@@ -123,6 +129,9 @@ class ConsigneeExciseControllerSpec extends SpecBase
 
 
       "when Destination type is NOT TemporaryRegisteredConsignee and Northern Irish" in new Fixture() {
+
+        MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
+
         val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
         override lazy val form = formProvider(None)
@@ -138,6 +147,9 @@ class ConsigneeExciseControllerSpec extends SpecBase
 
 
       "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(userAnswersWithConsigneeExcise)) {
+
+        MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
+
         val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
         override lazy val form = formProvider(None)
@@ -153,6 +165,9 @@ class ConsigneeExciseControllerSpec extends SpecBase
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture(Some(userAnswersWithConsigneeExcise)) {
+
+      MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
+
       val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", testErn))
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
@@ -171,6 +186,7 @@ class ConsigneeExciseControllerSpec extends SpecBase
       val expectedSavedAnswers = emptyUserAnswers
         .set(ConsigneeExcisePage, testNorthernIrelandErn)
 
+      MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
       MockUserAnswersService.set(expectedSavedAnswers).returns(Future.successful(expectedSavedAnswers))
 
       val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", testNorthernIrelandErn))
@@ -188,6 +204,8 @@ class ConsigneeExciseControllerSpec extends SpecBase
       )
     ) {
 
+      MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
+
       val expectedSavedAnswers = emptyUserAnswers
         .set(ConsigneeExcisePage, "GB22222222222")
         .set(ConsigneeAddressPage, testUserAddress)
@@ -203,6 +221,9 @@ class ConsigneeExciseControllerSpec extends SpecBase
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
+
+      MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
+
       val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", ""))
 
       override lazy val form = formProvider(None)

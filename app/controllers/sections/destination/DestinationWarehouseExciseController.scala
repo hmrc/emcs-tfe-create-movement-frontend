@@ -19,9 +19,8 @@ package controllers.sections.destination
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.destination.DestinationWarehouseExciseFormProvider
-import models.{CountryModel, Mode}
+import models.Mode
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.EuTaxWarehouse
 import navigation.DestinationNavigator
 import pages.sections.destination.{DestinationAddressPage, DestinationWarehouseExcisePage}
 import pages.sections.info.DestinationTypePage
@@ -33,8 +32,6 @@ import views.html.sections.destination.DestinationWarehouseExciseView
 
 import javax.inject.Inject
 import scala.concurrent.Future
-import cats.implicits._
-import models.sections.info.movementScenario.MovementScenario
 
 class DestinationWarehouseExciseController @Inject()(
                                                       override val messagesApi: MessagesApi,
@@ -52,7 +49,7 @@ class DestinationWarehouseExciseController @Inject()(
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withAnswerAsync(DestinationTypePage) { movementScenario =>
-        withOptionalEuMemberStates(movementScenario) { memberStates =>
+        memberStatesService.withEuMemberStatesWhenDestinationEU { memberStates =>
           renderView(Ok, fillForm(DestinationWarehouseExcisePage, formProvider(movementScenario, memberStates)), mode)
         }
       }
@@ -61,7 +58,7 @@ class DestinationWarehouseExciseController @Inject()(
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withAnswerAsync(DestinationTypePage) { movementScenario =>
-        withOptionalEuMemberStates(movementScenario) { memberStates =>
+        memberStatesService.withEuMemberStatesWhenDestinationEU { memberStates =>
           formProvider(movementScenario, memberStates).bindFromRequest().fold(
             formWithError => renderView(BadRequest, formWithError, mode),
             cleanseSaveAndRedirect(_, mode)
@@ -85,11 +82,5 @@ class DestinationWarehouseExciseController @Inject()(
     }
     saveAndRedirect(DestinationWarehouseExcisePage, value, cleansedAnswers, mode)
   }
-
-  def withOptionalEuMemberStates[A](movementScenario: MovementScenario)
-                                   (f: Option[Seq[CountryModel]] => Future[A])(implicit request: DataRequest[_]): Future[A] =
-    Option.when(movementScenario == EuTaxWarehouse) {
-      memberStatesService.getEuMemberStates()
-    }.traverse(identity).flatMap(f)
 
 }

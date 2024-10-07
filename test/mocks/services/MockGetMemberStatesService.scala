@@ -17,7 +17,8 @@
 package mocks.services
 
 import models.CountryModel
-import org.scalamock.handlers.CallHandler1
+import models.requests.DataRequest
+import org.scalamock.handlers.{CallHandler1, CallHandler3}
 import org.scalamock.scalatest.MockFactory
 import services.GetMemberStatesService
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
@@ -39,5 +40,14 @@ trait MockGetMemberStatesService extends MockFactory {
 
     def getEuMemberStates(): CallHandler1[HeaderCarrier, Future[Seq[CountryModel]]] =
       (mockGetMemberStatesService.getEuMemberStates()(_: HeaderCarrier)).expects(*)
+
+    def withEuMemberStatesWhenDestinationEU[A](memberStatesResponse: Option[Seq[CountryModel]])
+    : CallHandler3[Option[Seq[CountryModel]] => Future[A], DataRequest[_], HeaderCarrier, Future[A]] =
+      (mockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(_: Option[Seq[CountryModel]] => Future[A])(_: DataRequest[_], _: HeaderCarrier))
+        .expects(*, *, *)
+        .onCall { handler =>
+          val f = handler.productElement(0).asInstanceOf[Option[Seq[CountryModel]] => Future[A]]
+          f(memberStatesResponse)
+        }
   }
 }

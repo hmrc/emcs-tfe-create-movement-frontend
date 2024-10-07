@@ -18,7 +18,11 @@ package services
 
 import base.SpecBase
 import mocks.connectors.MockGetMemberStatesConnector
+import models.CountryModel
 import models.response.{MemberStatesException, UnexpectedDownstreamResponseError}
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, UkTaxWarehouse}
+import pages.sections.info.DestinationTypePage
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
 import uk.gov.hmrc.http.HeaderCarrier
@@ -109,6 +113,59 @@ class GetMemberStatesServiceSpec extends SpecBase with MockGetMemberStatesConnec
         val actualResult = intercept[MemberStatesException](await(testService.getMemberStatesSelectItems())).getMessage
 
         actualResult mustBe expectedResult
+      }
+    }
+  }
+
+  ".withEuMemberStatesWhenDestinationEU" - {
+
+    def f: Option[Seq[CountryModel]] => Future[Option[Seq[CountryModel]]] = countries => Future.successful(countries)
+
+    "when the destination is EU Tax Warehouse" - {
+
+      "when Connector returns failure from downstream" - {
+
+        "should throw MemberStatesException" in {
+
+          val expectedResult = "No member states retrieved"
+
+          MockGetMemberStatesConnector.getMemberStates().returns(Future(Left(UnexpectedDownstreamResponseError)))
+
+          val actualResult = intercept[MemberStatesException](await(testService.getMemberStatesSelectItems())).getMessage
+
+          actualResult mustBe expectedResult
+        }
+      }
+
+      "when connector returns a success" - {
+
+        "should execute the function `f` with Some(countries)" in {
+
+          implicit val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationTypePage, EuTaxWarehouse))
+
+          val expectedResult = Seq(
+            countryModelAT,
+            countryModelBE
+          )
+
+          MockGetMemberStatesConnector.getMemberStates().returns(Future(Right(Seq(countryModelAT, countryModelBE))))
+
+          val actualResults = testService.withEuMemberStatesWhenDestinationEU(f).futureValue
+
+          actualResults mustBe Some(expectedResult)
+        }
+      }
+    }
+
+    "when the destination is NOT EU Tax Warehouse" - {
+
+      "should execute the function `f` with None" in {
+
+        implicit val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB))
+
+        val actualResults = testService.withEuMemberStatesWhenDestinationEU(f).futureValue
+
+        actualResults mustBe None
       }
     }
   }

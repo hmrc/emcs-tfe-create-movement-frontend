@@ -31,5 +31,9 @@ a.cursor-default {
   }
 }
 
+.hmrc-header__service-name {
+  width: 80%;
+}
+
 @import "accessible-autocomplete";
 @import "active-trader-info";

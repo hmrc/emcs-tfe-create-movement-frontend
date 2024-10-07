@@ -59,7 +59,7 @@ class ItemDesignationOfOriginSummarySpec extends SpecBase {
             Seq(
               ProtectedDesignationOfOrigin -> "The product has a Protected Designation of Origin (PDO)",
               ProtectedGeographicalIndication -> "The product has a Protected Geographical Indication (PGI)",
-              NoGeographicalIndication -> "I don’t want to provide a statement about the designation of origin"
+              NoGeographicalIndication -> "None"
             ).foreach { geographicalIndicationAndExpectedMessage =>
 
               s"for ${geographicalIndicationAndExpectedMessage._1}" in {
@@ -92,7 +92,7 @@ class ItemDesignationOfOriginSummarySpec extends SpecBase {
             Seq(
               ProtectedDesignationOfOrigin -> "The product has a Protected Designation of Origin (PDO)",
               ProtectedGeographicalIndication -> "The product has a Protected Geographical Indication (PGI)",
-              NoGeographicalIndication -> "I don’t want to provide a statement about the designation of origin"
+              NoGeographicalIndication -> "None"
             ).foreach { geographicalIndicationAndExpectedMessage =>
 
               s"for ${geographicalIndicationAndExpectedMessage._1}" in {
@@ -126,7 +126,7 @@ class ItemDesignationOfOriginSummarySpec extends SpecBase {
             Seq(
               ProtectedDesignationOfOrigin -> "The product has a Protected Designation of Origin (PDO)",
               ProtectedGeographicalIndication -> "The product has a Protected Geographical Indication (PGI)",
-              NoGeographicalIndication -> "I don’t want to provide a statement about the designation of origin"
+              NoGeographicalIndication -> "None"
             ).foreach { geographicalIndicationAndExpectedMessage =>
 
               s"for ${geographicalIndicationAndExpectedMessage._1}" in {

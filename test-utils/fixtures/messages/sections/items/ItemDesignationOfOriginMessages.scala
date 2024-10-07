@@ -36,7 +36,7 @@ object ItemDesignationOfOriginMessages {
     val pdoInput = "Enter the name and register number of the PDO (optional)"
     val pgiRadio = "The product has a Protected Geographical Indication (PGI)"
     val pgiInput = "Enter the name and register number of the PGI (optional)"
-    val noGiRadio = "I don’t want to provide a statement about the designation of origin"
+    val noGiRadio = "None"
 
     val s200YesRadio = "It is hereby certified that the product described is marketed and labelled in compliance with Regulation (EU) 2019/787"
     val s200NoRadio = "I don’t want to provide a statement about the marketing and labelling of the spirit"

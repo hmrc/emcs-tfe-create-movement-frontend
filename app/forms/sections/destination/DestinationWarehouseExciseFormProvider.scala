@@ -16,30 +16,45 @@
 
 package forms.sections.destination
 
+import config.Constants
 import forms.mappings.Mappings
 import forms.{GB_00_EXCISE_NUMBER_REGEX, XI_00_EXCISE_NUMBER_REGEX, XI_OR_GB_00_EXCISE_NUMBER_REGEX, XSS_REGEX}
+import models.CountryModel
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
 import pages.sections.destination.DestinationWarehouseExcisePage
 import play.api.data.Form
-import play.api.data.validation.Constraint
+import play.api.data.validation.{Constraint, Invalid, Valid}
 
 import javax.inject.Inject
 
 class DestinationWarehouseExciseFormProvider @Inject() extends Mappings {
 
-  private[forms] def inputIsValidForDestinationType(movementScenario: MovementScenario): Constraint[String] =
+  //noinspection ScalaStyle
+  private[forms] def inputIsValidForDestinationType(movementScenario: MovementScenario,
+                                                    memberStates: Option[Seq[CountryModel]] = None
+                                                   ): Constraint[String] =
     Constraint {
       case answer if movementScenario == MovementScenario.UkTaxWarehouse.GB =>
         regexp(GB_00_EXCISE_NUMBER_REGEX, "destinationWarehouseExcise.error.invalidGB00").apply(answer)
       case answer if movementScenario == MovementScenario.UkTaxWarehouse.NI =>
         regexp(XI_00_EXCISE_NUMBER_REGEX, "destinationWarehouseExcise.error.invalidXI00").apply(answer)
+      case answer if movementScenario == MovementScenario.EuTaxWarehouse =>
+        if (answer.startsWith(Constants.NI_PREFIX) || answer.startsWith(Constants.GB_PREFIX)) Invalid("destinationWarehouseExcise.error.invalidXIOrGB") else {
+          memberStates.map(_.map(_.code)) match {
+            case Some(codes) if codes.contains(answer.take(2)) => Valid
+            case Some(_) => Invalid("destinationWarehouseExcise.error.invalidMemberState")
+            case _ => Valid
+          }
+        }
       case answer =>
         regexpToNotMatch(XI_OR_GB_00_EXCISE_NUMBER_REGEX, "destinationWarehouseExcise.error.invalidXIOrGB").apply(answer)
     }
 
 
-  def apply(movementScenario: MovementScenario)(implicit dataRequest: DataRequest[_]): Form[String] = {
+  def apply(movementScenario: MovementScenario,
+            memberStates: Option[Seq[CountryModel]])
+           (implicit dataRequest: DataRequest[_]): Form[String] = {
     val optOriginalValueSentInPreviousSubmission = DestinationWarehouseExcisePage.getOriginalAttributeValue
 
     Form(
@@ -50,7 +65,7 @@ class DestinationWarehouseExciseFormProvider @Inject() extends Mappings {
             regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseExcise.error.invalidCharacter"),
             maxLength(16, "destinationWarehouseExcise.error.length"),
             isNotEqualToOptExistingAnswer(optOriginalValueSentInPreviousSubmission, "destinationWarehouseExcise.error.submissionError"),
-            inputIsValidForDestinationType(movementScenario)
+            inputIsValidForDestinationType(movementScenario, memberStates)
           )
         )
     )

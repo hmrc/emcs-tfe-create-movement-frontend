@@ -47,7 +47,7 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours wi
       implicit val msgs: Messages = messages(Seq(English.lang))
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-      val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply(MovementScenario.UkTaxWarehouse.NI)
+      val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply(MovementScenario.UkTaxWarehouse.NI, None)
 
       implicit val doc: Document =
         Jsoup.parse(view(
@@ -79,7 +79,7 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours wi
         )
       )
 
-      val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply(MovementScenario.UkTaxWarehouse.NI)
+      val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply(MovementScenario.UkTaxWarehouse.NI, None)
 
 
       implicit val doc: Document =
@@ -109,7 +109,7 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours wi
         )
       )
 
-      val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply(MovementScenario.UkTaxWarehouse.NI)
+      val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply(MovementScenario.UkTaxWarehouse.NI, None)
 
       implicit val doc: Document =
         Jsoup.parse(view(

@@ -32,6 +32,7 @@ object DestinationWarehouseExciseMessages {
     val errorInvalidGB00: String = "Excise ID must begin GB00, followed by 9 characters"
     val errorInvalidXI00: String = "Excise ID must begin XI00, followed by 9 characters"
     val errorInvalidXIOrGB: String = "Excise ID must not begin XI or GB because the destination of this movement is not to a UK tax warehouse"
+    val errorInvalidMemberState: String = "Excise ID must begin with a valid 2-letter EU Member State code"
     val text: String = "This is sometimes called an excise registration number (ERN), starting with two letters identifying the member state of the destination warehouse. For example, GB00123456789."
 
     val placeOfDestinationExciseIdInvalidError = "The excise ID for the tax warehouse of destination is not valid"

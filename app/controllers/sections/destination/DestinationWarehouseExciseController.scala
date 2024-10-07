@@ -27,7 +27,7 @@ import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
+import services.{GetMemberStatesService, UserAnswersService}
 import views.html.sections.destination.DestinationWarehouseExciseView
 
 import javax.inject.Inject
@@ -42,34 +42,36 @@ class DestinationWarehouseExciseController @Inject()(
                                                       override val requireData: DataRequiredAction,
                                                       formProvider: DestinationWarehouseExciseFormProvider,
                                                       val controllerComponents: MessagesControllerComponents,
+                                                      memberStatesService: GetMemberStatesService,
                                                       view: DestinationWarehouseExciseView
                                                     ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
-      withAnswer(DestinationTypePage) { movementScenario =>
-        renderView(Ok, fillForm(DestinationWarehouseExcisePage, formProvider(movementScenario)), mode)
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      withAnswerAsync(DestinationTypePage) { movementScenario =>
+        memberStatesService.withEuMemberStatesWhenDestinationEU { memberStates =>
+          renderView(Ok, fillForm(DestinationWarehouseExcisePage, formProvider(movementScenario, memberStates)), mode)
+        }
       }
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withAnswerAsync(DestinationTypePage) { movementScenario =>
-        formProvider(movementScenario).bindFromRequest().fold(
-          formWithError => Future.successful(renderView(BadRequest, formWithError, mode)),
-          cleanseSaveAndRedirect(_, mode)
-        )
+        memberStatesService.withEuMemberStatesWhenDestinationEU { memberStates =>
+          formProvider(movementScenario, memberStates).bindFromRequest().fold(
+            formWithError => renderView(BadRequest, formWithError, mode),
+            cleanseSaveAndRedirect(_, mode)
+          )
+        }
       }
     }
 
-  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
-    withAnswer(DestinationTypePage) { _ =>
-      status(view(
-        form,
-        onSubmitCall = controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(request.ern, request.draftId, mode)
-      ))
-    }
-  }
+  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+    Future.successful(status(view(
+      form,
+      onSubmitCall = controllers.sections.destination.routes.DestinationWarehouseExciseController.onSubmit(request.ern, request.draftId, mode)
+    )))
 
   def cleanseSaveAndRedirect(value: String, mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
     val cleansedAnswers = {

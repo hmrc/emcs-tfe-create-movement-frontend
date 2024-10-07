@@ -28,7 +28,7 @@ import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserAnswersService
+import services.{GetMemberStatesService, UserAnswersService}
 import views.html.sections.consignee.ConsigneeExciseView
 
 import javax.inject.Inject
@@ -42,22 +42,25 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
                                           override val userAnswersService: UserAnswersService,
                                           formProvider: ConsigneeExciseFormProvider,
                                           val controllerComponents: MessagesControllerComponents,
+                                          memberStatesService: GetMemberStatesService,
                                           view: ConsigneeExciseView
                                          ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) {
-      implicit request =>
-        renderView(Ok, fillForm(ConsigneeExcisePage, formProvider()), ern, draftId, mode)
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      memberStatesService.withEuMemberStatesWhenDestinationEU { memberStates =>
+        renderView(Ok, fillForm(ConsigneeExcisePage, formProvider(memberStates)), ern, draftId, mode)
+      }
     }
 
   def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) {
-      implicit request =>
-        formProvider().bindFromRequest().fold(
+    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+      memberStatesService.withEuMemberStatesWhenDestinationEU { memberStates =>
+        formProvider(memberStates).bindFromRequest().fold(
           renderView(BadRequest, _, ern, draftId, mode),
           cleanseSaveAndRedirect(_, mode)
         )
+      }
     }
 
   private def isNorthernIrish(implicit request: DataRequest[_]): Boolean =

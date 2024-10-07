@@ -20,10 +20,10 @@ import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import controllers.routes
 import forms.sections.consignee.ConsigneeExciseFormProvider
-import mocks.services.MockUserAnswersService
+import mocks.services.{MockGetMemberStatesService, MockUserAnswersService}
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.{TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
-import models.{NormalMode, UserAnswers}
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
+import models.{CountryModel, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExcisePage}
 import pages.sections.info.DestinationTypePage
@@ -35,7 +35,9 @@ import views.html.sections.consignee.ConsigneeExciseView
 
 import scala.concurrent.Future
 
-class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService {
+class ConsigneeExciseControllerSpec extends SpecBase
+  with MockUserAnswersService
+  with MockGetMemberStatesService {
 
   lazy val formProvider: ConsigneeExciseFormProvider = new ConsigneeExciseFormProvider()
   lazy val view: ConsigneeExciseView = app.injector.instanceOf[ConsigneeExciseView]
@@ -50,7 +52,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
 
     implicit val dr: DataRequest[_] = dataRequest(request, optUserAnswers.getOrElse(emptyUserAnswers))
 
-    lazy val form: Form[String] = formProvider()
+    lazy val form: Form[String] = formProvider(None)
 
     lazy val testController = new ConsigneeExciseController(
       messagesApi,
@@ -61,6 +63,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
       mockUserAnswersService,
       formProvider,
       messagesControllerComponents,
+      mockGetMemberStatesService,
       view
     )
 
@@ -69,11 +72,34 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
   val userAnswersWithConsigneeExcise: UserAnswers = emptyUserAnswers.set(ConsigneeExcisePage, testErn)
   val userAnswersWithDestinationTypeTemporaryRegisteredConsignee: UserAnswers = emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee)
   val userAnswersWithDestinationTypeTemporaryCertifiedConsignee: UserAnswers = emptyUserAnswers.set(DestinationTypePage, TemporaryCertifiedConsignee)
+  val userAnswersWithDestinationTypeEU: UserAnswers = emptyUserAnswers.set(DestinationTypePage, EuTaxWarehouse)
 
   "ConsigneeExciseController Controller" - {
     "must return OK and the correct view for a GET" - {
+
+      "when Destination type is EuTaxWarehouse (retrieving EU member state country codes)" in
+        new Fixture(Some(userAnswersWithDestinationTypeEU)) {
+
+          MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(Some(Seq(CountryModel("FR", "France")))).once()
+
+          override lazy val form = formProvider(Some(Seq(CountryModel("FR", "France"))))
+
+          val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            form,
+            consigneeExciseSubmit,
+            isNorthernIrishTemporaryRegisteredConsignee = false,
+            isNorthernIrishTemporaryCertifiedConsignee = false
+          )(dataRequest(request), messages(request)).toString
+        }
+
       "when Destination type is TemporaryRegisteredConsignee and Northern Irish" in
         new Fixture(Some(userAnswersWithDestinationTypeTemporaryRegisteredConsignee)) {
+
+          MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
+
           val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
           status(result) mustEqual OK
@@ -87,6 +113,9 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
 
       "when Destination type is TemporaryCertifiedConsignee and Northern Irish" in
         new Fixture(Some(userAnswersWithDestinationTypeTemporaryCertifiedConsignee)) {
+
+          MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
+
           val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
           status(result) mustEqual OK
@@ -100,9 +129,12 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
 
 
       "when Destination type is NOT TemporaryRegisteredConsignee and Northern Irish" in new Fixture() {
+
+        MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
+
         val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        override lazy val form = formProvider()
+        override lazy val form = formProvider(None)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -115,9 +147,12 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
 
 
       "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(userAnswersWithConsigneeExcise)) {
+
+        MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
+
         val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
 
-        override lazy val form = formProvider()
+        override lazy val form = formProvider(None)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -130,6 +165,9 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture(Some(userAnswersWithConsigneeExcise)) {
+
+      MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
+
       val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", testErn))
 
       val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
@@ -148,6 +186,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
       val expectedSavedAnswers = emptyUserAnswers
         .set(ConsigneeExcisePage, testNorthernIrelandErn)
 
+      MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
       MockUserAnswersService.set(expectedSavedAnswers).returns(Future.successful(expectedSavedAnswers))
 
       val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", testNorthernIrelandErn))
@@ -165,6 +204,8 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
       )
     ) {
 
+      MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
+
       val expectedSavedAnswers = emptyUserAnswers
         .set(ConsigneeExcisePage, "GB22222222222")
         .set(ConsigneeAddressPage, testUserAddress)
@@ -180,9 +221,12 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
+
+      MockGetMemberStatesService.withEuMemberStatesWhenDestinationEU(None).once()
+
       val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", ""))
 
-      override lazy val form = formProvider()
+      override lazy val form = formProvider(None)
 
       val boundForm = form.bind(Map("value" -> ""))
 

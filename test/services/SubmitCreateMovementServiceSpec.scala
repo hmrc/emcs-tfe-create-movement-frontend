@@ -76,7 +76,14 @@ class SubmitCreateMovementServiceSpec extends SpecBase
             MockSubmitCreateMovementConnector.submit(minimumSubmitCreateMovementModel).returns(Future.successful(Right(submitCreateMovementResponseEIS)))
 
             MockAuditingService
-              .audit(SubmitCreateMovementAudit(testErn, testReceiptDateTime, minimumSubmitCreateMovementModel, Right(submitCreateMovementResponseEIS)))
+              .audit(SubmitCreateMovementAudit(
+                ern = testErn,
+                templateName = None,
+                templateId = None,
+                receiptDate = testReceiptDateTime,
+                submissionRequest = minimumSubmitCreateMovementModel,
+                submissionResponse = Right(submitCreateMovementResponseEIS)
+              ))
               .once()
 
             testService.submit(minimumSubmitCreateMovementModel, testErn)(request, hc).futureValue mustBe Right(submitCreateMovementResponseEIS)
@@ -87,12 +94,22 @@ class SubmitCreateMovementServiceSpec extends SpecBase
 
           "when Connector returns failure from downstream" in new Fixture(nrsEnabled) {
 
-            val request = dataRequest(FakeRequest())
+            val request = dataRequest(FakeRequest(), emptyUserAnswers.copy(
+              createdFromTemplateName = Some(templateName),
+              createdFromTemplateId = Some(templateId)
+            ))
 
             MockSubmitCreateMovementConnector.submit(minimumSubmitCreateMovementModel).returns(Future.successful(Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))))
 
             MockAuditingService
-              .audit(SubmitCreateMovementAudit(testErn, testReceiptDateTime, minimumSubmitCreateMovementModel, Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))))
+              .audit(SubmitCreateMovementAudit(
+                ern = testErn,
+                templateName = Some(templateName),
+                templateId = Some(templateId),
+                receiptDate = testReceiptDateTime,
+                submissionRequest = minimumSubmitCreateMovementModel,
+                submissionResponse = Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))
+              ))
               .once()
 
             testService.submit(minimumSubmitCreateMovementModel, testErn)(request, hc).futureValue mustBe Left(UnexpectedDownstreamDraftSubmissionResponseError(INTERNAL_SERVER_ERROR))

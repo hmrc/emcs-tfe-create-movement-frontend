@@ -65,7 +65,9 @@ class SubmitCreateMovementService @Inject()(
         ern = dataRequest.ern,
         submissionRequest = submissionRequest,
         submissionResponse = submissionResponse,
-        receiptDate = timeMachine.now().toString
+        receiptDate = timeMachine.now().toString,
+        templateName = dataRequest.userAnswers.createdFromTemplateName,
+        templateId = dataRequest.userAnswers.createdFromTemplateId
       )
     )
 }

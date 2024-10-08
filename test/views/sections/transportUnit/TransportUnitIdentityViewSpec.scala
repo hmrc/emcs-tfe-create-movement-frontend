@@ -40,7 +40,6 @@ class TransportUnitIdentityViewSpec extends SpecBase with ViewBehaviours {
 
   "TransportUnitIdentityView" - {
     Seq(
-      ("FixedTransport", TransportUnitType.FixedTransport),
       ("Container", TransportUnitType.Container),
       ("Tractor", TransportUnitType.Tractor),
       ("Trailer", TransportUnitType.Trailer),
@@ -70,6 +69,7 @@ class TransportUnitIdentityViewSpec extends SpecBase with ViewBehaviours {
             behave like pageWithExpectedElementsAndMessages(Seq(
               Selectors.title -> messagesForLanguage.title(transportUnitType),
               Selectors.h1 -> messagesForLanguage.heading(transportUnitType),
+              Selectors.hint -> messagesForLanguage.hint(transportUnitType),
               Selectors.button -> messagesForLanguage.saveAndContinue,
               Selectors.returnToDraftLink -> messagesForLanguage.returnToDraft
             ))

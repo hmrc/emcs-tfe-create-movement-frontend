@@ -29,26 +29,33 @@ object TransportUnitIdentityMessages {
       case TransportUnitType.Tractor =>  "What is the vehicle registration number or unique identifier for this tractor?"
       case TransportUnitType.Trailer => "What is the trailer number or unique identifier for this trailer?"
       case TransportUnitType.Vehicle => "What is the vehicle registration number or unique identifier for this vehicle?"
-      case TransportUnitType.FixedTransport => "What is the unique identifier for this fixed transport installation?"
+      case TransportUnitType.FixedTransport => ""
       case TransportUnitType.Container => "What is the container number or unique identifier for this container?"
+    }
+    val hint: TransportUnitType => String = {
+      case TransportUnitType.Tractor =>  "You must not submit this movement without providing an accurate identifier for the tractor."
+      case TransportUnitType.Trailer => "You must not submit this movement without providing an accurate identifier for the trailer."
+      case TransportUnitType.Vehicle => "You must not submit this movement without providing an accurate identifier for the vehicle."
+      case TransportUnitType.FixedTransport => ""
+      case TransportUnitType.Container => "You must not submit this movement without providing an accurate identifier for the container."
     }
     val errorEmpty: TransportUnitType =>  String = {
       case TransportUnitType.Tractor | TransportUnitType.Vehicle => "Enter the vehicle registration number or unique identifier"
       case TransportUnitType.Trailer => "Enter the trailer number or unique identifier"
-      case TransportUnitType.FixedTransport => "Enter the unique identifier"
+      case TransportUnitType.FixedTransport => ""
       case TransportUnitType.Container => "Enter the container number or unique identifier"
     }
     val errorInputTooLong: TransportUnitType => String = {
       case TransportUnitType.Tractor | TransportUnitType.Vehicle => "Vehicle registration number or unique identifier must be 35 characters or less"
       case TransportUnitType.Trailer => "Trailer number or unique identifier must be 35 characters or less"
-      case TransportUnitType.FixedTransport => "Unique identifier must be 35 characters or less"
+      case TransportUnitType.FixedTransport => ""
       case TransportUnitType.Container => "Container number or unique identifier must be 35 characters or less"
     }
 
     val errorInputDisallowedCharacters: TransportUnitType => String = {
       case TransportUnitType.Tractor | TransportUnitType.Vehicle => "Vehicle registration number or unique identifier must only contain letters and numbers"
       case TransportUnitType.Trailer => "Trailer number or unique identifier must only contain letters and numbers"
-      case TransportUnitType.FixedTransport => "Unique identifier must only contain letters and numbers"
+      case TransportUnitType.FixedTransport => ""
       case TransportUnitType.Container => "Container number or unique identifier must only contain letters and numbers"
     }
 

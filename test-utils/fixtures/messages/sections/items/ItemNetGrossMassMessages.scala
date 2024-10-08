@@ -24,6 +24,8 @@ object ItemNetGrossMassMessages {
     def heading(goodsType: String) = s"What is the net and gross mass of the $goodsType?"
     def title(goodsType: String): String = titleHelper(heading(goodsType))
 
+    val paragraph = "Bulk goods with no packaging, such as liquids in a tanker, will have the same net and gross mass."
+
     def netMassH2 = "Net mass"
     def netMassHint = "The net mass is the weight of the goods without packaging. Enter the net mass in kilograms."
 

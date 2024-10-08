@@ -19,10 +19,12 @@ package models.audit
 import models.response.{ErrorResponse, SubmitCreateMovementResponse}
 import models.submitCreateMovement.SubmitCreateMovementModel
 import play.api.http.Status.OK
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 
 case class SubmitCreateMovementAudit(
                                       ern: String,
+                                      templateName: Option[String],
+                                      templateId: Option[String],
                                       receiptDate: String,
                                       submissionRequest: SubmitCreateMovementModel,
                                       submissionResponse: Either[ErrorResponse, SubmitCreateMovementResponse]
@@ -30,8 +32,12 @@ case class SubmitCreateMovementAudit(
 
   override val auditType: String = "SubmitDraftMovement"
 
-  override val detail: JsValue = Json.obj(fields =
-    "exciseRegistrationNumber" -> ern
+  override val detail: JsValue = JsObject(fields =
+    Seq(
+      Some("exciseRegistrationNumber" -> JsString(ern)),
+      templateName.map(name => "templateName" -> JsString(name)),
+      templateId.map(id => "templateId" -> JsString(id))
+    ).flatten
   ).deepMerge(Json.toJsObject(submissionRequest)(SubmitCreateMovementModel.auditWrites)) ++ {
     submissionResponse match {
       case Right(success) =>

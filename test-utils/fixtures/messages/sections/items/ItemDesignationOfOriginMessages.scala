@@ -39,7 +39,7 @@ object ItemDesignationOfOriginMessages {
     val noGiRadio = "None"
 
     val s200YesRadio = "It is hereby certified that the product described is marketed and labelled in compliance with Regulation (EU) 2019/787"
-    val s200NoRadio = "I don’t want to provide a statement about the marketing and labelling of the spirit"
+    val s200NoRadio = "None"
 
     val designationOfOriginLegendS200 = "Statement of designation of origin"
     val spiritMarketingAndLabellingLegend = "Statement of spirit marketing and labelling"

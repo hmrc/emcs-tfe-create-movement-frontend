@@ -1205,14 +1205,14 @@ itemDesignationOfOrigin.s200.geographicalIndication.legend = Statement of design
 itemDesignationOfOrigin.s200.legend = Statement of spirit marketing and labelling
 itemDesignationOfOrigin.s200.hint = Spirits must meet certain rules in order to be marketed in relation to their maturation age, protected geographical names or spirit category, such as ‘Irish Whiskey’ or ‘dry gin’.
 itemDesignationOfOrigin.s200.radio.yes = It is hereby certified that the product described is marketed and labelled in compliance with Regulation (EU) 2019/787
-itemDesignationOfOrigin.s200.radio.unprovided = I don’t want to provide a statement about the marketing and labelling of the spirit
+itemDesignationOfOrigin.s200.radio.unprovided = None
 # Separation needed due to the service sending ’ as ..., the message key below maintains the apostrophe
 itemDesignationOfOrigin.s200.radio.unprovided.downstream = I don''t want to provide a statement about the marketing and labelling of the spirit
 
 itemDesignationOfOrigin.checkYourAnswersLabel = Statement of designation of origin
 itemDesignationOfOrigin.checkYourAnswersLabel.s200 = Statements about designation of origin and labelling of the product
-itemDesignationOfOrigin.error.geographicalIndication.choice.required = Select a statement about the designation of origin or select ‘I don’t want to provide a statement about the designation of origin’
-itemDesignationOfOrigin.error.spiritMarketedAndLabelled.choice.required = Select the statement about marketing and labelling or select ‘I don’t want to provide a statement about the marketing and labelling of the spirit’
+itemDesignationOfOrigin.error.geographicalIndication.choice.required = Select a statement about the designation of origin or select ‘None’
+itemDesignationOfOrigin.error.spiritMarketedAndLabelled.choice.required = Select the statement about marketing and labelling or select ‘None’
 itemDesignationOfOrigin.error.geographicalIndication.input.length = The information entered should be 50 characters or less
 itemDesignationOfOrigin.error.geographicalIndication.input.invalid = Information must not include < and > and : and ;
 itemDesignationOfOrigin.change.hidden = Statement of designation of origin

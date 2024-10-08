@@ -139,7 +139,7 @@ class ItemDesignationOfOriginSummarySpec extends SpecBase {
                     key = messagesForLanguage.cyaLabelS200,
                     value = Value(HtmlContent(Seq(
                       p()(Text(geographicalIndicationAndExpectedMessage._2).asHtml).toString(),
-                      p()(Text("I don’t want to provide a statement about the marketing and labelling of the spirit").asHtml).toString()
+                      p()(Text("None").asHtml).toString()
                     ).mkString)),
                     actions = Seq(
                       ActionItemViewModel(

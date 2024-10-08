@@ -60,8 +60,13 @@
     @p() {@messages("confirmation.p4")}
 
     @h2("confirmation.ifYouNeedToChange")
-    @p() {@messages("confirmation.p5")}
-    @p() {@messages("confirmation.p6")}
+    @if(request.isDutyPaidTrader) {
+        @p() {@messages("confirmation.p5.dutypaid")}
+        @p() {@messages("confirmation.p6.dutypaid")}
+    } else {
+        @p() {@messages("confirmation.p5.dutysuspended")}
+        @p() {@messages("confirmation.p6.dutysuspended")}
+    }
 
     @h2("confirmation.ifUnsuccessful")
     @p() {@messages("confirmation.p7")}

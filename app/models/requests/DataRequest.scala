@@ -41,6 +41,8 @@ case class DataRequest[A](request: UserRequest[A],
   lazy val isRegisteredConsignor: Boolean = request.isRegisteredConsignor
   lazy val isCertifiedConsignor: Boolean = request.isCertifiedConsignor
 
+  lazy val isDutyPaidTrader: Boolean = Seq("XIPA", "XIPB", "XIPC", "XIPD").contains(ern.take(4))
+
   def dispatchPlace: Option[DispatchPlace] = userAnswers.get(DispatchPlacePage) match {
     case Some(dp) if dp == GreatBritain => Some(GreatBritain)
     case Some(dp) if dp == NorthernIreland => Some(NorthernIreland)

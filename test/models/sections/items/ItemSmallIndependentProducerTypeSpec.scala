@@ -27,7 +27,7 @@ class ItemSmallIndependentProducerTypeSpec extends SpecBase {
         CertifiedIndependentSmallProducer,
         SelfCertifiedIndependentSmallProducerAndConsignor,
         SelfCertifiedIndependentSmallProducerAndNotConsignor,
-        NotAIndependentSmallProducer,
+        NotApplicable,
         NotProvided
       )
     }
@@ -38,7 +38,7 @@ class ItemSmallIndependentProducerTypeSpec extends SpecBase {
     "should return Not provided and None" in {
 
       ItemSmallIndependentProducerType.notProvidedValues mustBe Seq(
-        NotAIndependentSmallProducer,
+        NotApplicable,
         NotProvided
       )
     }

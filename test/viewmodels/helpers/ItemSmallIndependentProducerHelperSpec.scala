@@ -79,14 +79,9 @@ class ItemSmallIndependentProducerHelperSpec extends SpecBase with ItemFixtures 
             divider = Some(messagesForLanguage.or)
           ),
           RadioItem(
-            id = Some(s"${form(producerField).id}-$NotAIndependentSmallProducer"),
-            value = Some(NotAIndependentSmallProducer.toString),
+            id = Some(s"${form(producerField).id}-$NotApplicable"),
+            value = Some(NotApplicable.toString),
             content = Text(messagesForLanguage.notAIndependentSmallProducer)
-          ),
-          RadioItem(
-            id = Some(s"${form(producerField).id}-$NotProvided"),
-            value = Some(NotProvided.toString),
-            content = Text(messagesForLanguage.smallProducerNotProvided)
           )
         ), fieldset = Some(Fieldset(legend = Some(Legend(Text(messagesForLanguage.legend), classes = " govuk-fieldset__legend--s")))))
     }

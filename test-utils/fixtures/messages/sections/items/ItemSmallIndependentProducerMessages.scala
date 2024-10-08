@@ -38,8 +38,7 @@ object ItemSmallIndependentProducerMessages {
     val selfCertifiedIndependentSmallProducerAndConsignor = "The producer is a self-certified independent small producer and the consignor"
     val selfCertifiedIndependentSmallProducerNotConsignor = "The producer is a self-certified independent small producer and not the consignor"
     val selfCertifiedIndependentSmallProducerNotConsignorInput = "Enter the self-certified producer’s excise ID or, if not available, the VAT registration number"
-    val notAIndependentSmallProducer = "The producer is not an independent small producer"
-    val smallProducerNotProvided = "I don’t want to provide information about the producer"
+    val notAIndependentSmallProducer = "Not applicable"
 
     def seedNumber(value: String) = s"Identification: $value"
 

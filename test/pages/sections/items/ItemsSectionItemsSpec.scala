@@ -21,7 +21,7 @@ import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import models.GoodsType._
 import models.requests.DataRequest
 import models.sections.items.ItemSmallIndependentProducerModel
-import models.sections.items.ItemSmallIndependentProducerType.{CertifiedIndependentSmallProducer, NotAIndependentSmallProducer, NotProvided}
+import models.sections.items.ItemSmallIndependentProducerType.{CertifiedIndependentSmallProducer, NotApplicable, NotProvided}
 import play.api.test.FakeRequest
 import viewmodels.taskList.NotStarted
 
@@ -249,7 +249,7 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
     "must return true when there exists an item that's an independent small producer" in {
 
       implicit val request = dataRequest(FakeRequest(), emptyUserAnswers
-        .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(NotAIndependentSmallProducer, None))
+        .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(NotApplicable, None))
         .set(ItemSmallIndependentProducerPage(testIndex2), ItemSmallIndependentProducerModel(CertifiedIndependentSmallProducer, None))
         .set(ItemSmallIndependentProducerPage(testIndex3), ItemSmallIndependentProducerModel(NotProvided, None))
       )
@@ -260,8 +260,8 @@ class ItemsSectionItemsSpec extends SpecBase with ItemFixtures with MovementSubm
     "must return false when there DOES NOT exist an item that's an independent small producer" in {
 
       implicit val request = dataRequest(FakeRequest(), emptyUserAnswers
-        .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(NotAIndependentSmallProducer, None))
-        .set(ItemSmallIndependentProducerPage(testIndex2), ItemSmallIndependentProducerModel(NotAIndependentSmallProducer, None))
+        .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(NotApplicable, None))
+        .set(ItemSmallIndependentProducerPage(testIndex2), ItemSmallIndependentProducerModel(NotApplicable, None))
         .set(ItemSmallIndependentProducerPage(testIndex3), ItemSmallIndependentProducerModel(NotProvided, None))
       )
 

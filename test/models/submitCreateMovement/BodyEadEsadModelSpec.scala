@@ -24,7 +24,7 @@ import models.response.MissingMandatoryPage
 import models.response.referenceData.{ItemPackaging, WineOperations}
 import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, UkTaxWarehouse, UnknownDestination}
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedDesignationOfOrigin, ProtectedGeographicalIndication}
-import models.sections.items.ItemSmallIndependentProducerType.{CertifiedIndependentSmallProducer, NotAIndependentSmallProducer, NotProvided, SelfCertifiedIndependentSmallProducerAndNotConsignor}
+import models.sections.items.ItemSmallIndependentProducerType.{CertifiedIndependentSmallProducer, NotApplicable, NotProvided, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.sections.items.ItemWineProductCategory.ImportedWine
 import models.sections.items._
 import pages.sections.info.DestinationTypePage
@@ -474,8 +474,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
     }
 
     Seq(
-      NotAIndependentSmallProducer -> "The producer is not an independent small producer",
-      NotProvided -> "I don't want to provide information about the producer"
+      NotApplicable -> "Not applicable",
     ).foreach { optionAndAnswer =>
       s"generate the correct answer when the user selects: ${optionAndAnswer._1}" in {
 

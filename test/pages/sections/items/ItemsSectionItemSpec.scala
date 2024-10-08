@@ -23,7 +23,7 @@ import models.requests.DataRequest
 import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode.BulkLiquid
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedDesignationOfOrigin}
-import models.sections.items.ItemSmallIndependentProducerType.{NotAIndependentSmallProducer, SelfCertifiedIndependentSmallProducerAndNotConsignor}
+import models.sections.items.ItemSmallIndependentProducerType.{NotApplicable, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.sections.items.ItemWineGrowingZone.CIII_A
 import models.sections.items.ItemWineProductCategory.{ImportedWine, Other}
 import models.sections.items._
@@ -1098,7 +1098,7 @@ class ItemsSectionItemSpec extends SpecBase with ItemFixtures with MovementSubmi
           goodsType =>
             val userAnswers = emptyUserAnswers
               .set(ItemAlcoholStrengthPage(testIndex1), BigDecimal(8.49))
-              .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(NotAIndependentSmallProducer, None))
+              .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(NotApplicable, None))
 
             val dr: DataRequest[_] = dataRequest(FakeRequest(), userAnswers)
 

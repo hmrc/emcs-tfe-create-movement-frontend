@@ -21,7 +21,7 @@ import forms.XSS_REGEX
 import forms.behaviours.FieldBehaviours
 import forms.sections.items.ItemSmallIndependentProducerFormProvider._
 import models.sections.items.{ItemSmallIndependentProducerModel, ItemSmallIndependentProducerType}
-import models.sections.items.ItemSmallIndependentProducerType.SelfCertifiedIndependentSmallProducerAndNotConsignor
+import models.sections.items.ItemSmallIndependentProducerType.{NotProvided, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import play.api.data.FormError
 
 class ItemSmallIndependentProducerFormProviderSpec extends FieldBehaviours with BaseFixtures {
@@ -37,7 +37,10 @@ class ItemSmallIndependentProducerFormProviderSpec extends FieldBehaviours with 
 
     "should bind successfully" - {
 
-      ItemSmallIndependentProducerType.values.filterNot(_ == SelfCertifiedIndependentSmallProducerAndNotConsignor).foreach { producer =>
+      ItemSmallIndependentProducerType.values
+        .filterNot(_ == SelfCertifiedIndependentSmallProducerAndNotConsignor)
+        .filterNot(_ == NotProvided)
+        .foreach { producer =>
 
         s"when the producer is: $producer" in {
 

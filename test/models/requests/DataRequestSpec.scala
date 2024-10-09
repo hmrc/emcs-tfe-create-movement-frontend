@@ -76,4 +76,25 @@ class DataRequestSpec extends SpecBase {
       }
     }
   }
+
+  "isDutyPaid" - {
+    Seq("XIPA", "XIPB", "XIPC", "XIPD").foreach { ern =>
+      s"should return true when ern starts with $ern" in {
+        val fakeRequest = FakeRequest()
+        val request = dataRequest(fakeRequest, ern = ern)
+
+        request.isDutyPaidTrader mustBe true
+      }
+    }
+
+    Seq("GBWK", "GBRC", "XIWK", "XIRC", "XI00", "GB00").foreach { ern =>
+      s"should return false when ern starts with $ern" in {
+        val fakeRequest = FakeRequest()
+        val request = dataRequest(fakeRequest, ern = ern)
+
+        request.isDutyPaidTrader mustBe false
+      }
+    }
+
+  }
 }

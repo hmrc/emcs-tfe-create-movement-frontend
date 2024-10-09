@@ -33,8 +33,10 @@ object ConfirmationMessages {
     val p4 = "Once your goods have been delivered, you will receive a Report of Receipt from the consignee to let you know if the movement was satisfactory, or if there were any problems."
 
     val ifYouNeedToChange = "If you need to change or cancel the movement"
-    val p5 = "If you need to cancel the movement this must be done before the goods are dispatched. While the goods are in transit you may submit a change of destination or an explanation of a delay."
-    val p6 = "Links to cancel, change the movement or explain a delay can be found in the movement overview."
+    val p5DutySuspended = "You can choose to cancel a movement up to the date and time recorded on the electronic administrative document (eAD). If the date and time on the eAD has passed, or the goods are in transit, you can choose to submit a change of destination or an explanation of a delay."
+    val p5DutyPaid = "You can choose to cancel a movement up to the date and time recorded on the electronic administrative document (eAD). To cancel this movement, submit a change of destination and select to return the goods to the consignor's place of dispatch. If the date and time on the eAD has passed, or the goods are in transit, you can choose to submit an explanation of a delay or a change of destination with the same consignee."
+    val p6DutySuspended = "Links to cancel, change the movement or explain a delay can be found in the movement overview."
+    val p6DutyPaid = "Links to change the movement or explain a delay can be found in the movement overview."
 
     val ifUnsuccessful = "If your submission is unsuccessful"
     val p7 = "If unsuccessful, you’ll get an error message sent to your messages inbox."

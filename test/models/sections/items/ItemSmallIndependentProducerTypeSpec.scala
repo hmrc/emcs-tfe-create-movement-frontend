@@ -18,6 +18,7 @@ package models.sections.items
 
 import base.SpecBase
 import models.sections.items.ItemSmallIndependentProducerType._
+import play.api.libs.json.JsString
 
 class ItemSmallIndependentProducerTypeSpec extends SpecBase {
 
@@ -42,6 +43,13 @@ class ItemSmallIndependentProducerTypeSpec extends SpecBase {
         NotProvided
       )
     }
+  }
+
+  "must read correctly with NotProvided being mapped to NotApplicable" in {
+    ItemSmallIndependentProducerType.values.filterNot(_.equals(NotProvided)).foreach { value =>
+      JsString(value.toString).as[ItemSmallIndependentProducerType] mustBe value
+    }
+    JsString(ItemSmallIndependentProducerType.NotProvided.toString).as[ItemSmallIndependentProducerType] mustBe NotApplicable
   }
 
 }

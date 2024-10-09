@@ -46,5 +46,13 @@ case object ItemSmallIndependentProducerType extends Enumerable.Implicits {
   )
 
   implicit val enumerable: Enumerable[ItemSmallIndependentProducerType] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(
+      CertifiedIndependentSmallProducer.toString -> CertifiedIndependentSmallProducer,
+      SelfCertifiedIndependentSmallProducerAndConsignor.toString -> SelfCertifiedIndependentSmallProducerAndConsignor,
+      SelfCertifiedIndependentSmallProducerAndNotConsignor.toString -> SelfCertifiedIndependentSmallProducerAndNotConsignor,
+      NotApplicable.toString -> NotApplicable,
+      //`NotProvided` is intentionally mapped to `NotApplicable`, as this value is not used anymore. It's added here to provide
+      //backward compatibility with the old data. In the future, `NotProvided` can be removed from the `ItemSmallIndependentProducerType` enum.
+      NotProvided.toString -> NotApplicable
+    )
 }

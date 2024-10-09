@@ -57,6 +57,7 @@ class ItemNetGrossMassViewSpec extends SpecBase with ViewBehaviours {
         Selectors.title -> messagesForLanguage.title(Wine.toSingularOutput()),
         Selectors.h1 -> messagesForLanguage.heading(Wine.toSingularOutput()),
         Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
+        Selectors.p(1) -> messagesForLanguage.paragraph,
         Selectors.questionTitle(1) -> messagesForLanguage.netMassH2,
         Selectors.questionHint(1) -> messagesForLanguage.netMassHint,
         Selectors.questionSuffix(1) -> "kg",

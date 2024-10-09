@@ -17,6 +17,7 @@
 @import models.GoodsType
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
+@import views.html.components.p
 
 @this(
     layout: templates.Layout,
@@ -26,6 +27,7 @@
     govukButton: GovukButton,
     h1: components.h1,
     h2: components.h2,
+    p: p,
     continueOrExit: components.continueOrExit
 )
 
@@ -46,6 +48,8 @@
             hiddenContent = Some(messages("subHeading.hidden")),
             args = Seq(goodsType.toSingularOutput())
         )
+
+        @p() { @messages("itemNetGrossMass.paragraph") }
 
         @govukInput(
             InputViewModel(

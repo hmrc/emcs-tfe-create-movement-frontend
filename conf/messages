@@ -1324,6 +1324,7 @@ itemGeographicalIndication.change.hidden = geographical indication information
 
 itemNetGrossMass.title = What is the net and gross mass of the {0}?
 itemNetGrossMass.heading = What is the net and gross mass of the {0}?
+itemNetGrossMass.paragraph = Bulk goods with no packaging, such as liquids in a tanker, will have the same net and gross mass.
 itemNetGrossMass.netMass = Net mass
 itemNetGrossMass.netMass.hint = The net mass is the weight of the goods without packaging. Enter the net mass in kilograms.
 itemNetGrossMass.netMass.error.required = Enter a net mass amount

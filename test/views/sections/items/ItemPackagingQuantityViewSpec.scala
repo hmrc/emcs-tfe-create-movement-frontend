@@ -59,10 +59,9 @@ class ItemPackagingQuantityViewSpec extends SpecBase with ViewBehaviours with It
           Selectors.hint -> messagesForLanguage.hint(testPackagingIndex2.displayIndex.toInt, testIndex1.displayIndex.toInt, testItemPackagingTypes.head.description),
           Selectors.summary(1) -> messagesForLanguage.summary,
           Selectors.detailsP(1) -> messagesForLanguage.detailsP1,
+          Selectors.detailsP(2) -> messagesForLanguage.detailsP2,
           Selectors.detailsBullet(1) -> messagesForLanguage.detailsBullet1,
           Selectors.detailsBullet(2) -> messagesForLanguage.detailsBullet2,
-          Selectors.detailsBullet(3) -> messagesForLanguage.detailsBullet3,
-          Selectors.detailsP(2) -> messagesForLanguage.detailsP2,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))

@@ -48,8 +48,10 @@
                 field = form("value"),
                 label = LabelViewModel(Text(messages(s"transportUnitIdentity.heading.$transportUnitType")))
                     .asPageHeading(LabelSize.Large)
-            ).withAutocomplete("on")
+            )
+            .withAutocomplete("on")
             .withWidth(Full)
+            .withHint(HintViewModel(Text(messages(s"transportUnitIdentity.hint.$transportUnitType"))))
         )
 
         @continueOrExit()

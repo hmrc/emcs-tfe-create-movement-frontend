@@ -24,7 +24,7 @@ import models.response.MissingMandatoryPage
 import models.response.referenceData.{ItemPackaging, WineOperations}
 import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, UkTaxWarehouse, UnknownDestination}
 import models.sections.items.ItemGeographicalIndicationType.{NoGeographicalIndication, ProtectedDesignationOfOrigin, ProtectedGeographicalIndication}
-import models.sections.items.ItemSmallIndependentProducerType.{CertifiedIndependentSmallProducer, NotApplicable, NotProvided, SelfCertifiedIndependentSmallProducerAndNotConsignor}
+import models.sections.items.ItemSmallIndependentProducerType.{CertifiedIndependentSmallProducer, NotApplicable, SelfCertifiedIndependentSmallProducerAndNotConsignor}
 import models.sections.items.ItemWineProductCategory.ImportedWine
 import models.sections.items._
 import pages.sections.info.DestinationTypePage
@@ -219,7 +219,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             .set(ItemFiscalMarksPage(testIndex1), "fiscal marks")
             .set(ItemFiscalMarksChoicePage(testIndex1), true)
             .set(ItemDesignationOfOriginPage(testIndex1), ItemDesignationOfOriginModel(ProtectedDesignationOfOrigin, Some("talkin' 'bout my deeeeeesignation"), None))
-            .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(NotProvided, None))
+            .set(ItemSmallIndependentProducerPage(testIndex1), ItemSmallIndependentProducerModel(NotApplicable, None))
             .set(ItemProducerSizePage(testIndex1), BigInt(4))
             .set(ItemDensityPage(testIndex1), BigDecimal(7.89))
             .set(ItemCommercialDescriptionPage(testIndex1), "beans")
@@ -272,7 +272,7 @@ class BodyEadEsadModelSpec extends SpecBase with ItemFixtures {
             fiscalMark = Some("fiscal marks"),
             fiscalMarkUsedFlag = Some(true),
             designationOfOrigin = Some("The product has a Protected Designation of Origin (PDO). talkin' 'bout my deeeeeesignation"),
-            independentSmallProducersDeclaration = Some("I don't want to provide information about the producer"),
+            independentSmallProducersDeclaration = Some("Not applicable"),
             sizeOfProducer = Some(BigInt(4)),
             density = Some(BigDecimal(7.89)),
             commercialDescription = Some("beans"),

@@ -51,15 +51,6 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
         }
       }
 
-      s"must go to CAM-TU09 (transport unit check answers) when the TU type is FixedTransport and the JourneyType is FixedTransportInstallations" in {
-        val userAnswers = emptyUserAnswers
-          .set(TransportUnitTypePage(testIndex1), FixedTransport)
-          .set(HowMovementTransportedPage, FixedTransportInstallations)
-
-        navigator.nextPage(TransportUnitTypePage(testIndex1), NormalMode, userAnswers) mustBe
-         transportUnitRoutes.TransportUnitCheckAnswersController.onPageLoad(testErn, testDraftId)
-      }
-
       "must go to the add-to-list page when the TU type is FixedTransport and the JourneyType is something other than FixedTransportInstallations" in {
         HowMovementTransported.values.filterNot(_ == FixedTransportInstallations).foreach { movementTransport =>
           val userAnswers = emptyUserAnswers

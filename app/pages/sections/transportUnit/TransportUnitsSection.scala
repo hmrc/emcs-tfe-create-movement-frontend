@@ -33,15 +33,12 @@ case object TransportUnitsSection extends Section[JsObject] {
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
     (TransportUnitsSectionUnits.status,
       TransportUnitsAddToListPage.value,
-      request.userAnswers.getCount(TransportUnitsCount),
-      HowMovementTransportedPage.value) match {
-      case (_, _, Some(MAX), _) => Completed
-      case (_, _, Some(1), Some(FixedTransportInstallations)) => Completed
-      case (Completed, Some(TransportUnitsAddToListModel.NoMoreToCome), _, _) => Completed
-      case (Completed, Some(TransportUnitsAddToListModel.MoreToCome) | None, _, _) => InProgress
-      case (Completed, Some(TransportUnitsAddToListModel.Yes) | None, _, _) => InProgress
-      case (InProgress, _, _, _) => InProgress
-      case (status, _, _, _) => status
+      request.userAnswers.getCount(TransportUnitsCount)) match {
+      case (_, _, Some(MAX)) => Completed
+      case (Completed, Some(TransportUnitsAddToListModel.NoMoreToCome), _) => Completed
+      case (Completed, Some(TransportUnitsAddToListModel.MoreToCome) | None, _) => InProgress
+      case (Completed, Some(TransportUnitsAddToListModel.Yes) | None, _) => InProgress
+      case (status, _, _) => status
     }
   }
 

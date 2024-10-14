@@ -25,7 +25,7 @@ import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario.{UkTaxWarehouse, UnknownDestination}
 import models.sections.journeyType.HowMovementTransported
 import models.sections.transportUnit.TransportUnitType
-import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
+import models.sections.transportUnit.TransportUnitType.{Container, FixedTransport, Tractor}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeJourneyTypeNavigator
 import pages.sections.guarantor.GuarantorRequiredPage
@@ -215,12 +215,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
     "must cleanse the journey and transport unit section when changing the answer (from fixed transport installations)" in new Test(Some(
       baseUserAnswers
         .set(HowMovementTransportedPage, HowMovementTransported.FixedTransportInstallations)
-        .set(GiveInformationOtherTransportPage, "blah")
-        .set(JourneyTimeDaysPage, 1)
-        .set(TransportUnitTypePage(testIndex1), Container)
-        .set(TransportUnitIdentityPage(testIndex1), "Container1")
-        .set(TransportUnitTypePage(testIndex2), Tractor)
-        .set(TransportUnitIdentityPage(testIndex2), "Tractor")
+        .set(TransportUnitTypePage(testIndex1), FixedTransport)
     )) {
       val expectedAnswers = baseUserAnswers
         .set(HowMovementTransportedPage, HowMovementTransported.values.head)

@@ -48,6 +48,9 @@
             }
         }
 
+        @h2(messages("transportUnit.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h1(pluralSingular("transportUnitsAddToList.heading", transportUnits.size), classes = "govuk-heading-l")
+
         @if(GuarantorRequiredPage.guarantorIsOptionalNIToEU && GuarantorRequiredPage.value.contains(false)) {
             @inset(Html(messages("transportUnitsAddToList.1stTransportUnitMustBeFixed.guarantor")))
         } else {
@@ -59,9 +62,6 @@
                 }
             }
         }
-
-        @h2(messages("transportUnit.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
-        @h1(pluralSingular("transportUnitsAddToList.heading", transportUnits.size), classes = "govuk-heading-l")
 
         @transportUnits.map { transportUnit =>
                 @govukSummaryList(transportUnit)

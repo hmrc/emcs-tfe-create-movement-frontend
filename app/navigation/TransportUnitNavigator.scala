@@ -104,11 +104,9 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
       reviewRouteMap(page)(userAnswers)
   }
 
-  private[navigation] def transportUnitTypeNavigation(idx: Index, userAnswers: UserAnswers): Call = {
-    (userAnswers.get(TransportUnitTypePage(idx)), userAnswers.get(HowMovementTransportedPage)) match {
-      case (Some(FixedTransport), Some(FixedTransportInstallations)) => transportUnitRoutes.TransportUnitCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.draftId)
-      case (Some(FixedTransport), _) => transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
+  private[navigation] def transportUnitTypeNavigation(idx: Index, userAnswers: UserAnswers): Call =
+    userAnswers.get(TransportUnitTypePage(idx)) match {
+      case Some(FixedTransport) => transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(userAnswers.ern, userAnswers.draftId)
       case _ => transportUnitRoutes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
     }
-  }
 }

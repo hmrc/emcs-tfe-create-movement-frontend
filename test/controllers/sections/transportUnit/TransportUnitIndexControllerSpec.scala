@@ -19,11 +19,9 @@ package controllers.sections.transportUnit
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
 import mocks.services.MockUserAnswersService
-import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.sections.transportUnit.TransportUnitType
 import models.{NormalMode, UserAnswers}
 import navigation.TransportUnitNavigator
-import pages.sections.journeyType.HowMovementTransportedPage
 import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
@@ -47,16 +45,6 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
   }
 
   "TransportUnitIndex Controller" - {
-
-    "must redirect to the transport unit check answers page (CAM-TU09) when the journey type is " +
-      "Fixed Transport Installations" in new Test(Some(emptyUserAnswers.set(HowMovementTransportedPage, FixedTransportInstallations))) {
-
-      val result = controller.onPageLoad(testErn, testDraftId)(request)
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustBe
-        routes.TransportUnitCheckAnswersController.onPageLoad(testErn, testDraftId).url
-    }
 
     "must redirect to the transport unit type page (CAM-TU01) when no transport units answered" in new Test(Some(emptyUserAnswers)) {
 

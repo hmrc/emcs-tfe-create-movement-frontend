@@ -17,6 +17,9 @@
 @import models.requests.DataRequest
 @import models.sections.transportUnit.TransportUnitType
 @import viewmodels.LegendSize
+@import pages.sections.guarantor.GuarantorRequiredPage
+@import pages.sections.info.DestinationTypePage.isNItoEuMovement
+@import pages.sections.transportUnit.TransportUnitsSection.onlyFixedTransport
 
 @this(
     layout: templates.Layout,
@@ -26,6 +29,8 @@
     govukButton: GovukButton,
     h1: components.h1,
     h2: components.h2,
+    inset: components.inset,
+    p: components.p,
     continueOrExit: components.continueOrExit
 )
 
@@ -36,18 +41,33 @@
     @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitTypeController.onSubmit(request.ern, request.draftId, idx, mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_1")))
         }
 
         @h2(messages("transportUnit.subHeading", request.draftId),"govuk-caption-xl")
 
-        @govukRadios(
-            RadiosViewModel(
-                field  = form("value"),
-                legend = LegendViewModel(Text(messages("transportUnitType.heading"))).asPageHeading(LegendSize.Large),
-                items  = TransportUnitType.options
-            ).withHint(HintViewModel(messages("transportUnitType.hint")))
-        )
+        @if(GuarantorRequiredPage.value.contains(false) && isNItoEuMovement && onlyFixedTransport) {
+
+            @h1(messages("transportUnitType.guarantor.heading", request.draftId), classes = "govuk-heading-l")
+
+            @inset(Html(messages("transportUnitType.guarantor.inset")))
+
+            @govukRadios(
+                RadiosViewModel(
+                    field = form("value"),
+                    legend = LegendViewModel(Text(messages("transportUnitType.heading"))).withCssClass(LegendSize.Medium.toString),
+                    items = TransportUnitType.options
+                )
+            )
+        } else {
+            @govukRadios(
+                RadiosViewModel(
+                    field = form("value"),
+                    legend = LegendViewModel(Text(messages("transportUnitType.heading"))).asPageHeading(LegendSize.Large),
+                    items = TransportUnitType.options
+                ).withHint(HintViewModel(messages("transportUnitType.hint")))
+            )
+        }
 
         @continueOrExit()
     }

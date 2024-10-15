@@ -98,6 +98,25 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
               )
             }
 
+            s"don't show remove or change link when only fixed transport installations" in new Setup(
+              emptyUserAnswers
+                .set(HowMovementTransportedPage, FixedTransportInstallations)
+                .set(TransportUnitTypePage(testIndex1), FixedTransport)
+            ) {
+
+              helper.allTransportUnitsSummary() mustBe Seq(
+                SummaryList(
+                  card = Some(Card(
+                    title = Some(CardTitle(Text(msg.transportUnit1))),
+                    actions = Some(Actions(items = Seq()))
+                  )),
+                  rows = Seq(
+                    TransportUnitTypeSummary.row(testIndex1, sectionComplete = true, showChangeLink = false).get
+                  )
+                )
+              )
+            }
+
             s"when incomplete answers entered for container unit type" in new Setup(
               emptyUserAnswers
                 .set(TransportUnitTypePage(testIndex1), Container)

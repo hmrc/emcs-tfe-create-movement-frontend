@@ -91,9 +91,16 @@ class TransportUnitsAddToListHelper @Inject()(implicit link: link, tagHelper: Ta
     val transportUnitSectionStatus = TransportUnitSection(idx).status
     val sectionComplete = transportUnitSectionStatus == Completed
 
+    val showRemoveChangeLink =
+      //Hide remove and change link if FTI and this TU is FT and the index is 0
+      !(HowMovementTransportedPage.value.contains(FixedTransportInstallations) &&
+        isTransportUnitAFixedTransportInstallation &&
+        idx == Index(0)
+      )
+
     SummaryListViewModel(
       rows = Seq(
-        Some(TransportUnitTypeSummary.row(idx, sectionComplete)),
+        Some(TransportUnitTypeSummary.row(idx, sectionComplete, showRemoveChangeLink)),
         if (!isTransportUnitAFixedTransportInstallation) Some(TransportUnitIdentitySummary.row(idx, sectionComplete)) else None,
         if (!isTransportUnitAFixedTransportInstallation) Some(TransportSealChoiceSummary.row(idx, sectionComplete)) else None,
         if (!isTransportUnitAFixedTransportInstallation) Some(TransportSealTypeSummary.row(idx, sectionComplete)) else None,
@@ -107,7 +114,7 @@ class TransportUnitsAddToListHelper @Inject()(implicit link: link, tagHelper: Ta
           Actions(
             items = Seq(
               continueEditingLink(idx, transportUnitSectionStatus),
-              Some(removeLink(idx))
+              Option.when(showRemoveChangeLink)(removeLink(idx))
             ).flatten
           )
         )

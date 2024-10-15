@@ -22,6 +22,7 @@ import models.UserAnswers
 import models.requests.DataRequest
 import models.sections.info.DispatchDetailsModel
 import models.validation.UIErrorModel
+import pages.sections.guarantor.{GuarantorRequiredPage, GuarantorSection}
 import pages.sections.info.{DeferredMovementPage, DispatchDetailsPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.http.HeaderCarrier
@@ -43,8 +44,18 @@ class ValidationService @Inject()(override val appConfig: AppConfig,
       logger.info(s"[validate] Validation Error of type ${error.errorType} was triggered")
       updatedAnswers.copy(submissionFailures = updatedAnswers.submissionFailures.filterNot(_.errorType == error.errorType.code) :+ error.asSubmissionFailure)
     }
-    userAnswersService.set(validatedUserAnswers) map identity
+
+    val updatedAnswers = resetGuarantorSectionIfRequiredAndCurrentlyFalse()(request.copy(userAnswers = validatedUserAnswers))
+
+    userAnswersService.set(updatedAnswers) map identity
   }
+
+  def resetGuarantorSectionIfRequiredAndCurrentlyFalse()(implicit request: DataRequest[_]): UserAnswers =
+    if(GuarantorRequiredPage.isRequired() && GuarantorRequiredPage.value.contains(false)) {
+      request.userAnswers.remove(GuarantorSection)
+    } else {
+      request.userAnswers
+    }
 
   private def validateDateOfDispatch()(implicit request: DataRequest[_], messages: Messages): Seq[UIErrorModel[DispatchDetailsModel, LocalDate]] =
     DispatchDetailsPage(isOnPreDraftFlow = false).value -> DeferredMovementPage(isOnPreDraftFlow = false).value match {

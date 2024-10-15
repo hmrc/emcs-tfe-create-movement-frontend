@@ -99,19 +99,16 @@ class HowMovementTransportedController @Inject()(
   }
 
   private def cleanseAnswers(answer: HowMovementTransported)(implicit request: DataRequest[_]): UserAnswers = {
-
-    val tuCount = request.userAnswers.getCount(TransportUnitsCount)
-    val removeJourneyType = request.userAnswers.remove(JourneyTypeSection)
-    val tuIsOnlyFixed = TransportUnitTypePage(Index(0)).value.contains(FixedTransport) && tuCount.contains(1)
-
-    if(!tuCount.exists(_ > 0) && answer == FixedTransportInstallations) {
-      //If the transport units is empty and the answer is FTI then set the first TU to be FT
-      removeJourneyType.set(TransportUnitTypePage(Index(0)), FixedTransport)
-    } else if (HowMovementTransportedPage.value.contains(FixedTransportInstallations) && tuIsOnlyFixed && answer != FixedTransportInstallations) {
-      //If the existing journey type is FTI and the TU is only FT then remove the TU and the current answer is no FTI
-      removeJourneyType.resetIndexedSection(TransportUnitsSection, Index(0))
+    //Cond156 - cleanup any existing TU entries when the user selects FixedTransportInstallations - set the Transport Unit type to be FixedTransportInstallations
+    if (answer == FixedTransportInstallations) {
+      request.userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0)).set(
+        TransportUnitTypePage(Index(0)), FixedTransport
+      )
+    } else if (HowMovementTransportedPage.value.contains(FixedTransportInstallations)) {
+      //If the user previously selected Fixed Transport Installation then clear the TU section (because the user did not actively enter any TU info)
+      request.userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0))
     } else {
-      removeJourneyType
+      request.userAnswers.remove(JourneyTypeSection)
     }
   }
 }

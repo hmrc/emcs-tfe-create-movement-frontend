@@ -972,6 +972,9 @@ transportUnitsAddToList.2 = I will add more transport units later
 transportUnitsAddToList.3.singular = No, this is the only transport unit for this movement
 transportUnitsAddToList.3.plural = No, these are all the transport units
 transportUnitsAddToList.error.required = Select yes if you need to add another transport unit
+transportUnitsAddToList.1stTransportUnitMustBeFixed.guarantor = Transport unit 1 must be fixed transport installations because there is no guarantor for this movement. Only movements of energy products by fixed transport installations can have no guarantor.
+transportUnitsAddToList.1stTransportUnitMustBeFixed = Transport unit 1 must be fixed transport installations because the journey type selected is fixed transport installations.
+transportUnitsAddToList.guarantorNowRequired = A transport unit has been added that is not fixed transport installations, so you are now required to add a guarantor.
 
 transportUnitRemoveUnit.title = Are you sure you want to remove transport unit {0}?
 transportUnitRemoveUnit.heading = Are you sure you want to remove transport unit {0}?

@@ -21,8 +21,15 @@ import fixtures.messages.sections.transportUnit.TransportUnitTypeMessages
 import forms.sections.transportUnit.TransportUnitTypeFormProvider
 import models.NormalMode
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.DirectDelivery
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
+import models.sections.transportUnit.TransportUnitType.FixedTransport
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.info.DestinationTypePage
+import pages.sections.journeyType.HowMovementTransportedPage
+import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -30,6 +37,10 @@ import views.html.sections.transportUnit.TransportUnitTypeView
 import views.{BaseSelectors, ViewBehaviours}
 
 class TransportUnitTypeViewSpec extends SpecBase with ViewBehaviours {
+
+  lazy val view = app.injector.instanceOf[TransportUnitTypeView]
+  lazy val form = app.injector.instanceOf[TransportUnitTypeFormProvider].apply()
+
   object Selectors extends BaseSelectors
 
   "TransportUnitTypeView" - {
@@ -39,31 +50,75 @@ class TransportUnitTypeViewSpec extends SpecBase with ViewBehaviours {
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-       lazy val view = app.injector.instanceOf[TransportUnitTypeView]
-        val form = app.injector.instanceOf[TransportUnitTypeFormProvider].apply()
+        "when adding a second transport unit, when currently only fixed transport and NI to EU" - {
 
-        implicit val doc: Document = Jsoup.parse(
-          view(
-            form = form,
-            idx = testIndex1,
-            mode = NormalMode
-          ).toString())
+          "should render the complex question pattern with inset text" - {
 
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.radioButton(1) -> messagesForLanguage.containerRadioOption,
-          Selectors.radioButton(2) -> messagesForLanguage.fixedTransportRadioOption,
-          Selectors.radioButton(3) -> messagesForLanguage.tractorRadioOption,
-          Selectors.radioButtonHint(3) -> messagesForLanguage.tractorRadioOptionHint,
-          Selectors.radioButtonHint(5) -> messagesForLanguage.vehicleRadioOptionHint,
-          Selectors.radioButton(4) -> messagesForLanguage.trailerRadioOption,
-          Selectors.radioButton(5) -> messagesForLanguage.vehicleRadioOption,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
-        ))
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .copy(ern = testNorthernIrelandErn)
+                .set(DestinationTypePage, DirectDelivery)
+                .set(GuarantorRequiredPage, false)
+                .set(HowMovementTransportedPage, FixedTransportInstallations)
+                .set(TransportUnitTypePage(testIndex1), FixedTransport),
+              testNorthernIrelandErn
+            )
+
+            implicit val doc: Document = Jsoup.parse(
+              view(
+                form = form,
+                idx = testIndex1,
+                mode = NormalMode
+              ).toString())
+
+            behave like pageWithExpectedElementsAndMessages(Seq(
+              Selectors.title -> messagesForLanguage.title,
+              Selectors.h1 -> messagesForLanguage.addGuarantorHeading,
+              Selectors.inset -> messagesForLanguage.addGuarantorInset,
+              Selectors.radioButton(1) -> messagesForLanguage.containerRadioOption,
+              Selectors.radioButton(2) -> messagesForLanguage.fixedTransportRadioOption,
+              Selectors.radioButton(3) -> messagesForLanguage.tractorRadioOption,
+              Selectors.radioButtonHint(3) -> messagesForLanguage.tractorRadioOptionHint,
+              Selectors.radioButton(4) -> messagesForLanguage.trailerRadioOption,
+              Selectors.radioButton(5) -> messagesForLanguage.vehicleRadioOption,
+              Selectors.radioButtonHint(5) -> messagesForLanguage.vehicleRadioOptionHint,
+              Selectors.button -> messagesForLanguage.saveAndContinue,
+              Selectors.link(1) -> messagesForLanguage.returnToDraft
+            ))
+          }
+        }
+
+        "in any other scenario" - {
+
+          "should render the simple question pattern with hint text" - {
+
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+            implicit val doc: Document = Jsoup.parse(
+              view(
+                form = form,
+                idx = testIndex1,
+                mode = NormalMode
+              ).toString())
+
+            behave like pageWithExpectedElementsAndMessages(Seq(
+              Selectors.title -> messagesForLanguage.title,
+              Selectors.h1 -> messagesForLanguage.heading,
+              Selectors.hint -> messagesForLanguage.hint,
+              Selectors.radioButton(1) -> messagesForLanguage.containerRadioOption,
+              Selectors.radioButton(2) -> messagesForLanguage.fixedTransportRadioOption,
+              Selectors.radioButton(3) -> messagesForLanguage.tractorRadioOption,
+              Selectors.radioButtonHint(3) -> messagesForLanguage.tractorRadioOptionHint,
+              Selectors.radioButton(4) -> messagesForLanguage.trailerRadioOption,
+              Selectors.radioButton(5) -> messagesForLanguage.vehicleRadioOption,
+              Selectors.radioButtonHint(5) -> messagesForLanguage.vehicleRadioOptionHint,
+              Selectors.button -> messagesForLanguage.saveAndContinue,
+              Selectors.link(1) -> messagesForLanguage.returnToDraft
+            ))
+          }
+        }
       }
     }
   }

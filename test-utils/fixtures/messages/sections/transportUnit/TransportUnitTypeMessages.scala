@@ -25,6 +25,9 @@ object TransportUnitTypeMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val title = titleHelper("What will the goods be transported in?")
     val heading = "What will the goods be transported in?"
+    val hint = "You can return to this page to select another option."
+    val addGuarantorHeading = "Transport units moving the goods"
+    val addGuarantorInset = "If a transport unit is added that is not fixed transport installations, then you are required to add a guarantor."
     val containerRadioOption = "Container"
     val fixedTransportRadioOption = "Fixed transport installations"
     val tractorRadioOption = "Tractor"

@@ -18,6 +18,7 @@ package pages.sections.transportUnit
 
 import models.requests.DataRequest
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
+import models.sections.transportUnit.TransportUnitType.FixedTransport
 import models.sections.transportUnit.TransportUnitsAddToListModel
 import pages.sections.Section
 import pages.sections.journeyType.HowMovementTransportedPage
@@ -43,4 +44,8 @@ case object TransportUnitsSection extends Section[JsObject] {
   }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
+
+  def onlyFixedTransport(implicit request: DataRequest[_]): Boolean =
+    (HowMovementTransportedPage.is(FixedTransportInstallations) || HowMovementTransportedPage.isEmpty) &&
+      TransportUnitsSectionUnits.onlyContainsOrIsEmpty(FixedTransport)
 }

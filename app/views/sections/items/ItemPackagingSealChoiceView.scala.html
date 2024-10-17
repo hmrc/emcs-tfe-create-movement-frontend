@@ -55,8 +55,8 @@
 
       @govukRadios(
           RadiosViewModel.yesNo(
-              field = form("value"),
-              legend = LegendViewModel(Text(messages("itemPackagingSealChoice.heading"))).withCssClass("govuk-visually-hidden")
+            field = form("value"),
+            legend = LegendViewModel(Text(messages("itemPackagingSealChoice.label"))).withCssClass("govuk-fieldset__legend--m")
           )
       )
 

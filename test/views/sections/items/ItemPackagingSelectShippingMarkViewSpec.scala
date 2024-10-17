@@ -61,7 +61,9 @@ class ItemPackagingSelectShippingMarkViewSpec extends SpecBase
           testOnwardRoute,
           testIndex1,
           testPackagingIndex1,
-          selectOptions
+          selectOptions,
+          testPackageBag.description,
+          "1"
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
@@ -69,7 +71,8 @@ class ItemPackagingSelectShippingMarkViewSpec extends SpecBase
           Selectors.hiddenText -> messagesForLanguage.hiddenSectionContent,
           Selectors.title -> messagesForLanguage.title(testIndex1),
           Selectors.h1 -> messagesForLanguage.heading(testIndex1),
-          Selectors.hint -> messagesForLanguage.hint(testIndex1),
+          Selectors.p(1) -> messagesForLanguage.p1(testIndex1.displayIndex, testPackagingIndex1.displayIndex, testPackageBag.description, "1"),
+          Selectors.p(2) -> messagesForLanguage.p2(testIndex1),
           Selectors.selectOption(1) -> messagesForLanguage.defaultValue,
           Selectors.selectOption(2) -> "beans",
           Selectors.selectOption(3) -> "eggs",

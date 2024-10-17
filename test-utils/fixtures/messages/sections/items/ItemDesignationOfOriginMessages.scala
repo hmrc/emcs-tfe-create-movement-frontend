@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ItemDesignationOfOriginMessages {
 
@@ -24,10 +24,10 @@ object ItemDesignationOfOriginMessages {
     _: i18n =>
 
     val heading: String = "Select a statement about the designation of origin of item 1"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.itemsSubHeading))
 
     val headingS200: String = "Select statements about the designation of origin and labelling of item 1"
-    val titleS200: String = titleHelper(headingS200)
+    val titleS200: String = titleHelper(headingS200, Some(SectionMessages.English.itemsSubHeading))
 
     val geographicalIndicationHint: String = "For example, Champagne has a Protected Designation of Origin (PDO) status and Calvados wine has a Protected Geographical Indication (PGI) protected wine name."
     val spiritMarketingAndLabellingHint: String = "Spirits must meet certain rules in order to be marketed in relation to their maturation age, protected geographical names or spirit category, such as ‘Irish Whiskey’ or ‘dry gin’."

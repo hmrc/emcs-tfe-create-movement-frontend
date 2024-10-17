@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.importInformation
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 import models.{NorthernIrelandRegisteredConsignor, UserType}
 
 object ImportCustomsOfficeCodeMessages {
@@ -31,7 +31,7 @@ object ImportCustomsOfficeCodeMessages {
         "Customs office code for the place where the goods originally entered the UK"
       }
 
-    def title(userType: UserType): String = titleHelper(heading(userType))
+    def title(userType: UserType): String = titleHelper(heading(userType), Some(SectionMessages.English.importInformationSubHeading))
 
     def paragraph(userType: UserType): String =
       if (userType == NorthernIrelandRegisteredConsignor) {

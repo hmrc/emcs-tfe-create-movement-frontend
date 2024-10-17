@@ -27,7 +27,7 @@
 
 @(form: Form[_], action: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("useTemplate.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("useTemplate.title"), Some(messages("draftMovement.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = action, Symbol("autoComplete") -> "off") {
 

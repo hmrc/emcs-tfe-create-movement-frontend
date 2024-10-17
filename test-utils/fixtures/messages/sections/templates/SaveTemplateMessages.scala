@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.templates
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object SaveTemplateMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Do you want to save this draft as a template for future use?"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.draftMovementSubHeading))
     val saveTemplateHint = "Templates allow you to edit and reuse the draft for another movement."
     val errorRequired = "Select how you would like to create this movement"
     val templateNameLabel = "Enter a template name to identify this movement"

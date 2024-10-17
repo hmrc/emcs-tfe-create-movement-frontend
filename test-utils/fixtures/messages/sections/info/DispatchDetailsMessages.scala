@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.info
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object DispatchDetailsMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading = "Dispatch details"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.movementInformationSubHeading))
 
     val deferredMovementFalseParagraph = "You can create a draft electronic administrative document (eAD) at any time, but it cannot be submitted more than 7 days before the date of dispatch."
     val deferredMovementTrueParagraph = "This date must match the date you entered on the fallback document."

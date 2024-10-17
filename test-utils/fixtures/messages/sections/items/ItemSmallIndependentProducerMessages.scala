@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ItemSmallIndependentProducerMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Independent small producer declaration"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.itemsSubHeading))
 
     val producedByIndependentSmallProducer = "It is hereby certified that the alcoholic product described has been produced by an independent small producer."
     val producedByIndependentSmallBrewery = "It is hereby certified that the alcoholic product described has been produced by an independent small brewery."

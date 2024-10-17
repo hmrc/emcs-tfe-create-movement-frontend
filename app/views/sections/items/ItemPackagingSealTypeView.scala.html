@@ -35,7 +35,7 @@
 
 @(form: Form[_], action: Call, itemIndex: Option[Index], packagingIndex: Option[Index], packagingTypeDescription: String, optPackagingQuantity: Option[String])(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemPackagingSealType.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemPackagingSealType.title"), Some(messages("items.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action, Symbol("autoComplete") -> "off") {
 
@@ -43,7 +43,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
         @h1(headingMsg = messages("itemPackagingSealType.heading"), classes = "govuk-heading-l")
 

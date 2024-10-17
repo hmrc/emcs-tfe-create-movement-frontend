@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.importInformation
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object CheckYourAnswersImportMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Check your answers"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.importInformationSubHeading))
     val customsOfficeCode: String = "Customs office code"
 
     val importCustomsOffice704Error = "The import customs office code you have entered is not valid"

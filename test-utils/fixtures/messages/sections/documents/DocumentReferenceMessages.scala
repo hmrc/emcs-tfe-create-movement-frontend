@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.documents
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object DocumentReferenceMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Enter a reference for this document"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.documentsSubHeading))
     val errorRequired = "Enter a reference for this document"
     val errorLength = "Document reference must be 35 characters or less"
     val errorXss = "Document reference must not contain < and > and : and ;"

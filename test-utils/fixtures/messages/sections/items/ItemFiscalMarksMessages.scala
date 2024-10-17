@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ItemFiscalMarksMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = s"Give information about the fiscal marks on the tobacco"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.itemsSubHeading))
 
     val cyaLabel = "Fiscal marks information"
     val cyaChangeHidden = "fiscal marks information"

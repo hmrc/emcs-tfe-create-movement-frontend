@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ItemWineOriginMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading: String = s"What was the wine’s country of origin?"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.itemsSubHeading))
     val hint: String = "Search by country name or abbreviation"
 
     val defaultSelectOption = "Choose country"

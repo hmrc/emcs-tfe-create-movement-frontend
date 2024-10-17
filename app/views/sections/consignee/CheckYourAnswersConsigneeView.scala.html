@@ -31,7 +31,7 @@
 
 @(submitAction: Call, ern: String, lrn: String, summaryList: Seq[SummaryList], isExport: Boolean = false)(implicit request: DataRequest[_], messages: Messages)
 
-    @layout(pageTitle = titleNoForm(messages("checkYourAnswersConsignee.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+    @layout(pageTitle = titleNoForm(messages("checkYourAnswersConsignee.title"), Some(messages("consignee.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
         @formHelper(submitAction) {
 
@@ -42,16 +42,16 @@
 
             @h1("checkYourAnswersConsignee.heading", Some(messages("consignee.subHeading")), "govuk-heading-l")
 
-            @if(isExport == true){
+            @if(isExport){
                 @h2(messages("checkYourAnswersConsignee.h2.exportOffice"))
 
-                @govukSummaryList(summaryList(0))
+                @govukSummaryList(summaryList.head)
 
                 @h2(messages("checkYourAnswersConsignee.h2.consigneeDetails"))
 
                 @govukSummaryList(summaryList(1))
             }else{
-                @govukSummaryList(summaryList(0))
+                @govukSummaryList(summaryList.head)
             }
 
             @saveAndContinue("site.confirmAnswers")

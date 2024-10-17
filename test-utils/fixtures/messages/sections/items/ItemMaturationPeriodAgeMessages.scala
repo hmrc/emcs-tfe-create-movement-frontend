@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 import forms.sections.items.ItemMaturationPeriodAgeFormProvider
 
 object ItemMaturationPeriodAgeMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     def heading(goodsType: String) = s"Do you know the maturation age of the $goodsType?"
-    def title(goodsType: String): String = titleHelper(heading(goodsType))
+    def title(goodsType: String): String = titleHelper(heading(goodsType), Some(SectionMessages.English.itemsSubHeading))
 
     val hint = "The maturation age refers to a production process that happens before bottling. It can usually be found in the description, presentation and labelling of the goods."
     val maturationPeriodAgeLabel = "Enter the maturation period or age in years"

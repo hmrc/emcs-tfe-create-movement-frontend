@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ItemPackagingShippingMarksChoiceMessages {
 
@@ -24,7 +24,7 @@ object ItemPackagingShippingMarksChoiceMessages {
 
     val heading = "Shipping mark"
 
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.itemsSubHeading))
 
     def p1(quantity: String) = s"Packaging 1 for item 1 is Bag: $quantity."
 

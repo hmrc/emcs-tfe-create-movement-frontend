@@ -61,7 +61,8 @@ class ItemCommodityCodeController @Inject()(
                   form = fillForm(ItemCommodityCodePage(idx), formProvider()),
                   action = routes.ItemCommodityCodeController.onSubmit(request.ern, request.draftId, idx, mode),
                   goodsType = GoodsType(itemExciseProductCode),
-                  commodityCodes
+                  commodityCodes,
+                  idx
                 )
               ))
           }
@@ -84,7 +85,8 @@ class ItemCommodityCodeController @Inject()(
                       form = formWithErrors,
                       action = routes.ItemCommodityCodeController.onSubmit(request.ern, request.draftId, idx, mode),
                       goodsType = GoodsType(itemExciseProductCode),
-                      commodityCodes
+                      commodityCodes,
+                      idx
                     )
                   )
               }

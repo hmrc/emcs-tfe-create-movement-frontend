@@ -22,10 +22,11 @@ object ItemPackagingSealChoiceMessages {
 
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
-    val heading: String = "Is there a commercial seal on this packaging?"
+    val heading: String = "Commercial seal"
     val title: String = titleHelper(heading, Some(SectionMessages.English.itemsSubHeading))
-    val p1 = "This is a seal that prevents items being removed from or added to this packaging. You will have the opportunity to give details of any seals on the transport later."
-    def p2(packagingIndex: String, itemIndex: String,packagingDescription: String, packagingQuantity: String) = s"Packaging $packagingIndex for item $itemIndex is $packagingDescription: $packagingQuantity."
+    val p2 = "This is a seal that prevents items being removed from or added to this packaging. You will have the opportunity to give details of any seals on the transport later."
+    def p1(packagingIndex: String, itemIndex: String,packagingDescription: String, packagingQuantity: String) = s"Packaging $packagingIndex for item $itemIndex is $packagingDescription: $packagingQuantity."
+    val label = "Is there a commercial seal on this packaging?"
     val cyaLabel: String = "Commercial seal"
     val cyaChangeHidden: String = "commercial seal"
   }

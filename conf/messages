@@ -1157,13 +1157,15 @@ itemAlcoholStrength.error.nonNumeric = Amount must only include numbers
 itemAlcoholStrength.error.range = Enter an amount with up to 2 decimal places between {0} and {1}
 itemAlcoholStrength.error.decimalPlaces = Amount can have up to 2 decimal places
 
-itemCommodityCode.title = Choose the commodity code for the {0}
-itemCommodityCode.heading = Choose the commodity code for the {0}
+itemCommodityCode.title = Commodity code for item {0}
+itemCommodityCode.heading = Commodity code for item {0}
 itemCommodityCode.checkYourAnswersLabel = Commodity code
 itemCommodityCode.error.required = Choose a commodity code
 itemCommodityCode.change.hidden = commodity code
 itemCommodityCode.hint.text = You can use the Trade Tariff tool to
 itemCommodityCode.hint.link = look up a commodity code
+itemCommodityCode.hint = Start typing the commodity code to see suggestions
+itemCommodityCode.label = Select the commodity code
 itemCommodityCode.defaultItem = Choose commodity code
 
 itemQuantity.title = How much {0} are you moving?
@@ -1384,9 +1386,11 @@ itemBulkPackagingChoice.checkYourAnswersLabel = Bulk package
 itemBulkPackagingChoice.error.required = Select yes if the {0} is being moved in bulk
 itemBulkPackagingChoice.change.hidden = if the {0} is being moved in bulk
 
-itemPackagingSelectShippingMark.title = Select a shipping mark for packaging {0}
-itemPackagingSelectShippingMark.heading = Select a shipping mark for packaging {0}
-itemPackagingSelectShippingMark.hint = Select a description of a mark or number that can be seen on the outside of the packaging. By selecting this shipping mark you are confirming that item {0} is packed together in the same package as any items with this shipping mark.
+itemPackagingSelectShippingMark.title = Shipping mark for packaging {0}
+itemPackagingSelectShippingMark.heading = Shipping mark for packaging {0}
+itemPackagingSelectShippingMark.p1 = Packaging {0} for item {1} is {2}
+itemPackagingSelectShippingMark.p2 = Select a description of a mark or number that can be seen on the outside of the packaging. By selecting this shipping mark you are confirming that item {0} is packed together inside the same package as any other items using this shipping mark.
+itemPackagingSelectShippingMark.label = Select a shipping mark for packaging {0}
 itemPackagingSelectShippingMark.error.required = Select a shipping mark
 itemPackagingSelectShippingMark.select.defaultValue = Select a shipping mark
 
@@ -1538,10 +1542,11 @@ itemWineGrowingZone.error.required = Select a wine-growing zone
 itemWineGrowingZone.checkYourAnswersLabel = Wine growing zone
 itemWineGrowingZone.change.hidden = wine growing zone
 
-itemPackagingSealChoice.title = Is there a commercial seal on this packaging?
-itemPackagingSealChoice.heading = Is there a commercial seal on this packaging?
+itemPackagingSealChoice.title = Commercial seal
+itemPackagingSealChoice.heading = Commercial seal
 itemPackagingSealChoice.p1 = This is a seal that prevents items being removed from or added to this packaging. You will have the opportunity to give details of any seals on the transport later.
 itemPackagingSealChoice.p2 = Packaging {0} for item {1} is
+itemPackagingSealChoice.label = Is there a commercial seal on this packaging?
 itemPackagingSealChoice.checkYourAnswersLabel = Commercial seal
 itemPackagingSealChoice.error.required = Select yes if there is a commercial seal on the packaging
 itemPackagingSealChoice.change.hidden = commercial seal

@@ -22,13 +22,15 @@ object ItemCommodityCodeMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
-    val heading = "Choose the commodity code for the beer"
+    val heading = "Commodity code for item 1"
     val title = titleHelper(heading, Some(SectionMessages.English.itemsSubHeading))
     val p = "You can use the Trade Tariff tool to look up a commodity code (opens in new tab)"
     val link = "look up a commodity code (opens in new tab)"
     val errorRequired = "Choose the commodity code for the beer"
     val lookUpCommodityCode = "look up a commodity code (opens in new tab)"
     val defaultItem = "Choose commodity code"
+    val label = "Select the commodity code"
+    val hint = "Start typing the commodity code to see suggestions"
     val cyaLabel = "Commodity code"
     val cyaChangeHidden = "commodity code"
   }

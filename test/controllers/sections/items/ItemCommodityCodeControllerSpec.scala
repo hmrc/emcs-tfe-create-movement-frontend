@@ -80,7 +80,8 @@ class ItemCommodityCodeControllerSpec extends SpecBase
           form,
           submitCall,
           testGoodsTypeTobacco,
-          Seq(testCommodityCodeTobacco, testCommodityCodeWine)
+          Seq(testCommodityCodeTobacco, testCommodityCodeWine),
+          testIndex1
         )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
@@ -104,7 +105,8 @@ class ItemCommodityCodeControllerSpec extends SpecBase
           form.fill(testCommodityCodeTobacco.cnCode),
           submitCall,
           testGoodsTypeTobacco,
-          Seq(testCommodityCodeTobacco, testCommodityCodeWine)
+          Seq(testCommodityCodeTobacco, testCommodityCodeWine),
+          testIndex1
         )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
@@ -165,7 +167,8 @@ class ItemCommodityCodeControllerSpec extends SpecBase
           boundForm,
           submitCall,
           testGoodsTypeTobacco,
-          Seq(testCommodityCodeTobacco, testCommodityCodeWine)
+          Seq(testCommodityCodeTobacco, testCommodityCodeWine),
+          testIndex1
         )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 

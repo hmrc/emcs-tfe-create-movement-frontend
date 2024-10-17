@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 import models.Index
 
 object ItemPackagingEnterShippingMarksMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     def heading(packagingIndex: Index): String = s"Shipping mark for packaging ${packagingIndex.displayIndex}"
-    def title(packagingIndex: Index): String = titleHelper(heading(packagingIndex))
+    def title(packagingIndex: Index): String = titleHelper(heading(packagingIndex), Some(SectionMessages.English.itemsSubHeading))
 
     def p1(packagingIndex: Index, itemIndex: Index, packagingDescription: String, packagingQuantity: String) =
       s"Packaging ${packagingIndex.displayIndex} for item ${itemIndex.displayIndex} is $packagingDescription: $packagingQuantity."

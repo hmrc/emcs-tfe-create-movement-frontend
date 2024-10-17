@@ -46,7 +46,8 @@
 
 @layout(pageTitle = title(
     form = form,
-    title = headingContent("title")
+    title = headingContent("title"),
+    Some(messages("importInformation.subHeading"))
 ), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action, Symbol("autoComplete") -> "off") {

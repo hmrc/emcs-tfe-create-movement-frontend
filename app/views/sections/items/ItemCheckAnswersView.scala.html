@@ -35,7 +35,7 @@
 
 @(idx: Index, cnCodeInformation: CnCodeInformation, action: Call, addMorePackagingCall: Call, isBulk: Boolean, packagingCount: Option[Int])(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("itemCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = titleNoForm(messages("itemCheckAnswers.title"), Some(messages("items.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action) {
 

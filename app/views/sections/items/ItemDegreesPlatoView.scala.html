@@ -40,7 +40,7 @@
 
 @(form: Form[_], action: Call, goodsType: GoodsType, idx: Index)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemDegreesPlato.title", goodsType.toSingularOutput())), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemDegreesPlato.title", goodsType.toSingularOutput()), Some(messages("items.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action, 'autoComplete -> "off") {
 
@@ -48,7 +48,7 @@
           @govukErrorSummary(ErrorSummaryViewModel(form))
       }
 
-      @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+      @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
       @govukRadios(
           RadiosViewModel.apply(

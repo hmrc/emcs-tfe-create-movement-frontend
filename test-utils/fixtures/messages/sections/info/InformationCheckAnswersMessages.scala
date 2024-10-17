@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.info
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object InformationCheckAnswersMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Check your answers"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.movementInformationSubHeading))
     val sectionSubheading = "Movement information"
 
     val lrnSubmissionFailure = "The Local Reference Number (LRN) entered has been used before"

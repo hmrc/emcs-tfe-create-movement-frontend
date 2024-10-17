@@ -16,16 +16,16 @@
 
 package fixtures.messages.sections.documents
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object DocumentsCertificatesMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading = "Are there any document certificates associated with this movement?"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.documentsSubHeading))
     val smallProducerHeading = "Document certificates"
-    val smallProducerTitle = titleHelper(smallProducerHeading)
+    val smallProducerTitle = titleHelper(smallProducerHeading, Some(SectionMessages.English.documentsSubHeading))
     val smallProducerInset = "You have told us that this movement contains an item produced by a certified independent small producer. You should record the certificate document and a reference if claiming Small Producer Relief on alcohol duty."
     val smallProducerQuestion = heading
     val errorRequired = "Select yes if there are documents associated with this movement"

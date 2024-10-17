@@ -38,14 +38,14 @@
 
 @(form: Form[_], action: Call, goodsType: GoodsType, cnCodeInfo: CnCodeInformation, idx: Index)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages(itemQuantityHelper.title(goodsType, cnCodeInfo))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages(itemQuantityHelper.title(goodsType, cnCodeInfo)), Some(messages("items.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
     @formHelper(action) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
         @if(itemQuantityHelper.requiresRicherContent(cnCodeInfo)) {
             @itemQuantityHelper.heading(cnCodeInfo).map { heading => @h1(heading) }

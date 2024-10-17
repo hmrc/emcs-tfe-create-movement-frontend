@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ItemWineProductCategoryMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading: String = "What is the product category of the wine?"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.itemsSubHeading))
 
     val radioOptionWineWithout = "Wine without a Protected Designation of Origin (PDO) or Protected Geographical Indicator (PGI)"
     val radioOptionVarietal = "Varietal wine without a Protected Designation of Origin (PDO) or Protected Geographical Indicator (PGI)"

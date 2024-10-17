@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.documents
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object DocumentsCheckAnswersMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Check your answers"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.documentsSubHeading))
   }
 
   object English extends ViewMessages with BaseEnglish

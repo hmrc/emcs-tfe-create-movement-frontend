@@ -16,15 +16,15 @@
 
 package fixtures.messages.sections.guarantor
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object GuarantorRequiredMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Movement guarantee"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.guarantorSubHeading))
     val isRequiredHeading = "Your movement requires a guarantee"
-    val isRequiredTitle = titleHelper(isRequiredHeading)
+    val isRequiredTitle = titleHelper(isRequiredHeading, Some(SectionMessages.English.guarantorSubHeading))
     val p1 = "Generally, excise goods moving within the UK (between UK warehouses or before export), or from Northern Ireland to the EU, must be covered by financial security in the form of a movement guarantee."
     val isRequiredP1 = "This movement must be covered by financial security in the form of a movement guarantee."
     val isRequiredNIToEUP1 = "This movement must be covered by financial security in the form of a movement guarantee. The only type of movement that is allowed to take place without a guarantee from Northern Ireland to the EU is the movement of energy products using fixed transport installations."

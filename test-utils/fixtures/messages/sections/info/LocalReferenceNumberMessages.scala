@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.info
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object LocalReferenceNumberMessages {
 
@@ -24,7 +24,7 @@ object LocalReferenceNumberMessages {
     _: i18n =>
 
     val newHeading: String = "Create a unique reference for this movement"
-    val newTitle: String = titleHelper(newHeading)
+    val newTitle: String = titleHelper(newHeading, Some(SectionMessages.English.movementInformationSubHeading))
     val newP1: String = "This is also known as a Local Reference Number (LRN). Use this reference to help you identify this movement in your records."
     val newLabel: String = "Enter a Local Reference Number (LRN)"
     val newHint: String = "The reference can be up to 22 characters and must not have been used for a previous movement."
@@ -35,7 +35,7 @@ object LocalReferenceNumberMessages {
     val submissionFailureError: String = "The Local Reference Number (LRN) entered has been used before so you must now enter different details"
 
     val deferredHeading: String = "Enter the Local Reference Number (LRN) for the deferred movement"
-    val deferredTitle: String = titleHelper(deferredHeading)
+    val deferredTitle: String = titleHelper(deferredHeading, Some(SectionMessages.English.movementInformationSubHeading))
     val deferredP1: String = "This must match the LRN on the Fallback Accompanying Document (FAD)."
     val deferredErrorRequired: String = "Enter the LRN"
     val deferredErrorLength: String = "LRN must be 22 characters or less"

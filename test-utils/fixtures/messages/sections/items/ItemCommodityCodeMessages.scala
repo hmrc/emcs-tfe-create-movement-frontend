@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ItemCommodityCodeMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading = "Choose the commodity code for the beer"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.itemsSubHeading))
     val p = "You can use the Trade Tariff tool to look up a commodity code (opens in new tab)"
     val link = "look up a commodity code (opens in new tab)"
     val errorRequired = "Choose the commodity code for the beer"

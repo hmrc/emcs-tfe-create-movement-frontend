@@ -31,7 +31,7 @@
 
 @(form: Form[_], action: Call, options: Seq[RadioItem], goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemBulkPackagingSelect.title", goodsType.toSingularOutput())),
+@layout(pageTitle = title(form, messages("itemBulkPackagingSelect.title", goodsType.toSingularOutput()), Some(messages("items.subHeading"))),
     maybeShowActiveTrader = maybeShowActiveTrader(request) ) {
 
     @formHelper(action = action, 'autoComplete -> "off") {
@@ -40,7 +40,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
         @govukRadios(
             RadiosViewModel(

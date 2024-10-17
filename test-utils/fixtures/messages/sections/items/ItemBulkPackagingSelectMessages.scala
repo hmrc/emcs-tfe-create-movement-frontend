@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ItemBulkPackagingSelectMessages {
 
@@ -24,7 +24,7 @@ object ItemBulkPackagingSelectMessages {
     _: i18n =>
     def heading(goodsType: String) = s"Which bulk packaging type are you using for the $goodsType?"
 
-    def title(goodsType: String): String = titleHelper(heading(goodsType))
+    def title(goodsType: String): String = titleHelper(heading(goodsType), Some(SectionMessages.English.itemsSubHeading))
 
     val radioOption1 = "Bulk, gas (at 1031 mbar and 15°C) (VG)"
     val radioOption2 = "Bulk, liquefied gas (abn.temp/press) (VQ)"

@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.documents
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object DocumentTypeMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading = "Select a document associated with this movement"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.documentsSubHeading))
     val hint = "Start typing to see suggestions. This is for reference only and you will not upload the document."
     val errorRequired = "Select the document you want to add"
     val cyaLabel = "Document type"

@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 import forms.sections.items.ItemPackagingSealTypeFormProvider
 import models.Index
 
@@ -25,7 +25,7 @@ object ItemPackagingSealTypeMessages {
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
     val heading: String = "What type of commercial seal is on this packaging?"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.itemsSubHeading))
 
     def p(packagingDescription: String, packagingQuantity: String, itemIndex: Index, packagingIndex: Index) = s"Packaging ${packagingIndex.displayIndex} for item ${itemIndex.displayIndex} is $packagingDescription: $packagingQuantity."
 

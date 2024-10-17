@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ItemProducerSizeMessages {
 
@@ -26,8 +26,8 @@ object ItemProducerSizeMessages {
       s"What was the producer’s total production of $goodsType from 1 February $start to 31 January $end?"
     def headingPureAlcohol(start: String, end: String) =
       s"What was the producer’s total pure alcohol production from 1 February $start to 31 January $end?"
-    def titleGoodsType(goodsType: String, start: String, end: String): String = titleHelper(headingGoodsType(goodsType, start: String, end: String))
-    def titlePureAlcohol(start: String, end: String): String = titleHelper(headingPureAlcohol(start: String, end: String))
+    def titleGoodsType(goodsType: String, start: String, end: String): String = titleHelper(headingGoodsType(goodsType, start, end), Some(SectionMessages.English.itemsSubHeading))
+    def titlePureAlcohol(start: String, end: String): String = titleHelper(headingPureAlcohol(start, end), Some(SectionMessages.English.itemsSubHeading))
 
     val p = "This information should be provided when claiming Small Producer Relief on Alcohol Duty."
     val p2GoodsType = "You should enter the total production in hectolitres of finished product."

@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.exportInformation
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ExportInformationCheckAnswersViewMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading: String = "Check your answers"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.exportInformationSubHeading))
 
     val exportCustomsOfficeSubmissionFailure = "The export customs office code you have entered is not valid"
   }

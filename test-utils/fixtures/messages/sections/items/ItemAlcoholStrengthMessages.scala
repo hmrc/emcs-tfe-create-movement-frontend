@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 import forms.sections.items.ItemAlcoholStrengthFormProvider._
 
 object ItemAlcoholStrengthMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     def heading(goodsType: String) = s"What is the alcohol strength by volume (ABV) for the $goodsType?"
-    def title(goodsType: String): String = titleHelper(heading(goodsType))
+    def title(goodsType: String): String = titleHelper(heading(goodsType), Some(SectionMessages.English.itemsSubHeading))
 
     val hint = "Enter the alcoholic strength as a percentage (by volume at 20°C)."
     val suffix = "%"

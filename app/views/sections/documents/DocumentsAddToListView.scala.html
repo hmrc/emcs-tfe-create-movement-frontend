@@ -33,8 +33,8 @@
 @(formOpt: Option[Form[_]], onSubmitCall: Call, documents: Seq[SummaryList], showNoOption: Boolean)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(
-    pageTitle = formOpt.fold(titleNoForm(pluralSingular("documentsAddToList.title", documents.length))){
-        form => title(form, pluralSingular("documentsAddToList.title", documents.length))
+    pageTitle = formOpt.fold(titleNoForm(pluralSingular("documentsAddToList.title", documents.length), Some(messages("documents.subHeading")))){
+        form => title(form, pluralSingular("documentsAddToList.title", documents.length), Some(messages("documents.subHeading")))
     },
     maybeShowActiveTrader = maybeShowActiveTrader(request)
 ) {

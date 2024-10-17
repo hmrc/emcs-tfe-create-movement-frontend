@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.documents
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 import models.Index
 
 object DocumentsAddToListMessages {
@@ -28,7 +28,7 @@ object DocumentsAddToListMessages {
       case idx => s"You have given information for $idx documents"
     }
 
-    val title: Int => String = idx => titleHelper(heading(idx))
+    val title: Int => String = idx => titleHelper(heading(idx), Some(SectionMessages.English.documentsSubHeading))
 
     def documentCardTitle(idx: Index) = s"Document ${idx.displayIndex}"
     def removeDocument(idx: Index): String = s"Remove ${documentCardTitle(idx)}"

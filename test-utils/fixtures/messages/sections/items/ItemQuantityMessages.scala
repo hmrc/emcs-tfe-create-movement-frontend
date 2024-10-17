@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 import models.response.referenceData.CnCodeInformation
 
 object ItemQuantityMessages {
@@ -24,9 +24,9 @@ object ItemQuantityMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     def title(goodsType: String, cnCode: CnCodeInformation): String = {
       cnCode.exciseProductCode match {
-        case "T200" => titleHelper(headingT200)
-        case "T300" => titleHelper(headingT300)
-        case _ => titleHelper(heading(goodsType))
+        case "T200" => titleHelper(headingT200, Some(SectionMessages.English.itemsSubHeading))
+        case "T300" => titleHelper(headingT300, Some(SectionMessages.English.itemsSubHeading))
+        case _ => titleHelper(heading(goodsType), Some(SectionMessages.English.itemsSubHeading))
       }
     }
 

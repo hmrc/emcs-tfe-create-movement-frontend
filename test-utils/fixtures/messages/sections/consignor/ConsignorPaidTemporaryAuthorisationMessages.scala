@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.consignor
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ConsignorPaidTemporaryAuthorisationMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Enter the consignor’s Paid Temporary Authorisation (PTA) code"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.consignorSubHeading))
     val hint = "The PTA contains 13 characters starting with XIPTA. It will be different to the Excise Registration Number you signed in to EMCS with."
     val errorMessageHelper: String => String = s"Error: " + _
 

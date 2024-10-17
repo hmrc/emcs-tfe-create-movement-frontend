@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ItemDensityMessages {
 
@@ -24,7 +24,7 @@ object ItemDensityMessages {
     _: i18n =>
     def heading(goodsType: String) = s"What is the density of the $goodsType?"
 
-    def title(goodsType: String): String = titleHelper(heading(goodsType))
+    def title(goodsType: String): String = titleHelper(heading(goodsType), Some(SectionMessages.English.itemsSubHeading))
 
     val hint = "Enter the density in kilograms per cubic metres"
     val suffix = "kg/m3"

@@ -46,7 +46,7 @@
     }
 }
 
-@layout(pageTitle = title(form, messages("documentType.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
+@layout(pageTitle = title(form, messages("documentType.title"), Some(messages("documents.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
 

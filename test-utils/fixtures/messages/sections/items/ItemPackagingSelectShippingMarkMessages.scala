@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 import models.Index
 
 object ItemPackagingSelectShippingMarkMessages {
@@ -25,7 +25,7 @@ object ItemPackagingSelectShippingMarkMessages {
     _: i18n =>
     def heading(i: Index): String = s"Select a shipping mark for packaging ${i.displayIndex}"
 
-    def title(i: Index): String = titleHelper(heading(i))
+    def title(i: Index): String = titleHelper(heading(i), Some(SectionMessages.English.itemsSubHeading))
 
     def hint(i: Index): String = s"Select a description of a mark or number that can be seen on the outside of the packaging." +
       s" By selecting this shipping mark you are confirming that item ${i.displayIndex}" +

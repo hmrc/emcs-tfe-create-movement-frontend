@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 import forms.sections.items.ItemDegreesPlatoFormProvider
 
 object ItemDegreesPlatoMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     def heading(goodsType: String) = s"Is the destination a country that uses Degrees Plato to tax the $goodsType?"
-    def title(goodsType: String): String = titleHelper(heading(goodsType))
+    def title(goodsType: String): String = titleHelper(heading(goodsType), Some(SectionMessages.English.itemsSubHeading))
 
     val degreesPlatoLabel = "Enter the density in Degrees Plato"
     val detailsSummaryHeading = "Which countries use Degrees Plato"

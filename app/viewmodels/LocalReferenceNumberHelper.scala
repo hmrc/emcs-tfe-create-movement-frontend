@@ -29,7 +29,7 @@ class LocalReferenceNumberHelper @Inject()(p: views.html.components.p) {
     if (isDeferred) messages(s"localReferenceNumber.deferred.$key") else messages(s"localReferenceNumber.new.$key")
 
   def title(form: Form[_], isDeferred: Boolean)(implicit messages: Messages): String =
-    ViewUtils.title(form, messageFor("title")(isDeferred))
+    ViewUtils.title(form, messageFor("title")(isDeferred), Some(messages("movementInformation.subHeading")))
 
   def heading(isDeferred: Boolean)(implicit messages: Messages): String =
     messageFor("heading")(isDeferred)

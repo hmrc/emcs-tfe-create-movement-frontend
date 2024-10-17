@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ItemWineOperationsChoiceMessages {
 
@@ -24,7 +24,7 @@ object ItemWineOperationsChoiceMessages {
     _: i18n =>
 
     val heading = s"Has the wine undergone any operations?"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.itemsSubHeading))
     val hint: String = "Select all that apply."
 
     val checkBoxItem0 = "The product has been enriched"

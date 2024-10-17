@@ -16,16 +16,16 @@
 
 package fixtures.messages.sections.sad
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object SadAddToListMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "You have given information for 1 Single Administrative Document (SAD) number"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.sadSubHeading))
 
     val headingMultiple = "You have given information for 2 Single Administrative Document (SAD) numbers"
-    val titleMultiple = titleHelper(headingMultiple)
+    val titleMultiple = titleHelper(headingMultiple, Some(SectionMessages.English.sadSubHeading))
 
     val question = "Do you need to add another Single Administrative Document (SAD) number for this movement?"
     val yesOption = "Yes"

@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ItemPackagingQuantityMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     def heading(itemNumber: String) = s"How many of this type of package are you using to move item $itemNumber?"
-    def title(itemNumber: String): String = titleHelper(heading(itemNumber))
+    def title(itemNumber: String): String = titleHelper(heading(itemNumber), Some(SectionMessages.English.itemsSubHeading))
 
     def hint(packagingNumber: Int, itemNumber: Int, packageType: String) = s"Packaging $packagingNumber for item $itemNumber is: $packageType."
 

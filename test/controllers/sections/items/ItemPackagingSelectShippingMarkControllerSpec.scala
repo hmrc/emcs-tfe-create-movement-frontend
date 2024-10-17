@@ -24,7 +24,7 @@ import forms.sections.items.ItemPackagingSelectShippingMarkFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, ShippingMarkOption, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage}
+import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingQuantityPage, ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage, ItemQuantityPage, ItemSelectPackagingPage}
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
@@ -117,6 +117,8 @@ class ItemPackagingSelectShippingMarkControllerSpec extends SpecBase with MockUs
 
     "must return OK and the correct view for a GET" in new Test(Some(
       baseUserAnswers
+        .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "0")
+        .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
         .set(ItemPackagingShippingMarksChoicePage(testIndex1, testPackagingIndex1), true)
         .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "beans")
         .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex3), "eggs")
@@ -129,12 +131,16 @@ class ItemPackagingSelectShippingMarkControllerSpec extends SpecBase with MockUs
         action = action,
         itemIdx = testIndex1,
         packagingIdx = testPackagingIndex1,
-        selectOptions = shippingMarkOptions()
+        selectOptions = shippingMarkOptions(),
+        packagingDescription = testPackageBag.description,
+        packagingQuantity = "0"
       )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
       baseUserAnswers
+        .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "0")
+        .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
         .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "beans")
         .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "eggs")
     )) {
@@ -146,7 +152,9 @@ class ItemPackagingSelectShippingMarkControllerSpec extends SpecBase with MockUs
         action = action,
         itemIdx = testIndex1,
         packagingIdx = testPackagingIndex1,
-        selectOptions = shippingMarkOptions(Some("beans"))
+        selectOptions = shippingMarkOptions(Some("beans")),
+        packagingDescription = testPackageBag.description,
+        packagingQuantity = "0"
       )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
@@ -163,6 +171,8 @@ class ItemPackagingSelectShippingMarkControllerSpec extends SpecBase with MockUs
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(
       baseUserAnswers
+        .set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "0")
+        .set(ItemSelectPackagingPage(testIndex1, testPackagingIndex1), testPackageBag)
         .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex1), "beans")
         .set(ItemPackagingShippingMarksPage(testIndex1, testPackagingIndex2), "eggs")
     )) {
@@ -176,7 +186,9 @@ class ItemPackagingSelectShippingMarkControllerSpec extends SpecBase with MockUs
         action = action,
         itemIdx = testIndex1,
         packagingIdx = testPackagingIndex1,
-        selectOptions = shippingMarkOptions(Some("beans"))
+        selectOptions = shippingMarkOptions(Some("beans")),
+        packagingDescription = testPackageBag.description,
+        packagingQuantity = "0"
       )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 

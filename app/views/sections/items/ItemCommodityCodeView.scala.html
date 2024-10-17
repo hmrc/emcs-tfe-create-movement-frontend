@@ -39,7 +39,7 @@
         autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
 
-@(form: Form[_], action: Call, goodsType: GoodsType, commodityCodes: Seq[CnCodeInformation])(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, goodsType: GoodsType, commodityCodes: Seq[CnCodeInformation], idx: Index)(implicit request: DataRequest[_], messages: Messages)
 
 @scripts = {
   @autocompleteJavascript()
@@ -67,9 +67,10 @@
             Select(
                 id = "item-commodity-code",
                 name = "item-commodity-code",
+                hint = Some(HintViewModel(content = Text(messages("itemCommodityCode.hint")))),
                 label = LabelViewModel(
-                    content = Text(messages("itemCommodityCode.heading", goodsType.toSingularOutput()))
-                ).withCssClass("govuk-label--l").hidden,
+                    content = Text(messages("itemCommodityCode.label", goodsType.toSingularOutput()))
+                ).withCssClass("govuk-label--s"),
                 items = Seq(
                     SelectItem(text = messages("itemCommodityCode.defaultItem"), selected = form.value.isEmpty, disabled = true)
                 ) ++ commodityCodes.map(commodityCode =>

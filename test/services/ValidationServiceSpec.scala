@@ -24,7 +24,14 @@ import mocks.services.MockUserAnswersService
 import models.UserAnswers
 import models.requests.DataRequest
 import models.sections.info.DispatchDetailsModel
-import pages.sections.info.{DeferredMovementPage, DispatchDetailsPage}
+import models.sections.info.movementScenario.MovementScenario.DirectDelivery
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
+import models.sections.transportUnit.TransportUnitType
+import models.sections.transportUnit.TransportUnitType.{FixedTransport, Tractor}
+import pages.sections.guarantor.{GuarantorRequiredPage, GuarantorSection}
+import pages.sections.info.{DeferredMovementPage, DestinationTypePage, DispatchDetailsPage}
+import pages.sections.journeyType.HowMovementTransportedPage
+import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers.await
 import play.api.test.{DefaultAwaitTimeout, FakeRequest}
@@ -51,12 +58,12 @@ class ValidationServiceSpec extends SpecBase
     override def instant(): Instant = Instant.now
   }
 
-  class Test(val userAnswers: UserAnswers) {
+  class Test(val userAnswers: UserAnswers, ern: String = testErn) {
 
     MockAppConfig.maxDispatchDateFutureDays.returns(7).anyNumberOfTimes()
     MockAppConfig.earliestDispatchDate.returns(LocalDate.of(2000,1,1)).anyNumberOfTimes()
 
-    implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+    implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers, ern)
 
     val service = new ValidationService(mockAppConfig, mockTimeMachine, mockUserAnswersService)
   }
@@ -138,6 +145,49 @@ class ValidationServiceSpec extends SpecBase
               MockUserAnswersService.set(answersWithError).returns(Future.successful(answersWithError))
 
               await(service.validate()) mustBe answersWithError
+            }
+          }
+
+          "when the movement has changed in a way that the guarantor section has become mandatory" - {
+
+            "when the guarantor section has been saved as 'No Guarantor Required'" - {
+
+              "must reset the guarantor section" in new Test(
+                emptyUserAnswers
+                  .copy(ern = testNorthernIrelandErn)
+                  .set(DestinationTypePage, DirectDelivery)
+                  .set(GuarantorRequiredPage, false)
+                  .set(HowMovementTransportedPage, FixedTransportInstallations)
+                  .set(TransportUnitTypePage(testIndex1), FixedTransport)
+                  .set(TransportUnitTypePage(testIndex2), Tractor),
+                testNorthernIrelandErn
+              ) {
+
+                val expectedUpdatedAnswers = userAnswers.remove(GuarantorSection)
+
+                MockUserAnswersService.set(expectedUpdatedAnswers).returns(Future.successful(expectedUpdatedAnswers))
+
+                await(service.validate()) mustBe expectedUpdatedAnswers
+              }
+            }
+
+            "when the guarantor section has been saved as 'Yes a Guarantor is Required'" - {
+
+              "must NOT reset the guarantor section" in new Test(
+                emptyUserAnswers
+                  .copy(ern = testNorthernIrelandErn)
+                  .set(DestinationTypePage, DirectDelivery)
+                  .set(GuarantorRequiredPage, true)
+                  .set(HowMovementTransportedPage, FixedTransportInstallations)
+                  .set(TransportUnitTypePage(testIndex1), FixedTransport)
+                  .set(TransportUnitTypePage(testIndex2), Tractor),
+                testNorthernIrelandErn
+              ) {
+
+                MockUserAnswersService.set(userAnswers).returns(Future.successful(userAnswers))
+
+                await(service.validate()) mustBe userAnswers
+              }
             }
           }
         }

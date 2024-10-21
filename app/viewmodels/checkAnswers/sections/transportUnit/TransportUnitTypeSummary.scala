@@ -27,13 +27,13 @@ import viewmodels.implicits._
 
 object TransportUnitTypeSummary {
 
-  def row(idx: Index, sectionComplete: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row(idx: Index, sectionComplete: Boolean, showChangeLink: Boolean = true)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     TransportUnitTypePage(idx).value.map {
       answer =>
         SummaryListRowViewModel(
           key = "transportUnitType.addToListLabel",
           value = ValueViewModel(messages(s"transportUnitType.$answer")),
-          actions = if (sectionComplete) {
+          actions = if (sectionComplete && showChangeLink) {
             Seq(
               ActionItemViewModel(
                 "site.change",

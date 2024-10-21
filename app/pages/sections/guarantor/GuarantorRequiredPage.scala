@@ -26,6 +26,7 @@ import pages.QuestionPage
 import pages.sections.info.DestinationTypePage
 import pages.sections.items.ItemsSectionItems
 import pages.sections.journeyType.HowMovementTransportedPage
+import pages.sections.transportUnit.TransportUnitsSection.onlyFixedTransport
 import pages.sections.transportUnit.TransportUnitsSectionUnits
 import play.api.libs.json.JsPath
 
@@ -48,8 +49,4 @@ case object GuarantorRequiredPage extends QuestionPage[Boolean] {
 
   private def destinationTypeIsNotUnknownOrExempted(implicit request: DataRequest[_]): Boolean =
     !Seq(UnknownDestination, ExemptedOrganisation).exists(DestinationTypePage.is)
-
-  private def onlyFixedTransport(implicit request: DataRequest[_]): Boolean =
-    (HowMovementTransportedPage.is(FixedTransportInstallations) || HowMovementTransportedPage.isEmpty) &&
-      TransportUnitsSectionUnits.onlyContainsOrIsEmpty(FixedTransport)
 }

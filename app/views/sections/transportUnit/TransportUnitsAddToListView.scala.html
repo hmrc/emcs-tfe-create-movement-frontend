@@ -19,6 +19,9 @@
 @import views.ViewUtils.pluralSingular
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 @import models.sections.transportUnit.TransportUnitsAddToListModel
+@import pages.sections.guarantor.GuarantorRequiredPage
+@import pages.sections.journeyType.HowMovementTransportedPage
+@import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 
 @this(
     layout: templates.Layout,
@@ -29,7 +32,8 @@
     h1: components.h1,
     h2: components.h2,
     govukSummaryList: GovukSummaryList,
-    continueOrExit: components.continueOrExit
+    continueOrExit: components.continueOrExit,
+    inset: components.inset
 )
 
 @(optionalForm: Option[Form[_]], transportUnits: Seq[SummaryList], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
@@ -46,6 +50,18 @@
 
         @h2(messages("transportUnit.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
         @h1(pluralSingular("transportUnitsAddToList.heading", transportUnits.size), classes = "govuk-heading-l")
+
+        @if(GuarantorRequiredPage.guarantorIsOptionalNIToEU && GuarantorRequiredPage.value.contains(false)) {
+            @inset(Html(messages("transportUnitsAddToList.1stTransportUnitMustBeFixed.guarantor")))
+        } else {
+            @if(GuarantorRequiredPage.isRequired() && GuarantorRequiredPage.value.contains(false)) {
+                @inset(Html(messages("transportUnitsAddToList.guarantorNowRequired")))
+            } else {
+                @if(HowMovementTransportedPage.value.contains(FixedTransportInstallations)) {
+                    @inset(Html(messages("transportUnitsAddToList.1stTransportUnitMustBeFixed")))
+                }
+            }
+        }
 
         @transportUnits.map { transportUnit =>
                 @govukSummaryList(transportUnit)

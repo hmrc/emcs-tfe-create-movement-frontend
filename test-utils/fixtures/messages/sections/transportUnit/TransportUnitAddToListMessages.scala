@@ -52,6 +52,10 @@ object TransportUnitAddToListMessages {
     val finalCyaCardTitle = "Transport units"
     val finalCyaKey: Int => String = "Transport unit " + _
     def finalCyaValue(transportUnit: String, id: Option[String]): String = s"$transportUnit${id.fold("")(i => s" ($i)")}"
+
+    val tu1MustBeFixedGuarantorVariant = "Transport unit 1 must be fixed transport installations because there is no guarantor for this movement. Only movements of energy products by fixed transport installations can have no guarantor."
+    val tu1MustBeFixed = "Transport unit 1 must be fixed transport installations because the journey type selected is fixed transport installations."
+    val addAGuarantor = "A transport unit has been added that is not fixed transport installations, so you are now required to add a guarantor."
   }
 
   object English extends ViewMessages with BaseEnglish {

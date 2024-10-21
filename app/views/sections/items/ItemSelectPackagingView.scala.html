@@ -50,7 +50,7 @@
     }
 }
 
-@layout(pageTitle = title(form, messages("itemSelectPackaging.title", itemsIndex.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
+@layout(pageTitle = title(form, messages("itemSelectPackaging.title", itemsIndex.displayIndex), Some(messages("items.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
 
     @formHelper(action = action) {
 
@@ -58,7 +58,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
         @h1(headingMsg = messages("itemSelectPackaging.heading", itemsIndex.displayIndex))
 

@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 import models.Index
 
 object ItemsAddToListMessages {
@@ -29,7 +29,7 @@ object ItemsAddToListMessages {
       case _ => s"You have given information for $count items"
     }
 
-    def title(count: Int): String = titleHelper(heading(count))
+    def title(count: Int): String = titleHelper(heading(count), Some(SectionMessages.English.itemsSubHeading))
 
     def itemCardTitle(idx: Index) = s"Item ${idx.displayIndex}"
 

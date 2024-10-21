@@ -31,7 +31,7 @@
 
 @(form: Form[_], submitAction: Call, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("saveTemplate.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("saveTemplate.title"), Some(messages("draftMovement.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(submitAction) {
 

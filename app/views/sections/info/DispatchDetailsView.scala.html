@@ -37,7 +37,7 @@
 
 @(form: Form[_], deferredMovement: Boolean, onSubmitCall: Call, skipQuestionCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("dispatchDetails.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("dispatchDetails.title"), Some(messages("movementInformation.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = onSubmitCall) {
 

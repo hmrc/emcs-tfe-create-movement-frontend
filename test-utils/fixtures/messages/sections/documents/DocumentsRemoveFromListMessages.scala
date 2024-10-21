@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.documents
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 import models.Index
 
 object DocumentsRemoveFromListMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     def heading(idx: Index): String = s"Are you sure you want to remove document ${idx.displayIndex}?"
-    def title(idx: Index): String = titleHelper(heading(idx))
+    def title(idx: Index): String = titleHelper(heading(idx), Some(SectionMessages.English.documentsSubHeading))
     def errorRequired(idx: Index): String = s"Select yes if you want to remove document ${idx.displayIndex}"
   }
 

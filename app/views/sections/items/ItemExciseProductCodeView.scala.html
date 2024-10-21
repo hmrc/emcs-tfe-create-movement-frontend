@@ -55,7 +55,7 @@
     }
 }
 
-@layout(pageTitle = title(form, messages("itemExciseProductCode.title", idx.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
+@layout(pageTitle = title(form, messages("itemExciseProductCode.title", idx.displayIndex), Some(messages("items.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
 
     @formHelper(action = action) {
 

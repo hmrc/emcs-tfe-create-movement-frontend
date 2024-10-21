@@ -39,7 +39,7 @@
         packageIdx: Index
 )(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemPackagingRemovePackage.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("itemPackagingRemovePackage.title"), Some(messages("items.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = action, 'autoComplete -> "off") {
 
@@ -47,7 +47,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("items.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
         @h1(messages("itemPackagingRemovePackage.heading"), classes = "govuk-heading-l")
 

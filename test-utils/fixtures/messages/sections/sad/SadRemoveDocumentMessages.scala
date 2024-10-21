@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.sad
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object SadRemoveDocumentMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    def title: String = titleHelper("Are you sure you want to remove this Single Administrative Document (SAD) number?")
-    def heading: String = "Are you sure you want to remove this Single Administrative Document (SAD) number?"
-    def errorMessage: String = "Select yes if you want to remove this Single Administrative Document"
+    val heading: String = "Are you sure you want to remove this Single Administrative Document (SAD) number?"
+    val title: String = titleHelper(heading, Some(SectionMessages.English.sadSubHeading))
+    val errorMessage: String = "Select yes if you want to remove this Single Administrative Document"
   }
 
   object English extends ViewMessages with BaseEnglish

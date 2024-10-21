@@ -35,7 +35,7 @@
 @(form: Form[_], onSubmitAction: Call, skipQuestionAction: Call, goodsType: GoodsType, startYear: String, endYear: String, index: Index, showAlcoholProductionContent: Boolean)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(
-    pageTitle = title(form, pageTitle),
+    pageTitle = title(form, pageTitle, Some(messages("items.subHeading"))),
     maybeShowActiveTrader = maybeShowActiveTrader(request)
 ) {
 

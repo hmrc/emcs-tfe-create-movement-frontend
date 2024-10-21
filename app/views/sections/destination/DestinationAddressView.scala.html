@@ -40,7 +40,7 @@
 @defining("destinationAddress") { msgKey =>
         @defining(DestinationTypePage.value.contains(DirectDelivery)) { isDirectDelivery =>
 
-            @layout(pageTitle = title(form, messages(s"address.$msgKey.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+            @layout(pageTitle = title(form, messages(s"address.$msgKey.title"), Some(messages(s"address.$DestinationAddressPage.subheading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
                 @formHelper(action = onSubmit) {
 

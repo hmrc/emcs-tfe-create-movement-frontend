@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ItemBulkPackagingChoiceMessages {
 
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
     val heading: String => String = goodsType => s"Is the $goodsType being moved in bulk?"
-    val title: String => String = goodsType => titleHelper(heading(goodsType))
+    val title: String => String = goodsType => titleHelper(heading(goodsType), Some(SectionMessages.English.itemsSubHeading))
     val hint = "Moving goods in bulk means that the goods are loaded directly into a vessel in large quantity, " +
       "and not packaged. For example, transporting liquids in a tanker."
     val cyaLabel: String = "Bulk package"

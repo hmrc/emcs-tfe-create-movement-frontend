@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ItemPackagingRemovePackageMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading: String = "Are you sure you want to remove this packaging?"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.itemsSubHeading))
     val inset: String => String = i => s"This packaging contains both item $i and another item packed together. If this packaging is removed, it will also be removed from the other items packed inside this packaging and using the same shipping mark."
 
     def p1(packageType: String): String = s"The packaging type is: $packageType."

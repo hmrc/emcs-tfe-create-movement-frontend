@@ -16,15 +16,15 @@
 
 package fixtures.messages.sections.info
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object DestinationTypeMessages {
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
     val headingMovement = "What is the destination type for this movement?"
-    val titleMovement = titleHelper(headingMovement)
+    val titleMovement = titleHelper(headingMovement, Some(SectionMessages.English.movementInformationSubHeading))
     val headingImport = "What is the destination type for this import?"
-    val titleImport = titleHelper(headingImport)
+    val titleImport = titleHelper(headingImport, Some(SectionMessages.English.movementInformationSubHeading))
     val taxWarehouseInGb = "Tax warehouse in Great Britain"
     val taxWarehouseInGbHint = "(England, Scotland and Wales)"
     val taxWarehouseInNi = "Tax warehouse in Northern Ireland"

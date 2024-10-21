@@ -16,12 +16,12 @@
 
 package fixtures.messages.sections.firstTransporter
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object FirstTransporterCheckAnswerMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Check your answers"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.firstTransporterSubHeading))
 
     val firstTransporterHasVat: String = "VAT registered in the UK"
     val firstTransporterVatNumber: String = "VAT registration number"

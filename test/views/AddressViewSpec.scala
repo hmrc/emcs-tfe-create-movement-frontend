@@ -65,7 +65,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
             )
 
             behave like pageWithExpectedElementsAndMessages(Seq(
-              Selectors.title -> messagesForLanguage.title(addressPage),
+              Selectors.title -> messagesForLanguage.title(addressPage, Some(messagesForLanguage.subheading(addressPage))),
               Selectors.h1 -> messagesForLanguage.heading(addressPage),
               Selectors.h2(1) -> messagesForLanguage.subheading(addressPage),
               Selectors.label("property") -> messagesForLanguage.property,

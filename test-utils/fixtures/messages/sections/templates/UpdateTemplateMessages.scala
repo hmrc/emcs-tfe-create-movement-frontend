@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.templates
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object UpdateTemplateMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Update template"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.draftMovementSubHeading))
     val p1: String => String = name => s"This draft movement was created from template ($name)"
     val label: String = "Do you want to update the template with new information entered in this movement?"
 

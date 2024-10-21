@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.items
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ItemWineGrowingZoneMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading = "Which wine-growing zone has the wine come from?"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.itemsSubHeading))
 
     val findOutMoreLink = "find more information about each wine-growing zone (opens in new tab)"
     val p1 = s"Select a wine-growing zone code. You can $findOutMoreLink in Annex IX to Regulation (EC) No 479/2008."

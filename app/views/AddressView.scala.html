@@ -40,71 +40,83 @@
 
 @defining(headingKey.getOrElse(addressPage.toString)) { msgKey =>
 
-    @layout(pageTitle = title(form, messages(s"address.$msgKey.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+    @defining(addressPage.toString match {
+        case "consigneeAddress" => Some(messages("consignee.subHeading"))
+        case "consignorAddress" => Some(messages("consignor.subHeading"))
+        case "destinationAddress" => Some(messages("destination.subHeading"))
+        case "dispatchAddress" => Some(messages("dispatch.subHeading"))
+        case "transportArrangerAddress" => Some(messages("transportArranger.subHeading"))
+        case "firstTransporterAddress" => Some(messages("firstTransporter.subHeading"))
+        case "guarantorAddress" => Some(messages("guarantor.subHeading"))
+        case _ => None
+    }) { section =>
 
-        @formHelper(action = onSubmit) {
+        @layout(pageTitle = title(form, messages(s"address.$msgKey.title"), section), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-            @if(form.errors.nonEmpty) {
-                @govukErrorSummary(ErrorSummaryViewModel(form))
-            }
+            @formHelper(action = onSubmit) {
 
-            @h1(s"address.$msgKey.heading", Some(messages(s"address.$addressPage.subheading")), "govuk-heading-l")
+                @if(form.errors.nonEmpty) {
+                    @govukErrorSummary(ErrorSummaryViewModel(form))
+                }
 
-            @if(isConsignorPageOrUsingConsignorDetails && request.traderKnownFacts.isDefined) {
-                <p class="govuk-body">Business name <br> <span class="govuk-body govuk-!-font-weight-bold">@request.traderKnownFacts.get.traderName</span></p>
-            } else {
+                @h1(s"address.$msgKey.heading", Some(messages(s"address.$addressPage.subheading")), "govuk-heading-l")
+
+                @if(isConsignorPageOrUsingConsignorDetails && request.traderKnownFacts.isDefined) {
+                    <p class="govuk-body">Business name <br> <span class="govuk-body govuk-!-font-weight-bold">@request.traderKnownFacts.get.traderName</span></p>
+                } else {
+                    @govukInput(
+                        InputViewModel(
+                            field = form("businessName"),
+                            label = LabelViewModel(Text(messages("address.businessName")))
+                        )
+                        .withWidth(Full)
+                        .withAutocomplete("organization")
+                    )
+                }
+
                 @govukInput(
                     InputViewModel(
-                        field = form("businessName"),
-                        label = LabelViewModel(Text(messages("address.businessName")))
+                        field = form("property"),
+                        label = LabelViewModel(Text(messages("address.property")))
                     )
                     .withWidth(Full)
-                    .withAutocomplete("organization")
+                    .withAutocomplete("address-line1")
                 )
+
+                @govukInput(
+                    InputViewModel(
+                        field = form("street"),
+                        label = LabelViewModel(Text(messages("address.street")))
+                    )
+                    .withWidth(Full)
+                    .withAutocomplete("address-line2")
+                )
+
+                @govukInput(
+                    InputViewModel(
+                        field = form("town"),
+                        label = LabelViewModel(Text(messages("address.town")))
+                    )
+                    .withWidth(TwoThirds)
+                    .withAutocomplete("address-level1")
+                )
+
+                @govukInput(
+                    InputViewModel(
+                        field = form("postcode"),
+                        label = LabelViewModel(Text(messages("address.postcode")))
+                    )
+                    .withWidth(OneThird)
+                    .withAutocomplete("postal-code")
+                )
+
+                @onSkip.fold {
+                    @continueOrExit()
+                } { call =>
+                    @continueOrSkip(call.url, "site.saveAndContinue", "site.skipThisQuestion")
+                }
+
             }
-
-            @govukInput(
-                InputViewModel(
-                    field = form("property"),
-                    label = LabelViewModel(Text(messages("address.property")))
-                )
-                .withWidth(Full)
-                .withAutocomplete("address-line1")
-            )
-
-            @govukInput(
-                InputViewModel(
-                    field = form("street"),
-                    label = LabelViewModel(Text(messages("address.street")))
-                )
-                .withWidth(Full)
-                .withAutocomplete("address-line2")
-            )
-
-            @govukInput(
-                InputViewModel(
-                    field = form("town"),
-                    label = LabelViewModel(Text(messages("address.town")))
-                )
-                .withWidth(TwoThirds)
-                .withAutocomplete("address-level1")
-            )
-
-            @govukInput(
-                InputViewModel(
-                    field = form("postcode"),
-                    label = LabelViewModel(Text(messages("address.postcode")))
-                )
-                .withWidth(OneThird)
-                .withAutocomplete("postal-code")
-            )
-
-            @onSkip.fold {
-                @continueOrExit()
-            } { call =>
-                @continueOrSkip(call.url, "site.saveAndContinue", "site.skipThisQuestion")
-            }
-
         }
     }
 }

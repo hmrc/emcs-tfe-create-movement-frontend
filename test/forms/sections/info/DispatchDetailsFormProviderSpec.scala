@@ -88,7 +88,7 @@ class DispatchDetailsFormProviderSpec extends SpecBase with StringFieldBehaviour
 
           val data = formAnswersMap(day = "1000", month = "1000", year = "1000")
 
-          val expectedResult = Seq(FormError(dateField, s"dispatchDetails.$dateField.error.invalid"))
+          val expectedResult = Seq(FormError(dateField, s"dispatchDetails.$dateField.error.notARealDate"))
 
           val actualResult = form().bind(data)
 
@@ -174,7 +174,7 @@ class DispatchDetailsFormProviderSpec extends SpecBase with StringFieldBehaviour
 
             val data = formAnswersMap(day = "")
 
-            val expectedResult = Seq(FormError(dateField, s"dispatchDetails.$dateField.error.required", List("day")))
+            val expectedResult = Seq(FormError(dateField, s"dispatchDetails.$dateField.error.required.one", List("day")))
 
             val actualResult = form().bind(data)
 
@@ -191,7 +191,7 @@ class DispatchDetailsFormProviderSpec extends SpecBase with StringFieldBehaviour
 
             val data = formAnswersMap(month = "")
 
-            val expectedResult = Seq(FormError(dateField, s"dispatchDetails.$dateField.error.required", List("month")))
+            val expectedResult = Seq(FormError(dateField, s"dispatchDetails.$dateField.error.required.one", List("month")))
 
             val actualResult = form().bind(data)
 
@@ -208,7 +208,7 @@ class DispatchDetailsFormProviderSpec extends SpecBase with StringFieldBehaviour
 
             val data = formAnswersMap(year = "")
 
-            val expectedResult = Seq(FormError(dateField, s"dispatchDetails.$dateField.error.required", List("year")))
+            val expectedResult = Seq(FormError(dateField, s"dispatchDetails.$dateField.error.required.one", List("year")))
 
             val actualResult = form().bind(data)
 

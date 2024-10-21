@@ -127,7 +127,7 @@ class InvoiceDetailsFormProviderSpec extends SpecBase with StringFieldBehaviours
 
           val data = formAnswersMap(day = "1000", month = "1000", year = "1000")
 
-          val expectedResult = Seq(FormError(dateField, s"invoiceDetails.$dateField.error.invalid"))
+          val expectedResult = Seq(FormError(dateField, s"invoiceDetails.$dateField.error.notARealDate"))
 
           val actualResult = form.bind(data)
 
@@ -154,7 +154,7 @@ class InvoiceDetailsFormProviderSpec extends SpecBase with StringFieldBehaviours
 
           val data = formAnswersMap(day = "")
 
-          val expectedResult = Seq(FormError(dateField, s"invoiceDetails.$dateField.error.required", List("day")))
+          val expectedResult = Seq(FormError(dateField, s"invoiceDetails.$dateField.error.required.one", List("day")))
 
           val actualResult = form.bind(data)
 
@@ -171,7 +171,7 @@ class InvoiceDetailsFormProviderSpec extends SpecBase with StringFieldBehaviours
 
           val data = formAnswersMap(month = "")
 
-          val expectedResult = Seq(FormError(dateField, s"invoiceDetails.$dateField.error.required", List("month")))
+          val expectedResult = Seq(FormError(dateField, s"invoiceDetails.$dateField.error.required.one", List("month")))
 
           val actualResult = form.bind(data)
 
@@ -188,7 +188,7 @@ class InvoiceDetailsFormProviderSpec extends SpecBase with StringFieldBehaviours
 
           val data = formAnswersMap(year = "")
 
-          val expectedResult = Seq(FormError(dateField, s"invoiceDetails.$dateField.error.required", List("year")))
+          val expectedResult = Seq(FormError(dateField, s"invoiceDetails.$dateField.error.required.one", List("year")))
 
           val actualResult = form.bind(data)
 
@@ -286,7 +286,7 @@ class InvoiceDetailsFormProviderSpec extends SpecBase with StringFieldBehaviours
 
         "have the correct error message for one missing date field" in {
 
-          msgs("invoiceDetails.value.error.required", "year") mustBe
+          msgs("invoiceDetails.value.error.required.one", "year") mustBe
             messagesForLanguage.dateErrorRequired("year")
         }
 

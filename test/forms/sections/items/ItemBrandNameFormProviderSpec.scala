@@ -44,6 +44,23 @@ class ItemBrandNameFormProviderSpec extends BooleanFieldBehaviours {
       }
     }
 
+    "when brand name has no input" - {
+
+      "must error when binding the form" in {
+
+        val boundForm = form.bind(Map(
+          ItemBrandNameFormProvider.hasBrandNameField -> "true",
+          ItemBrandNameFormProvider.brandNameField -> ""
+        ))
+
+        boundForm.errors mustBe Seq(FormError(
+          ItemBrandNameFormProvider.brandNameField,
+          ItemBrandNameFormProvider.brandNameRequired,
+          Seq(ItemBrandNameFormProvider.brandNameMaxLength.toString)
+        ))
+      }
+    }
+
     "when brand name is too long" - {
 
       "must error when binding the form" in {

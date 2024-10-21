@@ -17,6 +17,7 @@
 @import forms.sections.items.ItemBrandNameFormProvider
 @import models.GoodsType
 @import models.requests.DataRequest
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
 @import viewmodels.LegendSize
 
 @this(
@@ -24,7 +25,7 @@
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
         govukRadios: GovukRadios,
-        govukInput: GovukInput,
+        govukCharacterCount : GovukCharacterCount,
         govukButton: GovukButton,
         h1: components.h1,
         h2: components.h2,
@@ -67,11 +68,19 @@
     }
 }
 
+
 @brandName = {
-    @govukInput(InputViewModel.apply(
-        form(ItemBrandNameFormProvider.brandNameField),
-        LabelViewModel(Text(messages("itemBrandName.label")))
-    ))
+    @{govukCharacterCount(CharacterCount(
+        id = ItemBrandNameFormProvider.brandNameField,
+        name = ItemBrandNameFormProvider.brandNameField,
+        maxLength = Some(350),
+        label = LabelViewModel(Text(messages("itemBrandName.label"))),
+        value = form(ItemBrandNameFormProvider.brandNameField).value,
+        errorMessage = form.errors(ItemBrandNameFormProvider.brandNameField) match {
+            case Nil => None
+            case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message, err.args:_*)).mkString("<br>"))))
+        }
+    ))}
 }
 
 @{

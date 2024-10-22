@@ -1126,7 +1126,7 @@ itemExciseProductCode.checkYourAnswersLabel = Excise Product Code
 itemExciseProductCode.paragraph = You will be asked to give information and packaging details about this item. You can return to this screen to add more items later.
 itemExciseProductCode.warningText = Changing the EPC code removes any information completed for this item and you will be asked to enter new item information
 itemExciseProductCode.label = Select the Excise Product Code (EPC)
-itemExciseProductCode.hint = Start typing the EPC code to see suggestions
+itemExciseProductCode.hint = Start typing the EPC code to see suggestions.
 itemExciseProductCode.error.required = Choose the Excise Product Code
 itemExciseProductCode.error.submissionFailure = You must update the Excise Product Code so that it is different to the original submission
 itemExciseProductCode.change.hidden = Excise Product Code
@@ -1164,7 +1164,7 @@ itemCommodityCode.error.required = Choose a commodity code
 itemCommodityCode.change.hidden = commodity code
 itemCommodityCode.hint.text = You can use the Trade Tariff tool to
 itemCommodityCode.hint.link = look up a commodity code
-itemCommodityCode.hint = Start typing the commodity code to see suggestions
+itemCommodityCode.hint = Start typing the commodity code to see suggestions.
 itemCommodityCode.label = Select the commodity code
 itemCommodityCode.defaultItem = Choose commodity code
 

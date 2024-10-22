@@ -33,7 +33,7 @@ object ItemExciseProductCodeMessages {
     val beerSelectOption = "B000: Beer"
 
     val label = "Select the Excise Product Code (EPC)"
-    val hint = "Start typing the EPC code to see suggestions"
+    val hint = "Start typing the EPC code to see suggestions."
     val paragraph = "You will be asked to give information and packaging details about this item. You can return to this screen to add more items later."
 
     val warningText = s"$warning Changing the EPC code removes any information completed for this item and you will be asked to enter new item information"

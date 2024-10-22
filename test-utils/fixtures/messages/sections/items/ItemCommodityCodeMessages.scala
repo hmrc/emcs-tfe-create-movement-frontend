@@ -30,7 +30,7 @@ object ItemCommodityCodeMessages {
     val lookUpCommodityCode = "look up a commodity code (opens in new tab)"
     val defaultItem = "Choose commodity code"
     val label = "Select the commodity code"
-    val hint = "Start typing the commodity code to see suggestions"
+    val hint = "Start typing the commodity code to see suggestions."
     val cyaLabel = "Commodity code"
     val cyaChangeHidden = "commodity code"
   }

@@ -23,13 +23,15 @@ object ItemPackagingSelectShippingMarkMessages {
 
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
-    def heading(i: Index): String = s"Select a shipping mark for packaging ${i.displayIndex}"
+    def heading(i: Index): String = s"Shipping mark for packaging ${i.displayIndex}"
 
     def title(i: Index): String = titleHelper(heading(i), Some(SectionMessages.English.itemsSubHeading))
 
-    def hint(i: Index): String = s"Select a description of a mark or number that can be seen on the outside of the packaging." +
+    def p1(packagingNumber: String, itemNumber: String, packagingType: String, packagingQuantity: String) = s"Packaging $packagingNumber for item $itemNumber is $packagingType: $packagingQuantity."
+
+    def p2(i: Index): String = s"Select a description of a mark or number that can be seen on the outside of the packaging." +
       s" By selecting this shipping mark you are confirming that item ${i.displayIndex}" +
-      s" is packed together in the same package as any items with this shipping mark."
+      s" is packed together inside the same package as any other items using this shipping mark."
 
     val defaultValue = "Select a shipping mark"
   }

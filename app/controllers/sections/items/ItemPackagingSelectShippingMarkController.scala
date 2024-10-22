@@ -82,13 +82,19 @@ class ItemPackagingSelectShippingMarkController @Inject()(
       defaultTextMessageKey = "itemPackagingSelectShippingMark.select.defaultValue",
       existingAnswer = ItemPackagingShippingMarksPage(itemsIndex, packagingIdx).value
     )
-    Future.successful(status(view(
-      form = form,
-      action = routes.ItemPackagingSelectShippingMarkController.onSubmit(request.ern, request.draftId, itemsIndex, packagingIdx, mode),
-      itemIdx = itemsIndex,
-      packagingIdx = packagingIdx,
-      selectOptions = selectItems
-    )))
+    withItemPackaging(itemsIndex, packagingIdx) { packagingDescription =>
+      withItemPackagingQuantity(itemsIndex, packagingIdx) { packagingQuantity =>
+        Future.successful(status(view(
+          form = form,
+          action = routes.ItemPackagingSelectShippingMarkController.onSubmit(request.ern, request.draftId, itemsIndex, packagingIdx, mode),
+          itemIdx = itemsIndex,
+          packagingIdx = packagingIdx,
+          selectOptions = selectItems,
+          packagingDescription = packagingDescription,
+          packagingQuantity =  packagingQuantity
+        )))
+      }
+    }
   }
 
   private def withShippingMarks(itemsIdx: Index)(f: Seq[String] => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {

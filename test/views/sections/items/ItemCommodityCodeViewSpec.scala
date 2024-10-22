@@ -51,7 +51,7 @@ class ItemCommodityCodeViewSpec extends SpecBase with ViewBehaviours with ItemFi
 
       val testCommodityCode2 = testCommodityCodeWine
 
-      implicit val doc: Document = Jsoup.parse(view(form, submitRoute, Beer, Seq(testCommodityCode1, testCommodityCode2)).toString())
+      implicit val doc: Document = Jsoup.parse(view(form, submitRoute, Beer, Seq(testCommodityCode1, testCommodityCode2), testIndex1).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
         Selectors.title -> English.title,
@@ -59,6 +59,8 @@ class ItemCommodityCodeViewSpec extends SpecBase with ViewBehaviours with ItemFi
         Selectors.h1 -> English.heading,
         Selectors.p(1) -> English.p,
         Selectors.link(1) -> English.link,
+        Selectors.hint -> English.hint,
+        Selectors.label("item-commodity-code") -> English.label,
         Selectors.selectOption(1) -> English.defaultItem,
         Selectors.selectOption(2) -> s"${testCommodityCode1.cnCode}: ${testCommodityCode1.cnCodeDescription}",
         Selectors.selectOption(3) -> s"${testCommodityCode2.cnCode}: ${testCommodityCode2.cnCodeDescription}",

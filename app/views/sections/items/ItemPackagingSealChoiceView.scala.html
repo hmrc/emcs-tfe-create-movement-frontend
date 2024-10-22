@@ -43,20 +43,20 @@
 
       @h1(messages("itemPackagingSealChoice.heading"), classes = "govuk-heading-l")
 
-      @p() {
-        @messages("itemPackagingSealChoice.p1")
-      }
-
       @if(!isBulk) {
         @p() {
             @Html(messages("itemPackagingSealChoice.p2", packagingIndex.displayIndex, itemIndex.displayIndex) + strong(Html(s"$packagingDescription: ${packagingQuantity.get}"), withFullStop = true))
         }
       }
 
+      @p() {
+        @messages("itemPackagingSealChoice.p1")
+      }
+
       @govukRadios(
           RadiosViewModel.yesNo(
-              field = form("value"),
-              legend = LegendViewModel(Text(messages("itemPackagingSealChoice.heading"))).withCssClass("govuk-visually-hidden")
+            field = form("value"),
+            legend = LegendViewModel(Text(messages("itemPackagingSealChoice.label"))).withCssClass("govuk-fieldset__legend--m")
           )
       )
 

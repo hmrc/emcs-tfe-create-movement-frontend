@@ -37,7 +37,7 @@
         autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
 
-@(form: Form[_], action: Call, itemIdx: Index, packagingIdx: Index, selectOptions: Seq[SelectItem])(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, itemIdx: Index, packagingIdx: Index, selectOptions: Seq[SelectItem], packagingDescription: String, packagingQuantity: String)(implicit request: DataRequest[_], messages: Messages)
 
 @scripts = {
 @autocompleteJavascript()
@@ -59,18 +59,27 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h1(messages("itemPackagingSelectShippingMark.heading", packagingIdx.displayIndex), Some(messages("items.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
+
+        @p() {
+            @{
+                Html(messages("itemPackagingSelectShippingMark.p1", packagingIdx.displayIndex, itemIdx.displayIndex, strong(Html(s"${packagingDescription.trim}: $packagingQuantity"), withFullStop = true)))
+            }
+        }
+
+        @p() {
+            @messages("itemPackagingSelectShippingMark.p2", itemIdx.displayIndex)
+        }
 
         @govukSelect(
             Select(
                 id = "value",
                 name = "value",
                 label = Label(
-                    classes = "govuk-label--l",
-                    isPageHeading = true,
-                    content = Text(messages("itemPackagingSelectShippingMark.heading", packagingIdx.displayIndex))
+                    classes = "govuk-label--m",
+                    isPageHeading = false,
+                    content = Text(messages("itemPackagingSelectShippingMark.label", packagingIdx.displayIndex))
                 ),
-                hint = Some(HintViewModel(Text(messages("itemPackagingSelectShippingMark.hint", itemIdx.displayIndex)))),
                 items = selectOptions,
                 errorMessage = errorMessage
             ).asAccessibleAutocomplete(

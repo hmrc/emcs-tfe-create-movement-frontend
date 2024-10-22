@@ -39,14 +39,14 @@
         autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
 
-@(form: Form[_], action: Call, goodsType: GoodsType, commodityCodes: Seq[CnCodeInformation])(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, goodsType: GoodsType, commodityCodes: Seq[CnCodeInformation], idx: Index)(implicit request: DataRequest[_], messages: Messages)
 
 @scripts = {
   @autocompleteJavascript()
   <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
 }
 
-@layout(pageTitle = title(form = form, title = messages("itemCommodityCode.title", goodsType.toSingularOutput()), Some(messages("items.subHeading"))), additionalCss = autocompleteCss(), additionalScripts = scripts, maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form = form, title = messages("itemCommodityCode.title", idx.displayIndex), Some(messages("items.subHeading"))), additionalCss = autocompleteCss(), additionalScripts = scripts, maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action) {
         @if(form.errors.nonEmpty) {
@@ -55,7 +55,7 @@
 
         @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
         @h1(
-          headingMsg = messages("itemCommodityCode.heading", goodsType.toSingularOutput())
+          headingMsg = messages("itemCommodityCode.heading", idx.displayIndex)
         )
 
         @p(id = Some("commodity-code-guidance")) {
@@ -67,9 +67,10 @@
             Select(
                 id = "item-commodity-code",
                 name = "item-commodity-code",
+                hint = Some(HintViewModel(content = Text(messages("itemCommodityCode.hint")))),
                 label = LabelViewModel(
-                    content = Text(messages("itemCommodityCode.heading", goodsType.toSingularOutput()))
-                ).withCssClass("govuk-label--l").hidden,
+                    content = Text(messages("itemCommodityCode.label", goodsType.toSingularOutput()))
+                ).withCssClass("govuk-label--s"),
                 items = Seq(
                     SelectItem(text = messages("itemCommodityCode.defaultItem"), selected = form.value.isEmpty, disabled = true)
                 ) ++ commodityCodes.map(commodityCode =>

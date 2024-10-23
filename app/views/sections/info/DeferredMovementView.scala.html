@@ -40,12 +40,11 @@
         }
 
         @h2(messages("deferredMovement.caption"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
-        @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
-                legend = LegendViewModel(Text(messages("deferredMovement.heading"))).asPageHeading(LegendSize.Large)
-            ).withHint(HintViewModel(messages("deferredMovement.hint")))
-        )
+        @h1(messages("deferredMovement.heading"), classes = "govuk-heading-l")
+
+        @p(classes = "govuk-hint") {
+            @messages("deferredMovement.hint")
+        }
 
         @details("deferredMovement.summary"){
             @p(){
@@ -55,6 +54,13 @@
             @messages("deferredMovement.paragraph2")
             }
         }
+
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                legend = LegendViewModel(Text(messages("deferredMovement.label"))).withCssClass("govuk-fieldset__legend--m")
+            )
+        )
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))

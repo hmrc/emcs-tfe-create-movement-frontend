@@ -53,6 +53,8 @@
 
             @h1("dispatchDetails.heading")
 
+            @(hint)
+
             @govukDateInput(
                 DateViewModel(
                     field  = form("value"),
@@ -60,7 +62,7 @@
                     erroredFields
                 )
                 .withHint(
-                    HintViewModel(HtmlContent(hint))
+                    HintViewModel(messages("dispatchDetails.value.hint"))
                 )
             )
 
@@ -86,12 +88,6 @@
     @if(request.isRegisteredConsignor) {
         @p(){@messages("dispatchDetails.registeredConsignor.paragraph")}
     }
-
-    @p() {
-        @messages("dispatchDetails.value.hint")
-    }
-
-
 }
 
 @{

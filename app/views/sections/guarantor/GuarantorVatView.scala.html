@@ -58,7 +58,7 @@
                     )
                 ),
                 legend = LegendViewModel(Text(messages(s"guarantorVat.$guarantorArranger.heading"))).asPageHeading(LegendSize.Large)
-            ).withHint(HintViewModel(content = Text(messages("guarantorVat.hint"))))
+            )
         )
 
         @continueOrExit()
@@ -66,10 +66,14 @@
 }
 
 @vatRegistrationNumber = {
-    @govukInput(InputViewModel.apply(
-        form(GuarantorVatFormProvider.vatNumberField),
-        LabelViewModel(Text(messages("guarantorVat.input.label")))
-    ).withWidth(InputWidth.TwoThirds))
+    @govukInput(
+        InputViewModel.apply(
+            form(GuarantorVatFormProvider.vatNumberField),
+            LabelViewModel(Text(messages("guarantorVat.input.label")))
+        )
+        .withWidth(InputWidth.TwoThirds)
+        .withHint(HintViewModel(content = Text(messages("guarantorVat.hint"))))
+    )
 }
 
 @{

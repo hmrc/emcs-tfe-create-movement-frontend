@@ -80,6 +80,16 @@ if (typeof HMRCAccessibleAutocomplete != 'undefined' && document.querySelector('
             }
         })
 
+        // Additional 'input' event listener which trims leading whitespace characters
+        // This is to address [https://github.com/hmrc/accessibility-audits-external/issues/8044]
+        // and also addresses the voice control issue on Mac OS where leading whitespace characters
+        // are sometimes added when speaking [https://github.com/alphagov/accessible-autocomplete/issues/494]
+        parentForm.addEventListener('input', function(event) {
+            var userInput = event.target.value;
+            var trimmed = userInput.replace(/^\s+/g, '');
+            event.target.value = trimmed;
+        });
+
     }
     function checkForAutocompleteLoad(){
         if(parentForm.querySelector('[role="combobox"]')){

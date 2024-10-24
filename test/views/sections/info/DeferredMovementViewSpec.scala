@@ -31,7 +31,9 @@ import views.{BaseSelectors, ViewBehaviours}
 
 class DeferredMovementViewSpec extends SpecBase with ViewBehaviours {
 
-  object Selectors extends BaseSelectors
+  object Selectors extends BaseSelectors{
+    def detailsP(pIndex: Int) = s"main details p:nth-of-type($pIndex)"
+  }
 
   "Deferred Movement view" - {
 
@@ -54,8 +56,9 @@ class DeferredMovementViewSpec extends SpecBase with ViewBehaviours {
           Selectors.h2(1) -> messagesForLanguage.movementInformationSection,
           Selectors.hint -> messagesForLanguage.hint,
           Selectors.summary(1) -> messagesForLanguage.summary,
-          Selectors.p(1) -> messagesForLanguage.paragraph1,
-          Selectors.p(2) -> messagesForLanguage.paragraph2,
+          Selectors.detailsP(1) -> messagesForLanguage.paragraph1,
+          Selectors.detailsP(2) -> messagesForLanguage.paragraph2,
+          Selectors.legend -> messagesForLanguage.label,
           Selectors.radioButton(1) -> messagesForLanguage.yes,
           Selectors.radioButton(2) -> messagesForLanguage.no,
           Selectors.button -> messagesForLanguage.continue

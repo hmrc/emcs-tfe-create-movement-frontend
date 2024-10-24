@@ -21,13 +21,14 @@ import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 object DeferredMovementMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "Is this a deferred movement?"
+    val heading = "Deferred movement"
     val title = titleHelper(heading, Some(SectionMessages.English.movementInformationSubHeading))
     val hint = "A deferred movement is one that was originally made using fallback procedures due to EMCS being unavailable."
     val summary = "Help with fallback procedures"
     val paragraph1 = "Fallback is used when goods need to be dispatched and EMCS is unavailable. When this happens the Fallback Accompanying Document (FAD) is completed and printed to travel with the goods."
     val paragraph2 = "Any information entered on EMCS for a deferred movement must match the information on the FAD."
     val errorRequired = "Select yes if this is a deferred movement"
+    val label = "Is this a deferred movement?"
     val cyaLabel: String = "Deferred movement"
     val cyaChangeHidden: String = "deferred movement"
   }

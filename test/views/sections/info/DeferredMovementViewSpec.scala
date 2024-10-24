@@ -54,7 +54,7 @@ class DeferredMovementViewSpec extends SpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.h2(1) -> messagesForLanguage.movementInformationSection,
-          Selectors.hint -> messagesForLanguage.hint,
+          Selectors.p(1) -> messagesForLanguage.hint,
           Selectors.summary(1) -> messagesForLanguage.summary,
           Selectors.detailsP(1) -> messagesForLanguage.paragraph1,
           Selectors.detailsP(2) -> messagesForLanguage.paragraph2,

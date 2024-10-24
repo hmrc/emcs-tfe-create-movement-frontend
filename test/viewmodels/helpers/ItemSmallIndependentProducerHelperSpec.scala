@@ -30,6 +30,7 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases._
 import uk.gov.hmrc.govukfrontend.views.html.components.GovukInput
+import viewmodels.LegendSize
 import viewmodels.govuk.LabelFluency
 
 class ItemSmallIndependentProducerHelperSpec extends SpecBase with ItemFixtures with LabelFluency {
@@ -83,7 +84,7 @@ class ItemSmallIndependentProducerHelperSpec extends SpecBase with ItemFixtures 
             value = Some(NotApplicable.toString),
             content = Text(messagesForLanguage.notAIndependentSmallProducer)
           )
-        ), fieldset = Some(Fieldset(legend = Some(Legend(Text(messagesForLanguage.legend), classes = " govuk-fieldset__legend--s")))))
+        ), fieldset = Some(Fieldset(legend = Some(Legend(Text(messagesForLanguage.legend), classes = " govuk-fieldset__legend--m")))))
     }
   }
 

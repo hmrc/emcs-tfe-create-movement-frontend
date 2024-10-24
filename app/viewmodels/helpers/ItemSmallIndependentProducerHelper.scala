@@ -78,7 +78,7 @@ class ItemSmallIndependentProducerHelper @Inject()(govukInput: GovukInput) {
           content = Text(messages(s"itemSmallIndependentProducer.${NotApplicable.toString}"))
         )
       ),
-      LegendViewModel(Text(messages("itemSmallIndependentProducer.legend"))).withCssClass(LegendSize.Small.toString)
+      LegendViewModel(Text(messages("itemSmallIndependentProducer.legend"))).withCssClass(LegendSize.Medium.toString)
     )
 
 }

@@ -35,7 +35,11 @@
     @formHelper(action = action, Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+            @defining({
+                DispatchPlace.options.headOption.flatMap(_.id).getOrElse("value_GB")
+            }) { id =>
+                @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> id)))
+            }
         }
 
         @h2(messages("deferredMovement.caption"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))

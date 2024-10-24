@@ -23,6 +23,7 @@ import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.{RadioItem, Radios}
+import viewmodels.LegendSize
 import viewmodels.govuk.HintFluency
 import viewmodels.govuk.all._
 
@@ -33,7 +34,7 @@ object ItemPackagingShippingMarksChoiceHelper extends HintFluency {
     val yesMessageKey = if(isQuantityMoreThanZero) "site.yes" else "itemPackagingShippingMarksChoice.choice.yes.existing"
     RadiosViewModel.apply(
       field = form("value"),
-      legend = LegendViewModel(Text(messages("itemPackagingShippingMarksChoice.legend"))).withCssClass("govuk-fieldset__legend--s"),
+      legend = LegendViewModel(Text(messages("itemPackagingShippingMarksChoice.legend"))).withCssClass(LegendSize.Medium.toString),
       items = Seq(
         RadioItem(
           content = Text(messages(yesMessageKey)),

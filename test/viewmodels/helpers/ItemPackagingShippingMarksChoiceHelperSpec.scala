@@ -25,6 +25,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Radios, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import viewmodels.LegendSize
 import viewmodels.govuk.{FieldsetFluency, HintFluency}
 import viewmodels.implicits._
 
@@ -47,7 +48,7 @@ class ItemPackagingShippingMarksChoiceHelperSpec extends SpecBase with FieldsetF
         implicit val dr = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "0"))
 
         ItemPackagingShippingMarksChoiceHelper.options(form, testIndex1, testPackagingIndex1) mustBe Radios(
-          fieldset = Some(FieldsetViewModel(LegendViewModel(messagesForLanguage.legend).withCssClass("govuk-fieldset__legend--s"))),
+          fieldset = Some(FieldsetViewModel(LegendViewModel(messagesForLanguage.legend).withCssClass(LegendSize.Medium.toString))),
           items = Seq(
             RadioItem(
               content = Text(messagesForLanguage.yesSelectExistingShippingMark),
@@ -71,7 +72,7 @@ class ItemPackagingShippingMarksChoiceHelperSpec extends SpecBase with FieldsetF
         implicit val dr = dataRequest(FakeRequest(), emptyUserAnswers.set(ItemPackagingQuantityPage(testIndex1, testPackagingIndex1), "1"))
 
         ItemPackagingShippingMarksChoiceHelper.options(form, testIndex1, testPackagingIndex1) mustBe Radios(
-          fieldset = Some(FieldsetViewModel(LegendViewModel(messagesForLanguage.legend).withCssClass("govuk-fieldset__legend--s"))),
+          fieldset = Some(FieldsetViewModel(LegendViewModel(messagesForLanguage.legend).withCssClass(LegendSize.Medium.toString))),
           items = Seq(
             RadioItem(
               content = Text(messagesForLanguage.yes),

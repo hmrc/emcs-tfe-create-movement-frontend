@@ -43,7 +43,7 @@ trait BaseMessages { _: i18n =>
   val continueEditing: String = "Continue editing"
   val sectionNotComplete: String => String = section => s"$section section not complete"
   val incomplete: String = "Incomplete"
-  val updateNeededTag: String = "Update Needed"
+  val updateNeededTag: String = "Update needed"
   val updateNeeded = "Update needed"
   val important = "Important"
   val notificationBannerParagraph = "Some information needs updating"

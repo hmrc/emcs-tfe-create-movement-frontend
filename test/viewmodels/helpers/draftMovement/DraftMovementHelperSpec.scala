@@ -69,19 +69,19 @@ class DraftMovementHelperSpec extends SpecBase with MovementSubmissionFailureFix
 
       "heading" - {
         "when user answers are valid" - {
+          "must return the draftMovement.heading.movementBetweenGBTaxWarehouses message" in {
+            implicit val request: DataRequest[_] = dataRequest(ern = "GBWK123", userAnswers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB))
+
+            helper.heading mustBe messagesForLanguage.headingMovementBetweenGbTaxWarehouses
+            titleNoForm(helper.heading) mustBe messagesForLanguage.titleMovementBetweenGbTaxWarehouses
+          }
           "must return the draftMovement.heading.gbTaxWarehouseTo message" in {
-            Seq[(String, MovementScenario)](
-              ("GBWK123", UkTaxWarehouse.GB),
-              ("GBWK123", UkTaxWarehouse.NI)
-            ).foreach {
-              case (ern, movementScenario) =>
-                implicit val request: DataRequest[_] = dataRequest(ern = ern, userAnswers = emptyUserAnswers.set(DestinationTypePage, movementScenario))
+            implicit val request: DataRequest[_] = dataRequest(ern = "GBWK123", userAnswers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.NI))
 
-                val input1 = msgs(s"draftMovement.heading.$movementScenario")
+            val input1 = msgs(s"draftMovement.heading.${UkTaxWarehouse.NI}")
 
-                helper.heading mustBe messagesForLanguage.headingGbTaxWarehouseTo(input1)
-                titleNoForm(helper.heading) mustBe messagesForLanguage.titleGbTaxWarehouseTo(input1)
-            }
+            helper.heading mustBe messagesForLanguage.headingGbTaxWarehouseTo(input1)
+            titleNoForm(helper.heading) mustBe messagesForLanguage.titleGbTaxWarehouseTo(input1)
           }
           "must return the draftMovement.heading.dispatchPlaceTo message" in {
             Seq[(String, DispatchPlace, MovementScenario)](

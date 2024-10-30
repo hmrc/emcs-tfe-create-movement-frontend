@@ -289,7 +289,7 @@ class DraftMovementHelper @Inject()(list: list, p: p, link: link, appConfig: App
         id = "submit",
         link =  if (completed) Some(controllers.routes.CheckYourAnswersController.onPageLoad(request.ern, request.draftId).url) else None,
         section = None,
-        status = if (completed) None else Some(CannotStartYet)
+        status = if (completed) Some(NotStarted) else Some(CannotStartYet)
       ))
     )
   }

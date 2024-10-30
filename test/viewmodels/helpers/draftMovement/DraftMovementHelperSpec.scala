@@ -568,7 +568,7 @@ class DraftMovementHelperSpec extends SpecBase with MovementSubmissionFailureFix
                   id = "submit",
                   link = Some(controllers.routes.CheckYourAnswersController.onPageLoad(testErn,testDraftId).url),
                   section = None,
-                  status = None
+                  status = Some(NotStarted)
                 )
               )
             )

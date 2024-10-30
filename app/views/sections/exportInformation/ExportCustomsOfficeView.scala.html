@@ -43,34 +43,33 @@
 
     @formHelper(action) {
 
-      @if(form.errors.nonEmpty) {
-        @govukErrorSummary(ErrorSummaryViewModel(form))
-      } else {
-        @errorNotificationBannerHelper.content(ExportCustomsOfficePage.getMovementSubmissionErrors, hasContentHeading = false).map(notificationBanner(_))
-      }
-
-      @h2(messages("exportInformation.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
-      @govukInput(
-          InputViewModel(
-              field = form("value"),
-              label = LabelViewModel(Text(messages("exportCustomsOffice.heading"))).asPageHeading(LabelSize.Large)
-          )
-          .withWidth(Full)
-          .withHint(HintViewModel(HtmlContent(hint)))
-      )
-
-      @continueOrExit()
-    }
-}
-
-@hint = {
-    @p() {
-        @messages("exportCustomsOffice.hint")
-        @if(euExport) {
-            @link(appConfig.euCustomsOfficeCodesUrl, "exportCustomsOffice.hint.eu.link", opensInNewTab = true, withFullStop = true)
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
         } else {
-            @link(appConfig.gbCustomsOfficeCodesUrl, "exportCustomsOffice.hint.gb.link", opensInNewTab = true, withFullStop = true)
+            @errorNotificationBannerHelper.content(ExportCustomsOfficePage.getMovementSubmissionErrors, hasContentHeading = false).map(notificationBanner(_))
         }
+
+        @h1(messages("exportCustomsOffice.heading"), Some(messages("exportInformation.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
+
+        @p() {
+            @messages("exportCustomsOffice.p1")
+            @if(euExport) {
+                @link(appConfig.euCustomsOfficeCodesUrl, "exportCustomsOffice.p1.eu.link", opensInNewTab = true, withFullStop = true)
+            } else {
+                @link(appConfig.gbCustomsOfficeCodesUrl, "exportCustomsOffice.p1.gb.link", opensInNewTab = true, withFullStop = true)
+            }
+        }
+
+        @govukInput(
+            InputViewModel(
+                field = form("value"),
+                label = LabelViewModel(Text(messages("exportCustomsOffice.label"))).withCssClass("govuk-label--m govuk-!-margin-top-5"),
+            )
+            .withWidth(Full)
+            .withHint(HintViewModel(Text(messages("exportCustomsOffice.hint"))))
+        )
+
+        @continueOrExit()
     }
 }
 

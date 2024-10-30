@@ -19,7 +19,8 @@ package forms.mappings
 import play.api.data.FormError
 import play.api.data.format.Formatter
 
-import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.{LocalDate, Month}
 import scala.util.{Failure, Success, Try}
 
 private[mappings] class LocalDateFormatter(
@@ -65,12 +66,15 @@ private[mappings] class LocalDateFormatter(
   }
 
   private def handleRangeInputs(key: String, data: Map[String, String]): Seq[FormError] = {
-    def isValid(value: Option[String], range: Range): Boolean =
+    def isValidInt(value: Option[String], range: Range): Boolean =
       value.flatMap(v => Try(v.trim.toInt).toOption).exists(range.contains)
 
-    val dayValid = isValid(data.get(s"$key.day"), 1 to 31)
-    val monthValid = isValid(data.get(s"$key.month"), 1 to 12)
-    val yearValid = isValid(data.get(s"$key.year"), 1 to Int.MaxValue)
+    def isValidMonthName(value: Option[String]): Boolean =
+      value.exists(v => Month.values().exists(m => isMatchingMonth(m, v)))
+
+    val dayValid = isValidInt(data.get(s"$key.day"), 1 to 31)
+    val monthValid = isValidInt(data.get(s"$key.month"), 1 to 12) || isValidMonthName(data.get(s"$key.month"))
+    val yearValid = isValidInt(data.get(s"$key.year"), 1 to Int.MaxValue)
 
     (dayValid, monthValid, yearValid) match {
       case (true, true, true) => Nil
@@ -84,11 +88,23 @@ private[mappings] class LocalDateFormatter(
     }
   }
 
+  private def monthNumberFromMonthName(monthName: String): Int =
+    Month.values().find(isMatchingMonth(_, monthName)).map(_.getValue).getOrElse(0)
+
+  private def isMatchingMonth(month: Month, monthName: String): Boolean =
+    monthName.equalsIgnoreCase(month.toString) || monthName.equalsIgnoreCase(month.toString.take(3))
+
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], LocalDate] = {
     handlePartialInputs(key, data) match {
       case Nil =>
         handleRangeInputs(key, data) match {
-          case Nil => toDate(key, data(s"$key.day").trim.toInt, data(s"$key.month").trim.toInt, data(s"$key.year").trim.toInt)
+          case Nil => {
+            val day = data(s"$key.day").trim.toInt
+            val month = Try(data(s"$key.month").trim.toInt).getOrElse(monthNumberFromMonthName(data(s"$key.month").trim))
+            val year = data(s"$key.year").trim.toInt
+
+            toDate(key, day, month, year)
+          }
           case rangeErrors => Left(rangeErrors)
         }
       case partialInputErrors => Left(partialInputErrors)

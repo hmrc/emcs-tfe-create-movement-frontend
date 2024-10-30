@@ -19,10 +19,8 @@ package pages.sections.transportUnit
 import base.SpecBase
 import models.Index
 import models.requests.DataRequest
-import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
-import models.sections.transportUnit.TransportUnitType.{Container, FixedTransport, Tractor}
+import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
 import models.sections.transportUnit.TransportUnitsAddToListModel.{MoreToCome, NoMoreToCome}
-import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.libs.json.{JsArray, Json}
 import play.api.test.FakeRequest
 import viewmodels.taskList.{Completed, InProgress, NotStarted}

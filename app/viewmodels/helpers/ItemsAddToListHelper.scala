@@ -169,7 +169,7 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
           content = Text(messages("site.change")),
           href = routes.ItemCheckAnswersController.onPageLoad(request.ern, request.draftId, item.idx).url,
           id = s"changeItem-${item.idx.displayIndex}"
-        ).withVisuallyHiddenText(messages("itemsAddToList.itemCardTitle", item.idx.displayIndex)))
+        ))
       case _ =>
         None
     }
@@ -180,7 +180,7 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
       content = Text(messages("site.remove")),
       href = routes.ItemRemoveItemController.onPageLoad(request.ern, request.draftId, item.idx).url,
       id = s"removeItem-${item.idx.displayIndex}"
-    ).withVisuallyHiddenText(messages("itemsAddToList.itemCardTitle", item.idx.displayIndex))
+    )
 
   private def continueEditingLink(item: ItemsAddToListItemModel)(implicit request: DataRequest[_], messages: Messages): Option[ActionItem] =
     item.status match {
@@ -204,7 +204,7 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
           content = Text(messages("site.continueEditing")),
           href = continueEditingLink.url,
           id = s"editItem-${item.idx.displayIndex}"
-        ).withVisuallyHiddenText(messages("itemsAddToList.itemCardTitle", item.idx.displayIndex)))
+        ))
       case _ => None
     }
 }

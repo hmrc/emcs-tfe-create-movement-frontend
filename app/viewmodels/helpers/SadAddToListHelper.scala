@@ -72,7 +72,7 @@ class SadAddToListHelper @Inject()() {
           content = Text(messages("site.remove")),
           href = sadRoutes.SadRemoveDocumentController.onPageLoad(request.userAnswers.ern, request.userAnswers.draftId, idx).url,
           id = s"removeSad${idx.displayIndex}"
-        ).withVisuallyHiddenText(messages("sadAddToList.sadCardTitle", idx.displayIndex))
+        )
       ))))
     ))
   }

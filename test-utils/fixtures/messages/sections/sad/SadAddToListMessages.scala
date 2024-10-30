@@ -35,8 +35,8 @@ object SadAddToListMessages {
 
     val sad1 = "SAD document number 1"
     val sad2 = "SAD document number 2"
-    val removeLink1WithHiddenText    = "Remove SAD document number 1"
-    val removeLink2WithHiddenText    = "Remove SAD document number 2"
+    val removeLink1WithHiddenText    = "Remove (SAD document number 1)"
+    val removeLink2WithHiddenText    = "Remove (SAD document number 2)"
 
     val importNumberMessages: BaseMessages
 

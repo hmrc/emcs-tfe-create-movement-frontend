@@ -70,7 +70,7 @@ class SadAddToListHelperSpec extends SpecBase {
                       ActionItem(
                         href = sadRoutes.SadRemoveDocumentController.onPageLoad(testErn, testDraftId, testIndex1).url,
                         content = Text(msg.remove),
-                        visuallyHiddenText = Some(msg.sad1),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "removeSad1")
                       )
                     ))))),
@@ -93,7 +93,7 @@ class SadAddToListHelperSpec extends SpecBase {
                       ActionItem(
                         href = sadRoutes.SadRemoveDocumentController.onPageLoad(testErn, testDraftId, testIndex1).url,
                         content = Text(msg.remove),
-                        visuallyHiddenText = Some(msg.sad1),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "removeSad1")
                       )
                     ))))),
@@ -108,7 +108,7 @@ class SadAddToListHelperSpec extends SpecBase {
                       ActionItem(
                         href = sadRoutes.SadRemoveDocumentController.onPageLoad(testErn, testDraftId, testIndex2).url,
                         content = Text(msg.remove),
-                        visuallyHiddenText = Some(msg.sad2),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "removeSad2")
                       )
                     ))))),

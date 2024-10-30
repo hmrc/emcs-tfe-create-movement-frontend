@@ -33,11 +33,13 @@ object ItemsAddToListMessages {
 
     def itemCardTitle(idx: Index) = s"Item ${idx.displayIndex}"
 
-    def removeItem(idx: Index): String = s"Remove ${itemCardTitle(idx)}"
+    def removeItem(idx: Index): String = s"Remove ( ${itemCardTitle(idx)} )"
+    def removeItemIncomplete(idx: Index): String = s"Remove ( ${itemCardTitle(idx)} Incomplete )"
 
-    def changeItem(idx: Index): String = s"Change ${itemCardTitle(idx)}"
+    def changeItem(idx: Index): String = s"Change ( ${itemCardTitle(idx)} )"
 
-    def editItem(idx: Index): String = s"Continue editing ${itemCardTitle(idx)}"
+    def editItem(idx: Index): String = s"Continue editing ( ${itemCardTitle(idx)} )"
+    def editItemIncomplete(idx: Index): String = s"Continue editing ( ${itemCardTitle(idx)} Incomplete )"
 
     val h2 = "Do you need to add another item?"
     val no1 = "No, this is the only item in this movement"

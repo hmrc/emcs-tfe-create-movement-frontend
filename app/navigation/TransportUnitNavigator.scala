@@ -18,12 +18,10 @@ package navigation
 
 import controllers.routes
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
-import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.sections.transportUnit.TransportUnitType.FixedTransport
 import models.sections.transportUnit.TransportUnitsAddToListModel
 import models.{CheckMode, Index, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
-import pages.sections.journeyType.HowMovementTransportedPage
 import pages.sections.transportUnit._
 import play.api.mvc.Call
 import queries.TransportUnitsCount

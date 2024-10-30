@@ -78,7 +78,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
                       ActionItem(
                         href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 0).url,
                         content = Text(messagesForLanguage.remove),
-                        visuallyHiddenText = Some(messagesForLanguage.documentCardTitle(0)),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "removeDocuments-1")
                       )
                     )))
@@ -106,7 +106,7 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
                       ActionItem(
                         href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 0).url,
                         content = Text(messagesForLanguage.remove),
-                        visuallyHiddenText = Some(messagesForLanguage.documentCardTitle(0)),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "removeDocuments-1")
                       )
                     )))
@@ -126,13 +126,13 @@ class DocumentsAddToListHelperSpec extends SpecBase with DocumentTypeFixtures {
                       ActionItem(
                         href = routes.DocumentTypeController.onPageLoad(testErn, testDraftId, 1, NormalMode).url,
                         content = Text(messagesForLanguage.continueEditing),
-                        visuallyHiddenText = Some(messagesForLanguage.documentCardTitle(1)),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "editDocuments-2")
                       ),
                       ActionItem(
                         href = routes.DocumentsRemoveFromListController.onPageLoad(testErn, testDraftId, 1).url,
                         content = Text(messagesForLanguage.remove),
-                        visuallyHiddenText = Some(messagesForLanguage.documentCardTitle(1)),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "removeDocuments-2")
                       )
                     )))

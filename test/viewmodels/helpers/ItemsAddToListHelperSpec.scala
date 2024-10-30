@@ -106,13 +106,13 @@ class ItemsAddToListHelperSpec extends SpecBase
                       ActionItem(
                         href = routes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1).url,
                         content = Text(messagesForLanguage.change),
-                        visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex1)),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "changeItem-1")
                       ),
                       ActionItem(
                         href = routes.ItemRemoveItemController.onPageLoad(testErn, testDraftId, testIndex1).url,
                         content = Text(messagesForLanguage.remove),
-                        visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex1)),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "removeItem-1")
                       )
                     )))
@@ -153,13 +153,13 @@ class ItemsAddToListHelperSpec extends SpecBase
                       ActionItem(
                         href = routes.ItemSelectPackagingController.onPageLoad(testErn, testDraftId, testIndex1, testPackagingIndex1, NormalMode).url,
                         content = Text(messagesForLanguage.continueEditing),
-                        visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex1)),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "editItem-1")
                       ),
                       ActionItem(
                         href = routes.ItemRemoveItemController.onPageLoad(testErn, testDraftId, testIndex1).url,
                         content = Text(messagesForLanguage.remove),
-                        visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex1)),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "removeItem-1")
                       )
                     )))
@@ -196,13 +196,13 @@ class ItemsAddToListHelperSpec extends SpecBase
                       ActionItem(
                         href = routes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1).url,
                         content = Text(messagesForLanguage.continueEditing),
-                        visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex1)),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "editItem-1")
                       ),
                       ActionItem(
                         href = routes.ItemRemoveItemController.onPageLoad(testErn, testDraftId, testIndex1).url,
                         content = Text(messagesForLanguage.remove),
-                        visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex1)),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "removeItem-1")
                       )
                     )))
@@ -245,13 +245,13 @@ class ItemsAddToListHelperSpec extends SpecBase
                       ActionItem(
                         href = routes.ItemBulkPackagingChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url,
                         content = Text(messagesForLanguage.continueEditing),
-                        visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex1)),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "editItem-1")
                       ),
                       ActionItem(
                         href = routes.ItemRemoveItemController.onPageLoad(testErn, testDraftId, testIndex1).url,
                         content = Text(messagesForLanguage.remove),
-                        visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex1)),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "removeItem-1")
                       )
                     )))
@@ -293,13 +293,13 @@ class ItemsAddToListHelperSpec extends SpecBase
                       ActionItem(
                         href = routes.ItemCheckAnswersController.onPageLoad(testErn, testDraftId, testIndex1).url,
                         content = Text(messagesForLanguage.change),
-                        visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex1)),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "changeItem-1")
                       ),
                       ActionItem(
                         href = routes.ItemRemoveItemController.onPageLoad(testErn, testDraftId, testIndex1).url,
                         content = Text(messagesForLanguage.remove),
-                        visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex1)),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "removeItem-1")
                       )
                     )))
@@ -324,13 +324,13 @@ class ItemsAddToListHelperSpec extends SpecBase
                       ActionItem(
                         href = routes.ItemExciseProductCodeController.onPageLoad(testErn, testDraftId, testIndex2, NormalMode).url,
                         content = Text(messagesForLanguage.continueEditing),
-                        visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex2)),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "editItem-2")
                       ),
                       ActionItem(
                         href = routes.ItemRemoveItemController.onPageLoad(testErn, testDraftId, testIndex2).url,
                         content = Text(messagesForLanguage.remove),
-                        visuallyHiddenText = Some(messagesForLanguage.itemCardTitle(testIndex2)),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "removeItem-2")
                       )
                     )))

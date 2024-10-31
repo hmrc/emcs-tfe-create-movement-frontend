@@ -58,7 +58,7 @@ class DraftMovementHelper @Inject()(list: list, p: p, link: link, appConfig: App
 
     (request.userTypeFromErn, DestinationTypePage.value) match {
       case (GreatBritainWarehouseKeeper, Some(UkTaxWarehouse.GB)) =>
-        messages("draftMovement.heading.gbTaxWarehouseTo", messages(Seq(s"draftMovement.heading.${UkTaxWarehouse.GB}", s"destinationType.${UkTaxWarehouse.GB}")))
+        messages("draftMovement.heading.movementBetweenGBTaxWarehouses")
 
       case (GreatBritainWarehouseKeeper, Some(UkTaxWarehouse.NI)) =>
         messages("draftMovement.heading.gbTaxWarehouseTo", messages(Seq(s"draftMovement.heading.${UkTaxWarehouse.NI}", s"destinationType.${UkTaxWarehouse.NI}")))

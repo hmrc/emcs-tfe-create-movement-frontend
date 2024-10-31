@@ -20,7 +20,6 @@ import models.UserAddress
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import pages.QuestionPage
-import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.destination.DestinationAddressPage
 import pages.sections.dispatch.DispatchAddressPage

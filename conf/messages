@@ -173,6 +173,7 @@ draftMovement.consignee = Consignee: {0}
 draftMovement.notProvided = Not provided
 draftMovement.delete = Delete this draft
 draftMovement.heading.importFor = Import for {0}
+draftMovement.heading.movementBetweenGBTaxWarehouses = Movement between tax warehouses in Great Britain
 draftMovement.heading.gbTaxWarehouseTo = Great Britain tax warehouse to {0}
 draftMovement.heading.gbTaxWarehouse = Great Britain tax warehouse
 draftMovement.heading.niTaxWarehouse = Northern Ireland tax warehouse

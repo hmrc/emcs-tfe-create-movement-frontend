@@ -50,7 +50,7 @@ class ItemFiscalMarksViewSpec extends SpecBase with ViewBehaviours {
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

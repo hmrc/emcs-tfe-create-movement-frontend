@@ -63,7 +63,7 @@ class ItemPackagingQuantityViewSpec extends SpecBase with ViewBehaviours with It
           Selectors.detailsBullet(1) -> messagesForLanguage.detailsBullet1,
           Selectors.detailsBullet(2) -> messagesForLanguage.detailsBullet2,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

@@ -60,7 +60,7 @@ class GuarantorArrangerViewSpec extends SpecBase with ViewBehaviours {
           Selectors.radioButton(3) -> messagesForLanguage.goodsOwnerRadioOption,
           Selectors.radioButton(4) -> messagesForLanguage.transporterRadioOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

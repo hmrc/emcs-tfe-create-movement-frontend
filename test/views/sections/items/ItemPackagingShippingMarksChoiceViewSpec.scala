@@ -83,7 +83,7 @@ class ItemPackagingShippingMarksChoiceViewSpec extends SpecBase with ViewBehavio
             Selectors.radioButton(2) -> messagesForLanguage.no,
             Selectors.radioButtonHint(2) -> messagesForLanguage.noHint(testIndex1.displayIndex.toInt),
             Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.link(1) -> messagesForLanguage.returnToDraft
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))
         }
 
@@ -127,7 +127,7 @@ class ItemPackagingShippingMarksChoiceViewSpec extends SpecBase with ViewBehavio
               Selectors.radioButton(2) -> messagesForLanguage.no,
               Selectors.warningText -> messagesForLanguage.warningText,
               Selectors.button -> messagesForLanguage.saveAndContinue,
-              Selectors.link(1) -> messagesForLanguage.returnToDraft
+              Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
             ))
 
             "must not have a hint on the 'No' radio button" - {

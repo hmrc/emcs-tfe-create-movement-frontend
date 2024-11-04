@@ -56,7 +56,7 @@ class ConsigneeExportVatViewSpec extends SpecBase with ViewBehaviours {
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.consigneeInformationSection,
           Selectors.hint -> messagesForLanguage.hint,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

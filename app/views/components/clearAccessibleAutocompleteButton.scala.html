@@ -16,17 +16,17 @@
 
 @import models.requests.DataRequest
 @import views.html.helper.CSPNonce
+@import views.html.components.link
 
-@this(govukButton: GovukButton)
+@this(link: link)
 
 @(idToClear: String)(implicit request: DataRequest[_], messages: Messages)
 
-@govukButton(
-    ButtonViewModel(Text(messages("site.clearSelectedCode")))
-    .withCssClass("no-print js-visible")
-    .withId("clear-selected-code")
-    .withAttribute("type", "button")
-    .asSecondaryButton()
+@link(
+    "#",
+    messages("site.clearSelectedCode"),
+    classes = "govuk-button govuk-button--secondary no-print js-visible",
+    id = Some("clear-selected-code")
 )
 
 <script type="module" @CSPNonce.attr>

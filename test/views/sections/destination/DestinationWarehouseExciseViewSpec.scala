@@ -61,7 +61,7 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours wi
         Selectors.h2(1) -> English.destinationSection,
         Selectors.hint -> English.text,
         Selectors.button -> English.saveAndContinue,
-        Selectors.link(1) -> English.returnToDraft
+        Selectors.saveAndExitLink -> English.returnToDraft
       ))
 
       behave like pageWithElementsNotPresent(Seq(
@@ -93,7 +93,7 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours wi
         Selectors.h1 -> English.heading,
         Selectors.hint -> English.text,
         Selectors.button -> English.saveAndContinue,
-        Selectors.link(1) -> English.returnToDraft,
+        Selectors.saveAndExitLink -> English.returnToDraft,
         Selectors.notificationBannerTitle -> English.updateNeeded,
         Selectors.notificationBannerError(1) -> English.placeOfDestinationExciseIdInvalidError,
         Selectors.notificationBannerError(2) -> English.placeOfDestinationNoLinkBetweenConsigneeAndPlaceOfDeliveryError,

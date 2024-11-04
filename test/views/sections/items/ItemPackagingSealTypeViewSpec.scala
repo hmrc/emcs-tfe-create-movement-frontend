@@ -71,7 +71,7 @@ class ItemPackagingSealTypeViewSpec extends SpecBase with ViewBehaviours {
             Selectors.label("packaging-seal-information") -> messagesForLanguage.p2,
             Selectors.packagingSealInformationHint -> messagesForLanguage.sealInformationHint,
             Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.link(1) -> messagesForLanguage.returnToDraft
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))
         }
 
@@ -95,7 +95,7 @@ class ItemPackagingSealTypeViewSpec extends SpecBase with ViewBehaviours {
             Selectors.label("packaging-seal-information") -> messagesForLanguage.p2,
             Selectors.packagingSealInformationHint -> messagesForLanguage.sealInformationHint,
             Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.link(1) -> messagesForLanguage.returnToDraft
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))
 
           behave like pageWithElementsNotPresent(Seq(

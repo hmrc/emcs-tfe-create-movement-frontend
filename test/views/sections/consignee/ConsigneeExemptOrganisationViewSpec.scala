@@ -57,7 +57,7 @@ class ConsigneeExemptOrganisationViewSpec extends SpecBase with ViewBehaviours {
           Selectors.label("memberState") -> messagesForLanguage.memberStateLabel,
           Selectors.label("certificateSerialNumber") -> messagesForLanguage.certificateSerialNumberLabel,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

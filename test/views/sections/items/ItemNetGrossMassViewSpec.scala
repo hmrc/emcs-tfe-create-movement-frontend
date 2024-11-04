@@ -65,7 +65,7 @@ class ItemNetGrossMassViewSpec extends SpecBase with ViewBehaviours {
         Selectors.questionHint(2) -> messagesForLanguage.grossMassHint,
         Selectors.questionSuffix(2) -> "kg",
         Selectors.button -> messagesForLanguage.saveAndContinue,
-        Selectors.link(1) -> messagesForLanguage.returnToDraft
+        Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
       ))
     }
   }

@@ -73,7 +73,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
               Selectors.label("town") -> messagesForLanguage.town,
               Selectors.label("postcode") -> messagesForLanguage.postcode,
               Selectors.button -> messagesForLanguage.saveAndContinue,
-              Selectors.link(1) -> messagesForLanguage.returnToDraft
+              Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
             ))
           }
         }
@@ -100,7 +100,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
             Selectors.label("town") -> messagesForLanguage.town,
             Selectors.label("postcode") -> messagesForLanguage.postcode,
             Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.link(1) -> messagesForLanguage.returnToDraft
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))
         }
 
@@ -141,7 +141,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
           Selectors.label("town") -> messagesForLanguage.town,
           Selectors.label("postcode") -> messagesForLanguage.postcode,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
 
@@ -190,7 +190,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
             Selectors.label("town") -> messagesForLanguage.town,
             Selectors.label("postcode") -> messagesForLanguage.postcode,
             Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.link(1) -> messagesForLanguage.returnToDraft
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))
         }
       }
@@ -214,7 +214,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
           Selectors.label("town") -> messagesForLanguage.town,
           Selectors.label("postcode") -> messagesForLanguage.postcode,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
 
@@ -244,7 +244,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
                 Selectors.label("town") -> messagesForLanguage.town,
                 Selectors.label("postcode") -> messagesForLanguage.postcode,
                 Selectors.button -> messagesForLanguage.saveAndContinue,
-                Selectors.link(1) -> messagesForLanguage.returnToDraft
+                Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
               ))
             }
       )

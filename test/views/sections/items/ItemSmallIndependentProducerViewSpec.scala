@@ -71,7 +71,7 @@ class ItemSmallIndependentProducerViewSpec extends SpecBase with ViewBehaviours 
           Selectors.radioDividerButton(5) -> messagesForLanguage.or,
           Selectors.radioButton(6) -> messagesForLanguage.notAIndependentSmallProducer,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

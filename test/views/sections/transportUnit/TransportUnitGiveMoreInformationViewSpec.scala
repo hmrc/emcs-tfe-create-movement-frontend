@@ -66,7 +66,7 @@ class TransportUnitGiveMoreInformationViewSpec extends SpecBase with ViewBehavio
             Selectors.h1 -> messagesForLanguage.heading(transportUnitTypeAndMessage._2),
             Selectors.hint -> messagesForLanguage.hintText,
             Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.link(1) -> messagesForLanguage.returnToDraft
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))
         }
       }

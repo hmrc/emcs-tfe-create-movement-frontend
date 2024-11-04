@@ -56,7 +56,7 @@ class DispatchWarehouseExciseViewSpec extends SpecBase with ViewBehaviours with 
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.hint -> messagesForLanguage.hintText,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
 

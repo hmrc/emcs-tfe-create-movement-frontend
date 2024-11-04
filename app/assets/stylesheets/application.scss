@@ -1,8 +1,6 @@
-$govuk-assets-path: "/emcs/create-movement/assets/lib/govuk-frontend/dist/govuk/assets/";
-$hmrc-assets-path: "/emcs/create-movement/assets/lib/hmrc-frontend/hmrc/assets/";
+$govuk-include-default-font-face: false;
+@import "lib/govuk-frontend/dist/govuk/base";
 
-@import "lib/govuk-frontend/dist/govuk/all";
-@import "lib/hmrc-frontend/hmrc/all";
 @import "taskList.scss";
 
 .js-visible {

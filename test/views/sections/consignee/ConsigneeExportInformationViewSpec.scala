@@ -60,7 +60,7 @@ class ConsigneeExportInformationViewSpec extends SpecBase with ViewBehaviours {
           Selectors.checkboxDividerItem(3) -> messagesForLanguage.or,
           Selectors.checkboxItem(4) -> messagesForLanguage.checkboxItemForNoInfo,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

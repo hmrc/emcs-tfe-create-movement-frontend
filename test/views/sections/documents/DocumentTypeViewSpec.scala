@@ -62,7 +62,7 @@ class DocumentTypeViewSpec extends SpecBase with ViewBehaviours {
         Selectors.selectOption(2) -> English.firstSelectionOption,
         Selectors.button -> English.saveAndContinue,
         Selectors.secondaryButton -> English.clearSelectedCode,
-        Selectors.link(1) -> English.returnToDraft
+        Selectors.saveAndExitLink -> English.returnToDraft
       ))
     }
   }

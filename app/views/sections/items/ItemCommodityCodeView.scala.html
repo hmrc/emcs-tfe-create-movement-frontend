@@ -72,7 +72,7 @@
                     content = Text(messages("itemCommodityCode.label", goodsType.toSingularOutput()))
                 ).withCssClass("govuk-label--s"),
                 items = Seq(
-                    SelectItem(text = messages("itemCommodityCode.defaultItem"), selected = form.value.isEmpty, disabled = true)
+                    SelectItem(value = Some(""), text = messages("itemCommodityCode.defaultItem"), selected = form.value.isEmpty, disabled = true)
                 ) ++ commodityCodes.map(commodityCode =>
                     SelectItem(
                         value = Some(commodityCode.cnCode),

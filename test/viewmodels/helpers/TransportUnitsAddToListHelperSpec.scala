@@ -82,7 +82,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                       ActionItem(
                         href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
                         content = Text(msg.remove),
-                        visuallyHiddenText = Some(msg.transportUnit1),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "removeTransportUnit1")
                       )
                     ))))),
@@ -142,13 +142,13 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                       ActionItem(
                         href = transportUnitRoutes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url,
                         content = Text(msg.continueEditing),
-                        visuallyHiddenText = Some(msg.transportUnit1),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "editTransportUnit1")
                       ),
                       ActionItem(
                         href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
                         content = Text(msg.remove),
-                        visuallyHiddenText = Some(msg.transportUnit1),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "removeTransportUnit1")
                       )
                     ))))),
@@ -184,7 +184,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                       ActionItem(
                         href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
                         content = Text(msg.remove),
-                        visuallyHiddenText = Some(msg.transportUnit1),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "removeTransportUnit1")
                       )
                     ))))),
@@ -204,7 +204,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                       ActionItem(
                         href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex2).url,
                         content = Text(msg.remove),
-                        visuallyHiddenText = Some(msg.transportUnit2),
+                        visuallyHiddenText = None,
                         attributes = Map("id" -> "removeTransportUnit2")
                       )
                     ))))),

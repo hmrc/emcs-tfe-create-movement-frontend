@@ -57,7 +57,7 @@ class ItemMaturationPeriodAgeViewSpec extends SpecBase with ViewBehaviours {
           //Note, this is radio button 2 but index is 3 due to hidden HTML conditional content for radio 1
           Selectors.radioButton(3) -> messagesForLanguage.no,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

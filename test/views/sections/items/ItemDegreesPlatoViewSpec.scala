@@ -80,7 +80,7 @@ class ItemDegreesPlatoViewSpec extends SpecBase with ViewBehaviours with Movemen
           Selectors.bullet(12) -> countryMessages.portugal,
           Selectors.bullet(13) -> countryMessages.romania,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))(doc())
       }
     }

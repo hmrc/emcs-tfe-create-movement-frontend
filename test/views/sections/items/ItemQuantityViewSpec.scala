@@ -71,7 +71,7 @@ class ItemQuantityViewSpec extends SpecBase with ViewBehaviours with MovementSub
             Selectors.label("value") -> messagesForLanguage.labelT200,
             Selectors.inputSuffix -> unitOfMeasureMessages.kilogramsShort,
             Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.link(1) -> messagesForLanguage.returnToDraft
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))(doc())
 
           behave like pageWithElementsNotPresent(Seq(
@@ -98,7 +98,7 @@ class ItemQuantityViewSpec extends SpecBase with ViewBehaviours with MovementSub
             Selectors.label("value") -> messagesForLanguage.labelT300,
             Selectors.inputSuffix -> unitOfMeasureMessages.kilogramsShort,
             Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.link(1) -> messagesForLanguage.returnToDraft
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))(doc())
 
           behave like pageWithElementsNotPresent(Seq(
@@ -123,7 +123,7 @@ class ItemQuantityViewSpec extends SpecBase with ViewBehaviours with MovementSub
             Selectors.hint -> messagesForLanguage.hintLiquid(unitOfMeasureMessages.litres20Long),
             Selectors.inputSuffix -> unitOfMeasureMessages.litres20Short,
             Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.link(1) -> messagesForLanguage.returnToDraft
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))(doc())
 
           behave like pageWithElementsNotPresent(Seq(
@@ -147,7 +147,7 @@ class ItemQuantityViewSpec extends SpecBase with ViewBehaviours with MovementSub
             Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
             Selectors.inputSuffix -> unitOfMeasureMessages.kilogramsShort,
             Selectors.button -> messagesForLanguage.saveAndContinue,
-            Selectors.link(1) -> messagesForLanguage.returnToDraft
+            Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))(doc())
 
           behave like pageWithElementsNotPresent(Seq(

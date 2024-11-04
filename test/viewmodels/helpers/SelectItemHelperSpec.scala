@@ -33,7 +33,7 @@ class SelectItemHelperSpec extends SpecBase with ItemFixtures {
         defaultTextMessageKey = "default",
         existingAnswer = None)
       result mustBe Seq(
-        SelectItem(selected = true, disabled = true, text = "default"),
+        SelectItem(value = Some(""), selected = true, disabled = true, text = "default"),
         SelectItem(value = Some("B000"), text = "B000: Beer", selected = false),
         SelectItem(value = Some("W200"), text = "W200: Still wine and still fermented beverages other than wine and beer", selected = false)
       )
@@ -45,7 +45,7 @@ class SelectItemHelperSpec extends SpecBase with ItemFixtures {
         defaultTextMessageKey = "default",
         existingAnswer = Some("W200"))
       result mustBe Seq(
-        SelectItem(selected = false, disabled = true, text = "default"),
+        SelectItem(value = Some(""), selected = false, disabled = true, text = "default"),
         SelectItem(value = Some("B000"), text = "B000: Beer", selected = false),
         SelectItem(value = Some("W200"), text = "W200: Still wine and still fermented beverages other than wine and beer", selected = true)
       )

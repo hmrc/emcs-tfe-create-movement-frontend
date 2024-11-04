@@ -72,7 +72,7 @@
 }
 
 @scripts = {
-    <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/application.min.js")'></script>
+    <script type="module" @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/application.min.js")'></script>
     @additionalScripts
 }
 

@@ -38,9 +38,11 @@ object TransportUnitAddToListMessages {
 
     val transportUnit1 = "Transport unit 1"
     val transportUnit2 = "Transport unit 2"
-    val removeLink1WithHiddenText    = "Remove Transport unit 1"
-    val removeLink2WithHiddenText    = "Remove Transport unit 2"
-    val editLink1WithHiddenText = "Continue editing Transport unit 1"
+    val removeLink1WithHiddenText    = "Remove (Transport unit 1)"
+    val removeLink1WithHiddenTextIncomplete    = "Remove ( Transport unit 1 Incomplete )"
+    val removeLink2WithHiddenText    = "Remove (Transport unit 2)"
+    val editLink1WithHiddenText = "Continue editing (Transport unit 1)"
+    val editLink1WithHiddenTextIncomplete = "Continue editing ( Transport unit 1 Incomplete )"
 
     val transportSealTypeMessages: BaseMessages
     val transportSealChoiceMessages: BaseMessages

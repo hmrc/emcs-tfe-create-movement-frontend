@@ -59,7 +59,7 @@ class ItemBulkPackagingSelectViewSpec extends SpecBase with ViewBehaviours with 
           Selectors.radioButton(6) -> messagesForLanguage.radioOption6,
           Selectors.radioButton(7) -> messagesForLanguage.radioOption7,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

@@ -17,17 +17,13 @@
 package pages.sections.guarantor
 
 import models.GoodsType._
-import models.{NorthernIrelandCertifiedConsignor, NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper}
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario._
-import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
-import models.sections.transportUnit.TransportUnitType.FixedTransport
+import models.{NorthernIrelandCertifiedConsignor, NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper}
 import pages.QuestionPage
 import pages.sections.info.DestinationTypePage
 import pages.sections.items.ItemsSectionItems
-import pages.sections.journeyType.HowMovementTransportedPage
 import pages.sections.transportUnit.TransportUnitsSection.onlyFixedTransport
-import pages.sections.transportUnit.TransportUnitsSectionUnits
 import play.api.libs.json.JsPath
 
 case object GuarantorRequiredPage extends QuestionPage[Boolean] {

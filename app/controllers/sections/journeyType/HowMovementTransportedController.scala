@@ -34,7 +34,6 @@ import pages.sections.transportUnit.{TransportUnitTypePage, TransportUnitsSectio
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import queries.TransportUnitsCount
 import services.UserAnswersService
 import views.html.sections.journeyType.{HowMovementTransportedNoOptionView, HowMovementTransportedView}
 

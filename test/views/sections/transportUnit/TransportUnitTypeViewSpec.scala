@@ -85,7 +85,7 @@ class TransportUnitTypeViewSpec extends SpecBase with ViewBehaviours {
               Selectors.radioButton(5) -> messagesForLanguage.vehicleRadioOption,
               Selectors.radioButtonHint(5) -> messagesForLanguage.vehicleRadioOptionHint,
               Selectors.button -> messagesForLanguage.saveAndContinue,
-              Selectors.link(1) -> messagesForLanguage.returnToDraft
+              Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
             ))
           }
         }
@@ -115,7 +115,7 @@ class TransportUnitTypeViewSpec extends SpecBase with ViewBehaviours {
               Selectors.radioButton(5) -> messagesForLanguage.vehicleRadioOption,
               Selectors.radioButtonHint(5) -> messagesForLanguage.vehicleRadioOptionHint,
               Selectors.button -> messagesForLanguage.saveAndContinue,
-              Selectors.link(1) -> messagesForLanguage.returnToDraft
+              Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
             ))
           }
         }

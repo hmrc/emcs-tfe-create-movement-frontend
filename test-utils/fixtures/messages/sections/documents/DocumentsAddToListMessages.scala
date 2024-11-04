@@ -31,9 +31,11 @@ object DocumentsAddToListMessages {
     val title: Int => String = idx => titleHelper(heading(idx), Some(SectionMessages.English.documentsSubHeading))
 
     def documentCardTitle(idx: Index) = s"Document ${idx.displayIndex}"
-    def removeDocument(idx: Index): String = s"Remove ${documentCardTitle(idx)}"
+    def removeDocument(idx: Index): String = s"Remove ( ${documentCardTitle(idx)} )"
+    def removeDocumentIncomplete(idx: Index): String = s"Remove ( ${documentCardTitle(idx)} Incomplete )"
 
-    def editDocument(idx: Index): String = s"Continue editing ${documentCardTitle(idx)}"
+    def editDocument(idx: Index): String = s"Continue editing ( ${documentCardTitle(idx)} )"
+    def editDocumentIncomplete(idx: Index): String = s"Continue editing ( ${documentCardTitle(idx)} Incomplete )"
 
     val h2 = "Do you need to add another document?"
     val no1 = "No, this is the only document"

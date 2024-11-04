@@ -54,7 +54,7 @@ class ItemDensityViewSpec extends SpecBase with ViewBehaviours {
           Selectors.hint -> messagesForLanguage.hint,
           Selectors.inputSuffix -> messagesForLanguage.suffix,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

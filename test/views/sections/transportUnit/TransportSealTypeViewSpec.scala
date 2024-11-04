@@ -63,7 +63,7 @@ class TransportSealTypeViewSpec extends SpecBase with ViewBehaviours {
               Selectors.label("moreInfo") -> messagesForLanguage.moreInfo,
               Selectors.hint -> messagesForLanguage.moreInfoHint,
               Selectors.button -> messagesForLanguage.saveAndContinue,
-              Selectors.link(1) -> messagesForLanguage.returnToDraft
+              Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
             ))
           }
         }

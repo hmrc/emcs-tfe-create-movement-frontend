@@ -26,7 +26,6 @@ import models.requests.DataRequest
 import models.sections.info.DispatchDetailsModel
 import models.sections.info.movementScenario.MovementScenario.DirectDelivery
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
-import models.sections.transportUnit.TransportUnitType
 import models.sections.transportUnit.TransportUnitType.{FixedTransport, Tractor}
 import pages.sections.guarantor.{GuarantorRequiredPage, GuarantorSection}
 import pages.sections.info.{DeferredMovementPage, DestinationTypePage, DispatchDetailsPage}

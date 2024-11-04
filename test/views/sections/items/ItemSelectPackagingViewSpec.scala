@@ -65,7 +65,7 @@ class ItemSelectPackagingViewSpec extends SpecBase with ViewBehaviours with Item
           Selectors.selectOption(2) -> messagesForLanguage.aerosolSelectOption,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.secondaryButton -> messagesForLanguage.clearSelectedCode,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

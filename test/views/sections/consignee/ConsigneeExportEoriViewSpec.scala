@@ -55,7 +55,7 @@ class ConsigneeExportEoriViewSpec extends SpecBase with ViewBehaviours {
           Selectors.hint -> messagesForLanguage.hint,
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.consigneeInformationSection,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

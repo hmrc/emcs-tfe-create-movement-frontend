@@ -49,7 +49,7 @@ class DocumentReferenceViewSpec extends SpecBase with ViewBehaviours {
         Selectors.title -> English.title,
         Selectors.h1 -> English.heading,
         Selectors.button -> English.saveAndContinue,
-        Selectors.link(1) -> English.returnToDraft
+        Selectors.saveAndExitLink -> English.returnToDraft
       ))
     }
   }

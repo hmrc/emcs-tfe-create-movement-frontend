@@ -24,7 +24,7 @@ import forms.sections.items.ItemPackagingSelectShippingMarkFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, ShippingMarkOption, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
-import pages.sections.items.{ItemExciseProductCodePage, ItemPackagingQuantityPage, ItemPackagingShippingMarksChoicePage, ItemPackagingShippingMarksPage, ItemSelectPackagingPage}
+import pages.sections.items._
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._

@@ -38,7 +38,7 @@
 
 @scripts = {
 @autocompleteJavascript()
-    <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
+    <script type="module" @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
 }
 
 @errorMessage = @{

@@ -116,7 +116,7 @@ class DocumentsAddToListHelper @Inject()(tagHelper: TagHelper, span: views.html.
       content = Text(messages("site.remove")),
       href = routes.DocumentsRemoveFromListController.onPageLoad(request.ern, request.draftId, idx).url,
       id = s"removeDocuments-${idx.displayIndex}"
-    ).withVisuallyHiddenText(messages("documentsAddToList.documentCardTitle", idx.displayIndex))
+    )
   }
 
   private def continueEditingLink(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[ActionItem] = {
@@ -126,7 +126,7 @@ class DocumentsAddToListHelper @Inject()(tagHelper: TagHelper, span: views.html.
           content = Text(messages("site.continueEditing")),
           href = routes.DocumentTypeController.onPageLoad(request.ern, request.draftId, idx, NormalMode).url,
           id = s"editDocuments-${idx.displayIndex}"
-        ).withVisuallyHiddenText(messages("documentsAddToList.documentCardTitle", idx.displayIndex)))
+        ))
       case _ => None
     }
   }

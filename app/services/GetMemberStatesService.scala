@@ -59,5 +59,5 @@ class GetMemberStatesService @Inject()(connector: GetMemberStatesConnector)
 
   def withEuMemberStatesWhenDestinationEU[A](f: Option[Seq[CountryModel]] => Future[A])
                                             (implicit request: DataRequest[_], hc: HeaderCarrier): Future[A] =
-    Option.when(DestinationTypePage.value.contains(EuTaxWarehouse))(getEuMemberStates()).sequence.flatMap(f)
+    Option.when(DestinationTypePage.isNItoEuMovement)(getEuMemberStates()).sequence.flatMap(f)
 }

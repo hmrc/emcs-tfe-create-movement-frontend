@@ -39,6 +39,7 @@ class InvoiceDetailsFormProvider @Inject()(appConfig: AppConfig) extends Mapping
         oneRequiredKey = "invoiceDetails.value.error.required.one",
         twoRequiredKey = "invoiceDetails.value.error.required.two",
         oneInvalidKey = "invoiceDetails.value.error.invalid.one",
+        twoInvalidKey = "invoiceDetails.value.error.invalid.two",
         notARealDateKey = "invoiceDetails.value.error.notARealDate"
       )
         .verifying(

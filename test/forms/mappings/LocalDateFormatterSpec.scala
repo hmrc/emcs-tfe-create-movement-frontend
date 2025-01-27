@@ -30,16 +30,18 @@ class LocalDateFormatterSpec extends AnyFreeSpec with Matchers with OptionValues
   val oneRequiredKey = "error.oneRequired"
   val twoRequiredKey = "error.twoRequired"
   val oneInvalidKey = "error.oneInvalid"
+  val twoInvalidKey = "error.twoInvalid"
   val notARealDateKey = "error.notARealDate"
   val args = Seq.empty[String]
 
   val formatter = new LocalDateFormatter(
-    allRequiredKey,
-    oneRequiredKey,
-    twoRequiredKey,
-    oneInvalidKey,
-    notARealDateKey,
-    args
+    allRequiredKey = allRequiredKey,
+    oneRequiredKey = oneRequiredKey,
+    twoRequiredKey = twoRequiredKey,
+    oneInvalidKey = oneInvalidKey,
+    twoInvalidKey = twoInvalidKey,
+    notARealDateKey = notARealDateKey,
+    args = args
   )
 
   "LocalDateFormatter" - {

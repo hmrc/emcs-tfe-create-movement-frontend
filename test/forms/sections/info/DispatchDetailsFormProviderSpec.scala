@@ -86,7 +86,7 @@ class DispatchDetailsFormProviderSpec extends SpecBase with StringFieldBehaviour
 
         "when the date is invalid" in {
 
-          val data = formAnswersMap(day = "1000", month = "1000", year = "1000")
+          val data = formAnswersMap(day = "1000", month = "1000", year = "a")
 
           val expectedResult = Seq(FormError(dateField, s"dispatchDetails.$dateField.error.notARealDate"))
 

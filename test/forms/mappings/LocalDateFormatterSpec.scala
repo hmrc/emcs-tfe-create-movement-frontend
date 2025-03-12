@@ -120,7 +120,7 @@ class LocalDateFormatterSpec extends AnyFreeSpec with Matchers with OptionValues
       val data = Map(
         "date.day" -> "32",
         "date.month" -> "13",
-        "date.year" -> "0"
+        "date.year" -> "2025"
       )
       val result = formatter.bind("date", data)
       result shouldBe Left(Seq(FormError("date", notARealDateKey, args)))

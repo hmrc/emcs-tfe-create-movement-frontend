@@ -36,7 +36,6 @@ class DispatchDetailsFormProvider @Inject()(override val appConfig: AppConfig,
           oneRequiredKey = "dispatchDetails.value.error.required.one",
           twoRequiredKey = "dispatchDetails.value.error.required.two",
           oneInvalidKey = "dispatchDetails.value.error.invalid.one",
-          twoInvalidKey = "dispatchDetails.value.error.invalid.two",
           notARealDateKey = "dispatchDetails.value.error.notARealDate"
         )
           .verifying(

@@ -83,7 +83,6 @@ private[mappings] class LocalTimeFormatter(
 
 
   override def unbind(key: String, time: LocalTime): Map[String, String] =
-    Map(key -> time.formatTimeForUIOutput)
+    Map(key -> time.formatTimeForUIOutput())
 
 }
-

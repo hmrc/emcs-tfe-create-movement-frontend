@@ -29,7 +29,7 @@ case class MovementSubmissionFailure(
                                     ) {
 
   lazy val asSubmissionError: SubmissionError = SubmissionError.apply(errorType)
-  def isFixable(implicit request: DataRequest[_]): Boolean = asSubmissionError.isFixable
+  def isFixable(implicit request: DataRequest[_]): Boolean = asSubmissionError.isFixable()
 }
 
 object MovementSubmissionFailure {

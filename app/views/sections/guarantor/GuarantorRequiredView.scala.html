@@ -61,7 +61,7 @@
 
     } else {
 
-        @formHelper(action = onwardRoute, 'autoComplete -> "off") {
+        @formHelper(action = onwardRoute, Symbol("autoComplete") -> "off") {
 
             @h1("guarantorRequired.heading", Some(messages("guarantor.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
 

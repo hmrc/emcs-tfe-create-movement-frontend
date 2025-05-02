@@ -33,7 +33,7 @@
 
 @layout(pageTitle = titleNoForm(messages("dispatchCheckAnswers.title"), Some(messages("dispatch.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
+    @formHelper(action = onSubmitCall, Symbol("autoComplete") -> "off") {
 
         @errorNotificationBannerHelper.content(
             errors = DispatchWarehouseExcisePage.getMovementSubmissionErrors,

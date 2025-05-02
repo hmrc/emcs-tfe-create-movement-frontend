@@ -66,7 +66,7 @@ class ItemsAddToListHelper @Inject()(span: views.html.components.span,
               unitOfMeasure <- item.unitOfMeasure
             } yield {
               SummaryListRow(
-                key = Key(Text(s"$quantity ${messages(s"unitOfMeasure.$unitOfMeasure.short")} of ${item.goodsType.toSingularOutput}")),
+                key = Key(Text(s"$quantity ${messages(s"unitOfMeasure.$unitOfMeasure.short")} of ${item.goodsType.toSingularOutput()}")),
                 value = Value(HtmlContent(
                   ItemBulkPackagingSelectPage(item.idx).value.fold(
                     list(packagingForItem(item.idx).map { packaging =>

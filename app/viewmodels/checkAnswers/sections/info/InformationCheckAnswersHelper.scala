@@ -34,14 +34,14 @@ class InformationCheckAnswersHelper @Inject()(informationLocalReferenceNumberSum
 
     val summary = SummaryListViewModel(
       rows = Seq(
-        InformationPlaceOfDispatchSummary.row,
-        InformationDestinationTypeSummary.row,
-        InformationDeferredMovementSummary.row,
+        InformationPlaceOfDispatchSummary.row(),
+        InformationDestinationTypeSummary.row(),
+        InformationDeferredMovementSummary.row(),
         informationLocalReferenceNumberSummary.row(deferredMovement),
-        informationInvoiceReferenceSummary.row,
-        informationInvoiceDateSummary.row,
-        informationDateOfDispatchSummary.row,
-        informationTimeOfDispatchSummary.row
+        informationInvoiceReferenceSummary.row(),
+        informationInvoiceDateSummary.row(),
+        informationDateOfDispatchSummary.row(),
+        informationTimeOfDispatchSummary.row()
       ).flatten
     )
 

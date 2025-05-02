@@ -15,7 +15,7 @@
 
 @layout(pageTitle = title(form, messages("$className;format="decap"$.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
+    @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.draftId, mode), Symbol("autoComplete") -> "off") {
 
         @defining(form.errors.headOption.map(_.args.map(_.toString)).getOrElse(Seq())) { erroredFields =>
 

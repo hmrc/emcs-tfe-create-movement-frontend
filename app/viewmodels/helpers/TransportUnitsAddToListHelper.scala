@@ -73,7 +73,7 @@ class TransportUnitsAddToListHelper @Inject()(implicit link: link, tagHelper: Ta
         CardViewModel(
           title = messages("checkYourAnswers.transportUnits.cardTitle"),
           headingLevel = 2,
-          actions = finalCyaChangeLink.map(route =>
+          actions = finalCyaChangeLink().map(route =>
             Actions(items = Seq(
               ActionItemViewModel(
                 href = route.url,

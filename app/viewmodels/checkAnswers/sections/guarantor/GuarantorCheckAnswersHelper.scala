@@ -29,10 +29,10 @@ class GuarantorCheckAnswersHelper @Inject()() {
     val summary =
       SummaryListViewModel(
         rows = Seq(
-          GuarantorRequiredSummary.row,
-          GuarantorArrangerSummary.row,
-          GuarantorErnVatSummary.rows,
-          GuarantorAddressSummary.row
+          GuarantorRequiredSummary.row(),
+          GuarantorArrangerSummary.row(),
+          GuarantorErnVatSummary.rows(),
+          GuarantorAddressSummary.row()
         ).flatten
       )
 

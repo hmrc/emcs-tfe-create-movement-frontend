@@ -3,8 +3,8 @@ import sbt.*
 object AppDependencies {
 
   val playSuffix = "-play-30"
-  val hmrcBootstrapVersion = "8.6.0"
-  val hmrcMongoVersion = "2.3.0"
+  val hmrcBootstrapVersion = "9.11.0"
+  val hmrcMongoVersion = "2.6.0"
   val jsoupVersion = "1.18.1"
   val catsCoreVersion   =  "2.12.0"
 

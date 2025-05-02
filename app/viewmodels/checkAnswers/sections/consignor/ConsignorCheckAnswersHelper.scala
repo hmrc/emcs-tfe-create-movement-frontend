@@ -29,9 +29,9 @@ class ConsignorCheckAnswersHelper @Inject()() {
 
     val summary = SummaryListViewModel(
       rows = Seq(
-        ConsignorERNSummary.row,
-        ConsignorPaidTemporaryAuthorisationCodeSummary.row,
-        ConsignorAddressSummary.row
+        ConsignorERNSummary.row(),
+        ConsignorPaidTemporaryAuthorisationCodeSummary.row(),
+        ConsignorAddressSummary.row()
       ).flatten
     )
 

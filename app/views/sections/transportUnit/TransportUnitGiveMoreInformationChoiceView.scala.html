@@ -36,7 +36,7 @@
 
 @layout(pageTitle = helper.title(form, transportUnitType, TransportUnitGiveMoreInformationChoicePage(idx)), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onSubmit(request.ern, request.draftId, idx, mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationChoiceController.onSubmit(request.ern, request.draftId, idx, mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

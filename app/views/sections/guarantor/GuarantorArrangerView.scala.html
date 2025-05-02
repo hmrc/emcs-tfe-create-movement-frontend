@@ -33,7 +33,7 @@
 
 @layout(pageTitle = title(form, messages("guarantorArranger.title"), Some(messages("guarantor.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = controllers.sections.guarantor.routes.GuarantorArrangerController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.sections.guarantor.routes.GuarantorArrangerController.onSubmit(request.ern, request.draftId, mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))

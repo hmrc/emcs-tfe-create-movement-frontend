@@ -18,6 +18,7 @@ package models
 
 import play.api.mvc.PathBindable
 
+import scala.language.implicitConversions
 import scala.util.{Failure, Success, Try}
 
 case class Index(position: Int) {

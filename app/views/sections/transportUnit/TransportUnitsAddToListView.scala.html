@@ -40,7 +40,7 @@
 
 @layout(pageTitle = optionalForm.fold(titleNoForm(pluralSingular("transportUnitsAddToList.title", transportUnits.size), Some(messages("transportUnit.subHeading"))))(form => title(form, pluralSingular("transportUnitsAddToList.title", transportUnits.size), Some(messages("transportUnit.subHeading")))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onSubmit(request.ern, request.draftId), 'autoComplete -> "off") {
+    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onSubmit(request.ern, request.draftId), Symbol("autoComplete") -> "off") {
 
         @optionalForm.map { form =>
             @if(form.errors.nonEmpty) {

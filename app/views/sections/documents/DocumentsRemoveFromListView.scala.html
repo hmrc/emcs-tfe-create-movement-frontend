@@ -33,7 +33,7 @@
 
 @layout(pageTitle = title(form, messages("documentsRemoveFromList.title", indexOfDocument.displayIndex), Some(messages("documents.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = controllers.sections.documents.routes.DocumentsRemoveFromListController.onSubmit(request.ern, request.draftId, indexOfDocument), 'autoComplete -> "off") {
+    @formHelper(action = controllers.sections.documents.routes.DocumentsRemoveFromListController.onSubmit(request.ern, request.draftId, indexOfDocument), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

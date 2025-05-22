@@ -17,6 +17,7 @@
 package services
 
 import connectors.referenceData.GetCnCodeInformationConnector
+import models.UnitOfMeasure
 import models.requests.{CnCodeInformationItem, CnCodeInformationRequest}
 import models.response.ReferenceDataException
 import models.response.referenceData.{CnCodeInformation, CnCodeInformationResponse}
@@ -32,19 +33,25 @@ class GetCnCodeInformationService @Inject()(connector: GetCnCodeInformationConne
   def getCnCodeInformation(items: Seq[CnCodeInformationItem])(implicit hc: HeaderCarrier): Future[Seq[(CnCodeInformationItem, CnCodeInformation)]] =
     connector.getCnCodeInformation(CnCodeInformationRequest(items)).map {
       case Right(response) =>
-        matchMovementItemsWithReferenceDataValues(response, items).map {
-          case (item, Some(information)) => (item, information)
-          case (item, _) => throw ReferenceDataException(s"Failed to match item with CN Code information: $item")
-        }
+        matchMovementItemsWithReferenceDataValues(response, items)
       case Left(errorResponse) => throw ReferenceDataException(s"Failed to retrieve CN Code information: $errorResponse")
     }
 
+  private def cnCodeInformationFromMovementItem(item: CnCodeInformationItem): CnCodeInformation =
+    // A movement item can have a CN code which is no longer, or not yet, in the reference data.
+    // We still need to be able to show the user their data, so when this happens we fall back to default values
+    CnCodeInformation(
+      cnCode = item.cnCode,
+      cnCodeDescription = s"Unknown CN Code: ${item.cnCode} - Verify in UK Integrated Online Tariff",
+      exciseProductCode = item.productCode,
+      exciseProductCodeDescription = s"Unknown Product Code: ${item.productCode} - Verify in UK Integrated Online Tariff",
+      unitOfMeasure = UnitOfMeasure.UnknownUnit,
+    )
+
   private def matchMovementItemsWithReferenceDataValues(response: CnCodeInformationResponse,
-                                                        items: Seq[CnCodeInformationItem]): Seq[(CnCodeInformationItem, Option[CnCodeInformation])] =
-    items.map {
-      case item if response.data.contains(item.cnCode) =>
-        item -> Some(response.data(item.cnCode))
-      case item =>
-        item -> None
-    }
+                                                        items: Seq[CnCodeInformationItem]): Seq[(CnCodeInformationItem, CnCodeInformation)] = {
+    items.map(item =>
+      item -> response.data.getOrElse(item.cnCode, cnCodeInformationFromMovementItem(item))
+    )
+  }
 }

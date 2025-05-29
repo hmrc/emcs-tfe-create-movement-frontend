@@ -20,8 +20,10 @@ import base.SpecBase
 import fixtures.messages.sections.info.DeferredMovementMessages
 import fixtures.messages.sections.info.DeferredMovementMessages.ViewMessages
 import models.CheckMode
+import models.requests.DataRequest
 import pages.sections.info.DeferredMovementPage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
@@ -52,25 +54,25 @@ class InformationDeferredMovementSummarySpec extends SpecBase {
 
       "and there is no answer for the DeferredMovementPage" - {
         "then must return a not provided row" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+          implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-          InformationDeferredMovementSummary.row mustBe expectedRow(value = messagesForLanguage.notProvided)
+          InformationDeferredMovementSummary.row() mustBe expectedRow(value = messagesForLanguage.notProvided)
         }
       }
 
       "and there is a DeferredMovementPage answer of yes" - {
         "then must return a row with the answer of yes " in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DeferredMovementPage(), true))
+          implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(DeferredMovementPage(), true))
 
-          InformationDeferredMovementSummary.row mustBe expectedRow(value = messagesForLanguage.yes)
+          InformationDeferredMovementSummary.row() mustBe expectedRow(value = messagesForLanguage.yes)
         }
       }
 
       "and there is a DeferredMovementPage answer of no" - {
         "then must return a row with the answer " in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DeferredMovementPage(), false))
+          implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(DeferredMovementPage(), false))
 
-          InformationDeferredMovementSummary.row mustBe expectedRow(value = messagesForLanguage.no)
+          InformationDeferredMovementSummary.row() mustBe expectedRow(value = messagesForLanguage.no)
         }
       }
     }

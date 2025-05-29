@@ -19,13 +19,15 @@ package connectors.emcsTfe
 import connectors.BaseConnectorUtils
 import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamDraftSubmissionResponseError}
 import play.api.http.Status.OK
-import play.api.libs.json.Writes
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+import play.api.libs.json.{Json, Writes}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps}
+import utils.RequestHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait EmcsTfeHttpParser[A] extends BaseConnectorUtils[A] {
-  def http: HttpClient
+trait EmcsTfeHttpParser[A] extends BaseConnectorUtils[A] with RequestHelper {
+  def http: HttpClientV2
 
   implicit object EmcsTfeReads extends HttpReads[Either[ErrorResponse, A]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, A] = {
@@ -45,9 +47,16 @@ trait EmcsTfeHttpParser[A] extends BaseConnectorUtils[A] {
 
   def post[I](url: String, body: I)(implicit hc: HeaderCarrier, ec: ExecutionContext, writes: Writes[I]): Future[Either[ErrorResponse, A]] =
     withExceptionRecovery("post") {
-      http.POST[I, Either[ErrorResponse, A]](url, body)(writes, EmcsTfeReads, hc, ec)
+      http
+        .post(url"$url")
+        .withBody(Json.toJson(body))
+        .execute[Either[ErrorResponse, A]](EmcsTfeReads, ec)
     }(implicitly, logger)
 
-  def get(url: String, queryParams: Seq[(String, String)] = Seq.empty)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, A]] =
-    http.GET[Either[ErrorResponse, A]](url, queryParams)
+  def get(url: String, queryParams: Seq[(String, String)] = Seq.empty)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, A]] = {
+    val urlWithQuery = url + makeQueryString(queryParams)
+    http
+      .get(url"$urlWithQuery")
+      .execute[Either[ErrorResponse, A]]
+  }
 }

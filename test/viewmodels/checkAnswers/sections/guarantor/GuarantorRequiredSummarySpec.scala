@@ -20,10 +20,12 @@ import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorRequiredMessages
 import fixtures.messages.sections.guarantor.GuarantorRequiredMessages.ViewMessages
 import models.CheckMode
+import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheUk}
 import pages.sections.guarantor.GuarantorRequiredPage
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
@@ -58,13 +60,13 @@ class GuarantorRequiredSummarySpec extends SpecBase {
 
           "then must return a not provided row" in {
 
-            implicit lazy val request = dataRequest(
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(
               FakeRequest(),
               emptyUserAnswers.set(DestinationTypePage, EuTaxWarehouse),
               testNorthernIrelandErn
             )
 
-            GuarantorRequiredSummary.row mustBe expectedRow(value = messagesForLanguage.notProvided, testNorthernIrelandErn)
+            GuarantorRequiredSummary.row() mustBe expectedRow(value = messagesForLanguage.notProvided, testNorthernIrelandErn)
           }
         }
 
@@ -72,7 +74,7 @@ class GuarantorRequiredSummarySpec extends SpecBase {
 
           "then must return a row with the answer of yes " in {
 
-            implicit lazy val request = dataRequest(
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(
               FakeRequest(),
               emptyUserAnswers
                 .set(DestinationTypePage, EuTaxWarehouse)
@@ -81,7 +83,7 @@ class GuarantorRequiredSummarySpec extends SpecBase {
               testNorthernIrelandErn
             )
 
-            GuarantorRequiredSummary.row mustBe expectedRow(value = messagesForLanguage.yes, testNorthernIrelandErn)
+            GuarantorRequiredSummary.row() mustBe expectedRow(value = messagesForLanguage.yes, testNorthernIrelandErn)
           }
         }
 
@@ -89,7 +91,7 @@ class GuarantorRequiredSummarySpec extends SpecBase {
 
           "then must return a row with the answer " in {
 
-            implicit lazy val request = dataRequest(
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(
               FakeRequest(),
               emptyUserAnswers
                 .set(DestinationTypePage, EuTaxWarehouse)
@@ -98,7 +100,7 @@ class GuarantorRequiredSummarySpec extends SpecBase {
               testNorthernIrelandErn
             )
 
-            GuarantorRequiredSummary.row mustBe expectedRow(value = messagesForLanguage.no, testNorthernIrelandErn)
+            GuarantorRequiredSummary.row() mustBe expectedRow(value = messagesForLanguage.no, testNorthernIrelandErn)
           }
         }
       }
@@ -107,13 +109,13 @@ class GuarantorRequiredSummarySpec extends SpecBase {
 
         "then must return None" in {
 
-          implicit lazy val request = dataRequest(
+          implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(
             FakeRequest(),
             emptyUserAnswers.set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
             testGreatBritainWarehouseKeeperErn
           )
 
-          GuarantorRequiredSummary.row mustBe None
+          GuarantorRequiredSummary.row() mustBe None
         }
       }
     }

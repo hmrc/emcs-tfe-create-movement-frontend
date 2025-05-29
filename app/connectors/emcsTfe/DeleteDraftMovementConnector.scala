@@ -21,13 +21,14 @@ import models.UserAnswers
 import models.requests.DataRequest
 import models.response.ErrorResponse
 import play.api.libs.json.Reads
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteDraftMovementConnector @Inject()(val http: HttpClient,
+class DeleteDraftMovementConnector @Inject()(val http: HttpClientV2,
                                              config: AppConfig) extends UserAnswersHttpParsers {
 
   //Unused as this connector deletes the draft, which returns no response body

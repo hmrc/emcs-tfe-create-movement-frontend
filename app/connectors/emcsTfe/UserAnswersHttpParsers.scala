@@ -20,13 +20,14 @@ import connectors.BaseConnectorUtils
 import models.UserAnswers
 import models.response.{BadRequestError, ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.Status.{BAD_REQUEST, NO_CONTENT, OK}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait UserAnswersHttpParsers extends BaseConnectorUtils[UserAnswers] {
 
-  def http: HttpClient
+  def http: HttpClientV2
 
   object GetUserAnswersReads extends HttpReads[Either[ErrorResponse, Option[UserAnswers]]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, Option[UserAnswers]] =
@@ -74,6 +75,8 @@ trait UserAnswersHttpParsers extends BaseConnectorUtils[UserAnswers] {
 
   def delete(url: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Boolean]] =
     withExceptionRecovery("delete") {
-      http.DELETE(url)(DeleteUserAnswersReads, implicitly, implicitly)
+      http
+        .delete(url"$url")
+        .execute[Either[ErrorResponse, Boolean]](DeleteUserAnswersReads, implicitly)
     }(implicitly, logger)
 }

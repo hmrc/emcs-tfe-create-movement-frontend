@@ -21,6 +21,7 @@ import mocks.connectors.MockHttpClient
 import models.requests.DataRequest
 import models.response.JsonValidationError
 import play.api.http.{HeaderNames, MimeTypes, Status}
+import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -43,7 +44,7 @@ class SubmitCreateMovementConnectorSpec extends SpecBase
 
         MockHttpClient.post(
           url = s"${appConfig.emcsTfeBaseUrl}/create-movement/$testErn/$testDraftId",
-          body = minimumSubmitCreateMovementModel
+          body = Json.toJson(minimumSubmitCreateMovementModel)
         ).returns(Future.successful(Right(submitCreateMovementResponseEIS)))
 
         connector.submit(minimumSubmitCreateMovementModel).futureValue mustBe Right(submitCreateMovementResponseEIS)
@@ -56,7 +57,7 @@ class SubmitCreateMovementConnectorSpec extends SpecBase
 
         MockHttpClient.post(
           url = s"${appConfig.emcsTfeBaseUrl}/create-movement/$testErn/$testDraftId",
-          body = minimumSubmitCreateMovementModel
+          body = Json.toJson(minimumSubmitCreateMovementModel)
         ).returns(Future.successful(Left(JsonValidationError)))
 
         connector.submit(minimumSubmitCreateMovementModel).futureValue mustBe Left(JsonValidationError)

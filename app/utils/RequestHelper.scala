@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-    layout: templates.Layout
-)
+package utils
 
-@(pageTitle: String, heading: String, message: String)(implicit request: RequestHeader, messages: Messages)
+import java.net.URLEncoder
 
-@layout(pageTitle = titleNoForm(pageTitle), maybeShowActiveTrader = None) {
-    <h1 class="govuk-heading-xl">@messages(heading)</h1>
+trait RequestHelper {
 
-    <p class="govuk-body">@messages(message)</p>
-}
+  def makeQueryString(queryParams: Seq[(String, String)]): String = {
+    val paramPairs = queryParams.map { case (k, v) => s"$k=${URLEncoder.encode(v, "utf-8")}" }
+    if (paramPairs.isEmpty) "" else paramPairs.mkString("?", "&", "")
+  }
 
-@{
- //$COVERAGE-OFF$
 }

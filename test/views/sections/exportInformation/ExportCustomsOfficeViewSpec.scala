@@ -23,12 +23,13 @@ import forms.sections.exportInformation.ExportCustomsOfficeFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.data.FormError
+import play.api.data.{Form, FormError}
 import play.api.i18n.{Lang, Messages}
 import play.api.test.FakeRequest
 import utils.ExportCustomsOfficeNumberError
 import views.html.sections.exportInformation.ExportCustomsOfficeView
 import views.{BaseSelectors, ViewBehaviours}
+import scala.language.implicitConversions
 
 class ExportCustomsOfficeViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures {
 
@@ -37,8 +38,8 @@ class ExportCustomsOfficeViewSpec extends SpecBase with ViewBehaviours with Move
     implicit lazy val msgs: Messages = messages(Seq(lang))
     implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-    lazy val view = app.injector.instanceOf[ExportCustomsOfficeView]
-    lazy val form = app.injector.instanceOf[ExportCustomsOfficeFormProvider].apply()
+    lazy val view: ExportCustomsOfficeView = app.injector.instanceOf[ExportCustomsOfficeView]
+    lazy val form: Form[String] = app.injector.instanceOf[ExportCustomsOfficeFormProvider].apply()
 
     implicit def doc(isFormError: Boolean = false)(implicit request: DataRequest[_]): Document = Jsoup.parse(view(
       form = if(isFormError) form.withError(FormError("key", "msg")) else form,

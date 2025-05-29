@@ -20,7 +20,8 @@ import config.AppConfig
 import models.response.referenceData.CnCodeInformation
 import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.libs.json.JsResultException
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,13 +33,15 @@ trait GetCommodityCodesConnector {
 }
 
 @Singleton
-class GetCommodityCodesConnectorImpl @Inject()(val http: HttpClient,
+class GetCommodityCodesConnectorImpl @Inject()(val http: HttpClientV2,
                                            config: AppConfig) extends GetCommodityCodesHttpParser with GetCommodityCodesConnector {
 
   def baseUrl: String = config.referenceDataBaseUrl
 
-  def getCommodityCodes(exciseProductCode: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[CnCodeInformation]]] =
-    http.GET[Either[ErrorResponse, Seq[CnCodeInformation]]](url = s"$baseUrl/oracle/cn-codes/$exciseProductCode")
+  def getCommodityCodes(exciseProductCode: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[CnCodeInformation]]] = {
+    http
+      .get(url"$baseUrl/oracle/cn-codes/$exciseProductCode")
+      .execute[Either[ErrorResponse, Seq[CnCodeInformation]]]
       .recover {
         case JsResultException(errors) =>
           logger.warn(s"[getCommodityCodes] Bad JSON response from emcs-tfe-reference-data: " + errors)
@@ -47,4 +50,5 @@ class GetCommodityCodesConnectorImpl @Inject()(val http: HttpClient,
           logger.warn(s"[getCommodityCodes] Unexpected error from cn-codes: ${error.getClass} ${error.getMessage}")
           Left(UnexpectedDownstreamResponseError)
       }
+  }
 }

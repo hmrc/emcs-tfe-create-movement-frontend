@@ -21,14 +21,15 @@ import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstream
 import models.sections.documents.DocumentType
 import play.api.http.Status.OK
 import play.api.libs.json.Reads
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait GetDocumentTypesHttpParser extends BaseConnectorUtils[Seq[DocumentType]] {
 
   implicit val reads: Reads[Seq[DocumentType]] = Reads.seq(DocumentType.format)
-  def http: HttpClient
+  def http: HttpClientV2
 
   class GetDocumentTypesReads() extends HttpReads[Either[ErrorResponse, Seq[DocumentType]]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, Seq[DocumentType]] = {
@@ -47,7 +48,10 @@ trait GetDocumentTypesHttpParser extends BaseConnectorUtils[Seq[DocumentType]] {
     }
   }
 
-  def get(url: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[DocumentType]]] =
-    http.GET[Either[ErrorResponse, Seq[DocumentType]]](url = url)(new GetDocumentTypesReads(), hc, ec)
+  def get(url: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[DocumentType]]] = {
+    http
+      .get(url"$url")
+      .execute[Either[ErrorResponse, Seq[DocumentType]]](new GetDocumentTypesReads(), ec)
+  }
 
 }

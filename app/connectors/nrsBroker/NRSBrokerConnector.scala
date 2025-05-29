@@ -20,18 +20,21 @@ import config.AppConfig
 import models.nrs.NRSPayload
 import models.response.nrsBroker.NRSBrokerInsertPayloadResponse
 import models.response.{ErrorResponse, UnexpectedDownstreamResponseError}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class NRSBrokerConnector @Inject()(http: HttpClient, config: AppConfig) extends NRSBrokerHttpParser {
+class NRSBrokerConnector @Inject()(http: HttpClientV2, config: AppConfig) extends NRSBrokerHttpParser {
 
   def submitPayload(nrsPayload: NRSPayload, ern: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, NRSBrokerInsertPayloadResponse]] = {
-    http.PUT[NRSPayload, Either[ErrorResponse, NRSBrokerInsertPayloadResponse]](
-      url = config.nrsBrokerBaseUrl() + s"/trader/$ern/nrs/submission",
-      body = nrsPayload
-    )
+    val url = config.nrsBrokerBaseUrl() + s"/trader/$ern/nrs/submission"
+    http
+      .put(url"$url")
+      .withBody(Json.toJson(nrsPayload))
+      .execute[Either[ErrorResponse, NRSBrokerInsertPayloadResponse]]
   }.recover {
     error =>
       logger.warn(s"[submitPayload] Unexpected error from NRS broker: ${error.getClass} ${error.getMessage.take(10000)}")

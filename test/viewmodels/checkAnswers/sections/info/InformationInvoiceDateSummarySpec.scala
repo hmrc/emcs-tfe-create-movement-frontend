@@ -20,24 +20,27 @@ import base.SpecBase
 import fixtures.messages.sections.info.InvoiceDetailsMessages
 import fixtures.messages.sections.info.InvoiceDetailsMessages.ViewMessages
 import models.CheckMode
+import models.requests.DataRequest
 import models.sections.info.InvoiceDetailsModel
 import pages.sections.info.InvoiceDetailsPage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, Key, SummaryListRow, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.helpers.TagHelper
 import views.html.components
+import views.html.components.link
 
 import java.time.LocalDate
 
 
 class InformationInvoiceDateSummarySpec extends SpecBase {
 
-  lazy val informationInvoiceDateSummary = app.injector.instanceOf[InformationInvoiceDateSummary]
-  lazy val link = app.injector.instanceOf[components.link]
-  lazy val tagHelper = app.injector.instanceOf[TagHelper]
+  lazy val informationInvoiceDateSummary: InformationInvoiceDateSummary = app.injector.instanceOf[InformationInvoiceDateSummary]
+  lazy val link: link = app.injector.instanceOf[components.link]
+  lazy val tagHelper: TagHelper = app.injector.instanceOf[TagHelper]
 
   private def expectedRow(value: Option[String],
                           isPreDraft: Boolean)(implicit messagesForLanguage: ViewMessages, messages: Messages): Option[SummaryListRow] = {
@@ -86,9 +89,9 @@ class InformationInvoiceDateSummarySpec extends SpecBase {
       "and there is no answer for the InvoiceDetailsPage" - {
         "when on pre-draft flow" - {
           "then must return add data row, with NO incomplete tag" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            informationInvoiceDateSummary.row mustBe expectedRow(
+            informationInvoiceDateSummary.row() mustBe expectedRow(
               value = None,
               isPreDraft = true
             )
@@ -97,9 +100,9 @@ class InformationInvoiceDateSummarySpec extends SpecBase {
 
         "when NOT on pre-draft flow" - {
           "then must return add data row, with incomplete tag" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.copy(createdFromTemplateId = Some(templateId)))
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.copy(createdFromTemplateId = Some(templateId)))
 
-            informationInvoiceDateSummary.row mustBe expectedRow(
+            informationInvoiceDateSummary.row() mustBe expectedRow(
               value = None,
               isPreDraft = false
             )
@@ -112,9 +115,9 @@ class InformationInvoiceDateSummarySpec extends SpecBase {
           "then must return a row with the answer" in {
             val model = InvoiceDetailsModel("inv reference", LocalDate.of(2023, 6, 7))
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(InvoiceDetailsPage(), model))
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(InvoiceDetailsPage(), model))
 
-            informationInvoiceDateSummary.row mustBe expectedRow(
+            informationInvoiceDateSummary.row() mustBe expectedRow(
               value = Some("7 June 2023"),
               isPreDraft = true
             )
@@ -125,12 +128,12 @@ class InformationInvoiceDateSummarySpec extends SpecBase {
           "then must return a row with the answer" in {
             val model = InvoiceDetailsModel("inv reference", LocalDate.of(2023, 6, 7))
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
               .copy(createdFromTemplateId = Some(templateId))
               .set(InvoiceDetailsPage(), model)
             )
 
-            informationInvoiceDateSummary.row mustBe expectedRow(
+            informationInvoiceDateSummary.row() mustBe expectedRow(
               value = Some("7 June 2023"),
               isPreDraft = false
             )

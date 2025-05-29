@@ -31,6 +31,7 @@ import play.api.test.FakeRequest
 import viewmodels.helpers.SelectItemHelper
 import views.html.sections.items.ItemPackagingSelectShippingMarkView
 import views.{BaseSelectors, ViewBehaviours}
+import scala.language.implicitConversions
 
 class ItemPackagingSelectShippingMarkViewSpec extends SpecBase
   with ViewBehaviours

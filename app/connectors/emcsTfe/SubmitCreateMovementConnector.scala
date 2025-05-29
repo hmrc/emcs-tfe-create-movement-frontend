@@ -21,13 +21,14 @@ import models.requests.DataRequest
 import models.response.{ErrorResponse, SubmitCreateMovementResponse}
 import models.submitCreateMovement.SubmitCreateMovementModel
 import play.api.libs.json.Reads
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitCreateMovementConnector @Inject()(val http: HttpClient,
+class SubmitCreateMovementConnector @Inject()(val http: HttpClientV2,
                                               config: AppConfig) extends EmcsTfeHttpParser[SubmitCreateMovementResponse] {
 
   override implicit val reads: Reads[SubmitCreateMovementResponse] = SubmitCreateMovementResponse.reads

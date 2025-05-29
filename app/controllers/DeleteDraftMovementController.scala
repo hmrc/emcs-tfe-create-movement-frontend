@@ -60,7 +60,7 @@ class DeleteDraftMovementController @Inject()(
         deleteDraft => if (deleteDraft) {
           LocalReferenceNumberPage(isOnPreDraftFlow = false).value.fold({
             logger.error("Error trying to delete draft, LRN is missing - rendering ISE")
-            Future(InternalServerError(errorHandler.internalServerErrorTemplate))
+            errorHandler.internalServerErrorTemplate.map(res => InternalServerError(res))
           })(
             lrn => service.deleteDraft().map(_ => Redirect(appConfig.emcsTfeDraftsUrl(ern)).flashing(TFE_DELETED_DRAFT_LRN -> lrn))
           )

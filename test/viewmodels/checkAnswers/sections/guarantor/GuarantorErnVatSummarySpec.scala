@@ -352,7 +352,7 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                       testGreatBritainWarehouseKeeperErn
                     )
 
-                    GuarantorErnVatSummary.rows mustBe Seq(
+                    GuarantorErnVatSummary.rows() mustBe Seq(
                       expectedRow(messagesForLanguage.cyaVatChoiceLabel, messagesForLanguage.yes, showChangeLink = true),
                       expectedRow(messagesForLanguage.cyaVatInputLabel, testVatNumber, showChangeLink = true),
                     )

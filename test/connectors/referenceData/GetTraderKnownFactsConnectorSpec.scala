@@ -20,10 +20,13 @@ import base.SpecBase
 import mocks.connectors.MockHttpClient
 import models.response.UnexpectedDownstreamResponseError
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.RequestHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetTraderKnownFactsConnectorSpec extends SpecBase with MockHttpClient {
+class GetTraderKnownFactsConnectorSpec extends SpecBase
+  with MockHttpClient
+  with RequestHelper {
 
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
@@ -35,10 +38,10 @@ class GetTraderKnownFactsConnectorSpec extends SpecBase with MockHttpClient {
     "should return a successful response" - {
       "when downstream call is successful" in {
 
-        MockHttpClient.get(
-          url = appConfig.traderKnownFactsReferenceDataBaseUrl,
-          parameters = Seq("exciseRegistrationId" -> testErn)
-        ).returns(Future.successful(Right(Some(testMinTraderKnownFacts))))
+        val uri = appConfig.traderKnownFactsReferenceDataBaseUrl
+        val urlWithQuery: String = uri + makeQueryString(Seq("exciseRegistrationId" -> testErn))
+
+        MockHttpClient.get(urlWithQuery).returns(Future.successful(Right(Some(testMinTraderKnownFacts))))
 
         connector.getTraderKnownFacts(testErn).futureValue mustBe Right(Some(testMinTraderKnownFacts))
       }
@@ -46,10 +49,11 @@ class GetTraderKnownFactsConnectorSpec extends SpecBase with MockHttpClient {
 
     "should return an error response" - {
       "when downstream call fails" in {
-        MockHttpClient.get(
-          url = appConfig.traderKnownFactsReferenceDataBaseUrl,
-          parameters = Seq("exciseRegistrationId" -> testErn)
-        ).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
+
+        val uri = appConfig.traderKnownFactsReferenceDataBaseUrl
+        val urlWithQuery: String = uri + makeQueryString(Seq("exciseRegistrationId" -> testErn))
+
+        MockHttpClient.get(urlWithQuery).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
 
         connector.getTraderKnownFacts(testErn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
       }

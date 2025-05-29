@@ -68,8 +68,8 @@ class ItemConfirmCommodityCodeViewSpec extends SpecBase with ViewBehaviours with
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.h1 -> messagesForLanguage.heading,
+          Selectors.title -> messagesForLanguage.title(),
+          Selectors.h1 -> messagesForLanguage.heading(),
           Selectors.h2(1) -> messagesForLanguage.itemSection,
           Selectors.govukSummaryListKey(1) -> messagesForLanguage.exciseProductCode,
           Selectors.govukSummaryListKey(2) -> messagesForLanguage.commodityCode,

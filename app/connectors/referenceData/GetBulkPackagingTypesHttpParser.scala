@@ -21,15 +21,16 @@ import models.response.referenceData.BulkPackagingType
 import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import models.sections.items.ItemBulkPackagingCode
 import play.api.http.Status.OK
-import play.api.libs.json.{Reads, Writes}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+import play.api.libs.json.{Json, Reads}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait GetBulkPackagingTypesHttpParser extends BaseConnectorUtils[Seq[BulkPackagingType]] {
 
   implicit val reads: Reads[Seq[BulkPackagingType]] = BulkPackagingType.seqReads
-  def http: HttpClient
+  def http: HttpClientV2
 
   class GetBulkPackagingTypesReads extends HttpReads[Either[ErrorResponse, Seq[BulkPackagingType]]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, Seq[BulkPackagingType]] = {
@@ -49,9 +50,11 @@ trait GetBulkPackagingTypesHttpParser extends BaseConnectorUtils[Seq[BulkPackagi
   }
 
   def post(url: String, packagingCodes: Seq[ItemBulkPackagingCode])
-          (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[BulkPackagingType]]] =
-    http.POST[Seq[ItemBulkPackagingCode], Either[ErrorResponse, Seq[BulkPackagingType]]](
-      url, packagingCodes
-    )(Writes.seq(ItemBulkPackagingCode.writes), new GetBulkPackagingTypesReads, hc, ec)
+          (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[BulkPackagingType]]] = {
+    http
+      .post(url"$url")
+      .withBody(Json.toJson(packagingCodes))
+      .execute[Either[ErrorResponse, Seq[BulkPackagingType]]](new GetBulkPackagingTypesReads, ec)
+  }
 
 }

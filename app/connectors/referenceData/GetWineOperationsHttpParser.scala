@@ -21,7 +21,8 @@ import models.response.referenceData.WineOperations
 import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.Status.OK
 import play.api.libs.json.Reads
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -29,7 +30,7 @@ trait GetWineOperationsHttpParser extends BaseConnectorUtils[Seq[WineOperations]
 
   implicit val reads: Reads[Seq[WineOperations]] = WineOperations.seqReads
 
-  def http: HttpClient
+  def http: HttpClientV2
 
   class GetWineOperationsReads extends HttpReads[Either[ErrorResponse, Seq[WineOperations]]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, Seq[WineOperations]] = {
@@ -48,6 +49,9 @@ trait GetWineOperationsHttpParser extends BaseConnectorUtils[Seq[WineOperations]
     }
   }
 
-  def get(url: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[WineOperations]]] =
-    http.GET[Either[ErrorResponse, Seq[WineOperations]]](url = url)(new GetWineOperationsReads(), hc, ec)
+  def get(url: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[WineOperations]]] = {
+    http
+      .get(url"$url")
+      .execute[Either[ErrorResponse, Seq[WineOperations]]](new GetWineOperationsReads(), ec)
+  }
 }

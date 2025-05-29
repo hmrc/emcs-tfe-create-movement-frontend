@@ -23,6 +23,7 @@ import fixtures.{ItemFixtures, MovementSubmissionFailureFixtures}
 import forms.sections.items.ItemQuantityFormProvider
 import models.GoodsType.{Energy, Tobacco, Wine}
 import models.requests.DataRequest
+import models.response.referenceData.CnCodeInformation
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.data.FormError
@@ -31,15 +32,16 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.items.ItemQuantityView
 import views.{BaseSelectors, ViewBehaviours}
+import scala.language.implicitConversions
 
 class ItemQuantityViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures with ItemFixtures {
 
   object Selectors extends BaseSelectors
 
-  val t200CommodityCode = testCommodityCodeTobacco.copy(exciseProductCode = "T200")
-  val t300CommodityCode = testCommodityCodeTobacco.copy(exciseProductCode = "T300")
-  val w200CommodityCode = testCommodityCodeWine
-  val e500CommodityCode = testCommodityCodeEnergy
+  val t200CommodityCode: CnCodeInformation = testCommodityCodeTobacco.copy(exciseProductCode = "T200")
+  val t300CommodityCode: CnCodeInformation = testCommodityCodeTobacco.copy(exciseProductCode = "T300")
+  val w200CommodityCode: CnCodeInformation = testCommodityCodeWine
+  val e500CommodityCode: CnCodeInformation = testCommodityCodeEnergy
 
 
   "ItemQuantity view" - {

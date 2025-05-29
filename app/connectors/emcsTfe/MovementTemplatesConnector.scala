@@ -19,27 +19,31 @@ package connectors.emcsTfe
 import config.AppConfig
 import models.response.ErrorResponse
 import models.response.templates.{MovementTemplate, MovementTemplates}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class MovementTemplatesConnector @Inject()(val http: HttpClient,
+class MovementTemplatesConnector @Inject()(val http: HttpClientV2,
                                            config: AppConfig) extends GetListOfTemplatesHttpParser with SaveTemplateHttpParser {
 
   lazy val baseUrl: String = config.emcsTfeBaseUrl
 
   def getList(ern: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, MovementTemplates]] =
     withExceptionRecovery("getList") {
-      http.GET[Either[ErrorResponse, MovementTemplates]](s"$baseUrl/templates/$ern")
+      http
+        .get(url"$baseUrl/templates/$ern")
+        .execute[Either[ErrorResponse, MovementTemplates]]
     }(ec, logger)
 
   def saveTemplate(movementTemplate: MovementTemplate)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Boolean]] =
     withExceptionRecovery("saveTemplate") {
-      http.PUT[MovementTemplate, Either[ErrorResponse, Boolean]](
-        s"$baseUrl/template/${movementTemplate.ern}/${movementTemplate.templateId}",
-        movementTemplate
-      )
+      http
+        .put(url"$baseUrl/template/${movementTemplate.ern}/${movementTemplate.templateId}")
+        .withBody(Json.toJson(movementTemplate))
+        .execute[Either[ErrorResponse, Boolean]]
     }(ec, logger)
 }

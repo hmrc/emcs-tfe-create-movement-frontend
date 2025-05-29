@@ -21,12 +21,13 @@ import models.response.referenceData.CnCodeInformation
 import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.Status.OK
 import play.api.libs.json.Reads
-import uk.gov.hmrc.http.{HttpClient, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 trait GetCommodityCodesHttpParser extends BaseConnectorUtils[Seq[CnCodeInformation]] {
 
   implicit val reads: Reads[Seq[CnCodeInformation]] = Reads.seq(CnCodeInformation.reads)
-  def http: HttpClient
+  def http: HttpClientV2
 
   implicit object GetCommodityCodesReads extends HttpReads[Either[ErrorResponse, Seq[CnCodeInformation]]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, Seq[CnCodeInformation]] = {

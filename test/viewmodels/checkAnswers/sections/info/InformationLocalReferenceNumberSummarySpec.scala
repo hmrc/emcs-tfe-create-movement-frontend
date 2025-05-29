@@ -21,8 +21,10 @@ import fixtures.MovementSubmissionFailureFixtures
 import fixtures.messages.sections.info.LocalReferenceNumberMessages
 import fixtures.messages.sections.info.LocalReferenceNumberMessages.ViewMessages
 import models.CheckMode
+import models.requests.DataRequest
 import pages.sections.info.LocalReferenceNumberPage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
@@ -69,7 +71,7 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase with MovementS
 
         "and there is no answer for the LocalReferenceNumberPage" - {
           "then must not return a row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
             summary.row(deferredMovement = true) mustBe None
           }
@@ -77,7 +79,7 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase with MovementS
 
         "and there is a LocalReferenceNumberPage answer " - {
           "then must return a row with the answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(LocalReferenceNumberPage(), testLrn))
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(LocalReferenceNumberPage(), testLrn))
 
             summary.row(deferredMovement = true) mustBe expectedRow(value = testLrn, deferredMovement = true)
           }
@@ -89,7 +91,7 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase with MovementS
 
         "and there is no answer for the LocalReferenceNumberPage" - {
           "then must not return a row" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
             summary.row(deferredMovement = false) mustBe None
           }
@@ -97,7 +99,7 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase with MovementS
 
         "and there is a LocalReferenceNumberPage answer " - {
           "then must return a row with the answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(LocalReferenceNumberPage(), testLrn))
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(LocalReferenceNumberPage(), testLrn))
 
             summary.row(deferredMovement = false) mustBe expectedRow(value = testLrn, deferredMovement = false)
           }
@@ -109,7 +111,7 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase with MovementS
 
         "must render an 'Update Needed' tag against the LRN - when the error has not been fixed" in {
 
-          implicit lazy val request = dataRequest(FakeRequest(),
+          implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
             emptyUserAnswers
               .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = false)))
               .set(LocalReferenceNumberPage(), testLrn))
@@ -119,7 +121,7 @@ class InformationLocalReferenceNumberSummarySpec extends SpecBase with MovementS
 
         "must not render an 'Update Needed' tag against the LRN - when the error has been fixed" in {
 
-          implicit lazy val request = dataRequest(FakeRequest(),
+          implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(),
             emptyUserAnswers
               .copy(submissionFailures = Seq(movementSubmissionFailure.copy(errorType = LocalReferenceNumberError.code, hasBeenFixed = true)))
               .set(LocalReferenceNumberPage(), testLrn))

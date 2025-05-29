@@ -88,10 +88,10 @@ class DeclarationController @Inject()(
           case Left(value) =>
             logger.warn(s"Received Left from SubmitCreateMovementService: $value")
             throw SubmitCreateMovementException(s"Failed to submit Create Movement to emcs-tfe for ern: '${request.ern}' & draftId: '${request.draftId}'")
-        }.recover {
+        }.recoverWith {
           case exception =>
             logger.error(s"Error thrown when calling Submit Create Movement: ${exception.getMessage}")
-            InternalServerError(errorHandler.internalServerErrorTemplate)
+            errorHandler.internalServerErrorTemplate.map(res => InternalServerError(res))
         }
       }
     }
@@ -104,7 +104,7 @@ class DeclarationController @Inject()(
 
       case Failure(exception) =>
         logger.error(s"[withSubmitCreateMovementModel] Error thrown when creating request model to submit: ${exception.getMessage}")
-        Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+        errorHandler.internalServerErrorTemplate.map(res => InternalServerError(res))
 
       case Success(submitCreateMovementModel) => onSuccess(submitCreateMovementModel)
     }

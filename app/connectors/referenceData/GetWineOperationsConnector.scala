@@ -20,7 +20,8 @@ import config.AppConfig
 import models.response.referenceData.WineOperations
 import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.libs.json.JsResultException
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,7 +32,7 @@ trait GetWineOperationsConnector {
   def getWineOperations()(implicit headerCarrier: HeaderCarrier, executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[WineOperations]]]
 }
 
-class GetWineOperationsConnectorImpl @Inject()(val http: HttpClient,
+class GetWineOperationsConnectorImpl @Inject()(val http: HttpClientV2,
                                                config: AppConfig) extends GetWineOperationsHttpParser with GetWineOperationsConnector {
 
   override def baseUrl: String = config.referenceDataBaseUrl

@@ -38,7 +38,7 @@ class CheckAnswersDocumentsHelperSpec extends SpecBase {
   "CheckYourAnswersDocumentsHelper" - {
     ".summaryList should render row" in new Setup(emptyUserAnswers.set(DocumentsCertificatesPage, false)) {
       checkAnswersDocumentsHelper.summaryList() mustBe SummaryList(
-        rows = Seq(DocumentsCertificatesSummary.row.get)
+        rows = Seq(DocumentsCertificatesSummary.row().get)
       )
     }
   }

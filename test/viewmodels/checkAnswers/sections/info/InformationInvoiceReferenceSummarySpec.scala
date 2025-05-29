@@ -20,23 +20,26 @@ import base.SpecBase
 import fixtures.messages.sections.info.InvoiceDetailsMessages
 import fixtures.messages.sections.info.InvoiceDetailsMessages.ViewMessages
 import models.CheckMode
+import models.requests.DataRequest
 import models.sections.info.InvoiceDetailsModel
 import pages.sections.info.InvoiceDetailsPage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, Key, SummaryListRow, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.helpers.TagHelper
 import views.html.components
+import views.html.components.link
 
 import java.time.LocalDate
 
 class InformationInvoiceReferenceSummarySpec extends SpecBase {
 
-  lazy val link = app.injector.instanceOf[components.link]
-  lazy val tagHelper = app.injector.instanceOf[TagHelper]
-  lazy val informationInvoiceReferenceSummary = app.injector.instanceOf[InformationInvoiceReferenceSummary]
+  lazy val link: link = app.injector.instanceOf[components.link]
+  lazy val tagHelper: TagHelper = app.injector.instanceOf[TagHelper]
+  lazy val informationInvoiceReferenceSummary: InformationInvoiceReferenceSummary = app.injector.instanceOf[InformationInvoiceReferenceSummary]
 
   private def expectedRow(value: Option[String],
                           isPreDraft: Boolean)(implicit messagesForLanguage: ViewMessages, messages: Messages): Option[SummaryListRow] = {
@@ -86,9 +89,9 @@ class InformationInvoiceReferenceSummarySpec extends SpecBase {
 
         "when on pre-draft flow" - {
           "then must return Add details row with NO incomplete tag" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            informationInvoiceReferenceSummary.row mustBe expectedRow(
+            informationInvoiceReferenceSummary.row() mustBe expectedRow(
               value = None,
               isPreDraft = true
             )
@@ -97,9 +100,9 @@ class InformationInvoiceReferenceSummarySpec extends SpecBase {
 
         "when NOT on pre-draft flow" - {
           "then must return Add details row with incomplete tag" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.copy(createdFromTemplateId = Some(templateId)))
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.copy(createdFromTemplateId = Some(templateId)))
 
-            informationInvoiceReferenceSummary.row mustBe expectedRow(
+            informationInvoiceReferenceSummary.row() mustBe expectedRow(
               value = None,
               isPreDraft = false
             )
@@ -112,9 +115,9 @@ class InformationInvoiceReferenceSummarySpec extends SpecBase {
           "then must return a row with the answer" in {
             val model = InvoiceDetailsModel("inv reference", LocalDate.now)
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(InvoiceDetailsPage(), model))
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(InvoiceDetailsPage(), model))
 
-            informationInvoiceReferenceSummary.row mustBe expectedRow(
+            informationInvoiceReferenceSummary.row() mustBe expectedRow(
               value = Some("inv reference"),
               isPreDraft = true
             )
@@ -124,12 +127,12 @@ class InformationInvoiceReferenceSummarySpec extends SpecBase {
           "then must return a row with the answer" in {
             val model = InvoiceDetailsModel("inv reference", LocalDate.now)
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
               .copy(createdFromTemplateId = Some(templateId))
               .set(InvoiceDetailsPage(), model)
             )
 
-            informationInvoiceReferenceSummary.row mustBe expectedRow(
+            informationInvoiceReferenceSummary.row() mustBe expectedRow(
               value = Some("inv reference"),
               isPreDraft = false
             )

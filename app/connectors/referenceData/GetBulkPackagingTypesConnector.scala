@@ -21,7 +21,8 @@ import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstream
 import models.response.referenceData.BulkPackagingType
 import models.sections.items.ItemBulkPackagingCode
 import play.api.libs.json.JsResultException
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,7 +35,7 @@ trait GetBulkPackagingTypesConnector {
                          executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[BulkPackagingType]]]
 }
 
-class GetBulkPackagingTypesConnectorImpl @Inject()(val http: HttpClient,
+class GetBulkPackagingTypesConnectorImpl @Inject()(val http: HttpClientV2,
                                                    config: AppConfig) extends GetBulkPackagingTypesHttpParser with GetBulkPackagingTypesConnector {
 
   override def baseUrl: String = config.referenceDataBaseUrl

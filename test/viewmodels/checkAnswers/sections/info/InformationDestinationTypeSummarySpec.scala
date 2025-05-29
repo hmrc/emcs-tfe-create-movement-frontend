@@ -20,9 +20,11 @@ import base.SpecBase
 import fixtures.messages.sections.info.DestinationTypeMessages
 import fixtures.messages.sections.info.DestinationTypeMessages.ViewMessages
 import models.CheckMode
+import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
@@ -53,9 +55,9 @@ class InformationDestinationTypeSummarySpec extends SpecBase {
 
       "and there is no answer for the DestinationTypePage" - {
         "then must not return a row" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+          implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-          InformationDestinationTypeSummary.row mustBe None
+          InformationDestinationTypeSummary.row() mustBe None
         }
       }
 

@@ -33,15 +33,12 @@ lazy val root = (project in file("."))
     ),
     PlayKeys.playDefaultPort := 8314,
     scalacOptions ++= Seq(
-      "-rootdir",
-      baseDirectory.value.getCanonicalPath,
       "-Wconf:cat=deprecation:w,cat=feature:w,cat=optimizer:ws,src=target/.*:s"
     ),
     libraryDependencies ++= AppDependencies(),
     retrieveManaged := true,
-    update / evictionWarningOptions  :=
+    (update / evictionWarningOptions).withRank(KeyRanks.Invisible)  :=
       EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-    resolvers ++= Seq(Resolver.jcenterRepo),
     // concatenate js
     Concat.groups := Seq(
       "javascripts/application.js" ->

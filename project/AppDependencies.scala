@@ -3,7 +3,7 @@ import sbt.*
 object AppDependencies {
 
   val playSuffix = "-play-30"
-  val hmrcBootstrapVersion = "9.11.0"
+  val hmrcBootstrapVersion = "9.12.0"
   val hmrcMongoVersion = "2.6.0"
   val jsoupVersion = "1.20.1"
   val catsCoreVersion   =  "2.12.0"
@@ -11,11 +11,11 @@ object AppDependencies {
 
   private val compile = Seq(
     play.sbt.PlayImport.ws,
-    "uk.gov.hmrc"             %% s"play-frontend-hmrc$playSuffix"               %  "12.0.0",
+    "uk.gov.hmrc"             %% s"play-frontend-hmrc$playSuffix"               %  "12.1.0",
     "uk.gov.hmrc"             %% s"bootstrap-frontend$playSuffix"               %  hmrcBootstrapVersion,
     "uk.gov.hmrc.mongo"       %% s"hmrc-mongo$playSuffix"                       %  hmrcMongoVersion,
     "org.jsoup"               %   "jsoup"                                       % jsoupVersion,
-    "uk.gov.hmrc"             %% s"play-conditional-form-mapping$playSuffix"    %  "3.2.0",
+    "uk.gov.hmrc"             %% s"play-conditional-form-mapping$playSuffix"    %  "3.3.0",
     "org.typelevel"           %%  "cats-core"                                   % catsCoreVersion
   )
 

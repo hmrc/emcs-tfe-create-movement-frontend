@@ -25,13 +25,14 @@ import models.UserAnswers
 import models.sections.info.movementScenario.MovementScenario
 import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.info.DestinationTypePage
-import play.api.mvc.Call
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.govuk.all.FluentSummaryList
 import viewmodels.govuk.summarylist._
 import views.html.sections.destination.DestinationCheckAnswersView
+
+import scala.concurrent.Future
 
 
 class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswersService with MockDestinationCheckAnswersHelper {
@@ -47,7 +48,7 @@ class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswer
 
   class Test(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-    val request = FakeRequest(GET, destinationCheckAnswersRoute)
+    val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, destinationCheckAnswersRoute)
 
     lazy val testController = new DestinationCheckAnswersController(
       messagesApi,
@@ -68,7 +69,7 @@ class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswer
       .set(DestinationTypePage, MovementScenario.DirectDelivery)
     )) {
       MockCheckAnswersJourneyTypeHelper.summaryList().returns(list)
-      val result = testController.onPageLoad(testErn, testDraftId)(request)
+      val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -78,18 +79,18 @@ class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswer
     }
 
     "must return OK and the correct view for a GET when destination type has NOT been answered" in new Test() {
-      val result = testController.onPageLoad(testErn, testDraftId)(request)
+      val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to the next page when submitted" in new Test() {
-      val req =
+      val req: FakeRequest[AnyContentAsFormUrlEncoded] =
         FakeRequest(POST, destinationCheckAnswersRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
-      val result = testController.onSubmit(testErn, testDraftId)(req)
+      val result: Future[Result] = testController.onSubmit(testErn, testDraftId)(req)
 
 
       status(result) mustEqual SEE_OTHER
@@ -97,18 +98,18 @@ class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswer
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
-      val result = testController.onPageLoad(testErn, testDraftId)(request)
+      val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
-      val req =
+      val req: FakeRequest[AnyContentAsFormUrlEncoded] =
         FakeRequest(POST, destinationCheckAnswersRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
-      val result = testController.onSubmit(testErn, testDraftId)(req)
+      val result: Future[Result] = testController.onSubmit(testErn, testDraftId)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

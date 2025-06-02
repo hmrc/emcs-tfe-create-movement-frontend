@@ -41,7 +41,7 @@ object DraftMovementMessages {
     val dispatch: String = "Place of dispatch"
     val consignee: String = "Consignee"
     val destination: String = "Place of destination"
-    val export: String = "Export"
+    val `export`: String = "Export"
 
     val guarantorSectionHeading: String = "Guarantor"
     val guarantor: String = "Guarantor"

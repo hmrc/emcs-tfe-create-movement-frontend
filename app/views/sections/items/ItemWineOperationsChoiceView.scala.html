@@ -35,7 +35,7 @@
 
 @layout(pageTitle = title(form, messages("itemWineOperationsChoice.title"), Some(messages("items.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = action, 'autoComplete -> "off") {
+    @formHelper(action = action, Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(

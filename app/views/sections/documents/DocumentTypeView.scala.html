@@ -48,7 +48,7 @@
 
 @layout(pageTitle = title(form, messages("documentType.title"), Some(messages("documents.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request), additionalCss = autocompleteCss(), additionalScripts = scripts) {
 
-    @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
+    @formHelper(action = onSubmitCall, Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))

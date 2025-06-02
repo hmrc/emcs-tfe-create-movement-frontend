@@ -25,7 +25,7 @@ import models.UserAnswers
 import navigation.FakeNavigators.FakeNavigator
 import pages.sections.info.LocalReferenceNumberPage
 import play.api.data.Form
-import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.mvc.{AnyContentAsEmpty, Call, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.DeleteDraftMovementView
@@ -64,7 +64,7 @@ class DeleteDraftMovementControllerSpec extends SpecBase with MockUserAnswersSer
   "DeleteDraftMovement Controller" - {
 
     "must return OK and the correct view for a GET" in new Test(Some(baseUserAnswers)) {
-      val result = controller.onPageLoad(testErn, testDraftId)(request)
+      val result: Future[Result] = controller.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, submitCall)(dataRequest(request, userAnswers.get), messages(request)).toString
@@ -74,7 +74,7 @@ class DeleteDraftMovementControllerSpec extends SpecBase with MockUserAnswersSer
 
       MockDeleteDraftMovementService.deleteDraft().returns(Future.successful(true))
 
-      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> "true"))
+      val result: Future[Result] = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> "true"))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual appConfig.emcsTfeDraftsUrl(testErn)
@@ -83,7 +83,7 @@ class DeleteDraftMovementControllerSpec extends SpecBase with MockUserAnswersSer
 
     "must redirect to task list when no is selected" in new Test(Some(baseUserAnswers)) {
 
-      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> "false"))
+      val result: Future[Result] = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> "false"))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url
@@ -91,29 +91,29 @@ class DeleteDraftMovementControllerSpec extends SpecBase with MockUserAnswersSer
 
     "must throw an exception when the local reference number of the draft is missing" in new Test(Some(emptyUserAnswers)) {
 
-      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> "true"))
+      val result: Future[Result] = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> "true"))
 
       status(result) mustEqual INTERNAL_SERVER_ERROR
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(baseUserAnswers)) {
-      val boundForm = form.bind(Map("value" -> ""))
+      val boundForm: Form[Boolean] = form.bind(Map("value" -> ""))
 
-      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> ""))
+      val result: Future[Result] = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> ""))
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, submitCall)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
-      val result = controller.onPageLoad(testErn, testDraftId)(request)
+      val result: Future[Result] = controller.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
-      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> "true"))
+      val result: Future[Result] = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> "true"))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

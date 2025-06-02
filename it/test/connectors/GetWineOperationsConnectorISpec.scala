@@ -1,8 +1,24 @@
-package connectors
+/*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package test.connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, urlEqualTo}
 import com.github.tomakehurst.wiremock.http.Fault
-import connectors.referenceData.GetItemPackagingTypesConnector
+import connectors.referenceData.GetWineOperationsConnector
 import fixtures.{BaseFixtures, ItemFixtures}
 import models.response.UnexpectedDownstreamResponseError
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -16,7 +32,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class GetItemPackagingTypesConnectorISpec extends AnyFreeSpec
+class GetWineOperationsConnectorISpec extends AnyFreeSpec
   with WireMockHelper
   with ScalaFutures
   with Matchers
@@ -28,9 +44,9 @@ class GetItemPackagingTypesConnectorISpec extends AnyFreeSpec
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  def url(isCountable: Option[Boolean]) = s"/emcs-tfe-reference-data/oracle/packaging-types${isCountable.fold("")(param => s"?isCountable=$param")}"
+  val url = "/emcs-tfe-reference-data/oracle/wine-operations"
 
-  ".getItemPackagingTypes" - {
+  ".getWineOperations" - {
 
     def app: Application =
       new GuiceApplicationBuilder()
@@ -38,52 +54,39 @@ class GetItemPackagingTypesConnectorISpec extends AnyFreeSpec
         .configure("features.stub-get-trader-known-facts" -> "false")
         .build()
 
-    lazy val connector: GetItemPackagingTypesConnector = app.injector.instanceOf[GetItemPackagingTypesConnector]
+    lazy val connector: GetWineOperationsConnector = app.injector.instanceOf[GetWineOperationsConnector]
 
-    s"must return Right(Seq[ItemPackaging]) when the server responds OK (with a query parameter)" in {
+    s"must return Right(Seq[WineOperations]) when the server responds OK" in {
 
       server.stubFor(
-        get(urlEqualTo(url(Some(true))))
+        get(urlEqualTo(url))
           .willReturn(
             aResponse()
               .withStatus(OK)
-              .withBody(testItemPackagingTypesJson.toString()))
+              .withBody(testWineOperationsJson.toString()))
       )
 
-      connector.getItemPackagingTypes(Some(true)).futureValue mustBe Right(testItemPackagingTypes)
-    }
-
-    s"must return Right(Seq[ItemPackaging]) when the server responds OK (without a query parameter)" in {
-
-      server.stubFor(
-        get(urlEqualTo(url(None)))
-          .willReturn(
-            aResponse()
-              .withStatus(OK)
-              .withBody(testItemPackagingTypesJson.toString()))
-      )
-
-      connector.getItemPackagingTypes(None).futureValue mustBe Right(testItemPackagingTypes)
+      connector.getWineOperations().futureValue mustBe Right(testWineOperations)
     }
 
     "must fail when the server responds with any other status" in {
 
       server.stubFor(
-        get(urlEqualTo(url(Some(true))))
+        get(urlEqualTo(url))
           .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
       )
 
-      connector.getItemPackagingTypes(Some(true)).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.getWineOperations().futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
 
     "must fail when the connection fails" in {
 
       server.stubFor(
-        get(urlEqualTo(url(None)))
+        get(urlEqualTo(url))
           .willReturn(aResponse().withFault(Fault.RANDOM_DATA_THEN_CLOSE))
       )
 
-      connector.getItemPackagingTypes(Some(true)).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.getWineOperations().futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
   }
 }

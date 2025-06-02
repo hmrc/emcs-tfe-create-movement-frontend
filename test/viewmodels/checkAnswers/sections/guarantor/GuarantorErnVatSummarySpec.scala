@@ -72,7 +72,9 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                 testGreatBritainWarehouseKeeperErn
               )
 
-              GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaVatNumberForExports, "VAT123"))
+              GuarantorErnVatSummary.rows() mustBe Seq(
+                expectedRow(messagesForLanguage.cyaVatNumberForExports, "VAT123"),
+              )
             }
           }
 
@@ -87,7 +89,7 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                 testGreatBritainWarehouseKeeperErn
               )
 
-              GuarantorErnVatSummary.rows mustBe Seq.empty
+              GuarantorErnVatSummary.rows() mustBe Seq.empty
             }
           }
         }
@@ -113,7 +115,9 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                     testGreatBritainWarehouseKeeperErn
                   )
 
-                  GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaVatInputLabel, "VAT123"))
+                  GuarantorErnVatSummary.rows() mustBe Seq(
+                    expectedRow(messagesForLanguage.cyaVatInputLabel, "VAT123"),
+                  )
                 }
 
                 "and the consignee doesn't provide either the VAT or EORI number " in {
@@ -128,7 +132,9 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                     testGreatBritainWarehouseKeeperErn
                   )
 
-                  GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaErnLabel, messagesForLanguage.consigneeErnNotProvided))
+                  GuarantorErnVatSummary.rows() mustBe Seq(
+                    expectedRow(messagesForLanguage.cyaErnLabel, messagesForLanguage.consigneeErnNotProvided),
+                  )
                 }
 
               }
@@ -146,7 +152,9 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                     testGreatBritainWarehouseKeeperErn
                   )
 
-                  GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaErnLabel, messagesForLanguage.consigneeErnNotProvided))
+                  GuarantorErnVatSummary.rows() mustBe Seq(
+                    expectedRow(messagesForLanguage.cyaErnLabel, messagesForLanguage.consigneeErnNotProvided),
+                  )
                 }
 
                 "and that section has been filled in" in {
@@ -160,7 +168,9 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                     testGreatBritainWarehouseKeeperErn
                   )
 
-                  GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaErnLabel, "GB12345678901"))
+                  GuarantorErnVatSummary.rows() mustBe Seq(
+                    expectedRow(messagesForLanguage.cyaErnLabel, "GB12345678901"),
+                  )
                 }
               }
 
@@ -177,7 +187,9 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                       .set(ConsigneeExcisePage, "GB12345678901")
                   )
 
-                  GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaErnNumberForTemporaryRegisteredConsignee, "GB12345678901", ern = testErn))
+                  GuarantorErnVatSummary.rows() mustBe Seq(
+                    expectedRow(messagesForLanguage.cyaErnNumberForTemporaryRegisteredConsignee, "GB12345678901", ern = testErn),
+                  )
                 }
 
                 "and the consignee identification number has not yet been provided" in {
@@ -190,7 +202,9 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                       .set(ItemExciseProductCodePage(testIndex1), "W200")
                   )
 
-                  GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaErnNumberForTemporaryRegisteredConsignee, consigneeErnNotProvided, ern = testErn))
+                  GuarantorErnVatSummary.rows() mustBe Seq(
+                    expectedRow(messagesForLanguage.cyaErnNumberForTemporaryRegisteredConsignee, consigneeErnNotProvided, ern = testErn),
+                  )
                 }
 
               }
@@ -209,7 +223,9 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                     testNICertifiedConsignorErn
                   )
 
-                  GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaErnNumberForTemporaryCertifiedConsignee, "GB12345678901", ern = testNICertifiedConsignorErn))
+                  GuarantorErnVatSummary.rows() mustBe Seq(
+                    expectedRow(messagesForLanguage.cyaErnNumberForTemporaryCertifiedConsignee, "GB12345678901", ern = testNICertifiedConsignorErn),
+                  )
                 }
 
                 "and the consignee identification number has not yet been provided" in {
@@ -223,7 +239,9 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                     testNICertifiedConsignorErn
                   )
 
-                  GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaErnNumberForTemporaryCertifiedConsignee, consigneeErnNotProvided, ern = testNICertifiedConsignorErn))
+                  GuarantorErnVatSummary.rows() mustBe Seq(
+                    expectedRow(messagesForLanguage.cyaErnNumberForTemporaryCertifiedConsignee, consigneeErnNotProvided, ern = testNICertifiedConsignorErn),
+                  )
                 }
 
               }
@@ -243,7 +261,9 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                         .set(ConsigneeExportVatPage, "VATExport123")
                     )
 
-                    GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaVatNumberForExports, "VATExport123", ern = testErn))
+                    GuarantorErnVatSummary.rows() mustBe Seq(
+                      expectedRow(messagesForLanguage.cyaVatNumberForExports, "VATExport123", ern = testErn),
+                    )
 
                   }
 
@@ -257,7 +277,9 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                         .set(DestinationTypePage, destinationType)
                     )
 
-                    GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaVatNumberForExports, consigneeErnNotProvided, ern = testErn))
+                    GuarantorErnVatSummary.rows() mustBe Seq(
+                      expectedRow(messagesForLanguage.cyaVatNumberForExports, consigneeErnNotProvided, ern = testErn),
+                    )
                   }
                 }
               }
@@ -274,7 +296,9 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                   testGreatBritainWarehouseKeeperErn
                 )
 
-                GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaErnLabel, request.ern))
+                GuarantorErnVatSummary.rows() mustBe Seq(
+                  expectedRow(messagesForLanguage.cyaErnLabel, request.ern),
+                )
               }
             }
 
@@ -291,7 +315,9 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                     testGreatBritainWarehouseKeeperErn
                   )
 
-                  GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaVatInputLabel, messagesForLanguage.notProvided, true))
+                  GuarantorErnVatSummary.rows() mustBe Seq(
+                    expectedRow(messagesForLanguage.cyaVatInputLabel, messagesForLanguage.notProvided, showChangeLink = true),
+                  )
                 }
               }
 
@@ -308,7 +334,9 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                       testGreatBritainWarehouseKeeperErn
                     )
 
-                    GuarantorErnVatSummary.rows mustBe Seq(expectedRow(messagesForLanguage.cyaVatChoiceLabel, messagesForLanguage.no, true))
+                    GuarantorErnVatSummary.rows() mustBe Seq(
+                      expectedRow(messagesForLanguage.cyaVatChoiceLabel, messagesForLanguage.no, showChangeLink = true),
+                    )
                   }
                 }
 
@@ -324,9 +352,9 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                       testGreatBritainWarehouseKeeperErn
                     )
 
-                    GuarantorErnVatSummary.rows mustBe Seq(
-                      expectedRow(messagesForLanguage.cyaVatChoiceLabel, messagesForLanguage.yes, true),
-                      expectedRow(messagesForLanguage.cyaVatInputLabel, testVatNumber, true)
+                    GuarantorErnVatSummary.rows() mustBe Seq(
+                      expectedRow(messagesForLanguage.cyaVatChoiceLabel, messagesForLanguage.yes, showChangeLink = true),
+                      expectedRow(messagesForLanguage.cyaVatInputLabel, testVatNumber, showChangeLink = true),
                     )
                   }
                 }
@@ -346,8 +374,8 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                     testGreatBritainWarehouseKeeperErn
                   )
 
-                  GuarantorErnVatSummary.rows mustBe Seq(
-                    expectedRow(messagesForLanguage.cyaVatInputLabel, messagesForLanguage.notProvided, true)
+                  GuarantorErnVatSummary.rows() mustBe Seq(
+                    expectedRow(messagesForLanguage.cyaVatInputLabel, messagesForLanguage.notProvided, showChangeLink = true),
                   )
                 }
               }
@@ -365,8 +393,8 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                       testGreatBritainWarehouseKeeperErn
                     )
 
-                    GuarantorErnVatSummary.rows mustBe Seq(
-                      expectedRow(messagesForLanguage.cyaVatChoiceLabel, messagesForLanguage.no, true)
+                    GuarantorErnVatSummary.rows() mustBe Seq(
+                      expectedRow(messagesForLanguage.cyaVatChoiceLabel, messagesForLanguage.no, showChangeLink = true),
                     )
                   }
                 }
@@ -382,9 +410,9 @@ class GuarantorErnVatSummarySpec extends SpecBase with Matchers {
                       testGreatBritainWarehouseKeeperErn
                     )
 
-                    GuarantorErnVatSummary.rows mustBe Seq(
-                      expectedRow(messagesForLanguage.cyaVatChoiceLabel, messagesForLanguage.yes, true),
-                      expectedRow(messagesForLanguage.cyaVatInputLabel, testVatNumber, true)
+                    GuarantorErnVatSummary.rows() mustBe Seq(
+                      expectedRow(messagesForLanguage.cyaVatChoiceLabel, messagesForLanguage.yes, showChangeLink = true),
+                      expectedRow(messagesForLanguage.cyaVatInputLabel, testVatNumber, showChangeLink = true),
                     )
                   }
                 }

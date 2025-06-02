@@ -46,8 +46,8 @@ class ConsignorCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures 
       ) {
 
         val expectedResult: SummaryList = SummaryList(Seq(
-          ConsignorPaidTemporaryAuthorisationCodeSummary.row,
-          ConsignorAddressSummary.row,
+          ConsignorPaidTemporaryAuthorisationCodeSummary.row(),
+          ConsignorAddressSummary.row(),
         ).flatten).withCssClass("govuk-!-margin-bottom-9")
 
         checkAnswersHelper.summaryList() mustBe expectedResult
@@ -56,8 +56,8 @@ class ConsignorCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures 
       "should return the correct rows for a non-XIPC user" in new Setup(baseUserAnswers) {
 
         val expectedResult: SummaryList = SummaryList(Seq(
-          ConsignorERNSummary.row,
-          ConsignorAddressSummary.row,
+          ConsignorERNSummary.row(),
+          ConsignorAddressSummary.row(),
         ).flatten).withCssClass("govuk-!-margin-bottom-9")
 
         checkAnswersHelper.summaryList() mustBe expectedResult
@@ -67,8 +67,8 @@ class ConsignorCheckAnswersHelperSpec extends SpecBase with UserAddressFixtures 
 
         val expectedResult: SummaryList = SummaryList(
           Seq(
-            ConsignorERNSummary.row,
-            ConsignorAddressSummary.row,
+            ConsignorERNSummary.row(),
+            ConsignorAddressSummary.row(),
           ).flatten,
           card = Some(CardViewModel(
             title = "Consignor",

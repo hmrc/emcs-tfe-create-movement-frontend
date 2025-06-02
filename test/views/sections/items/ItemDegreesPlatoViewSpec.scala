@@ -31,6 +31,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.sections.items.ItemDegreesPlatoView
 import views.{BaseSelectors, ViewBehaviours}
+import scala.language.implicitConversions
 
 class ItemDegreesPlatoViewSpec extends SpecBase with ViewBehaviours with MovementSubmissionFailureFixtures {
 

@@ -21,7 +21,6 @@ import connectors.referenceData.GetMemberStatesConnector
 import models.CountryModel
 import models.requests.DataRequest
 import models.response.MemberStatesException
-import models.sections.info.movementScenario.MovementScenario.EuTaxWarehouse
 import pages.sections.info.DestinationTypePage
 import uk.gov.hmrc.govukfrontend.views.Aliases.SelectItem
 import uk.gov.hmrc.http.HeaderCarrier

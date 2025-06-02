@@ -20,9 +20,11 @@ import base.SpecBase
 import fixtures.messages.sections.info.DispatchPlaceMessages
 import fixtures.messages.sections.info.DispatchPlaceMessages.ViewMessages
 import models.CheckMode
+import models.requests.DataRequest
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import pages.sections.info.{DispatchPlacePage, InformationCheckAnswersPage}
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
@@ -57,9 +59,9 @@ class InformationPlaceOfDispatchSummarySpec extends SpecBase {
 
       "and there is no answer for the DispatchPlacePage" - {
         "then must return no row" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+          implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-          InformationPlaceOfDispatchSummary.row mustBe None
+          InformationPlaceOfDispatchSummary.row() mustBe None
         }
       }
 
@@ -72,9 +74,9 @@ class InformationPlaceOfDispatchSummarySpec extends SpecBase {
 
           s"and the answer is ${answerAndExpectedValue._1}" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DispatchPlacePage, answerAndExpectedValue._1))
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(DispatchPlacePage, answerAndExpectedValue._1))
 
-            InformationPlaceOfDispatchSummary.row mustBe expectedRow(value = answerAndExpectedValue._2)
+            InformationPlaceOfDispatchSummary.row() mustBe expectedRow(value = answerAndExpectedValue._2)
           }
         }
 
@@ -82,11 +84,11 @@ class InformationPlaceOfDispatchSummarySpec extends SpecBase {
 
           "show the change links" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
               .set(DispatchPlacePage, GreatBritain)
             )
 
-            InformationPlaceOfDispatchSummary.row mustBe expectedRow(value = messagesForLanguage.greatBritainRadioOption)
+            InformationPlaceOfDispatchSummary.row() mustBe expectedRow(value = messagesForLanguage.greatBritainRadioOption)
           }
         }
 
@@ -94,12 +96,12 @@ class InformationPlaceOfDispatchSummarySpec extends SpecBase {
 
           "do NOT show the change links" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
               .set(DispatchPlacePage, GreatBritain)
               .set(InformationCheckAnswersPage, true)
             )
 
-            InformationPlaceOfDispatchSummary.row mustBe expectedRow(value = messagesForLanguage.greatBritainRadioOption, withChangeLinks = false)
+            InformationPlaceOfDispatchSummary.row() mustBe expectedRow(value = messagesForLanguage.greatBritainRadioOption, withChangeLinks = false)
           }
         }
       }

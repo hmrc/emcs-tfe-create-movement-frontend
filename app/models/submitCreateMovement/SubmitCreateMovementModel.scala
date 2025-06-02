@@ -82,12 +82,12 @@ object SubmitCreateMovementModel extends ModelConstructorHelpers {
 
     val referenceNumber = UserType(request.ern) match {
       case NorthernIrelandRegisteredConsignor | NorthernIrelandTemporaryCertifiedConsignor | NorthernIrelandCertifiedConsignor =>
-        DispatchPlace.NorthernIreland + appConfig.destinationOfficeSuffix
+        DispatchPlace.NorthernIreland.toString + appConfig.destinationOfficeSuffix
       case NorthernIrelandWarehouseKeeper =>
         val prefix: String = DispatchWarehouseExcisePage.value.getOrElse(mandatoryPage(DispatchPlacePage).toString).take(2)
         prefix + appConfig.destinationOfficeSuffix
       case _ =>
-        DispatchPlace.GreatBritain + appConfig.destinationOfficeSuffix
+        DispatchPlace.GreatBritain.toString + appConfig.destinationOfficeSuffix
     }
 
     OfficeModel(referenceNumber)

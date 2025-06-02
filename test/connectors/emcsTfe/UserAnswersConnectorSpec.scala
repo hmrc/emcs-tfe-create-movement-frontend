@@ -20,6 +20,7 @@ import base.SpecBase
 import mocks.connectors.MockHttpClient
 import models.response.{JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.{HeaderNames, MimeTypes, Status}
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -72,7 +73,7 @@ class UserAnswersConnectorSpec extends SpecBase with Status with MimeTypes with 
 
         MockHttpClient.put(
           url = s"${appConfig.emcsTfeBaseUrl}/user-answers/create-movement/$testErn/$testDraftId",
-          body = emptyUserAnswers
+          body = Json.toJson(emptyUserAnswers)
         ).returns(Future.successful(Right(emptyUserAnswers)))
 
         connector.put(emptyUserAnswers).futureValue mustBe Right(emptyUserAnswers)
@@ -85,7 +86,7 @@ class UserAnswersConnectorSpec extends SpecBase with Status with MimeTypes with 
 
         MockHttpClient.put(
           url = s"${appConfig.emcsTfeBaseUrl}/user-answers/create-movement/$testErn/$testDraftId",
-          body = emptyUserAnswers
+          body = Json.toJson(emptyUserAnswers)
         ).returns(Future.successful(Left(JsonValidationError)))
 
         connector.put(emptyUserAnswers).futureValue mustBe Left(JsonValidationError)

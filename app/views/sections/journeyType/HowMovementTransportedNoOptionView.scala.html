@@ -33,7 +33,7 @@
 
 @layout(pageTitle = titleNoForm(messages("howMovementTransported.onlyFixedAllowed.title"), Some(messages("journeyType.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = controllers.sections.journeyType.routes.HowMovementTransportedController.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.sections.journeyType.routes.HowMovementTransportedController.onSubmit(request.ern, request.draftId, mode), Symbol("autoComplete") -> "off") {
         @h2(messages("journeyType.subHeading", request.draftId), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
         @h1(messages("howMovementTransported.onlyFixedAllowed.heading"), classes="govuk-heading-l")
         @p(){

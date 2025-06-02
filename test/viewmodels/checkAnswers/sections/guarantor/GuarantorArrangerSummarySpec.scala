@@ -20,11 +20,13 @@ import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages.ViewMessages
 import models.CheckMode
+import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheUk, UkTaxWarehouse}
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Key, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -56,7 +58,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
         "then must return expected row" in {
 
-          implicit lazy val request = dataRequest(
+          implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(
             FakeRequest(),
             emptyUserAnswers
               .set(GuarantorArrangerPage, Consignee)
@@ -64,7 +66,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
             testGreatBritainWarehouseKeeperErn
           )
 
-          GuarantorArrangerSummary.row mustBe expectedRow(messagesForLanguage.consigneeRadioOption)
+          GuarantorArrangerSummary.row() mustBe expectedRow(messagesForLanguage.consigneeRadioOption)
         }
       }
 
@@ -74,7 +76,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
           "then must not return a row" in {
 
-            implicit lazy val request = dataRequest(
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(
               FakeRequest(),
               emptyUserAnswers
                 .set(DestinationTypePage, UkTaxWarehouse.GB)
@@ -82,7 +84,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
               testGreatBritainWarehouseKeeperErn
             )
 
-            GuarantorArrangerSummary.row mustBe None
+            GuarantorArrangerSummary.row() mustBe None
           }
         }
 
@@ -90,7 +92,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
           "and there is no answer for the GuarantorArrangerPage" in {
 
-            implicit lazy val request = dataRequest(
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(
               FakeRequest(),
               emptyUserAnswers
                 .set(DestinationTypePage, UkTaxWarehouse.GB)
@@ -98,7 +100,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
               testGreatBritainWarehouseKeeperErn
             )
 
-            GuarantorArrangerSummary.row mustBe expectedRow(messagesForLanguage.notProvided)
+            GuarantorArrangerSummary.row() mustBe expectedRow(messagesForLanguage.notProvided)
           }
 
           Seq(
@@ -110,7 +112,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
             s"and there is a GuarantorArrangerPage answer of `${arranger.getClass.getSimpleName.stripSuffix("$")}`" in {
 
-              implicit lazy val request = dataRequest(
+              implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
                   .set(DestinationTypePage, UkTaxWarehouse.GB)
@@ -119,7 +121,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
                 testGreatBritainWarehouseKeeperErn
               )
 
-              GuarantorArrangerSummary.row mustBe expectedRow(expectedMessage)
+              GuarantorArrangerSummary.row() mustBe expectedRow(expectedMessage)
             }
           }
         }

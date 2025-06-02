@@ -27,7 +27,7 @@ sealed trait SubmissionError {
   val code: String
   val messageKey: String
   val id: String
-  def isFixable()(implicit request: DataRequest[_]): Boolean = route.isDefined
+  def isFixable()(implicit request: DataRequest[_]): Boolean = route().isDefined
 
   def route()(implicit request: DataRequest[_]): Option[Call] = None
 

@@ -20,16 +20,19 @@ import base.SpecBase
 import fixtures.ItemFixtures
 import mocks.connectors.MockHttpClient
 import models.response.UnexpectedDownstreamResponseError
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.HeaderCarrier
+import utils.RequestHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class GetItemPackagingTypesConnectorSpec extends SpecBase
   with GetItemPackagingTypesHttpParser
   with MockHttpClient
-  with ItemFixtures {
+  with ItemFixtures
+  with RequestHelper {
 
-  override def http: HttpClient = mockHttpClient
+  override def http: HttpClientV2 = mockHttpClient
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
@@ -43,11 +46,10 @@ class GetItemPackagingTypesConnectorSpec extends SpecBase
       "when downstream call is successful" in {
 
         val expectedResult = Right(bulkPackagingTypes)
+        val uri = s"${appConfig.referenceDataBaseUrl}/oracle/packaging-types"
+        val urlWithQuery: String = uri + makeQueryString(Seq("isCountable" -> "true"))
 
-        MockHttpClient.get(
-          url = s"${appConfig.referenceDataBaseUrl}/oracle/packaging-types",
-          parameters = Seq("isCountable" -> "true")
-        ).returns(Future.successful(expectedResult))
+        MockHttpClient.get(urlWithQuery).returns(Future.successful(expectedResult))
 
         val actualResult = connector.getItemPackagingTypes(Some(true)).futureValue
 
@@ -60,11 +62,10 @@ class GetItemPackagingTypesConnectorSpec extends SpecBase
       "when downstream call fails" in {
 
         val expectedResult = Left(UnexpectedDownstreamResponseError)
+        val uri = s"${appConfig.referenceDataBaseUrl}/oracle/packaging-types"
+        val urlWithQuery: String = uri + makeQueryString(Seq("isCountable" -> "false"))
 
-        MockHttpClient.get(
-          url = s"${appConfig.referenceDataBaseUrl}/oracle/packaging-types",
-          parameters = Seq("isCountable" -> "false")
-        ).returns(Future.successful(expectedResult))
+        MockHttpClient.get(urlWithQuery).returns(Future.successful(expectedResult))
 
         val actualResult = connector.getItemPackagingTypes(Some(false)).futureValue
 

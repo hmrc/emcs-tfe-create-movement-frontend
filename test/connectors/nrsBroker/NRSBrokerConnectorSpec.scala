@@ -23,6 +23,7 @@ import mocks.connectors.MockHttpClient
 import models.response.UnexpectedDownstreamResponseError
 import org.scalatest.BeforeAndAfterAll
 import play.api.http.{HeaderNames, MimeTypes, Status}
+import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -54,7 +55,7 @@ class NRSBrokerConnectorSpec extends SpecBase
 
         MockHttpClient.put(
           url = s"$fakeUrl/trader/$testErn/nrs/submission",
-          body = nrsPayloadModel
+          body = Json.toJson(nrsPayloadModel)
         ).returns(Future.successful(Right(nrsBrokerResponseModel)))
 
         await(connector.submitPayload(nrsPayloadModel, testErn)) mustBe Right(nrsBrokerResponseModel)
@@ -67,7 +68,7 @@ class NRSBrokerConnectorSpec extends SpecBase
 
         MockHttpClient.put(
           url = s"$fakeUrl/trader/$testErn/nrs/submission",
-          body = nrsPayloadModel
+          body = Json.toJson(nrsPayloadModel)
         ).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
 
         await(connector.submitPayload(nrsPayloadModel, testErn)) mustBe Left(UnexpectedDownstreamResponseError)

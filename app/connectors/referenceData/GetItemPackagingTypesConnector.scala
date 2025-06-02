@@ -20,7 +20,8 @@ import config.AppConfig
 import models.response.referenceData.ItemPackaging
 import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.libs.json.JsResultException
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,13 +34,14 @@ trait GetItemPackagingTypesConnector {
                          executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[ItemPackaging]]]
 }
 
-class GetItemPackagingTypesConnectorImpl @Inject()(val http: HttpClient,
+class GetItemPackagingTypesConnectorImpl @Inject()(val http: HttpClientV2,
                                            config: AppConfig) extends GetItemPackagingTypesHttpParser with GetItemPackagingTypesConnector {
 
   override def baseUrl: String = config.referenceDataBaseUrl
 
   override def getItemPackagingTypes(optIsCountable: Option[Boolean])
-                                (implicit headerCarrier: HeaderCarrier, executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[ItemPackaging]]] = {
+                                (implicit headerCarrier: HeaderCarrier, executionContext: ExecutionContext):
+  Future[Either[ErrorResponse, Seq[ItemPackaging]]] = {
     get(baseUrl + "/oracle/packaging-types", optIsCountable)
       .recover {
         case JsResultException(errors) =>

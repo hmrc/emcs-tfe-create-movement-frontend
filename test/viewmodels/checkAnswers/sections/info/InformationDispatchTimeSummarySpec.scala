@@ -20,24 +20,27 @@ import base.SpecBase
 import fixtures.messages.sections.info.DispatchDetailsMessages
 import fixtures.messages.sections.info.DispatchDetailsMessages.ViewMessages
 import models.CheckMode
+import models.requests.DataRequest
 import models.sections.info.DispatchDetailsModel
 import pages.sections.info.DispatchDetailsPage
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, Key, SummaryListRow, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.helpers.TagHelper
 import views.html.components
+import views.html.components.link
 
 import java.time.{LocalDate, LocalTime}
 
 
 class InformationDispatchTimeSummarySpec extends SpecBase {
 
-  lazy val informationTimeOfDispatchSummary = app.injector.instanceOf[InformationTimeOfDispatchSummary]
-  val link = app.injector.instanceOf[components.link]
-  val tagHelper = app.injector.instanceOf[TagHelper]
+  lazy val informationTimeOfDispatchSummary: InformationTimeOfDispatchSummary = app.injector.instanceOf[InformationTimeOfDispatchSummary]
+  val link: link = app.injector.instanceOf[components.link]
+  val tagHelper: TagHelper = app.injector.instanceOf[TagHelper]
 
   private def expectedRow(value: Option[String],
                           isPreDraft: Boolean)(implicit messagesForLanguage: ViewMessages, messages: Messages): Option[SummaryListRow] = {
@@ -86,9 +89,9 @@ class InformationDispatchTimeSummarySpec extends SpecBase {
       "and there is no answer for the DispatchDetailsPage" - {
         "when on pre-draft flow" - {
           "then must return add data row, with no incomplete tag" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            informationTimeOfDispatchSummary.row mustBe expectedRow(
+            informationTimeOfDispatchSummary.row() mustBe expectedRow(
               value = None,
               isPreDraft = true
             )
@@ -97,9 +100,9 @@ class InformationDispatchTimeSummarySpec extends SpecBase {
 
         "when on pre-draft flow" - {
           "then must return add data row, with incomplete tag" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.copy(createdFromTemplateId = Some(templateId)))
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.copy(createdFromTemplateId = Some(templateId)))
 
-            informationTimeOfDispatchSummary.row mustBe expectedRow(
+            informationTimeOfDispatchSummary.row() mustBe expectedRow(
               value = None,
               isPreDraft = false
             )
@@ -112,9 +115,9 @@ class InformationDispatchTimeSummarySpec extends SpecBase {
           "then must return a row with the answer" in {
             val model = DispatchDetailsModel(LocalDate.of(2023, 6, 7), LocalTime.of(7, 25))
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DispatchDetailsPage(), model))
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers.set(DispatchDetailsPage(), model))
 
-            informationTimeOfDispatchSummary.row mustBe expectedRow(
+            informationTimeOfDispatchSummary.row() mustBe expectedRow(
               value = Some("07:25"),
               isPreDraft = true
             )
@@ -125,12 +128,12 @@ class InformationDispatchTimeSummarySpec extends SpecBase {
           "then must return a row with the answer" in {
             val model = DispatchDetailsModel(LocalDate.of(2023, 6, 7), LocalTime.of(7, 25))
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
               .copy(createdFromTemplateId = Some(templateId))
               .set(DispatchDetailsPage(), model)
             )
 
-            informationTimeOfDispatchSummary.row mustBe expectedRow(
+            informationTimeOfDispatchSummary.row() mustBe expectedRow(
               value = Some("07:25"),
               isPreDraft = false
             )

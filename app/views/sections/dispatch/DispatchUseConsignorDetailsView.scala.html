@@ -31,7 +31,7 @@
 
 @layout(pageTitle = title(form, messages("dispatchUseConsignorDetails.title"), Some(messages("dispatch.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action, 'autoComplete -> "off") {
+    @formHelper(action, Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

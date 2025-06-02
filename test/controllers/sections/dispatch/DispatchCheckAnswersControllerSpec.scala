@@ -23,12 +23,14 @@ import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockDispatchCheckAnswersHelper
 import models.UserAnswers
 import navigation.FakeNavigators.FakeDispatchNavigator
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.govuk.all.FluentSummaryList
 import viewmodels.govuk.summarylist._
 import views.html.sections.dispatch.DispatchCheckAnswersView
+
+import scala.concurrent.Future
 
 class DispatchCheckAnswersControllerSpec extends SpecBase with MockUserAnswersService with MockDispatchCheckAnswersHelper {
 
@@ -41,7 +43,7 @@ class DispatchCheckAnswersControllerSpec extends SpecBase with MockUserAnswersSe
 
   class Test(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-    val request = FakeRequest(GET, dispatchCheckAnswersRoute)
+    val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, dispatchCheckAnswersRoute)
 
     lazy val testController = new DispatchCheckAnswersController(
       messagesApi,
@@ -61,7 +63,7 @@ class DispatchCheckAnswersControllerSpec extends SpecBase with MockUserAnswersSe
     "must return OK and the correct view for a GET" in new Test() {
       MockDispatchCheckAnswersHelper.summaryList().returns(list)
 
-      val result = testController.onPageLoad(testErn, testDraftId)(request)
+      val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -71,25 +73,25 @@ class DispatchCheckAnswersControllerSpec extends SpecBase with MockUserAnswersSe
     }
 
     "must redirect to the next page when valid data is submitted" in new Test() {
-      val req = FakeRequest(POST, dispatchCheckAnswersRoute).withFormUrlEncodedBody(("value", "true"))
+      val req: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, dispatchCheckAnswersRoute).withFormUrlEncodedBody(("value", "true"))
 
-      val result = testController.onSubmit(testErn, testDraftId)(req)
+      val result: Future[Result] = testController.onSubmit(testErn, testDraftId)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
-      val result = testController.onPageLoad(testErn, testDraftId)(request)
+      val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
-      val req = FakeRequest(POST, dispatchCheckAnswersRoute).withFormUrlEncodedBody(("value", "true"))
+      val req: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, dispatchCheckAnswersRoute).withFormUrlEncodedBody(("value", "true"))
 
-      val result = testController.onSubmit(testErn, testDraftId)(req)
+      val result: Future[Result] = testController.onSubmit(testErn, testDraftId)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

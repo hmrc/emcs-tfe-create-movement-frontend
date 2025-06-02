@@ -28,7 +28,7 @@ import models.response.templates.MovementTemplates
 import navigation.FakeNavigators.FakeNavigator
 import pages.DeclarationPage
 import play.api.i18n.Messages
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.DeclarationView
@@ -84,7 +84,7 @@ class DeclarationControllerSpec extends SpecBase
         MockAppConfig.destinationOfficeSuffix.returns("004098")
         MockValidationService.validate().returns(Future.successful(userAnswers))
 
-        val res = controller.onPageLoad(ern, testDraftId)(request)
+        val res: Future[Result] = controller.onPageLoad(ern, testDraftId)(request)
 
         status(res) mustBe OK
         contentAsString(res) mustBe view(submitAction = submitRoute, countOfTemplates = 0).toString()
@@ -97,7 +97,7 @@ class DeclarationControllerSpec extends SpecBase
           submissionFailures = Seq(dispatchDateInPastValidationError())
         )))
 
-        val res = controller.onPageLoad(ern, testDraftId)(request)
+        val res: Future[Result] = controller.onPageLoad(ern, testDraftId)(request)
 
         status(res) mustBe SEE_OTHER
         redirectLocation(res).value mustBe routes.DraftMovementController.onPageLoad(ern, testDraftId).url
@@ -113,7 +113,7 @@ class DeclarationControllerSpec extends SpecBase
         MockAppConfig.destinationOfficeSuffix.returns("004098")
         MockValidationService.validate().returns(Future.successful(userAnswers))
 
-        val res = controller.onPageLoad(ern, testDraftId)(request)
+        val res: Future[Result] = controller.onPageLoad(ern, testDraftId)(request)
 
         status(res) mustBe SEE_OTHER
         redirectLocation(res).value mustBe routes.DraftMovementController.onPageLoad(ern, testDraftId).url
@@ -131,7 +131,7 @@ class DeclarationControllerSpec extends SpecBase
         MockAppConfig.destinationOfficeSuffix.returns("004098")
         MockValidationService.validate().returns(Future.successful(userAnswers))
 
-        val res = controller.onPageLoad(ern, testDraftId)(request)
+        val res: Future[Result] = controller.onPageLoad(ern, testDraftId)(request)
 
         status(res) mustBe OK
         contentAsString(res) mustBe view(submitAction = submitRoute, countOfTemplates = 0).toString()
@@ -139,7 +139,7 @@ class DeclarationControllerSpec extends SpecBase
 
       "when creating a request model fails" - {
         "must return a BadRequest when MissingMandatoryPage" in new Test(emptyUserAnswers) {
-          val res = controller.onPageLoad(ern, testDraftId)(request)
+          val res: Future[Result] = controller.onPageLoad(ern, testDraftId)(request)
 
           status(res) mustBe SEE_OTHER
           redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
@@ -148,7 +148,7 @@ class DeclarationControllerSpec extends SpecBase
         "must return a InternalServerError when something else goes wrong" in new Test() {
           MockAppConfig.destinationOfficeSuffix.throws(new Exception("test error"))
 
-          val res = controller.onPageLoad(ern, testDraftId)(request)
+          val res: Future[Result] = controller.onPageLoad(ern, testDraftId)(request)
 
           status(res) mustBe INTERNAL_SERVER_ERROR
         }
@@ -165,7 +165,7 @@ class DeclarationControllerSpec extends SpecBase
               .set(DeclarationPage, LocalDateTime.now())
           ))
 
-          val res = controller.onSubmit(ern, testDraftId)(request)
+          val res: Future[Result] = controller.onSubmit(ern, testDraftId)(request)
 
           status(res) mustBe SEE_OTHER
           redirectLocation(res) must contain(testOnwardRoute.url)
@@ -178,7 +178,7 @@ class DeclarationControllerSpec extends SpecBase
             )
           )
         ) {
-          val expectedUserAnswers = baseFullUserAnswers.copy(
+          val expectedUserAnswers: UserAnswers = baseFullUserAnswers.copy(
             hasBeenSubmitted = true,
             submittedDraftId = Some(testDraftId),
             submissionFailures = Seq(
@@ -188,7 +188,7 @@ class DeclarationControllerSpec extends SpecBase
           MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel, ern).returns(Future.successful(Right(submitCreateMovementResponseEIS)))
           MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
 
-          val res = controller.onSubmit(ern, testDraftId)(request)
+          val res: Future[Result] = controller.onSubmit(ern, testDraftId)(request)
 
           status(res) mustBe SEE_OTHER
           redirectLocation(res) must contain(testOnwardRoute.url)
@@ -199,9 +199,10 @@ class DeclarationControllerSpec extends SpecBase
         "when downstream returns a 422" - {
           "must redirect to the DraftMovementController" in new Test() {
             MockAppConfig.destinationOfficeSuffix.returns("004098")
-            MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel, ern).returns(Future.successful(Left(UnexpectedDownstreamDraftSubmissionResponseError(UNPROCESSABLE_ENTITY))))
+            MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel, ern)
+              .returns(Future.successful(Left(UnexpectedDownstreamDraftSubmissionResponseError(UNPROCESSABLE_ENTITY))))
 
-            val res = controller.onSubmit(ern, testDraftId)(request)
+            val res: Future[Result] = controller.onSubmit(ern, testDraftId)(request)
 
             status(res) mustBe SEE_OTHER
             redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
@@ -212,7 +213,8 @@ class DeclarationControllerSpec extends SpecBase
             // arbitrary 5xx status codes
             Seq(INTERNAL_SERVER_ERROR, BAD_GATEWAY, SERVICE_UNAVAILABLE, GATEWAY_TIMEOUT).foreach { responseStatus =>
               MockAppConfig.destinationOfficeSuffix.returns("004098")
-              MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel, ern).returns(Future.successful(Left(UnexpectedDownstreamDraftSubmissionResponseError(responseStatus))))
+              MockSubmitCreateMovementService.submit(xircSubmitCreateMovementModel, ern)
+                .returns(Future.successful(Left(UnexpectedDownstreamDraftSubmissionResponseError(responseStatus))))
 
               val res = controller.onSubmit(ern, testDraftId)(request)
 
@@ -224,7 +226,7 @@ class DeclarationControllerSpec extends SpecBase
 
       "when creating a request model fails" - {
         "must return a BadRequest when MissingMandatoryPage" in new Test(emptyUserAnswers) {
-          val res = controller.onSubmit(ern, testDraftId)(request)
+          val res: Future[Result] = controller.onSubmit(ern, testDraftId)(request)
 
           status(res) mustBe SEE_OTHER
           redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
@@ -233,7 +235,7 @@ class DeclarationControllerSpec extends SpecBase
         "must return a InternalServerError when something else goes wrong" in new Test() {
           MockAppConfig.destinationOfficeSuffix.throws(new Exception("test error"))
 
-          val res = controller.onSubmit(ern, testDraftId)(request)
+          val res: Future[Result] = controller.onSubmit(ern, testDraftId)(request)
 
           status(res) mustBe INTERNAL_SERVER_ERROR
         }

@@ -1,11 +1,27 @@
-package connectors
+/*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package test.connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, urlEqualTo}
 import com.github.tomakehurst.wiremock.http.Fault
-import connectors.referenceData.GetDocumentTypesConnector
+import connectors.referenceData.GetCountriesAndMemberStatesConnector
 import fixtures.BaseFixtures
+import models.CountryModel
 import models.response.UnexpectedDownstreamResponseError
-import models.sections.documents.DocumentType
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -18,7 +34,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class GetDocumentTypesConnectorISpec extends AnyFreeSpec
+class GetCountriesAndMemberStatesConnectorISpec extends AnyFreeSpec
   with WireMockHelper
   with ScalaFutures
   with Matchers
@@ -29,14 +45,14 @@ class GetDocumentTypesConnectorISpec extends AnyFreeSpec
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  val url = "/emcs-tfe-reference-data/oracle/type-of-document"
+  val url = "/emcs-tfe-reference-data/oracle/member-states-and-countries"
 
-  val documentTypesSeq: Seq[DocumentType] = Seq(
-    DocumentType("testCode1", "testDescription1"),
-    DocumentType("testCode2", "testDescription2")
+  val countries: Seq[CountryModel] = Seq(
+    countryModelAT,
+    countryModelBE
   )
 
-  ".getDocumentTypes" - {
+  ".getCountryCodesAndMemberStates" - {
 
     def app: Application =
       new GuiceApplicationBuilder()
@@ -44,22 +60,19 @@ class GetDocumentTypesConnectorISpec extends AnyFreeSpec
         .configure("features.stub-get-trader-known-facts" -> "false")
         .build()
 
-    lazy val connector: GetDocumentTypesConnector = app.injector.instanceOf[GetDocumentTypesConnector]
+    lazy val connector: GetCountriesAndMemberStatesConnector = app.injector.instanceOf[GetCountriesAndMemberStatesConnector]
 
-    "must return Right(Seq[DocumentType]) when the server responds OK" in {
+    "must return Right(Seq[CountryModel]) when the server responds OK" in {
 
       server.stubFor(
         get(urlEqualTo(url))
           .willReturn(
             aResponse()
               .withStatus(OK)
-              .withBody(Json.stringify(Json.arr(
-                Json.obj("code" -> "testCode1", "description" -> "testDescription1"),
-                Json.obj("code" -> "testCode2", "description" -> "testDescription2")
-              ))))
+              .withBody(Json.stringify(Json.arr(countryJsonAT, countryJsonBE))))
       )
 
-      connector.getDocumentTypes().futureValue mustBe Right(documentTypesSeq)
+      connector.getCountryCodesAndMemberStates().futureValue mustBe Right(countries)
     }
 
     "must fail when the server responds with any other status" in {
@@ -69,7 +82,7 @@ class GetDocumentTypesConnectorISpec extends AnyFreeSpec
           .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
       )
 
-      connector.getDocumentTypes().futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.getCountryCodesAndMemberStates().futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
 
     "must fail when the connection fails" in {
@@ -79,7 +92,7 @@ class GetDocumentTypesConnectorISpec extends AnyFreeSpec
           .willReturn(aResponse().withFault(Fault.RANDOM_DATA_THEN_CLOSE))
       )
 
-      connector.getDocumentTypes().futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.getCountryCodesAndMemberStates().futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
   }
 }

@@ -20,7 +20,8 @@ import config.AppConfig
 import models.CountryModel
 import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.libs.json.JsResultException
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,7 +32,7 @@ trait GetCountriesAndMemberStatesConnector {
   def getCountryCodesAndMemberStates()(implicit headerCarrier: HeaderCarrier,
                                        executionContext: ExecutionContext): Future[Either[ErrorResponse, Seq[CountryModel]]]
 }
-class GetCountriesAndMemberStatesConnectorImpl @Inject()(val http: HttpClient,
+class GetCountriesAndMemberStatesConnectorImpl @Inject()(val http: HttpClientV2,
                                                          config: AppConfig) extends GetCountriesHttpParser with GetCountriesAndMemberStatesConnector {
   def baseUrl: String = config.referenceDataBaseUrl
 

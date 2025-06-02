@@ -33,7 +33,7 @@
 
 @layout(pageTitle = titleNoForm(messages("destinationCheckAnswers.title"), Some(messages("destination.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
+    @formHelper(action = onSubmitCall, Symbol("autoComplete") -> "off") {
 
         @errorNotificationBannerHelper.content(
             errors = DestinationWarehouseExcisePage.getMovementSubmissionErrors,

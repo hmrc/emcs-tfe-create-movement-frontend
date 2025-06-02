@@ -47,7 +47,7 @@
         fullWidthContent: Boolean = false,
         additionalCss: Html = Html(""),
         additionalScripts: Html = Html("")
-)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
+)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
 
 @head = {
 
@@ -56,7 +56,7 @@
             hmrcTimeoutDialog(TimeoutDialog(
                 timeout             = Some(appConfig.timeout),
                 countdown           = Some(appConfig.countdown),
-                keepAliveUrl        = Some(routes.KeepAliveController.keepAlive.url),
+                keepAliveUrl        = Some(routes.KeepAliveController.keepAlive().url),
                 keepAliveButtonText = Some(messages("timeout.keepAlive")),
                 signOutUrl          = Some(controllers.auth.routes.SignedOutController.signOut().url),
                 timeoutUrl          = Some(controllers.auth.routes.SignedOutController.signOut(true).url),

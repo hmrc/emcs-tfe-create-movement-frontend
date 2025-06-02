@@ -22,7 +22,8 @@ import models.UserAnswers
 import models.response.{BadRequestError, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.libs.json.{Json, Reads}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,7 +32,7 @@ class UserAnswersHttpParsersSpec extends SpecBase with Status with MimeTypes wit
   lazy val httpParser = new UserAnswersHttpParsers {
     override implicit val reads: Reads[UserAnswers] = UserAnswers.format
 
-    override def http: HttpClient = mockHttpClient
+    override def http: HttpClientV2 = mockHttpClient
   }
 
   implicit val ec: ExecutionContext = ExecutionContext.global
@@ -159,7 +160,7 @@ class UserAnswersHttpParsersSpec extends SpecBase with Status with MimeTypes wit
 
   ".delete" - {
 
-    val fakeUrl: String = "/user-answers/create-movement/ern/draftId"
+    val fakeUrl: String = "http://user-answers/create-movement/ern/draftId"
 
     "should return the result of the call (if no exception thrown)" in {
 

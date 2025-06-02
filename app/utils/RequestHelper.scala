@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package models
+package utils
 
-import scala.language.implicitConversions
+import java.net.URLEncoder
 
-trait DynamicEnumerableType[T <: Checkboxable[T]] extends Enumerable.Implicits {
+trait RequestHelper {
 
-  implicit def enumerable(values: Seq[T]): Enumerable[T] =
-    Enumerable(
-      values.map(
-        v => v.code -> v
-      ): _*
-    )
+  def makeQueryString(queryParams: Seq[(String, String)]): String = {
+    val paramPairs = queryParams.map { case (k, v) => s"$k=${URLEncoder.encode(v, "utf-8")}" }
+    if (paramPairs.isEmpty) "" else paramPairs.mkString("?", "&", "")
+  }
+
 }

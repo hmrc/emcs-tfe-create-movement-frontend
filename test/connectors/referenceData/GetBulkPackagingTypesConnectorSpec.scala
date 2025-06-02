@@ -21,6 +21,7 @@ import mocks.connectors.MockHttpClient
 import fixtures.ItemFixtures
 import models.response.UnexpectedDownstreamResponseError
 import models.sections.items.ItemBulkPackagingCode.{BulkGas, BulkLiquefiedGas, BulkLiquid}
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -40,9 +41,10 @@ class GetBulkPackagingTypesConnectorSpec extends SpecBase with MockHttpClient wi
 
         val expectedResult = Right(bulkPackagingTypes)
 
+
         MockHttpClient.post(
           url = s"${appConfig.referenceDataBaseUrl}/oracle/packaging-types",
-          body = Seq(BulkGas, BulkLiquefiedGas, BulkLiquid)
+          body = Json.toJson(Seq(BulkGas.toString, BulkLiquefiedGas.toString, BulkLiquid.toString))
         ).returns(Future.successful(expectedResult))
 
         val actualResult = connector.getBulkPackagingTypes(Seq(BulkGas, BulkLiquefiedGas, BulkLiquid)).futureValue
@@ -59,7 +61,7 @@ class GetBulkPackagingTypesConnectorSpec extends SpecBase with MockHttpClient wi
 
         MockHttpClient.post(
           url = s"${appConfig.referenceDataBaseUrl}/oracle/packaging-types",
-          body = Seq(BulkGas, BulkLiquefiedGas, BulkLiquid)
+          body = Json.toJson(Seq(BulkGas.toString, BulkLiquefiedGas.toString, BulkLiquid.toString))
         ).returns(Future.successful(expectedResult))
 
         val actualResult = connector.getBulkPackagingTypes(Seq(BulkGas, BulkLiquefiedGas, BulkLiquid)).futureValue

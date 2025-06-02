@@ -27,20 +27,20 @@ trait MockAppConfig extends MockFactory {
   lazy val mockAppConfig: AppConfig = mock[AppConfig]
 
   object MockAppConfig {
-    def loginUrl: CallHandler0[String] = (mockAppConfig.loginUrl _).expects()
+    def loginUrl: CallHandler0[String] = (() => mockAppConfig.loginUrl).expects()
     def loginContinueUrl: CallHandler1[String, String] = (mockAppConfig.loginContinueUrl(_: String)).expects(*)
-    def destinationOfficeSuffix: CallHandler0[String] = (mockAppConfig.destinationOfficeSuffix _).expects()
-    def maxDispatchDateFutureDays: CallHandler0[Int] = (mockAppConfig.maxDispatchDateFutureDays _).expects()
-    def earliestDispatchDate: CallHandler0[LocalDate] = (mockAppConfig.earliestDispatchDate _).expects()
-    def nrsBrokerBaseUrl: CallHandler0[String] = (mockAppConfig.nrsBrokerBaseUrl _).expects()
+    def destinationOfficeSuffix: CallHandler0[String] = (() => mockAppConfig.destinationOfficeSuffix).expects()
+    def maxDispatchDateFutureDays: CallHandler0[Int] = (() => mockAppConfig.maxDispatchDateFutureDays).expects()
+    def earliestDispatchDate: CallHandler0[LocalDate] = (() => mockAppConfig.earliestDispatchDate).expects()
+    def nrsBrokerBaseUrl: CallHandler0[String] = (() => mockAppConfig.nrsBrokerBaseUrl()).expects()
 
-    def emcsTfeHomeUrl: CallHandler0[String] = (mockAppConfig.emcsTfeHomeUrl _).expects()
+    def emcsTfeHomeUrl: CallHandler0[String] = (() => mockAppConfig.emcsTfeHomeUrl).expects()
 
     def getFeatureSwitchValue(feature: FeatureSwitch): CallHandler1[String, Boolean] = {
       val featureSwitchName = feature.configName
       (mockAppConfig.getFeatureSwitchValue(_: String)).expects(featureSwitchName)
     }
 
-    def maxTemplates: CallHandler0[Int] = (mockAppConfig.maxTemplates _).expects()
+    def maxTemplates: CallHandler0[Int] = (() => mockAppConfig.maxTemplates).expects()
   }
 }

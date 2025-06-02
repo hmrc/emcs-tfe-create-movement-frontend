@@ -45,7 +45,7 @@ class CheckYourAnswersController @Inject()(override val messagesApi: MessagesApi
   def onPageLoad(ern: String, draftId: String): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       withAnswerAsync(DeferredMovementPage(isOnPreDraftFlow = false)) { isDeferred =>
-        itemsAddToListHelper.finalCyaSummary.map { itemsSummary =>
+        itemsAddToListHelper.finalCyaSummary().map { itemsSummary =>
           Ok(view(
             routes.CheckYourAnswersController.onSubmit(ern, draftId),
             isDeferred,

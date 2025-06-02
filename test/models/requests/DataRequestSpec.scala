@@ -59,7 +59,7 @@ class DataRequestSpec extends SpecBase {
             val request = dataRequest(
               request = FakeRequest(),
               answers = res match {
-                case Some(dp) => emptyUserAnswers.set(DispatchPlacePage, dp)
+                case Some(dispatchPlace) => emptyUserAnswers.set(DispatchPlacePage, dispatchPlace)
                 case None => emptyUserAnswers
               }
             )

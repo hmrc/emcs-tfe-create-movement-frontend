@@ -182,10 +182,10 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
           )
           helper.summaryList(asCard = true)(request, msgs) mustBe SummaryList(
             rows = Seq(
-              GuarantorRequiredSummary.row,
-              GuarantorArrangerSummary.row,
-              GuarantorErnVatSummary.rows,
-              GuarantorAddressSummary.row
+              GuarantorRequiredSummary.row(),
+              GuarantorArrangerSummary.row(),
+              GuarantorErnVatSummary.rows(),
+              GuarantorAddressSummary.row(),
             ).flatten,
             card = Some(CardViewModel(
               title = "Guarantor",

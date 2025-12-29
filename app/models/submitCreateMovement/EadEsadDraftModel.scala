@@ -33,7 +33,7 @@ case class EadEsadDraftModel(
                               originTypeCode: OriginType,
                               dateOfDispatch: String,
                               timeOfDispatch: Option[String],
-                              importSad: Option[Seq[ImportSadModel]]
+                              importCustomsDeclaration: Option[Seq[ImportCustomsDeclarationModel]]
                             )
 
 object EadEsadDraftModel extends ModelConstructorHelpers {
@@ -48,7 +48,7 @@ object EadEsadDraftModel extends ModelConstructorHelpers {
     originTypeCode = mandatoryPage(DestinationTypePage).originType,
     dateOfDispatch = mandatoryPage(DispatchDetailsPage()).date.toString,
     timeOfDispatch = Some(mandatoryPage(DispatchDetailsPage()).time.format(timeFormatter)),
-    importSad = Option.when (!request.isWarehouseKeeper && !request.isCertifiedConsignor) { ImportSadModel.apply }
+    importCustomsDeclaration = Option.when (!request.isWarehouseKeeper && !request.isCertifiedConsignor) { ImportCustomsDeclarationModel.apply }
   )
 
   implicit val fmt: OFormat[EadEsadDraftModel] = Json.format
@@ -60,6 +60,6 @@ object EadEsadDraftModel extends ModelConstructorHelpers {
     (__ \ "originTypeCode").write[OriginType](Auditable.writes[OriginType]) and
     (__ \ "dateOfDispatch").write[String] and
     (__ \ "timeOfDispatch").writeNullable[String] and
-    (__ \ "importSad").writeNullable[Seq[ImportSadModel]]
+    (__ \ "importCustomsDeclaration").writeNullable[Seq[ImportCustomsDeclarationModel]]
   )(unlift(EadEsadDraftModel.unapply))
 }

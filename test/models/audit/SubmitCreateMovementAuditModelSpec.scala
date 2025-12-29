@@ -236,15 +236,15 @@ class SubmitCreateMovementAuditModelSpec extends SpecBase with ItemFixtures {
              |    },
              |    "dateOfDispatch": "2020-10-31",
              |    "timeOfDispatch": "23:59:59",
-             |    "importSad": [
+             |    "importCustomsDeclaration": [
              |      {
-             |        "importSadNumber": "sad 1"
+             |        "importCustomsDeclarationNumber": "icd 1"
              |      },
              |      {
-             |        "importSadNumber": "sad 2"
+             |        "importCustomsDeclarationNumber": "icd 2"
              |      },
              |      {
-             |        "importSadNumber": "sad 3"
+             |        "importCustomsDeclarationNumber": "icd 3"
              |      }
              |    ]
              |  },
@@ -464,15 +464,15 @@ class SubmitCreateMovementAuditModelSpec extends SpecBase with ItemFixtures {
              |    },
              |    "dateOfDispatch": "2020-10-31",
              |    "timeOfDispatch": "23:59:59",
-             |    "importSad": [
+             |    "importCustomsDeclaration": [
              |      {
-             |        "importSadNumber": "sad 1"
+             |        "importCustomsDeclarationNumber": "icd 1"
              |      },
              |      {
-             |        "importSadNumber": "sad 2"
+             |        "importCustomsDeclarationNumber": "icd 2"
              |      },
              |      {
-             |        "importSadNumber": "sad 3"
+             |        "importCustomsDeclarationNumber": "icd 3"
              |      }
              |    ]
              |  },

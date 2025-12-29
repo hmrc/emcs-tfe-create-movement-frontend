@@ -217,7 +217,7 @@ trait BaseFixtures {
       originTypeCode = OriginType.Imports,
       dateOfDispatch = "2020-10-31",
       timeOfDispatch = None,
-      importSad = None
+      importCustomsDeclaration = None
     ),
     transportDetails = Seq()
   )

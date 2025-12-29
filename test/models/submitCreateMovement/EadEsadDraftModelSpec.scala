@@ -43,9 +43,9 @@ class EadEsadDraftModelSpec extends SpecBase {
                 .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
                 .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59")))
                 .set(DestinationTypePage, MovementScenario.ExemptedOrganisation)
-                .set(ImportNumberPage(testIndex1), "sad 1")
-                .set(ImportNumberPage(testIndex2), "sad 2")
-                .set(ImportNumberPage(testIndex3), "sad 3")
+                .set(ImportNumberPage(testIndex1), "icd 1")
+                .set(ImportNumberPage(testIndex2), "icd 2")
+                .set(ImportNumberPage(testIndex3), "icd 3")
               ,
               ern = ern
             )
@@ -57,7 +57,7 @@ class EadEsadDraftModelSpec extends SpecBase {
               originTypeCode = OriginType.Imports,
               dateOfDispatch = "2020-10-31",
               timeOfDispatch = Some("23:59:59"),
-              importSad = Some(Seq(ImportSadModel("sad 1"), ImportSadModel("sad 2"), ImportSadModel("sad 3")))
+              importCustomsDeclaration = Some(Seq(ImportCustomsDeclarationModel("icd 1"), ImportCustomsDeclarationModel("icd 2"), ImportCustomsDeclarationModel("icd 3")))
             )
         }
       }
@@ -74,9 +74,9 @@ class EadEsadDraftModelSpec extends SpecBase {
                 .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
                 .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59")))
                 .set(DestinationTypePage, MovementScenario.ExemptedOrganisation)
-                .set(ImportNumberPage(testIndex1), "sad 1")
-                .set(ImportNumberPage(testIndex2), "sad 2")
-                .set(ImportNumberPage(testIndex3), "sad 3")
+                .set(ImportNumberPage(testIndex1), "icd 1")
+                .set(ImportNumberPage(testIndex2), "icd 2")
+                .set(ImportNumberPage(testIndex3), "icd 3")
               ,
               ern = ern
             )
@@ -88,7 +88,7 @@ class EadEsadDraftModelSpec extends SpecBase {
               originTypeCode = OriginType.TaxWarehouse,
               dateOfDispatch = "2020-10-31",
               timeOfDispatch = Some("23:59:59"),
-              importSad = None
+              importCustomsDeclaration = None
             )
         }
       }
@@ -103,9 +103,9 @@ class EadEsadDraftModelSpec extends SpecBase {
                 .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
                 .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59")))
                 .set(DestinationTypePage, MovementScenario.ExemptedOrganisation)
-                .set(ImportNumberPage(testIndex1), "sad 1")
-                .set(ImportNumberPage(testIndex2), "sad 2")
-                .set(ImportNumberPage(testIndex3), "sad 3")
+                .set(ImportNumberPage(testIndex1), "icd 1")
+                .set(ImportNumberPage(testIndex2), "icd 2")
+                .set(ImportNumberPage(testIndex3), "icd 3")
               ,
               ern = ern
             )
@@ -117,7 +117,7 @@ class EadEsadDraftModelSpec extends SpecBase {
               originTypeCode = OriginType.DutyPaid,
               dateOfDispatch = "2020-10-31",
               timeOfDispatch = Some("23:59:59"),
-              importSad = None
+              importCustomsDeclaration = None
             )
         }
       }
@@ -131,9 +131,9 @@ class EadEsadDraftModelSpec extends SpecBase {
           .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
           .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59")))
           .set(DestinationTypePage, MovementScenario.ExemptedOrganisation)
-          .set(ImportNumberPage(testIndex1), "sad 1")
-          .set(ImportNumberPage(testIndex2), "sad 2")
-          .set(ImportNumberPage(testIndex3), "sad 3")
+          .set(ImportNumberPage(testIndex1), "icd 1")
+          .set(ImportNumberPage(testIndex2), "icd 2")
+          .set(ImportNumberPage(testIndex3), "icd 3")
       )
 
       EadEsadDraftModel.apply.timeOfDispatch mustBe Some("23:59:00")

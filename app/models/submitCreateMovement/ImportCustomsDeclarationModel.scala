@@ -24,11 +24,11 @@ import play.api.libs.json.{Json, OFormat}
 import queries.SadCount
 import utils.{Logging, ModelConstructorHelpers}
 
-case class ImportSadModel(importSadNumber: String)
+case class ImportCustomsDeclarationModel(importCustomsDeclarationNumber: String)
 
-object ImportSadModel extends ModelConstructorHelpers with Logging {
+object ImportCustomsDeclarationModel extends ModelConstructorHelpers with Logging {
 
-  def apply(implicit request: DataRequest[_]): Seq[ImportSadModel] = {
+  def apply(implicit request: DataRequest[_]): Seq[ImportCustomsDeclarationModel] = {
     request.userAnswers.getCount(SadCount) match {
       case Some(0) | None =>
         logger.error("SadSection should contain at least one item")
@@ -38,10 +38,10 @@ object ImportSadModel extends ModelConstructorHelpers with Logging {
           .map(Index(_))
           .map {
             idx =>
-              ImportSadModel(mandatoryPage(ImportNumberPage(idx)))
+              ImportCustomsDeclarationModel(mandatoryPage(ImportNumberPage(idx)))
           }
     }
   }
 
-  implicit val fmt: OFormat[ImportSadModel] = Json.format
+  implicit val fmt: OFormat[ImportCustomsDeclarationModel] = Json.format
 }

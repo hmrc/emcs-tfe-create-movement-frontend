@@ -478,9 +478,9 @@ trait ItemFixtures {
     .set(ItemWineOperationsChoicePage(testIndex1), Seq(WineOperations("op code", "choice desc")))
     .set(ItemsAddToListPage, ItemsAddToList.No)
     // sad
-    .set(ImportNumberPage(testIndex1), "sad 1")
-    .set(ImportNumberPage(testIndex2), "sad 2")
-    .set(ImportNumberPage(testIndex3), "sad 3")
+    .set(ImportNumberPage(testIndex1), "icd 1")
+    .set(ImportNumberPage(testIndex2), "icd 2")
+    .set(ImportNumberPage(testIndex3), "icd 3")
     .set(SadAddToListPage, SadAddToListModel.NoMoreToCome)
     // transportDetails
     .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
@@ -632,15 +632,15 @@ trait ItemFixtures {
       |    "originTypeCode": "2",
       |    "dateOfDispatch": "2020-10-31",
       |    "timeOfDispatch": "23:59:59",
-      |    "importSad": [
+      |    "importCustomsDeclaration": [
       |      {
-      |        "importSadNumber": "sad 1"
+      |        "importCustomsDeclarationNumber": "icd 1"
       |      },
       |      {
-      |        "importSadNumber": "sad 2"
+      |        "importCustomsDeclarationNumber": "icd 2"
       |      },
       |      {
-      |        "importSadNumber": "sad 3"
+      |        "importCustomsDeclarationNumber": "icd 3"
       |      }
       |    ]
       |  },
@@ -769,7 +769,7 @@ trait ItemFixtures {
       originTypeCode = OriginType.Imports,
       dateOfDispatch = "2020-10-31",
       timeOfDispatch = Some("23:59:59"),
-      importSad = Some(Seq(ImportSadModel("sad 1"), ImportSadModel("sad 2"), ImportSadModel("sad 3")))
+      importCustomsDeclaration = Some(Seq(ImportCustomsDeclarationModel("icd 1"), ImportCustomsDeclarationModel("icd 2"), ImportCustomsDeclarationModel("icd 3")))
     ),
     transportDetails = Seq(
       TransportDetailsModel(
@@ -1068,7 +1068,7 @@ trait ItemFixtures {
       originTypeCode = OriginType.TaxWarehouse,
       dateOfDispatch = "2020-10-31",
       timeOfDispatch = Some("23:59:59"),
-      importSad = None
+      importCustomsDeclaration = None
     ),
     transportDetails = Seq(
       TransportDetailsModel(
@@ -1227,15 +1227,15 @@ trait ItemFixtures {
       |    "originTypeCode": "2",
       |    "dateOfDispatch": "2020-10-31",
       |    "timeOfDispatch": "23:59:59",
-      |    "importSad": [
+      |    "importCustomsDeclaration": [
       |      {
-      |        "importSadNumber": "sad 1"
+      |        "importCustomsDeclarationNumber": "icd 1"
       |      },
       |      {
-      |        "importSadNumber": "sad 2"
+      |        "importCustomsDeclarationNumber": "icd 2"
       |      },
       |      {
-      |        "importSadNumber": "sad 3"
+      |        "importCustomsDeclarationNumber": "icd 3"
       |      }
       |    ]
       |  },
@@ -1364,7 +1364,7 @@ trait ItemFixtures {
       originTypeCode = OriginType.Imports,
       dateOfDispatch = "2020-10-31",
       timeOfDispatch = Some("23:59:59"),
-      importSad = Some(Seq(ImportSadModel("sad 1"), ImportSadModel("sad 2"), ImportSadModel("sad 3")))
+      importCustomsDeclaration = Some(Seq(ImportCustomsDeclarationModel("icd 1"), ImportCustomsDeclarationModel("icd 2"), ImportCustomsDeclarationModel("icd 3")))
     ),
     transportDetails = Seq(
       TransportDetailsModel(
@@ -1663,7 +1663,7 @@ trait ItemFixtures {
       originTypeCode = OriginType.TaxWarehouse,
       dateOfDispatch = "2020-10-31",
       timeOfDispatch = Some("23:59:59"),
-      importSad = None
+      importCustomsDeclaration = None
     ),
     transportDetails = Seq(
       TransportDetailsModel(

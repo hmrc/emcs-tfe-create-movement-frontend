@@ -22,41 +22,41 @@ import models.response.MissingMandatoryPage
 import pages.sections.sad.ImportNumberPage
 import play.api.test.FakeRequest
 
-class ImportSadModelSpec extends SpecBase {
+class ImportCustomsDeclarationModelSpec extends SpecBase {
   "apply" - {
     "must throw an error" - {
-      "when no SAD" in {
+      "when no ICD" in {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
         )
 
-        val result = intercept[MissingMandatoryPage](ImportSadModel.apply)
+        val result = intercept[MissingMandatoryPage](ImportCustomsDeclarationModel.apply)
 
         result.message mustBe "SadSection should contain at least one item"
       }
     }
 
-    "must return a Seq(ImportSadModel)" - {
-      "when one SAD" in {
+    "must return a Seq(ImportCustomsDeclarationModel)" - {
+      "when one ICD" in {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
-            .set(ImportNumberPage(testIndex1), "sad 1")
+            .set(ImportNumberPage(testIndex1), "icd 1")
         )
 
-        ImportSadModel.apply mustBe Seq(ImportSadModel("sad 1"))
+        ImportCustomsDeclarationModel.apply mustBe Seq(ImportCustomsDeclarationModel("icd 1"))
       }
-      "when more than one SAD" in {
+      "when more than one ICD" in {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
-            .set(ImportNumberPage(testIndex1), "sad 1")
-            .set(ImportNumberPage(testIndex2), "sad 2")
-            .set(ImportNumberPage(testIndex3), "sad 3")
+            .set(ImportNumberPage(testIndex1), "icd 1")
+            .set(ImportNumberPage(testIndex2), "icd 2")
+            .set(ImportNumberPage(testIndex3), "icd 3")
         )
 
-        ImportSadModel.apply mustBe Seq(ImportSadModel("sad 1"), ImportSadModel("sad 2"), ImportSadModel("sad 3"))
+        ImportCustomsDeclarationModel.apply mustBe Seq(ImportCustomsDeclarationModel("icd 1"), ImportCustomsDeclarationModel("icd 2"), ImportCustomsDeclarationModel("icd 3"))
       }
     }
   }

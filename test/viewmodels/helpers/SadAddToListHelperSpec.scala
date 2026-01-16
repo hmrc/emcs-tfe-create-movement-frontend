@@ -81,7 +81,7 @@ class SadAddToListHelperSpec extends SpecBase {
               )
             }
 
-            s"when all answers entered and multiple Sads" in new Setup(emptyUserAnswers
+            s"when all answers entered and multiple Customs Declarations" in new Setup(emptyUserAnswers
               .set(ImportNumberPage(testIndex1), "wee")
               .set(ImportNumberPage(testIndex2), "wee2")) {
 

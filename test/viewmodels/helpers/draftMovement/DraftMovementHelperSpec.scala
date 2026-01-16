@@ -979,7 +979,7 @@ class DraftMovementHelperSpec extends SpecBase with MovementSubmissionFailureFix
               MovementValidationFailure(Some(8704), Some("beans")),
               MovementValidationFailure(Some(8076), Some("beans")),
               MovementValidationFailure(Some(8077), Some("beans")),
-              MovementValidationFailure(Some(13), Some("The import Single Administrative Document (SAD) must be present if the origin type code is 'Import'. Please amend your entry and resubmit.")),
+              MovementValidationFailure(Some(13), Some("The import Customs Declaration must be present if the origin type code is 'Import'. Please amend your entry and resubmit.")),
               MovementValidationFailure(Some(8137), Some("beans")),
               MovementValidationFailure(Some(8713), Some("beans")),
               MovementValidationFailure(Some(8726), Some("beans")),
@@ -987,7 +987,7 @@ class DraftMovementHelperSpec extends SpecBase with MovementSubmissionFailureFix
               MovementValidationFailure(Some(8084), Some("beans")),
               MovementValidationFailure(Some(8085), Some("beans")),
               MovementValidationFailure(Some(8219), Some("beans")),
-              MovementValidationFailure(Some(12), Some("The import Single Administrative Document (SAD) must not be present if the origin type code is 'Tax Warehouse'. Please amend your entry and resubmit.")),
+              MovementValidationFailure(Some(12), Some("The import Customs Declaration must not be present if the origin type code is 'Tax Warehouse'. Please amend your entry and resubmit.")),
               MovementValidationFailure(Some(8081), Some("beans")),
               MovementValidationFailure(Some(8082), Some("beans"))
             )
@@ -1118,7 +1118,7 @@ class DraftMovementHelperSpec extends SpecBase with MovementSubmissionFailureFix
                 p()(Html("If the consignor trader ID starts with GB then the wine product category must not be 1, 2, or 3.")),
                 p()(Html("The Third Country of Origin Code is not required for non-imported wine.")),
                 p()(Html("Each Wine Operation Code must be unique.")),
-                p()(Html("The import Single Administrative Document (SAD) must be present if the origin type code is ‘Import’.")),
+                p()(Html("The import Customs Declaration must be present if the origin type code is ‘Import’.")),
                 p()(Html("You must enter a time of dispatch.")),
                 p()(Html("The origin type must be one of the following: Tax warehouse, Import or Duty Paid.")),
                 p()(Html("The origin type must be Duty Paid.")),
@@ -1126,7 +1126,7 @@ class DraftMovementHelperSpec extends SpecBase with MovementSubmissionFailureFix
                 p()(Html("The Date of Dispatch you entered is incorrect. It must be today or later.")),
                 p()(Html("You have selected the deferred indicator. The Date of Dispatch must be on or before the date of submission.")),
                 p()(Html("The time of dispatch should not specify milliseconds.")),
-                p()(Html("The import Single Administrative Document (SAD) must not be present if the origin type code is ‘Tax Warehouse’ or ‘Duty Paid’.")),
+                p()(Html("The import Customs Declaration must not be present if the origin type code is ‘Tax Warehouse’ or ‘Duty Paid’.")),
                 p()(Html("The Identity of Transport Units must be entered if Transport Unit Code is not fixed transport installation.")),
                 p()(Html("The Identity of transport Units field is not applicable as you have entered a Transport Unit Code of fixed transport installation.")),
               ))

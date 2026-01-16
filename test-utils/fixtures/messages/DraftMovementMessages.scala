@@ -56,7 +56,7 @@ object DraftMovementMessages {
     val items: String = "Items"
 
     val documentsSectionHeading: String = "Documents"
-    val sad: String = "Single Administrative Documents"
+    val sad: String = "Customs Declarations"
     val documents: String = "Documents"
 
     val submitSectionHeading: String = "Submit"

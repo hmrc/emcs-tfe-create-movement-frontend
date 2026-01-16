@@ -35,7 +35,7 @@ object SectionMessages {
     val importInformationSubHeading = "Import information"
     val documentsSubHeading = "Documents"
     val itemsSubHeading = "Item information"
-    val sadSubHeading = "Single Administrative Document"
+    val sadSubHeading = "Customs Declaration"
     val draftMovementSubHeading = "Draft movement"
 
     val hiddenSectionContent: String = "This section is"

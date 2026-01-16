@@ -21,9 +21,9 @@ import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 object SadRemoveDocumentMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading: String = "Are you sure you want to remove this Single Administrative Document (SAD) number?"
+    val heading: String = "Are you sure you want to remove this Customs Declaration number?"
     val title: String = titleHelper(heading, Some(SectionMessages.English.sadSubHeading))
-    val errorMessage: String = "Select yes if you want to remove this Single Administrative Document"
+    val errorMessage: String = "Select yes if you want to remove this Customs Declaration"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -21,27 +21,27 @@ import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 object SadAddToListMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "You have given information for 1 Single Administrative Document (SAD) number"
+    val heading = "You have given information for 1 Customs Declaration number"
     val title = titleHelper(heading, Some(SectionMessages.English.sadSubHeading))
 
-    val headingMultiple = "You have given information for 2 Single Administrative Document (SAD) numbers"
+    val headingMultiple = "You have given information for 2 Customs Declaration numbers"
     val titleMultiple = titleHelper(headingMultiple, Some(SectionMessages.English.sadSubHeading))
 
-    val question = "Do you need to add another Single Administrative Document (SAD) number for this movement?"
+    val question = "Do you need to add another Customs Declaration number for this movement?"
     val yesOption = "Yes"
-    val noOption = "No, there are no other Single Administrative Document (SAD) numbers for this movement"
+    val noOption = "No, there are no other Customs Declaration numbers for this movement"
     val errorMessage = "Enter Select yes if you need to add another SAD import number"
     val errorMessageHelper: String => String = s"Error: " + _
 
-    val sad1 = "SAD document number 1"
-    val sad2 = "SAD document number 2"
-    val removeLink1WithHiddenText    = "Remove (SAD document number 1)"
-    val removeLink2WithHiddenText    = "Remove (SAD document number 2)"
+    val sad1 = "Customs Declaration number 1"
+    val sad2 = "Customs Declaration number 2"
+    val removeLink1WithHiddenText    = "Remove (Customs Declaration number 1)"
+    val removeLink2WithHiddenText    = "Remove (Customs Declaration number 2)"
 
     val importNumberMessages: BaseMessages
 
-    val finalCyaCardTitle = "Single Administrative Document(s) (SAD)"
-    val finalCyaKey: Int => String = "SAD number " + _
+    val finalCyaCardTitle = "Customs Declaration(s)"
+    val finalCyaKey: Int => String = "Customs Declaration number " + _
   }
 
   object English extends ViewMessages with BaseEnglish {

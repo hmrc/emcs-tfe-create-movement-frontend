@@ -20,13 +20,13 @@ import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ImportNumberMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "Enter the number of the Single Administrative Document (SAD) used for releasing the goods for free circulation"
+    val heading = "Enter the number of the Customs Declaration used for releasing the goods for free circulation"
     val title: String = titleHelper(heading, Some(SectionMessages.English.sadSubHeading))
-    val hint = "For example, 555 A12345B 14092016. You will have the chance to add more SAD numbers later."
+    val hint = "For example, 555 A12345B 14092016. You will have the chance to add more Customs Declaration numbers later."
     val errorLength = "The number must be 21 characters or less"
     val errorXss = "Document reference must not include < and > and : and ;"
     val alphanumeric = "Document reference must only contain letters and numbers"
-    val errorRequired = "Enter the number of the Single Administrative Document"
+    val errorRequired = "Enter the number of the Customs Declaration"
     val checkYourAnswersLabel = "Number"
     val changeHidden = "import number"
   }

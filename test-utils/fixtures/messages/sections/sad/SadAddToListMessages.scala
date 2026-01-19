@@ -30,7 +30,7 @@ object SadAddToListMessages {
     val question = "Do you need to add another Customs Declaration number for this movement?"
     val yesOption = "Yes"
     val noOption = "No, there are no other Customs Declaration numbers for this movement"
-    val errorMessage = "Enter Select yes if you need to add another SAD import number"
+    val errorMessage = "Select yes if you need to add another Customs Declaration number"
     val errorMessageHelper: String => String = s"Error: " + _
 
     val sad1 = "Customs Declaration number 1"

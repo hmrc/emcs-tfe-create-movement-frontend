@@ -19,6 +19,7 @@ package views.sections.items
 import base.SpecBase
 import fixtures.messages.sections.items.ItemFiscalMarksMessages
 import forms.sections.items.ItemFiscalMarksFormProvider
+import models.GoodsType
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -40,15 +41,16 @@ class ItemFiscalMarksViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
-       lazy val view = app.injector.instanceOf[ItemFiscalMarksView]
+        lazy val view = app.injector.instanceOf[ItemFiscalMarksView]
         val form = app.injector.instanceOf[ItemFiscalMarksFormProvider].apply()
+        val goodsType = GoodsType.Vaping
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, goodsType).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
+          Selectors.title -> messagesForLanguage.title(GoodsType.Vaping.toSingularOutput()),
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.itemSection,
-          Selectors.h1 -> messagesForLanguage.heading,
+          Selectors.h1 -> messagesForLanguage.heading(GoodsType.Vaping.toSingularOutput()),
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))

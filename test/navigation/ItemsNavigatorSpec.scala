@@ -136,6 +136,17 @@ class ItemsNavigatorSpec extends SpecBase with ItemFixtures {
           }
         }
 
+        "when GoodsType is one type of Vaping " - {
+
+          "to the Item Fiscal Marks Choice Page" in {
+            val userAnswers = emptyUserAnswers
+              .set(ItemExciseProductCodePage(testIndex1), testExciseProductCodeV000.code)
+
+            navigator.nextPage(ItemCommercialDescriptionPage(testIndex1), NormalMode, userAnswers) mustBe
+              itemsRoutes.ItemFiscalMarksChoiceController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)
+          }
+        }
+
         "when GoodsType is Energy " - {
 
           Seq(testExciseProductCodeE470, testExciseProductCodeE500, testExciseProductCodeE600, testExciseProductCodeE930).foreach(epc => {

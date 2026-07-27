@@ -156,6 +156,18 @@ trait ItemFixtures {
     unitOfMeasure = Kilograms
   )
 
+  val testEpcVaping: String = "V000"
+  val testGoodsTypeVaping: GoodsType = GoodsType.apply(testEpcTobacco)
+  val testCnCodeVaping: String = "24022090"
+  val testCnCodeVaping2: String = "24029000"
+  val testCommodityCodeVaping: CnCodeInformation = CnCodeInformation(
+    cnCode = testCnCodeVaping,
+    cnCodeDescription = "Vaping Description",
+    exciseProductCode = testEpcVaping,
+    exciseProductCodeDescription = "Vaping Product",
+    unitOfMeasure = Litres20
+  )
+
   val testEpcOtherProductsContainingEthylAlcohol: String = "S500"
   val testCommodityCodeS500: CnCodeInformation = CnCodeInformation(
     cnCode = "10000000",
@@ -321,6 +333,13 @@ trait ItemFixtures {
       "Cigarettes",
       "T",
       "Manufactured tobacco products"
+    )
+  val testExciseProductCodeV000: ExciseProductCode =
+    ExciseProductCode(
+      "V000",
+      "Vapes",
+      "V",
+      "Vaping products"
     )
   val testExciseProductCodeT300: ExciseProductCode =
     ExciseProductCode(

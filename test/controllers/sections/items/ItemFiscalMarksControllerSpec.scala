@@ -21,7 +21,7 @@ import controllers.actions.FakeDataRetrievalAction
 import fixtures.ItemFixtures
 import forms.sections.items.ItemFiscalMarksFormProvider
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAnswers}
+import models.{GoodsType, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeItemsNavigator
 import pages.sections.items.{ItemExciseProductCodePage, ItemFiscalMarksPage}
 import play.api.data.Form
@@ -38,7 +38,9 @@ class ItemFiscalMarksControllerSpec extends SpecBase with MockUserAnswersService
   lazy val form: Form[String] = formProvider()
   lazy val view: ItemFiscalMarksView = app.injector.instanceOf[ItemFiscalMarksView]
 
-  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcTobacco)
+  val goodsType: GoodsType.Vaping.type = GoodsType.Vaping
+  val baseUserAnswersVaping: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcVaping)
+  val baseUserAnswersTobacco: UserAnswers = emptyUserAnswers.set(ItemExciseProductCodePage(testIndex1), testEpcVaping)
 
   class Fixture(val userAnswers: Option[UserAnswers]) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -60,14 +62,14 @@ class ItemFiscalMarksControllerSpec extends SpecBase with MockUserAnswersService
 
   "ItemFiscalMarks Controller" - {
 
-    "must redirect to Index of section when the idx is outside of bounds for a GET" in new Fixture(Some(baseUserAnswers)) {
+    "must redirect to Index of section when the idx is outside of bounds for a GET" in new Fixture(Some(baseUserAnswersVaping)) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex2, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must redirect to Index of section when the idx is outside of bounds for a POST" in new Fixture(Some(baseUserAnswers)) {
+    "must redirect to Index of section when the idx is outside of bounds for a POST" in new Fixture(Some(baseUserAnswersVaping)) {
       val result = controller.onSubmit(testErn, testDraftId, testIndex2, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
       status(result) mustEqual SEE_OTHER
@@ -88,28 +90,28 @@ class ItemFiscalMarksControllerSpec extends SpecBase with MockUserAnswersService
       redirectLocation(result).value mustBe routes.ItemsIndexController.onPageLoad(testErn, testDraftId).url
     }
 
-    "must return OK and the correct view for a GET" in new Fixture(Some(baseUserAnswers)) {
+    "must return OK and the correct view for a GET" in new Fixture(Some(baseUserAnswersVaping)) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, action)(dataRequest(request, userAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(form, action, goodsType)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
-      Some(baseUserAnswers.set(ItemFiscalMarksPage(testIndex1), "answer"))
+      Some(baseUserAnswersVaping.set(ItemFiscalMarksPage(testIndex1), "answer"))
     ) {
       val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill("answer"), action)(dataRequest(request, userAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(form.fill("answer"), action, goodsType)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Fixture(Some(baseUserAnswers)) {
+    "must redirect to the next page when valid data is submitted" in new Fixture(Some(baseUserAnswersVaping)) {
 
       MockUserAnswersService.set(
-        baseUserAnswers.set(ItemFiscalMarksPage(testIndex1), "answer")
+        baseUserAnswersVaping.set(ItemFiscalMarksPage(testIndex1), "answer")
       ).returns(Future.successful(
-        baseUserAnswers.set(ItemFiscalMarksPage(testIndex1), "answer")
+        baseUserAnswersVaping.set(ItemFiscalMarksPage(testIndex1), "answer")
       ))
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
@@ -117,13 +119,13 @@ class ItemFiscalMarksControllerSpec extends SpecBase with MockUserAnswersService
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(baseUserAnswers)) {
+    "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(baseUserAnswersVaping)) {
       val boundForm = form.bind(Map("value" -> ""))
 
       val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, action)(dataRequest(request, userAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(boundForm, action, goodsType)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {

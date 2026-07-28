@@ -19,7 +19,7 @@ package controllers.sections.items
 import controllers.actions._
 import forms.sections.items.ItemFiscalMarksFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode}
+import models.{GoodsType, Index, Mode}
 import navigation.ItemsNavigator
 import pages.sections.items.ItemFiscalMarksPage
 import play.api.data.Form
@@ -46,8 +46,9 @@ class ItemFiscalMarksController @Inject()(
   def onPageLoad(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
-        withGoodsTypeAsync(idx) { _ => //NOTE: not necessarily needed however good to have the guard
-          renderView(Ok, fillForm(ItemFiscalMarksPage(idx), formProvider()), idx, mode)
+        withGoodsTypeAsync(idx) {
+          goodsType =>
+          renderView(Ok, fillForm(ItemFiscalMarksPage(idx), formProvider()), idx, mode, goodsType)
         }
       }
     }
@@ -55,20 +56,22 @@ class ItemFiscalMarksController @Inject()(
   def onSubmit(ern: String, draftId: String, idx: Index, mode: Mode): Action[AnyContent] =
     authorisedDataRequestAsync(ern, draftId) { implicit request =>
       validateIndexAsync(idx) {
-        withGoodsTypeAsync(idx) { _ =>
+        withGoodsTypeAsync(idx) {
+          goodsType =>
           formProvider().bindFromRequest().fold(
-            renderView(BadRequest, _, idx, mode),
+            renderView(BadRequest, _, idx, mode, goodsType),
             saveAndRedirect(ItemFiscalMarksPage(idx), _, mode)
           )
         }
       }
     }
 
-  private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode)
+  private def renderView(status: Status, form: Form[_], idx: Index, mode: Mode, goodsType: GoodsType)
                         (implicit request: DataRequest[_]): Future[Result] = {
     Future.successful(status(view(
       form = form,
-      action = routes.ItemFiscalMarksController.onSubmit(request.ern, request.draftId, idx, mode)
+      action = routes.ItemFiscalMarksController.onSubmit(request.ern, request.draftId, idx, mode),
+      goodsType = goodsType
     )))
   }
 }

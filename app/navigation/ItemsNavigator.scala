@@ -413,6 +413,8 @@ class ItemsNavigator @Inject() extends BaseNavigator {
             itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case Energy =>
             itemsRoutes.ItemDensityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
+          case Vaping  =>
+            itemsRoutes.ItemFiscalMarksChoiceController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
           case _ =>
             itemsRoutes.ItemQuantityController.onPageLoad(userAnswers.ern, userAnswers.draftId, idx, NormalMode)
         }

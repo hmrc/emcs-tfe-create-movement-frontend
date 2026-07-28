@@ -29,10 +29,9 @@
         continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], action: Call)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, goodsType: GoodsType)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("itemFiscalMarks.title"), Some(messages("items.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
-
+@layout(pageTitle = title(form, messages("itemFiscalMarks.title", goodsType.toSingularOutput()), Some(messages("items.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
     @formHelper(action = action) {
 
         @if(form.errors.nonEmpty) {
@@ -45,7 +44,7 @@
             id = "value",
             name = "value",
             maxLength = Some(350),
-            label = LabelViewModel(Text(messages("itemFiscalMarks.heading"))).asPageHeading(LabelSize.Large),
+            label = LabelViewModel(Text(messages("itemFiscalMarks.heading", goodsType.toSingularOutput()))).asPageHeading(LabelSize.Large),
             value = form("value").value,
             errorMessage = form.errors("value") match {
                 case Nil => None

@@ -1125,6 +1125,8 @@ goodsType.S.singular = spirit
 goodsType.S.plural = spirits
 goodsType.E.singular = energy
 goodsType.E.plural = energies
+goodsType.V.singular = vaping product
+goodsType.V.plural = vaping products
 
 itemExciseProductCode.title = Excise Product Code (EPC) for item {0}
 itemExciseProductCode.heading = Excise Product Code (EPC) for item {0}
@@ -1178,6 +1180,8 @@ itemQuantity.title = How much {0} are you moving?
 itemQuantity.heading = How much {0} are you moving?
 itemQuantity.label = How much {0} are you moving?
 itemQuantity.hint.liquid = Enter the total quantity of liquids in {0}.
+
+itemQuantity.hint.V000 = Enter the total quantity of liquids in litres. For example, 1 millilitre (ml) is 0.001 litres.
 
 itemQuantity.title.T200 = Number of cigarettes you are moving
 itemQuantity.heading.T200 = Number of cigarettes you are moving
@@ -1245,6 +1249,7 @@ itemCommercialDescription.hint.I = Include any information that will help to ide
 itemCommercialDescription.hint.S = This will be used to help identify the goods. For example: 20 x 1 litre bottles of London dry gin.
 itemCommercialDescription.hint.T = This will be used to help identify the goods. For example: 500 x 30g packets of hand rolling tobacco.
 itemCommercialDescription.hint.E = Include any information that will help to identify the goods.
+itemCommercialDescription.hint.V = This will be used to help indentify the goods. For example: 15 x boxes of 100 x 2ml pods.
 itemCommercialDescription.details.beer.p = Include any information that will help to identify the goods, such as:
 itemCommercialDescription.details.beer.b1 = the number of the lowest level of packaging used, such as cans, bottles or kegs
 itemCommercialDescription.details.beer.b2 = if transporting multipacks or cases, state both the number of multipacks or cases, and the number of individual units. For example: 10 x cases of 12 x 300ml bottles of lager beer
@@ -1315,8 +1320,8 @@ itemFiscalMarksChoice.checkYourAnswersLabel = Fiscal marks
 itemFiscalMarksChoice.error.required = Select yes if the {0} has fiscal marks
 itemFiscalMarksChoice.change.hidden = fiscal marks
 
-itemFiscalMarks.title = Give information about the fiscal marks on the tobacco
-itemFiscalMarks.heading = Give information about the fiscal marks on the tobacco
+itemFiscalMarks.title = Give information about the fiscal marks on the {0}
+itemFiscalMarks.heading = Give information about the fiscal marks on the {0}
 itemFiscalMarks.checkYourAnswersLabel = Fiscal marks information
 itemFiscalMarks.error.required = Enter more information about the fiscal marks
 itemFiscalMarks.error.character = Information must include letters and numbers

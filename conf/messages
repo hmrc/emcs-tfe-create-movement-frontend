@@ -1268,6 +1268,10 @@ itemCommercialDescription.details.tobacco.p = Include any information that will 
 itemCommercialDescription.details.tobacco.b1 = the number of the lowest level of packaging used, such as individual cigarette packets or cigar boxes
 itemCommercialDescription.details.tobacco.b2 = if transporting multipacks state both the number of multipacks and number of individual units. For example: 200 x multipacks of 5 x 20 cigarettes
 itemCommercialDescription.details.tobacco.b3 = if transporting hand rolling or pipe tobacco state the number and weight of individual packets
+itemCommercialDescription.details.vaping.p = Include any information that will help to identify the goods, such as:
+itemCommercialDescription.details.vaping.b1 = the number of the lowest level of packaging used, such as pods, cartridges or refill bottles.
+itemCommercialDescription.details.vaping.b2 = if transporting multipacks or boxes, state both the number of multipacks or boxes and the number of individual units. For example: 35 x boxes of 100 x 10ml refill bottles of J Bloggs'' Blueberry Ice
+
 itemCommercialDescription.summary = Help with commercial description
 itemCommercialDescription.error.invalidCharacter = Description cannot contain < and > and : and ;
 

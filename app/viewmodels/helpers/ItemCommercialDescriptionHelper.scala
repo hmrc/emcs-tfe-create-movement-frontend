@@ -77,6 +77,20 @@ class ItemCommercialDescriptionHelper @Inject()(p: views.html.components.p,
             ))
           ))
         }
+      case Vaping => vapingHelper
       case _ => Html("")
     }
+
+  private def vapingHelper(implicit messages: Messages) = {
+    details("itemCommercialDescription.summary") {
+      HtmlFormat.fill(Seq(
+        p()(Html(messages("itemCommercialDescription.details.vaping.p"))),
+        bullets(Seq(
+          p()(Html(messages("itemCommercialDescription.details.vaping.b1"))),
+          p()(Html(messages("itemCommercialDescription.details.vaping.b2"))),
+        ))
+      ))
+    }
+  }
+
 }

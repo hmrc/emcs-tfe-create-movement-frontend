@@ -56,6 +56,10 @@ object ItemCommercialDescriptionMessages {
     val cyaLabel = "Commercial Description"
     val valueWhenAnswerNotPresent = "Enter a commercial description of the goods"
     val cyaChangeHidden = "commercial description"
+    val vapingP = "Include any information that will help to identify the goods, such as:"
+    val vapingB1 = "the number of the lowest level of packaging used, such as pods, cartridges or refill bottles."
+    val vapingB2 = "if transporting multipacks or boxes, state both the number of multipacks or boxes and the number of individual units. For example: 35 x boxes of 100 x 10ml refill bottles of J Bloggs' Blueberry Ice"
+
   }
 
   object English extends ViewMessages with BaseEnglish

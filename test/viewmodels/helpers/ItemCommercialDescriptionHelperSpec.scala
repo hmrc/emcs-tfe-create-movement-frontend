@@ -111,6 +111,22 @@ class ItemCommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSu
               }
             }
 
+            "when the goodsType is Vaping" - {
+
+              "must output the expected title" in {
+                helper.content(Vaping) mustBe
+                  details(langMessages.summary) {
+                    HtmlFormat.fill(Seq(
+                      p()(Html(langMessages.vapingP)),
+                      bullets(Seq(
+                        p()(Html(langMessages.vapingB1)),
+                        p()(Html(langMessages.vapingB2)),
+                      ))
+                    ))
+                  }
+              }
+            }
+
             "when the goodsType is Intermediate" - {
 
               "must output the expected title" in {

@@ -21,10 +21,11 @@ import forms.{GB_00_EXCISE_NUMBER_REGEX, XI_00_EXCISE_NUMBER_REGEX, XI_OR_GB_00_
 import models.requests.DataRequest
 import models.response.MissingMandatoryPage
 import models.sections.info.DispatchPlace
+import models.sections.info.movementScenario.MovementScenario
 import pages.sections.dispatch.DispatchWarehouseExcisePage
-import pages.sections.info.DispatchPlacePage
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.data.Form
-import play.api.data.validation.Constraint
+import play.api.data.validation.{Constraint, Valid}
 
 import javax.inject.Inject
 
@@ -52,6 +53,9 @@ class DispatchWarehouseExciseFormProvider @Inject() extends Mappings {
     if (request.isNorthernIrelandErn) {
       if (request.isWarehouseKeeper) {
         DispatchPlacePage.value.map {
+          case DispatchPlace.NorthernIreland if
+            request.userAnswers.get(DispatchPlacePage).contains(DispatchPlace.NorthernIreland) &&
+            request.userAnswers.get(DestinationTypePage).contains(MovementScenario.UkTaxWarehouse.NI) => Constraint{_:String=>Valid}
           case DispatchPlace.GreatBritain => regexpUnlessEmpty(GB_00_EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.mustStartWithGB00")
           case DispatchPlace.NorthernIreland => regexpUnlessEmpty(XI_00_EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.mustStartWithXI00")
         }.getOrElse(throw MissingMandatoryPage(s"Missing mandatory page ${DispatchPlacePage.toString} for Northern Ireland Warehouse Keeper ${request.ern}"))

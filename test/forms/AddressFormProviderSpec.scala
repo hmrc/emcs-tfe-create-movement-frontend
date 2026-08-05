@@ -21,10 +21,13 @@ import fixtures.UserAddressFixtures
 import forms.behaviours.FieldBehaviours
 import models.UserAddress
 import models.requests.DataRequest
+import models.sections.info.DispatchPlace
+import models.sections.info.movementScenario.MovementScenario
 import pages.Page
 import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExcisePage}
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.dispatch.{DispatchAddressPage, DispatchWarehouseExcisePage}
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.data.FormError
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -244,11 +247,24 @@ class AddressFormProviderSpec extends SpecBase with FieldBehaviours with UserAdd
       gbForm.bind(formAnswersMap(Some(postcodeField), Some("B1 1AA"))).errors mustBe empty
     }
 
-    "must not bind for non-BT postcodes when the user is a XI trader" in {
+    //this test case is for EU TO NI Vaping movement
+    "must bind for non-BT postcodes when the user is a XI trader and if movement is NI to NI" in {
+      lazy val xiForm2 = new AddressFormProvider()(ConsignorAddressPage, false)(dataRequest(FakeRequest(),
+         emptyUserAnswers
+           .set(DispatchPlacePage, DispatchPlace.NorthernIreland)
+           .set(DestinationTypePage, MovementScenario.UkTaxWarehouse.NI),
+        ern = testNorthernIrelandErn))
 
+      xiForm2.bind(formAnswersMap(Some(postcodeField), Some("B1 1AA"))).errors mustBe empty
+    }
+
+    "must not bind for non-BT postcodes when the user is a XI trader if movement is not NI to NI" in {
+      lazy val xiForm2 = new AddressFormProvider()(ConsignorAddressPage, false)(dataRequest(FakeRequest(),
+        emptyUserAnswers,
+        ern = testNorthernIrelandErn))
       val expectedResult = Seq(FormError(postcodeField, mustBeBTPostcodeKey(ConsignorAddressPage), Seq()))
 
-      xiForm.bind(formAnswersMap(Some(postcodeField), Some("B1 1AA"))).errors mustBe expectedResult
+      xiForm2.bind(formAnswersMap(Some(postcodeField), Some("B1 1AA"))).errors mustBe expectedResult
     }
 
     "must bind for postcodes beginning with 'BT' for a XI trader" in {

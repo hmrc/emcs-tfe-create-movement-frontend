@@ -21,9 +21,12 @@ import config.Constants.XI_POSTCODE
 import forms.mappings.Mappings
 import models.UserAddress
 import models.requests.DataRequest
+import models.sections.info.DispatchPlace
+import models.sections.info.movementScenario.MovementScenario
 import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExcisePage}
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.dispatch.{DispatchAddressPage, DispatchWarehouseExcisePage}
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import pages.{Page, QuestionPage}
 import play.api.data.Forms.{mapping, optional}
 import play.api.data.format.Formatter
@@ -114,6 +117,11 @@ class AddressFormProvider @Inject() extends Mappings {
   private def getExtraPostcodeValidationForPage(page: Page)(implicit request: DataRequest[_]): Constraint[String] = {
     def validate(ern: Option[String]): Constraint[String]= {
       ern match {
+        case Some(ern) if
+          ern.startsWith(Constants.NI_PREFIX) &&
+          request.userAnswers.get(DispatchPlacePage).contains(DispatchPlace.NorthernIreland) &&
+          request.userAnswers.get(DestinationTypePage).contains(MovementScenario.UkTaxWarehouse.NI)
+        => Constraint{_:String=>Valid}
         case Some(ern) if ern.startsWith(Constants.NI_PREFIX) => startsWith(XI_POSTCODE, s"address.postcode.error.$page.mustStartWithBT")
         case Some(ern) if ern.startsWith(Constants.GB_PREFIX) => doesNotStartWith(XI_POSTCODE, s"address.postcode.error.$page.mustNotStartWithBT")
         case _ => Constraint { case _ => Valid }

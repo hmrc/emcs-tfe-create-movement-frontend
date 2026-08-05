@@ -23,7 +23,8 @@ import forms.behaviours.StringFieldBehaviours
 import models.requests.DataRequest
 import models.response.MissingMandatoryPage
 import models.sections.info.DispatchPlace
-import pages.sections.info.DispatchPlacePage
+import models.sections.info.movementScenario.MovementScenario
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.data.FormError
 import play.api.data.validation.{Invalid, Valid}
 import play.api.test.FakeRequest
@@ -182,6 +183,17 @@ class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours with
           form.validationForERNBasedOnConsignor.apply("XI00123456789") mustBe Valid
           form.validationForERNBasedOnConsignor.apply("GB00123456789") mustBe Invalid("dispatchWarehouseExcise.error.mustStartWithXI00", "(XI00)[a-zA-Z0-9]{9}")
           form.validationForERNBasedOnConsignor.apply("FR00123456789") mustBe Invalid("dispatchWarehouseExcise.error.mustStartWithXI00", "(XI00)[a-zA-Z0-9]{9}")
+        }
+      }
+      "when dispatch place is Northern Ireland and Destination Type is NI" - {
+        "must allow only XI00 ERNs" in {
+          val userAnswers = emptyUserAnswers
+            .set(DispatchPlacePage, DispatchPlace.NorthernIreland)
+            .set(DestinationTypePage, MovementScenario.UkTaxWarehouse.NI)
+          implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), ern = "XIWK123456789", answers = userAnswers)
+          form.validationForERNBasedOnConsignor.apply("XI00123456789") mustBe Valid
+          form.validationForERNBasedOnConsignor.apply("GB00123456789") mustBe Valid
+          form.validationForERNBasedOnConsignor.apply("FR00123456789") mustBe Valid
         }
       }
       "when dispatch place is missing" - {

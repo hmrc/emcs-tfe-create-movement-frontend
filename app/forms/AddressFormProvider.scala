@@ -117,11 +117,11 @@ class AddressFormProvider @Inject() extends Mappings {
   private def getExtraPostcodeValidationForPage(page: Page)(implicit request: DataRequest[_]): Constraint[String] = {
     def validate(ern: Option[String]): Constraint[String]= {
       ern match {
-        case Some(ern) if ern.startsWith(Constants.NI_PREFIX) &&
+        case Some(ern) if
+          ern.startsWith(Constants.NI_PREFIX) &&
           request.userAnswers.get(DispatchPlacePage).contains(DispatchPlace.NorthernIreland) &&
           request.userAnswers.get(DestinationTypePage).contains(MovementScenario.UkTaxWarehouse.NI)
         => Constraint{_:String=>Valid}
-
         case Some(ern) if ern.startsWith(Constants.NI_PREFIX) => startsWith(XI_POSTCODE, s"address.postcode.error.$page.mustStartWithBT")
         case Some(ern) if ern.startsWith(Constants.GB_PREFIX) => doesNotStartWith(XI_POSTCODE, s"address.postcode.error.$page.mustNotStartWithBT")
         case _ => Constraint { case _ => Valid }

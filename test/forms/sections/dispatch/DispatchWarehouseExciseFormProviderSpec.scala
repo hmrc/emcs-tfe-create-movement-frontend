@@ -216,8 +216,6 @@ class DispatchWarehouseExciseFormProviderSpec extends StringFieldBehaviours with
         form.validationForERNBasedOnConsignor.apply("FR00123456789") mustBe
           Invalid("dispatchWarehouseExcise.error.mustStartWithGBOrXI00", "(GB00|XI00)[a-zA-Z0-9]{9}")
       }
-
-
     }
     "when request ERN is GBWK" - {
       implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), ern = "GBWK123456789")

@@ -61,7 +61,6 @@ class DispatchWarehouseExciseFormProvider @Inject() extends Mappings {
         }.getOrElse(throw MissingMandatoryPage(s"Missing mandatory page ${DispatchPlacePage.toString} for Northern Ireland Warehouse Keeper ${request.ern}"))
       } else {
         regexpUnlessEmpty(XI_OR_GB_00_EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.mustStartWithGBOrXI00")
-
       }
     } else {
       regexpUnlessEmpty(GB_00_EXCISE_NUMBER_REGEX, "dispatchWarehouseExcise.error.mustStartWithGB00")

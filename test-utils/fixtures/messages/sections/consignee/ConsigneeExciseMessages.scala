@@ -24,9 +24,15 @@ import models.sections.info.movementScenario.DestinationType.{TemporaryCertified
 object ConsigneeExciseMessages {
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
-    
+
+    val h1 = "Excise Registration Number (ERN)"
     val heading = "What is the consignee’s excise registration number (ERN)?"
-    val title: String = titleHelper(heading, Some(SectionMessages.English.consigneeSubHeading))
+    val h2 = "For movements of vaping products from the EU to Northern Ireland"
+    val p1 = "Enter the excise ID in this format: EU Country code followed by VPD12345678."
+    val p2 = "For example, FRVPD12345678"
+    val link = "Find EU country codes (opens in new tab)."
+    val p = p1 + " " + p2 + " " + link
+    val title: String = titleHelper(h1, Some(SectionMessages.English.consigneeSubHeading))
     val hint = "An ERN contains 13 characters, starting with 2 letters that represent the member state of the consignee, such as GBWK123456789. It can be found on your approval letter."
 
     val temporaryRegisteredConsigneeHeading = "What is the Temporary Registered Consignee’s authorisation reference?"

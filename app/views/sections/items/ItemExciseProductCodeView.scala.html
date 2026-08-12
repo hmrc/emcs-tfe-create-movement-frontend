@@ -30,6 +30,7 @@
         h1: components.h1,
         h2: components.h2,
         p: components.p,
+        bullets: components.bullets,
         inset: components.inset,
         notificationBannerHelper: ErrorNotificationBannerHelper,
         notificationBanner: GovukNotificationBanner,
@@ -64,10 +65,23 @@
         }
 
         @h1("itemExciseProductCode.heading", Some(messages("items.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")), args = idx.displayIndex)
+             @p() {
+                    @messages("itemExciseProductCode.paragraph")
+                }
+                <p></p>
+                @h2(messages("itemExciseProductCode.h2"), "govuk-heading-m", hiddenContent = None)
+                @p(){
+                    @messages("itemExciseProductCode.p1")
+                     @bullets(Seq(
+                         Html(messages("itemExciseProductCode.p1.bullet1")),
+                         Html(messages("itemExciseProductCode.p1.bullet2")),
+                         Html(messages("itemExciseProductCode.p1.bullet3"))
+                      ))
+                }
+                @p(){
+                     @messages("itemExciseProductCode.p2")
+                }
 
-        @p() {
-            @messages("itemExciseProductCode.paragraph")
-        }
 
         @helper.insetText().map(insetText => inset(Html(insetText)))
 

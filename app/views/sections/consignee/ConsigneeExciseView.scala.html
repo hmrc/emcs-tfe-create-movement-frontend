@@ -18,6 +18,7 @@
 @import pages.sections.consignee.ConsigneeExcisePage
 @import viewmodels.LabelSize
 @import viewmodels.helpers.ErrorNotificationBannerHelper
+@import config.AppConfig
 
 @this(layout: templates.Layout,
         formHelper: FormWithCSRF,
@@ -27,6 +28,9 @@
         notificationBanner: GovukNotificationBanner,
         h1: components.h1,
         h2: components.h2,
+        p: components.p,
+        link: components.link,
+        appConfig: AppConfig,
         errorNotificationBannerHelper: ErrorNotificationBannerHelper,
         continueOrExit: components.continueOrExit)
 
@@ -39,7 +43,7 @@
     } else if(isNorthernIrishTemporaryCertifiedConsignee){
         messages("consigneeExcise.temporaryCertifiedConsignee.title")
     } else {
-        messages("consigneeExcise.title")
+        messages("consigneeExcise.h1")
     },
     Some(messages("consignee.subHeading"))
 ), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
@@ -54,8 +58,12 @@
               hasContentHeading = false
             ).map(notificationBanner(_))
         }
-
         @h2(messages("consignee.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+         @if(!(isNorthernIrishTemporaryRegisteredConsignee || isNorthernIrishTemporaryCertifiedConsignee)) {
+           @vpd
+        }
+
+
         @govukInput(
             InputViewModel(
                 field = form("value"),
@@ -67,7 +75,8 @@
                     } else {
                         messages("consigneeExcise.heading")
                     }
-                )).asPageHeading(LabelSize.Large)
+                )).asPageHeading(LabelSize.Medium)
+
             ).withHint(
                 Hint(
                     id = Some("consignee-ern-hint"),
@@ -88,7 +97,15 @@
         @continueOrExit()
     }
 }
+@vpd ={
+    @h1(messages("consigneeExcise.h1"),  hiddenContent = None)
+          <p></p>
+         @h2(messages("consigneeExcise.h2"), "govuk-heading-m", hiddenContent = None)
+         @p(){@messages("consigneeExcise.p1")<br>@messages("consigneeExcise.p2")<br>
+         @link(appConfig.euCodes, "dispatchWarehouseExcise.link", opensInNewTab = true, withFullStop = true)}
 
+         <p></p>
+}
 @{
     //$COVERAGE-OFF$
 }

@@ -21,7 +21,15 @@ import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 object DispatchWarehouseExciseMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "What is the excise ID of the tax warehouse of dispatch?"
+    val heading = "Excise ID"
+    val heading2 = "What is the excise ID of the tax warehouse of dispatch?"
+    val placeOfDispatchHeading = "This section is Place of dispatch information"
+    val h2 = "For movements of vaping products from the EU to Northern Ireland"
+    val p1 = "Enter the excise ID in this format: EU Country code followed by VPD12345678."
+    val p2 = "For example, FRVPD12345678"
+    val link = "Find EU country codes (opens in new tab)."
+    val p = p1 + " " + p2 + " " + link
+
     val title = titleHelper(heading, Some(SectionMessages.English.dispatchSubHeading))
     val hintText = "This is sometimes called an excise registration number (ERN), starting with GB or XI. For example, GB00123456789."
     val cyaLabel = "Excise ID (ERN)"

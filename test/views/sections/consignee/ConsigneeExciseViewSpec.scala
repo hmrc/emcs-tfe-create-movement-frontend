@@ -55,8 +55,10 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours with Movement
 
       behave like pageWithExpectedElementsAndMessages(Seq(
         Selectors.title -> English.title,
-        Selectors.h1 -> English.heading,
+        Selectors.h1 -> English.h1,
         Selectors.h2(1) -> English.consigneeInformationSection,
+        Selectors.h2(2) -> English.h2,
+        Selectors.p(2) -> English.p,
         Selectors.hint -> English.hint,
         Selectors.button -> English.saveAndContinue
       ))
@@ -91,7 +93,7 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours with Movement
 
       behave like pageWithExpectedElementsAndMessages(Seq(
         Selectors.title -> English.title,
-        Selectors.h1 -> English.heading,
+        Selectors.h1 -> English.h1,
         Selectors.notificationBannerTitle -> English.updateNeeded,
         Selectors.notificationBannerError(1) -> English.invalidOrMissingConsignee,
         Selectors.notificationBannerError(2) -> English.linkIsPending,

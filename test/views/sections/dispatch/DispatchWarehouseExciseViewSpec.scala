@@ -48,12 +48,16 @@ class DispatchWarehouseExciseViewSpec extends SpecBase with ViewBehaviours with 
 
         val form = app.injector.instanceOf[DispatchWarehouseExciseFormProvider].apply()
 
+
         implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.dispatchSection,
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
+          Selectors.h2(1) -> messagesForLanguage.placeOfDispatchHeading,
+          Selectors.h2(2) -> messagesForLanguage.h2,
+          Selectors.p(1) -> messagesForLanguage.p,
           Selectors.hint -> messagesForLanguage.hintText,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft

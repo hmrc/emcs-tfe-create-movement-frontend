@@ -32,8 +32,8 @@ class DestinationTypeHelper extends Logging {
 
   def title(implicit request: DataRequest[_], messages: Messages): String = request.userTypeFromErn match {
     case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper | NorthernIrelandCertifiedConsignor | NorthernIrelandTemporaryCertifiedConsignor =>
-      messages("destinationType.title.movement")
-    case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => messages("destinationType.title.import")
+      messages("destinationType.h1")
+    case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => messages("destinationType.h1")
     case userType =>
       logger.error(s"[title] invalid UserType for CAM journey: $userType")
       throw InvalidUserTypeException(s"[DestinationTypeHelper][title] invalid UserType for CAM journey: $userType")

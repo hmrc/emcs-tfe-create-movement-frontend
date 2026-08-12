@@ -58,7 +58,9 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours wi
       behave like pageWithExpectedElementsAndMessages(Seq(
         Selectors.title -> English.title,
         Selectors.h1 -> English.heading,
+        Selectors.h1(1) -> English.heading2,
         Selectors.h2(1) -> English.destinationSection,
+        Selectors.p(2) -> English.p,
         Selectors.hint -> English.text,
         Selectors.button -> English.saveAndContinue,
         Selectors.saveAndExitLink -> English.returnToDraft

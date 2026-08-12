@@ -19,6 +19,7 @@
 @import viewmodels.InputWidth._
 @import viewmodels.LabelSize
 @import viewmodels.helpers.ErrorNotificationBannerHelper
+@import config.AppConfig
 
 @this(
     layout: templates.Layout,
@@ -29,7 +30,10 @@
     notificationBanner: GovukNotificationBanner,
     h1: components.h1,
     h2: components.h2,
+    p: components.p,
     errorNotificationBannerHelper: ErrorNotificationBannerHelper,
+    link: components.link,
+    appConfig: AppConfig,
     continueOrExit: components.continueOrExit
 )
 
@@ -50,10 +54,20 @@
         }
 
         @h2(messages("dispatch.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h1(messages("dispatchWarehouseExcise.heading"),  hiddenContent = None)
+
+        @h2(messages("dispatchWarehouseExcise.h2"), "govuk-heading-m", hiddenContent = None)
+        @p(){@messages("dispatchWarehouseExcise.p1")<br>@messages("dispatchWarehouseExcise.p2")<br>
+        @link(appConfig.euCodes, "dispatchWarehouseExcise.link", opensInNewTab = true, withFullStop = true)}
+
+
+
+        <p></p>
         @govukInput(
+
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(Text(messages("dispatchWarehouseExcise.heading"))).asPageHeading(LabelSize.Large)
+                label = LabelViewModel(Text(messages("dispatchWarehouseExcise.heading2"))).asPageHeading(LabelSize.Medium)
             )
             .withWidth(Full)
             .withHint(HintViewModel(content = Text(messages("dispatchWarehouseExcise.hintText"))))

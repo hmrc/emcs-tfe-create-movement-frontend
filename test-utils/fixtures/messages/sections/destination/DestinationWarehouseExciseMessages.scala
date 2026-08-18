@@ -25,7 +25,7 @@ object DestinationWarehouseExciseMessages {
     val heading = "Excise ID"
     val heading2: String = "What is the excise ID of the tax warehouse of destination?"
     val title = titleHelper(heading, Some(SectionMessages.English.destinationSubHeading))
-    val h2 = "For movements of vaping products from the EU to Northern Ireland"
+    val h2 = "For movements of vaping products from Northern Ireland to the EU"
     val p1 = "Enter the excise ID in this format: EU Country code followed by VPD12345678."
     val p2 = "For example, FRVPD12345678"
     val link = "Find EU country codes (opens in new tab)."

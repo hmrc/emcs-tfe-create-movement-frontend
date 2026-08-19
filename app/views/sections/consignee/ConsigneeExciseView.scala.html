@@ -59,7 +59,7 @@
             ).map(notificationBanner(_))
         }
         @h2(messages("consignee.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
-         @if(!(isNorthernIrishTemporaryRegisteredConsignee || isNorthernIrishTemporaryCertifiedConsignee)) {
+        @if(!(isNorthernIrishTemporaryRegisteredConsignee || isNorthernIrishTemporaryCertifiedConsignee)) {
            @vpd
         }
 

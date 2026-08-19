@@ -60,6 +60,7 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours wi
         Selectors.h1 -> English.heading,
         Selectors.h1(1) -> English.heading2,
         Selectors.h2(1) -> English.destinationSection,
+        Selectors.h2(2) -> English.h2,
         Selectors.p(2) -> English.p,
         Selectors.hint -> English.text,
         Selectors.button -> English.saveAndContinue,

@@ -282,6 +282,7 @@ address.dispatchAddress.heading = Enter the place of dispatch details
 address.dispatchAddress.optional.title = Enter the place of dispatch details (optional)
 address.dispatchAddress.optional.heading = Enter the place of dispatch details (optional)
 address.dispatchAddress.subheading = Place of dispatch information
+address.dispatchAddress.p1 = For movements of vaping products from the EU to Northern Ireland, you must enter the EU address of the place of dispatch.
 address.dispatchAddress.checkYourAnswersLabel = Place of dispatch details
 address.dispatchAddress.change.hidden = place of dispatch details
 

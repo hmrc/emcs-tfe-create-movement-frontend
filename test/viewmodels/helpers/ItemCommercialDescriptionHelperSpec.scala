@@ -121,6 +121,7 @@ class ItemCommercialDescriptionHelperSpec extends SpecBase with GuiceOneAppPerSu
                       bullets(Seq(
                         p()(Html(langMessages.vapingB1)),
                         p()(Html(langMessages.vapingB2)),
+                        p()(Html(langMessages.vapingB3)),
                       ))
                     ))
                   }

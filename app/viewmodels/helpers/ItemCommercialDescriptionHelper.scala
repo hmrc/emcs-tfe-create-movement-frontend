@@ -88,6 +88,7 @@ class ItemCommercialDescriptionHelper @Inject()(p: views.html.components.p,
         bullets(Seq(
           p()(Html(messages("itemCommercialDescription.details.vaping.b1"))),
           p()(Html(messages("itemCommercialDescription.details.vaping.b2"))),
+          p()(Html(messages("itemCommercialDescription.details.vaping.b3"))),
         ))
       ))
     }

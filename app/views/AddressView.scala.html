@@ -61,6 +61,10 @@
 
                 @h1(s"address.$msgKey.heading", Some(messages(s"address.$addressPage.subheading")), "govuk-heading-l")
 
+                @if(messages.isDefinedAt(s"address.$addressPage.p1")) {
+                    <p class="govuk-body">@messages(s"address.$addressPage.p1")</p>
+                }
+
                 @if(isConsignorPageOrUsingConsignorDetails && request.traderKnownFacts.isDefined) {
                     <p class="govuk-body">Business name <br> <span class="govuk-body govuk-!-font-weight-bold">@request.traderKnownFacts.get.traderName</span></p>
                 } else {

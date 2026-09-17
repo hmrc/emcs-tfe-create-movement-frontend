@@ -51,7 +51,7 @@ object ItemCommercialDescriptionMessages {
     val detailsTobaccoB1 = "the number of the lowest level of packaging used, such as individual cigarette packets or cigar boxes"
     val detailsTobaccoB2 = "if transporting multipacks state both the number of multipacks and number of individual units. For example: 200 x multipacks of 5 x 20 cigarettes"
     val detailsTobaccoB3 = "if transporting hand rolling or pipe tobacco state the number and weight of individual packets"
-    val summary = "Help with commercial description"
+    val summary = "Help with writing a commercial description"
     val errorXss = "Description cannot contain < and > and : and ;"
     val cyaLabel = "Commercial Description"
     val valueWhenAnswerNotPresent = "Enter a commercial description of the goods"

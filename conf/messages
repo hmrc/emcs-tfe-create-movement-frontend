@@ -1310,8 +1310,7 @@ itemCommercialDescription.details.vaping.p = Include any information that will h
 itemCommercialDescription.details.vaping.b1 = the brand name, flavour, container size, nicotine strength and product SKU
 itemCommercialDescription.details.vaping.b2 = the lowest level of packaging used, such as pods, cartridges or refill bottles
 itemCommercialDescription.details.vaping.b3 = if transporting multipacks or boxes, state both the number of multipacks or boxes and the number of individual units
-
-itemCommercialDescription.summary = Help with commercial description
+itemCommercialDescription.summary = Help with writing a commercial description
 itemCommercialDescription.error.invalidCharacter = Description cannot contain < and > and : and ;
 
 itemDegreesPlato.title = Is the destination a country that uses Degrees Plato to tax the {0}?

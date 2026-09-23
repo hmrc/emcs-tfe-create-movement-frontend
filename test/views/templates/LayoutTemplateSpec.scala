@@ -21,6 +21,8 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.test.FakeRequest
 import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 import views.ViewBehaviours
 import views.html.templates.Layout
 
@@ -30,16 +32,21 @@ class LayoutTemplateSpec extends SpecBase with ViewBehaviours {
   val contentBlock: Html = Html("Main Content")
 
   "must render NavBar when supplied from request" - {
-
+    val someNavigationItems =
+      Some(Seq(
+        ServiceNavigationItem(content = Text("Home"), href = "/home-link"),
+        ServiceNavigationItem(content = Text("Messages"), href = "/messages-link")
+      ))
     Seq(
-      userRequest(FakeRequest(), navBar = Some(Html("NavBar"))),
-      dataRequest(FakeRequest(), navBar = Some(Html("NavBar")))
+      userRequest(FakeRequest(), navBarItems = someNavigationItems),
+      dataRequest(FakeRequest(), navBarItems = someNavigationItems)
     ).foreach(implicit request => {
 
       s"when the request is of type ${request.getClass.getSimpleName}" in {
         implicit val msgs = messages(request)
         val doc: Document = Jsoup.parse(template(pageTitle = "Title", maybeShowActiveTrader = None)(contentBlock).toString())
-        doc.html().contains("NavBar") mustBe true
+        doc.getElementsByAttributeValue("href", "/home-link").text() mustBe "Home"
+        doc.getElementsByAttributeValue("href", "/messages-link").text() mustBe "Messages"
       }
     })
   }

@@ -32,7 +32,7 @@ import play.api.Play.materializer
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.{MessagesControllerComponents, Request}
 import play.api.test.Helpers.stubPlayBodyParsers
-import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 
 trait SpecBase extends AnyFreeSpec with Matchers with OptionValues with ScalaFutures with BaseFixtures with GuiceOneAppPerSuite {
 
@@ -51,9 +51,9 @@ trait SpecBase extends AnyFreeSpec with Matchers with OptionValues with ScalaFut
 
   val fakeAuthAction = new FakeAuthAction(stubPlayBodyParsers)
 
-  def userRequest[A](request: Request[A], ern: String = testErn, navBar: Option[Html] = None): UserRequest[A] =
-    UserRequest(request, ern, testInternalId, testCredId, testSessionId, hasMultipleErns = false, navBar)
+  def userRequest[A](request: Request[A], ern: String = testErn, navBarItems: Option[Seq[ServiceNavigationItem]] = None): UserRequest[A] =
+    UserRequest(request, ern, testInternalId, testCredId, testSessionId, hasMultipleErns = false, navBarItems)
 
-  def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers, ern: String = testErn, navBar: Option[Html] = None, traderKnownFacts: Option[TraderKnownFacts] = Some(testMinTraderKnownFacts)): DataRequest[A] =
-    DataRequest(userRequest(request, ern, navBar), testDraftId, answers, traderKnownFacts)
+  def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers, ern: String = testErn, navBarItems: Option[Seq[ServiceNavigationItem]] = None, traderKnownFacts: Option[TraderKnownFacts] = Some(testMinTraderKnownFacts)): DataRequest[A] =
+    DataRequest(userRequest(request, ern, navBarItems), testDraftId, answers, traderKnownFacts)
 }

@@ -36,14 +36,14 @@ class NavBarPartialConnectorSpec extends SpecBase
 
   "getNavBar()" - {
 
-    "should return Some(Html)" - {
+    "should return Some(Service Navigation Items)" - {
 
       "when call to TFE Frontend is successful" in {
 
-        MockHttpClient.get(s"${appConfig.emcsTfeFrontendBaseUrl}/emcs/partials/navigation/trader/$testErn")
-          .returns(Future.successful(Some(dummyHtml)))
+        MockHttpClient.get(s"${appConfig.emcsTfeFrontendBaseUrl}/emcs/partials/navigation-items/trader/$testErn")
+          .returns(Future.successful(someNavItems))
 
-        connector.getNavBar(exciseRegistrationNumber = testErn).futureValue mustBe Some(dummyHtml)
+        connector.getNavBarItems(exciseRegistrationNumber = testErn).futureValue mustBe someNavItems
       }
     }
 
@@ -51,10 +51,10 @@ class NavBarPartialConnectorSpec extends SpecBase
 
       "when call to TFE Frontend fails" in {
 
-        MockHttpClient.get(s"${appConfig.emcsTfeFrontendBaseUrl}/emcs/partials/navigation/trader/$testErn")
+        MockHttpClient.get(s"${appConfig.emcsTfeFrontendBaseUrl}/emcs/partials/navigation-items/trader/$testErn")
           .returns(Future.failed(new Exception("foo")))
 
-        connector.getNavBar(exciseRegistrationNumber = testErn).futureValue mustBe None
+        connector.getNavBarItems(exciseRegistrationNumber = testErn).futureValue mustBe None
       }
     }
   }

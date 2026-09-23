@@ -264,7 +264,7 @@ localReferenceNumber.new.change.hidden = Unique reference (LRN)
 address.consignorAddress.title = Enter the consignor’s details
 address.consignorAddress.heading = Enter the consignor’s details
 address.consignorAddress.subheading = Consignor information
-address.consignorAddress.p1 = For vaping products from the EU to Northern Ireland, enter the consignee's business details.
+address.consignorAddress.p1 = For vaping products from the EU to Northern Ireland, enter the consignee’s business details.
 
 address.consigneeAddress.title = Enter the consignee’s details
 address.consigneeAddress.heading = Enter the consignee’s details

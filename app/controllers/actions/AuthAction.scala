@@ -117,8 +117,8 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
                                             hasMultipleEnrolments: Boolean
                                            )(block: UserRequest[A] => Future[Result])
                                            (implicit request: Request[A], hc: HeaderCarrier): Future[Result] = {
-    lazy val success = navBarPartialConnector.getNavBar(ernFromUrl).flatMap { navBar =>
-      block(UserRequest(request, ernFromUrl, internalId, credId, sessionId.get.value, hasMultipleEnrolments, navBar))
+    lazy val success = navBarPartialConnector.getNavBarItems(ernFromUrl).flatMap { navBarItems =>
+      block(UserRequest(request, ernFromUrl, internalId, credId, sessionId.get.value, hasMultipleEnrolments, navBarItems))
     }
     val userType = UserType(ernFromUrl)
 

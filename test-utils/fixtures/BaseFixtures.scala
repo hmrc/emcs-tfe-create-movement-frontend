@@ -27,6 +27,8 @@ import models.sections.transportArranger.TransportArranger
 import models.submitCreateMovement._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.Call
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 
 import java.time.temporal.ChronoUnit
 import java.time.{Instant, LocalDate, LocalDateTime, LocalTime}
@@ -234,4 +236,10 @@ trait BaseFixtures {
     SubmitCreateMovementResponse(receipt = testConfirmationReference, downstreamService = "EIS", submittedDraftId = testDraftId)
   val submitCreateMovementResponseChRIS: SubmitCreateMovementResponse =
     SubmitCreateMovementResponse(receipt = testConfirmationReference, downstreamService = "ChRIS", submittedDraftId = testDraftId)
+
+  val someNavItems =
+    Some(Seq(
+      ServiceNavigationItem(content = Text("Home"), href = "/home-link"),
+      ServiceNavigationItem(content = Text("Messages"), href = "/messages-link")
+    ))
 }

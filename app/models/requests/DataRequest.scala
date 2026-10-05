@@ -21,7 +21,7 @@ import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import pages.sections.info.DispatchPlacePage
 import play.api.mvc.WrappedRequest
-import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 import utils.Logging
 
 case class DataRequest[A](request: UserRequest[A],
@@ -52,5 +52,5 @@ case class DataRequest[A](request: UserRequest[A],
       None
   }
 
-  override val navBar: Option[Html] = request.navBar
+  override val navBarItems: Option[Seq[ServiceNavigationItem]] = request.navBarItems
 }
